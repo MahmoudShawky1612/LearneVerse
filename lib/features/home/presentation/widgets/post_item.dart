@@ -20,9 +20,21 @@ class _PostItemState extends State<PostItem> {
   Widget build(BuildContext context) {
     final post = widget.post;
 
-    return Container(
-      color: Colors.white,
-      margin: const EdgeInsets.only(bottom: 16),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity( 0.08),
+            blurRadius: 12,
+            spreadRadius: 2,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -31,13 +43,19 @@ class _PostItemState extends State<PostItem> {
             Row(
               children: [
                 Container(
+                  padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.blue[200]!, width: 2),
+                    gradient: LinearGradient(
+                      colors: [Colors.blue.shade400, Colors.purple.shade400],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                   ),
                   child: CircleAvatar(
                     radius: 24,
                     backgroundImage: AssetImage(post['avatar']),
+                    backgroundColor: Colors.white,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -48,21 +66,26 @@ class _PostItemState extends State<PostItem> {
                       post['author'],
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 17,
+                        color: Colors.black87,
                       ),
                     ),
                     Text(
                       'Posted ${post['time']} hours ago',
                       style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
+                        color: Colors.grey[500],
+                        fontSize: 13,
+                        fontStyle: FontStyle.italic,
                       ),
                     ),
                   ],
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.more_horiz),
+                  icon: Icon(
+                    Icons.more_horiz,
+                    color: Colors.grey[600],
+                  ),
                   onPressed: () {},
                 ),
               ],
@@ -71,8 +94,10 @@ class _PostItemState extends State<PostItem> {
             Text(
               post['title'],
               style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontSize: 19,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+                letterSpacing: 0.2,
               ),
             ),
             const SizedBox(height: 8),
@@ -82,28 +107,27 @@ class _PostItemState extends State<PostItem> {
                 Text(
                   post['description'],
                   maxLines: isExpanded ? null : 3,
-                  overflow:
-                      isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                  overflow: isExpanded
+                      ? TextOverflow.visible
+                      : TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.grey[800],
-                    height: 1.4,
+                    height: 1.5,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 if (post['description'].length > 200)
                   GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isExpanded = !isExpanded;
-                      });
-                    },
+                    onTap: () => setState(() => isExpanded = !isExpanded),
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 6.0),
+                      padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
                         isExpanded ? 'Show less' : 'Read more...',
-                        style: const TextStyle(
-                          color: Colors.blue,
+                        style: TextStyle(
+                          color: Colors.blue[600],
                           fontWeight: FontWeight.w600,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -116,28 +140,28 @@ class _PostItemState extends State<PostItem> {
               children: [
                 Row(
                   children: [
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(20),
-                        onTap: () {
-                          setState(() {
-                            if (isUpVoted) {
-                              post['voteCount']--;
-                              isUpVoted = false;
-                            } else {
-                              post['voteCount']++;
-                              isUpVoted = true;
-                              isDownVoted = false;
-                            }
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.arrow_circle_up,
-                            color: isUpVoted ? Colors.green : Colors.grey[600],
-                          ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isUpVoted) {
+                            post['voteCount']--;
+                            isUpVoted = false;
+                          } else {
+                            post['voteCount']++;
+                            isUpVoted = true;
+                            isDownVoted = false;
+                          }
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.all(8),
+                        child: Icon(
+                          Icons.arrow_circle_up_rounded,
+                          size: 26,
+                          color: isUpVoted
+                              ? Colors.green[600]
+                              : Colors.grey[400],
                         ),
                       ),
                     ),
@@ -148,6 +172,7 @@ class _PostItemState extends State<PostItem> {
                           '${post['voteCount']}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
+                            fontSize: 16,
                             color: post['voteCount'] > 0
                                 ? Colors.green[700]
                                 : post['voteCount'] < 0
@@ -157,53 +182,56 @@ class _PostItemState extends State<PostItem> {
                         ),
                       ),
                     ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(20),
-                        onTap: () {
-                          setState(() {
-                            if (isDownVoted) {
-                              post['voteCount']++;
-                              isDownVoted = false;
-                            } else {
-                              post['voteCount']--;
-                              isDownVoted = true;
-                              isUpVoted = false;
-                            }
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.arrow_circle_down,
-                            color: isDownVoted ? Colors.red : Colors.grey[600],
-                          ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isDownVoted) {
+                            post['voteCount']++;
+                            isDownVoted = false;
+                          } else {
+                            post['voteCount']--;
+                            isDownVoted = true;
+                            isUpVoted = false;
+                          }
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.all(8),
+                        child: Icon(
+                          Icons.arrow_circle_down_rounded,
+                          size: 26,
+                          color: isDownVoted
+                              ? Colors.red[600]
+                              : Colors.grey[400],
                         ),
                       ),
                     ),
                   ],
                 ),
-                InkWell(
+                GestureDetector(
                   onTap: () {},
-                  borderRadius: BorderRadius.circular(20),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     child: Row(
                       children: [
-                        IconButton(
-                          icon: const FaIcon(
-                            FontAwesomeIcons.comments,
-                            size: 20,
-                          ),
-                          onPressed: () {},
+                        FaIcon(
+                          FontAwesomeIcons.comment,
+                          size: 20,
+                          color: Colors.blue[600],
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 6),
                         Text(
                           '${post['commentCount']}',
                           style: TextStyle(
                             color: Colors.blue[600],
                             fontWeight: FontWeight.w600,
+                            fontSize: 14,
                           ),
                         ),
                       ],

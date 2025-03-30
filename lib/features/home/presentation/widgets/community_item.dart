@@ -18,22 +18,19 @@ class CommunityItem extends StatefulWidget {
 }
 
 class _CommunityItemState extends State<CommunityItem> {
-
-
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       width: 165,
-      margin: const EdgeInsets.only(right: 15),
+      margin: const EdgeInsets.only(right: 15, left: 15),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(22) ,
         boxShadow: [
           BoxShadow(
-            color:
-                 Colors.black.withOpacity(0.12),
-            blurRadius:15,
+            color: Colors.black.withOpacity(0.12),
+            blurRadius: 15,
             spreadRadius: 1,
             offset: const Offset(0, 4),
           ),
@@ -67,7 +64,6 @@ class _CommunityItemState extends State<CommunityItem> {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
@@ -83,12 +79,10 @@ class _CommunityItemState extends State<CommunityItem> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(20),
@@ -116,9 +110,7 @@ class _CommunityItemState extends State<CommunityItem> {
               ),
             ),
           ),
-
           const SizedBox(height: 5),
-
           Expanded(
             child: Container(
               width: double.infinity,

@@ -13,24 +13,19 @@ class MainContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Communities',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: EdgeInsets.only(left: 15.0),
+              child: Text(
+                'Joined Communities',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             SizedBox(height: 15),
             CommunityGrid(),
             SizedBox(height: 20),
-            Text(
-              'Posts',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 15),
             BuildPosts(),
           ],
         ),
