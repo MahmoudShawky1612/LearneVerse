@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterwidgets/routing/routes.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -9,6 +11,7 @@ class HomeHeader extends StatelessWidget {
     return Positioned(
       left: 0,
       right: 0,
+      top: 0,
       child: Container(
         height: 200,
         width: MediaQuery.of(context).size.width,
@@ -26,44 +29,47 @@ class HomeHeader extends StatelessWidget {
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.red!, width: 2),
-                ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.red!, width: 2),
+              ),
+              child: InkWell(
+                onTap: (){
+                  context.push('/profile');
+
+                },
                 child: const CircleAvatar(
                   radius: 30,
                   backgroundImage: AssetImage('assets/images/avatar.jpg'),
                 ),
               ),
-              const SizedBox(
-                width: 5,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            const Text(
+              'Welcome,',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28,
               ),
-              const Text(
-                'Welcome,',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                ),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            const Text(
+              'DODJE',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(
-                width: 5,
-              ),
-              const Text(
-                'DODJE',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

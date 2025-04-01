@@ -11,15 +11,15 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Scaffold(
         body: Stack(
           clipBehavior: Clip.none,
           children: [
-            HomeHeader(),
-            CustomSearchBar(),
+            const HomeHeader(),
             MainContent(),
-            NotificationPanel(),
+            const CustomSearchBar(),
+            const NotificationPanel(),
           ],
         ),
       ),

@@ -1,5 +1,29 @@
 import 'dart:math';
 
+class Community {
+  final int id;
+  final String communityName;
+  final String communityImage;
+
+  Community({
+    required this.id,
+    required this.communityImage,
+    required this.communityName,
+  });
+}
+
+class Author {
+  final int id;
+  final String name;
+  final String avatar;
+
+  Author({
+    required this.id,
+    required this.name,
+    required this.avatar,
+  });
+}
+
 class Post {
   final String title;
   final String description;
@@ -10,6 +34,8 @@ class Post {
   final String avatar;
   final int time;
   final int commentCount;
+  final String communityName;
+  final String communityImage;
 
   Post({
     required this.title,
@@ -21,24 +47,74 @@ class Post {
     required this.avatar,
     required this.time,
     required this.commentCount,
+    required this.communityName,
+    required this.communityImage,
   });
 
   static List<Post> generateDummyPosts(int count) {
-    const List<String> authors = [
-      "Hassan",
-      "Ahmed",
-      "Mohamed",
-      "Ali",
-      "Maged",
-      "Aslam"
+    final List<Author> author = [
+      Author(
+        id: 1,
+        name: "Hassan",
+        avatar: 'assets/images/avatar1.jpg',
+      ),
+      Author(
+        id: 2,
+        name: "Ahmed",
+        avatar: 'assets/images/avatar2.jpg',
+      ),
+      Author(
+        id: 3,
+        name: "Mohamed",
+        avatar: 'assets/images/avatar3.jpg',
+      ),
+      Author(
+        id: 4,
+        name: "Ali",
+        avatar: 'assets/images/avatar4.jpg',
+      ),
+      Author(
+        id: 5,
+        name: "Maged",
+        avatar: 'assets/images/avatar5.jpg',
+      ),
+      Author(
+        id: 6,
+        name: "Aslam",
+        avatar: 'assets/images/avatar6.jpg',
+      ),
     ];
-    const List<String> avatars = [
-      'assets/images/avatar1.jpg',
-      'assets/images/avatar2.jpg',
-      'assets/images/avatar3.jpg',
-      'assets/images/avatar4.jpg',
-      'assets/images/avatar5.jpg',
-      'assets/images/avatar6.jpg',
+    final List<Community> communities = [
+      Community(
+          id: 1,
+          communityImage: 'assets/images/angular.jpg',
+          communityName: "Angular"),
+      Community(
+          id: 2, communityImage: 'assets/images/c.jpg', communityName: "C"),
+      Community(
+          id: 3,
+          communityImage: 'assets/images/go.jpg',
+          communityName: "Go Lang"),
+      Community(
+          id: 4,
+          communityImage: 'assets/images/js.jpg',
+          communityName: "Java Script"),
+      Community(
+          id: 5,
+          communityImage: 'assets/images/nodejs.jpg',
+          communityName: "NodeJs"),
+      Community(
+          id: 6,
+          communityImage: 'assets/images/post.jpg',
+          communityName: "Postgres"),
+      Community(
+          id: 7,
+          communityImage: 'assets/images/react.jpg',
+          communityName: "React"),
+      Community(
+          id: 8,
+          communityImage: 'assets/images/ts.jpg',
+          communityName: "Type Script"),
     ];
 
     return List.generate(
@@ -51,10 +127,13 @@ class Post {
           voteCount: _calculateVoteCount(index),
           upvote: _calculateVoteCount(index),
           downVote: (index + 1) * 3 - 4,
-          author: authors[index % authors.length],
-          avatar: avatars[index % avatars.length],
+          author: author[index % author.length].name,
+          avatar: author[index % author.length].avatar,
           time: (index + 1) * 2 - 1,
           commentCount: Random().nextInt(50),
+          communityImage:
+              communities[index % communities.length].communityImage,
+          communityName: communities[index % communities.length].communityName,
         );
       },
     );
