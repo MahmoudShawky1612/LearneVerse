@@ -20,10 +20,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // APP BAR WITH PROFILE HEADER
           _buildProfileHeader(),
 
-          // CONTRIBUTION STATS CARD & TAB BUTTONS
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             sliver: SliverToBoxAdapter(
@@ -43,7 +41,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Tab Buttons
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey.shade100,
@@ -74,7 +71,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
 
-          // CONTENT BASED ON SELECTED TAB
           if (selectedIndex == 0)
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -92,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SizedBox(
-                  height: 600,
+                  height: 700,
                   child: VerticalCommunityList(),
                 ),
               ),
@@ -105,7 +101,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // APP BAR WITH PROFILE HEADER
   SliverAppBar _buildProfileHeader() {
     return SliverAppBar(
       expandedHeight: 380,
@@ -113,13 +108,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.transparent,
       elevation: 0,
       actions: [
-        // Edit profile button
         Padding(
           padding: const EdgeInsets.only(right: 16.0),
           child: IconButton(
             icon: const Icon(Icons.edit, color: Colors.white),
             onPressed: () {
-              // Navigate to edit profile screen
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Edit Profile')),
               );
@@ -131,7 +124,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            // Background gradient
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -146,7 +138,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
 
-            // Curved white section at bottom
             Positioned(
               bottom: 0,
               left: 0,
@@ -162,7 +153,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
 
-            // Profile Content
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -171,22 +161,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     const SizedBox(height: 16),
 
-                    // Avatar and Name Row
                     _buildProfileAvatarAndName(),
 
                     const SizedBox(height: 16),
 
-                    // Bio Quote Container
                     _buildBioQuote(),
 
                     const SizedBox(height: 16),
 
-                    // User Stats Row
                     _buildUserStatsRow(),
 
                     const SizedBox(height: 20),
 
-                    // Social Links Row
                     _buildSocialLinksRow(),
                   ],
                 ),
@@ -198,12 +184,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // PROFILE AVATAR AND NAME
   Row _buildProfileAvatarAndName() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Avatar with  indicator
         Stack(
           children: [
             Container(
@@ -223,7 +207,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 radius: 40,
               ),
             ),
-            // Online indicator dot
             Positioned(
               right: 0,
               bottom: 0,
@@ -240,7 +223,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         const SizedBox(width: 20),
-        // Name and other info
         const Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,7 +246,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // BIO QUOTE CONTAINER
   Container _buildBioQuote() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

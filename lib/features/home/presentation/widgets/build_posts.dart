@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/post_item.dart';
 
-import '../../models/home_model.dart';
 
 class BuildPosts extends StatelessWidget {
   final  shrinkWrap;

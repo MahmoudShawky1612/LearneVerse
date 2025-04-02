@@ -1,19 +1,23 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutterwidgets/features/home/models/community_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/community_item.dart';
 
 class CommunityGrid extends StatelessWidget {
-  const CommunityGrid({super.key});
+  final communities;
+
+  const CommunityGrid({super.key, this.communities});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 220,
       child: ListView.builder(
-        itemCount: 15,
+        itemCount: communities.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
-          return const CommunityItem(
-              title: "Data Structure", image: "assets/images/flutter.jpg");
+          return CommunityItem(
+            community: communities[index],
+          );
         },
       ),
     );

@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterwidgets/features/home/models/community_model.dart';
+import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../models/user_model.dart';
 
 class UserCommunityItem extends StatelessWidget {
-  final UserPost post;
+  final Community community;
 
   const UserCommunityItem({
     super.key,
-    required this.post
+    required this.community
   });
 
   @override
@@ -53,7 +54,7 @@ class UserCommunityItem extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(14),
                     child: Image.asset(
-                      post.communityImage,
+                      community.image,
                       width: 70,
                       height: 70,
                       fit: BoxFit.cover,
@@ -66,7 +67,7 @@ class UserCommunityItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        post.communityName,
+                        community.name,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -95,7 +96,7 @@ class UserCommunityItem extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  "478 members",
+                                  '${community.memberCount}',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,

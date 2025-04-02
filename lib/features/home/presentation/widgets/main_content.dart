@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutterwidgets/features/home/models/home_model.dart';
+import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/build_posts.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/community_grid.dart';
 
+import '../../models/community_model.dart';
+
 class MainContent extends StatelessWidget {
-   MainContent({super.key});
+  MainContent({super.key});
+
   final List<Post> posts = Post.generateDummyPosts(15);
+  final List<Community> communities = Community.generateDummyCommunities();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,9 +32,12 @@ class MainContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 15),
-              const CommunityGrid(),
+              CommunityGrid(communities: communities),
               const SizedBox(height: 20),
-              BuildPosts(scrollPhysics: const NeverScrollableScrollPhysics(), posts: posts,),
+              BuildPosts(
+                scrollPhysics: const NeverScrollableScrollPhysics(),
+                posts: posts,
+              ),
             ],
           ),
         ),

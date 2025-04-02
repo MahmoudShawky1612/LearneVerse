@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CommunityItem extends StatefulWidget {
-  final String image;
-  final String title;
-  final int memberCount;
+  final community;
 
   const CommunityItem({
     super.key,
-    required this.image,
-    required this.title,
-    this.memberCount = 365,
+    required this.community,
   });
 
   @override
@@ -20,13 +16,15 @@ class CommunityItem extends StatefulWidget {
 class _CommunityItemState extends State<CommunityItem> {
   @override
   Widget build(BuildContext context) {
+    final community = widget.community;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       width: 165,
       margin: const EdgeInsets.only(right: 15, left: 15),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22) ,
+        borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.12),
@@ -57,7 +55,7 @@ class _CommunityItemState extends State<CommunityItem> {
                 ],
               ),
               child: Image(
-                image: AssetImage(widget.image),
+                image: AssetImage(community.image),
                 width: 55,
                 height: 55,
                 fit: BoxFit.contain,
@@ -67,7 +65,7 @@ class _CommunityItemState extends State<CommunityItem> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
-              widget.title,
+              community.name,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -97,7 +95,7 @@ class _CommunityItemState extends State<CommunityItem> {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    "478 members",
+                    '${community.memberCount}',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,

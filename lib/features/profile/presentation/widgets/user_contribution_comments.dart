@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../models/user_model.dart';
+import '../../models/user_comments_model.dart';
 import 'build_comments.dart';
 
 

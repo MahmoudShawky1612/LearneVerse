@@ -18,7 +18,12 @@ class HomeScreen extends StatelessWidget {
           children: [
             const HomeHeader(),
             MainContent(),
-            const CustomSearchBar(),
+            const Positioned(
+                top: 170,
+                left: 0,
+                right: 0,
+                child:
+            CustomSearchBar()),
             const NotificationPanel(),
           ],
         ),
