@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/features/history/models/user_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/contribution_header.dart';
 import '../widgets/user_contribution_comments.dart';

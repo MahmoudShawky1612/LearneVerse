@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/features/history/models/user_model.dart';
-import 'package:flutterwidgets/features/history/presentation/widgets/user_community_item.dart';
+import 'package:flutterwidgets/features/profile/presentation/widgets/user_community_item.dart';
+import '../../models/user_model.dart';
 
 class VerticalCommunityList extends StatelessWidget {
   VerticalCommunityList({super.key});

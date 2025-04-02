@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutterwidgets/features/history/models/user_model.dart';
-import 'package:flutterwidgets/features/history/presentation/widgets/build_comments.dart';
+
+import '../../models/user_model.dart';
+import 'build_comments.dart';
+
 
 class UserComments extends StatelessWidget {
    UserComments({super.key});

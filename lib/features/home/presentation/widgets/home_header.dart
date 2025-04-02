@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:go_router/go_router.dart';
 
-class HomeHeader extends StatelessWidget {
+class HomeHeader extends StatefulWidget {
   const HomeHeader({super.key});
 
+  @override
+  State<HomeHeader> createState() => _HomeHeaderState();
+}
+
+bool isClicked = false;
+
+class _HomeHeaderState extends State<HomeHeader> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -37,15 +44,25 @@ class HomeHeader extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.red!, width: 2),
               ),
-              child: InkWell(
-                onTap: (){
-                  context.push('/profile');
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isClicked = true;
+                  });
 
+                  Future.delayed(const Duration(seconds: 2), () {
+                    context.push('/profile');
+                    setState(() {
+                      isClicked = false;
+                    });
+                  });
                 },
-                child: const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('assets/images/avatar.jpg'),
-                ),
+                child: isClicked == false
+                    ? const CircleAvatar(
+                        radius: 30,
+                        backgroundImage: AssetImage('assets/images/avatar.jpg'),
+                      )
+                    : const CircularProgressIndicator(),
               ),
             ),
             const SizedBox(

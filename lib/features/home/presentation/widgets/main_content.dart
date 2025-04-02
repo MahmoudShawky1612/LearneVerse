@@ -12,7 +12,7 @@ class MainContent extends StatelessWidget {
       padding: const EdgeInsets.only(top: 200.0, left: 20.0, right: 20.0),
       child: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.only(top: 50),
+          margin: const EdgeInsets.only(top: 50, bottom: 100),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
