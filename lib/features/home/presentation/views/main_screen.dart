@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/features/calender/presentation/views/calendar_screen.dart';
 import 'package:flutterwidgets/features/discover/presentation/views/discover_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../calendar/presentation/views/calendar_screen.dart';
 import 'home_screen.dart';
 
 class MainScreen extends StatefulWidget {
