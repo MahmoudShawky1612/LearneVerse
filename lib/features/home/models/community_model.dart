@@ -8,12 +8,6 @@ class Community {
   static List<Community> communities = [
     Community(id: 1, image: 'assets/images/angular.jpg', name: "Angular", memberCount:328),
     Community(id: 2, image: 'assets/images/c.jpg', name: "C", memberCount:245),
-    Community(id: 2, image: 'assets/images/c.jpg', name: "C", memberCount:245),
-    Community(id: 2, image: 'assets/images/c.jpg', name: "C", memberCount:245),
-    Community(id: 2, image: 'assets/images/c.jpg', name: "C", memberCount:245),
-    Community(id: 2, image: 'assets/images/c.jpg', name: "C", memberCount:245),
-    Community(id: 2, image: 'assets/images/c.jpg', name: "C", memberCount:245),
-    Community(id: 2, image: 'assets/images/c.jpg', name: "C", memberCount:245),
     Community(id: 3, image: 'assets/images/go.jpg', name: "Go Lang", memberCount:356),
     Community(id: 4, image: 'assets/images/js.jpg', name: "JavaScript", memberCount:134),
     Community(id: 5, image: 'assets/images/nodejs.jpg', name: "NodeJs", memberCount:32),

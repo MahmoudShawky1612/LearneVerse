@@ -6,11 +6,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 class UserCommunityItem extends StatelessWidget {
+  final bool flag;
   final Community community;
 
   const UserCommunityItem({
     super.key,
-    required this.community
+    required this.community,  this.flag=true
   });
 
   @override
@@ -159,7 +160,7 @@ class UserCommunityItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    TextButton(
+                    flag ? TextButton(
                       onPressed: () {},
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.red,
@@ -171,7 +172,7 @@ class UserCommunityItem extends StatelessWidget {
                         ),
                       ),
                       child: const Text("Leave Group"),
-                    ),
+                    ): Container(),
                   ],
                 ),
               ],

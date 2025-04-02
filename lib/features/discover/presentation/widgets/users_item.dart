@@ -60,7 +60,7 @@ class UserItem extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "@${user.name.toLowerCase().replaceAll(' ', '_')}",
+                        "@${user.userName}",
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
