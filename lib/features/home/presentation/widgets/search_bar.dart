@@ -1,8 +1,13 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatelessWidget {
-  const CustomSearchBar({super.key});
+  final TextEditingController searchController;
+  final void Function(String) searchFunction;
+
+  const CustomSearchBar(this.searchController, this.searchFunction, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +38,8 @@ class CustomSearchBar extends StatelessWidget {
             ),
             Expanded(
               child: TextField(
+                controller: searchController,
+                onChanged: searchFunction,
                 decoration: InputDecoration(
                   hintText: 'Search...',
                   hintStyle: TextStyle(color: Colors.grey[400]),
@@ -44,7 +51,6 @@ class CustomSearchBar extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                // Add voice search functionality
               },
               child: Container(
                 margin: const EdgeInsets.only(right: 16),

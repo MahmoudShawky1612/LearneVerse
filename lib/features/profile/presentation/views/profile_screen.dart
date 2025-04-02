@@ -4,6 +4,7 @@ import '../widgets/contribution_header.dart';
 import '../widgets/user_contribution_comments.dart';
 import '../widgets/user_contribution_posts.dart';
 import '../widgets/user_joined_communities.dart';
+import '../widgets/vertical_community_list.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -21,13 +22,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: CustomScrollView(
         slivers: [
           _buildProfileHeader(),
-
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             sliver: SliverToBoxAdapter(
               child: Column(
                 children: [
-                  // Contribution Stats Card
                   Card(
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -40,7 +39,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey.shade100,
@@ -70,7 +68,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-
           if (selectedIndex == 0)
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -87,10 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SizedBox(
-                  height: 700,
-                  child: VerticalCommunityList(),
-                ),
+                child: UserJoinedCommunities(),
               ),
             ),
           const SliverToBoxAdapter(
@@ -137,7 +131,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-
             Positioned(
               bottom: 0,
               left: 0,
@@ -152,7 +145,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -160,19 +152,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
-
                     _buildProfileAvatarAndName(),
-
                     const SizedBox(height: 16),
-
                     _buildBioQuote(),
-
                     const SizedBox(height: 16),
-
                     _buildUserStatsRow(),
-
                     const SizedBox(height: 20),
-
                     _buildSocialLinksRow(),
                   ],
                 ),
@@ -289,7 +274,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(width: 10),
           _buildUserStat(context, "42", Icons.people, "Communities"),
           const SizedBox(width: 10),
-          _buildUserStat(context, "156", Icons.edit_note, "Contributions"),
+          _buildUserStat(context, "156", Icons.arrow_upward_outlined,
+              "Total Post Upvotes"),
+          const SizedBox(width: 10),
+          _buildUserStat(context, "532", Icons.arrow_upward_outlined,
+              "Total Comment Upvotes"),
           const SizedBox(width: 10),
         ],
       ),

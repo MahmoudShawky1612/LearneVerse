@@ -11,6 +11,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController textEditingController = TextEditingController();
+    void useless(String query){}
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -18,12 +20,12 @@ class HomeScreen extends StatelessWidget {
           children: [
             const HomeHeader(),
             MainContent(),
-            const Positioned(
+             Positioned(
                 top: 170,
                 left: 0,
                 right: 0,
                 child:
-            CustomSearchBar()),
+            CustomSearchBar(textEditingController, useless)),
             const NotificationPanel(),
           ],
         ),

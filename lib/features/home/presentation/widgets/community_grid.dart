@@ -5,7 +5,7 @@ import 'package:flutterwidgets/features/home/presentation/widgets/community_item
 class CommunityGrid extends StatelessWidget {
   final communities;
 
-  const CommunityGrid({super.key, this.communities});
+  const CommunityGrid({super.key, required this.communities});
 
   @override
   Widget build(BuildContext context) {
