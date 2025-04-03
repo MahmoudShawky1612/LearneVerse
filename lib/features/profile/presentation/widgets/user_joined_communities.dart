@@ -4,12 +4,14 @@ import 'package:flutterwidgets/features/profile/presentation/widgets/vertical_co
 import '../../../home/models/community_model.dart';
 
 class UserJoinedCommunities extends StatelessWidget {
+  UserJoinedCommunities({super.key});
 
-   UserJoinedCommunities({super.key});
   final List<Community> userCommunities = Community.generateDummyCommunities();
 
   @override
   Widget build(BuildContext context) {
-    return VerticalCommunityList(communities: userCommunities,);
+    return VerticalCommunityList(
+      communities: userCommunities,
+    );
   }
 }

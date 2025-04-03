@@ -25,11 +25,11 @@ class BuildSearchResults extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (foundCommunities.isNotEmpty) ...[
-              BuildSectionTitle(title: "Communities"),
+              const BuildSectionTitle(title: "Communities"),
               VerticalCommunityList(communities: foundCommunities, flag: false,),
             ],
             if (foundUsers.isNotEmpty) ...[
-              BuildSectionTitle(title: "People"),
+              const BuildSectionTitle(title: "People"),
               VerticalUserList(users: foundUsers),
             ],
           ],

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/features/home/models/community_model.dart';
 import 'package:flutterwidgets/features/profile/presentation/widgets/user_community_item.dart';
 
 class VerticalCommunityList extends StatelessWidget {
   final bool flag;
   final communities;
 
-  const VerticalCommunityList({super.key, required this.communities,  this.flag = true});
+  const VerticalCommunityList(
+      {super.key, required this.communities, this.flag = true});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +16,14 @@ class VerticalCommunityList extends StatelessWidget {
       itemCount: communities.length,
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       itemBuilder: (BuildContext context, int index) {
-        return UserCommunityItem(
-          community: communities[index],flag: flag,
+        return Column(
+          children: [
+            UserCommunityItem(
+              community: communities[index],
+              flag: flag,
+            ),
+            const Divider(),
+          ],
         );
       },
     );

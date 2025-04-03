@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 class BuildSectionTitle extends StatelessWidget {
   final title;
+
   const BuildSectionTitle({super.key, this.title});
-  final Color _textColor = const Color(0xFF2D3748);
 
   @override
   Widget build(BuildContext context) {
@@ -11,13 +12,12 @@ class BuildSectionTitle extends StatelessWidget {
       padding: const EdgeInsets.only(left: 10, top: 16, bottom: 8),
       child: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: _textColor,
+          color: AppColors.textPrimary,
         ),
       ),
     );
-
   }
 }

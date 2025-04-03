@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/app_colors.dart';
+
 class HomeHeader extends StatefulWidget {
   const HomeHeader({super.key});
 
@@ -23,7 +25,7 @@ class _HomeHeaderState extends State<HomeHeader> {
         height: 200,
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(colors: [Colors.blue, Colors.pink]),
+          gradient: AppColors.backgroundGradient,
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(30),
             bottomRight: Radius.circular(30),

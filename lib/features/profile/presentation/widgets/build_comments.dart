@@ -6,13 +6,15 @@ import 'comment_item.dart';
 class BuildComments extends StatelessWidget {
   final bool shrinkWrap;
   final ScrollPhysics scrollPhysics;
-  final List<UserComment> comments;
+  final comments;
+  final bool flag;
 
   const BuildComments({
     super.key,
     this.shrinkWrap = true,
     required this.scrollPhysics,
     required this.comments,
+    this.flag = true,
   });
 
   @override
@@ -22,7 +24,10 @@ class BuildComments extends StatelessWidget {
       physics: scrollPhysics,
       itemCount: comments.length,
       itemBuilder: (BuildContext context, int index) {
-        return CommentItem(comment: comments[index]);
+        return CommentItem(
+          comment: comments[index],
+          flag: flag,
+        );
       },
     );
   }

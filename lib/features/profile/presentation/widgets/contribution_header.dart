@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +8,7 @@ class ContributionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return    Container(
+    return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.all(15),
@@ -106,7 +105,5 @@ class ContributionHeader extends StatelessWidget {
         ],
       ),
     );
-
   }
 }
-

@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -13,9 +12,9 @@ class YearContributionChart extends StatelessWidget {
     final Random random = Random(42); // Fixed seed for consistent preview
     final List<List<int>> contributionData = List.generate(
       52, // weeks in a year
-          (_) => List.generate(
+      (_) => List.generate(
         7, // days per week
-            (_) => random.nextInt(5), // 0-4 contribution levels
+        (_) => random.nextInt(5), // 0-4 contribution levels
       ),
     );
 
@@ -43,9 +42,9 @@ class YearContributionChart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: months
                 .map((month) => Text(
-              month,
-              style: const TextStyle(fontSize: 10, color: Colors.grey),
-            ))
+                      month,
+                      style: const TextStyle(fontSize: 10, color: Colors.grey),
+                    ))
                 .toList(),
           ),
         ),

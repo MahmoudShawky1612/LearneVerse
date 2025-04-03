@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CommunityItem extends StatefulWidget {
@@ -23,14 +24,14 @@ class _CommunityItemState extends State<CommunityItem> {
       width: 165,
       margin: const EdgeInsets.only(right: 15, left: 15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundLight,
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
-            blurRadius: 15,
-            spreadRadius: 1,
-            offset: const Offset(0, 4),
+            color: AppColors.textSecondary.withOpacity(0.15),
+            blurRadius: 12,
+            spreadRadius: 0.5,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -44,11 +45,11 @@ class _CommunityItemState extends State<CommunityItem> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.grey.shade50,
+                color: AppColors.surfaceLight,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
+                    color: AppColors.textSecondary.withOpacity(0.08),
+                    blurRadius: 8,
                     spreadRadius: 0,
                     offset: const Offset(0, 2),
                   ),
@@ -69,7 +70,7 @@ class _CommunityItemState extends State<CommunityItem> {
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: AppColors.textPrimary,
                 height: 1.2,
               ),
               textAlign: TextAlign.center,
@@ -82,24 +83,24 @@ class _CommunityItemState extends State<CommunityItem> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+                color: AppColors.lightGrey,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  FaIcon(
+                  const FaIcon(
                     FontAwesomeIcons.userFriends,
                     size: 12,
-                    color: Colors.blueGrey.shade600,
+                    color: AppColors.textSecondary,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     '${community.memberCount}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: Colors.blueGrey.shade700,
+                      color: AppColors.textSecondary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -112,13 +113,9 @@ class _CommunityItemState extends State<CommunityItem> {
           Expanded(
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.blue.shade600, Colors.purple.shade600],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                borderRadius: const BorderRadius.only(
+              decoration: const BoxDecoration(
+                gradient: AppColors.buttonGradient,
+                borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(22),
                   bottomRight: Radius.circular(22),
                 ),
@@ -137,7 +134,7 @@ class _CommunityItemState extends State<CommunityItem> {
                       Text(
                         'View community',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.backgroundLight,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0.3,
@@ -145,7 +142,7 @@ class _CommunityItemState extends State<CommunityItem> {
                       ),
                       Icon(
                         Icons.arrow_forward_rounded,
-                        color: Colors.white,
+                        color: AppColors.backgroundLight,
                         size: 16,
                       ),
                     ],

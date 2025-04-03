@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/users_item.dart';
 
 import '../../../home/models/author_model.dart';
@@ -16,7 +17,12 @@ class VerticalUserList extends StatelessWidget {
       itemCount: users.length,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       itemBuilder: (BuildContext context, int index) {
-        return UserItem(user: users[index]);
+        return Column(
+          children: [
+            UserItem(user: users[index]),
+            const Divider(),
+          ],
+        );
       },
     );
   }

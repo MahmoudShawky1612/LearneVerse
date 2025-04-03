@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutterwidgets/core/constants/app_colors.dart';
 import '../widgets/contribution_header.dart';
+import '../widgets/profile_header.dart';
+import '../widgets/profile_tab_button.dart';
 import '../widgets/user_contribution_comments.dart';
 import '../widgets/user_contribution_posts.dart';
 import '../widgets/user_joined_communities.dart';
-import '../widgets/vertical_community_list.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,58 +20,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundLight,
       body: CustomScrollView(
         slivers: [
-          _buildProfileHeader(),
+          ProfileHeader(),
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(
               child: Column(
                 children: [
                   Card(
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    color: Colors.grey.shade50,
+                    color: AppColors.surfaceLight,
                     child: const Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: EdgeInsets.all(14),
                       child: ContributionHeader(),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(16),
+                      color: AppColors.lightGrey,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.textSecondary.withOpacity(0.1),
+                          blurRadius: 6,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Row(
                       children: [
                         Expanded(
-                          child: _buildTabButton(
-                            "Contributions",
-                            0,
-                            Icons.edit_note,
+                          child: ProfileTabButton(
+                            title: "Contributions",
+                            index: 0,
+                            icon: Icons.edit_note,
+                            selectedIndex: selectedIndex,
+                            onTap: (index) =>
+                                setState(() => selectedIndex = index),
                           ),
                         ),
                         Expanded(
-                          child: _buildTabButton(
-                            "Communities",
-                            1,
-                            Icons.people,
+                          child: ProfileTabButton(
+                            title: "Communities",
+                            index: 1,
+                            icon: Icons.people,
+                            selectedIndex: selectedIndex,
+                            onTap: (index) =>
+                                setState(() => selectedIndex = index),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
           ),
           if (selectedIndex == 0)
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               sliver: SliverToBoxAdapter(
                 child: Column(
                   children: [
@@ -83,344 +99,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           else if (selectedIndex == 1)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: UserJoinedCommunities(),
               ),
             ),
           const SliverToBoxAdapter(
-            child: SizedBox(height: 40),
+            child: SizedBox(height: 32),
           ),
         ],
-      ),
-    );
-  }
-
-  SliverAppBar _buildProfileHeader() {
-    return SliverAppBar(
-      expandedHeight: 380,
-      pinned: true,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: IconButton(
-            icon: const Icon(Icons.edit, color: Colors.white),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Edit Profile')),
-              );
-            },
-          ),
-        ),
-      ],
-      flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFF4158D0),
-                    Color(0xFFC850C0),
-                    Color(0xFFFFCC70),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 20,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(30),
-                  ),
-                ),
-              ),
-            ),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 16),
-                    _buildProfileAvatarAndName(),
-                    const SizedBox(height: 16),
-                    _buildBioQuote(),
-                    const SizedBox(height: 16),
-                    _buildUserStatsRow(),
-                    const SizedBox(height: 20),
-                    _buildSocialLinksRow(),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Row _buildProfileAvatarAndName() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 4),
-                borderRadius: BorderRadius.circular(50),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 20,
-                    spreadRadius: 5,
-                  ),
-                ],
-              ),
-              child: const CircleAvatar(
-                backgroundImage: AssetImage('assets/images/avatar.jpg'),
-                radius: 40,
-              ),
-            ),
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  border: Border.all(color: Colors.white, width: 3),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(width: 20),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Dodje Shawky",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: -0.5,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(height: 4),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Container _buildBioQuote() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: const Row(
-        children: [
-          Icon(
-            Icons.format_quote,
-            color: Colors.white70,
-            size: 20,
-          ),
-          SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              "كَلَّا إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ",
-              style: TextStyle(
-                fontSize: 16,
-                fontStyle: FontStyle.italic,
-                color: Colors.white,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  SingleChildScrollView _buildUserStatsRow() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          const SizedBox(width: 10),
-          _buildUserStat(
-              context, "Mar 31, 2025", Icons.calendar_today, "Joined"),
-          const SizedBox(width: 10),
-          _buildUserStat(context, "42", Icons.people, "Communities"),
-          const SizedBox(width: 10),
-          _buildUserStat(context, "156", Icons.arrow_upward_outlined,
-              "Total Post Upvotes"),
-          const SizedBox(width: 10),
-          _buildUserStat(context, "532", Icons.arrow_upward_outlined,
-              "Total Comment Upvotes"),
-          const SizedBox(width: 10),
-        ],
-      ),
-    );
-  }
-
-  Padding _buildSocialLinksRow() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _buildSocialButton(FontAwesomeIcons.github, Colors.white, () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('GitHub Profile')),
-            );
-          }),
-          const SizedBox(width: 20),
-          _buildSocialButton(FontAwesomeIcons.linkedin, Colors.white, () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('LinkedIn Profile')),
-            );
-          }),
-          const SizedBox(width: 20),
-          _buildSocialButton(FontAwesomeIcons.facebook, Colors.white, () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Facebook Profile')),
-            );
-          }),
-          const SizedBox(width: 20),
-          _buildSocialButton(FontAwesomeIcons.twitter, Colors.white, () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Twitter Profile')),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTabButton(String title, int index, IconData icon) {
-    final isSelected = selectedIndex == index;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    spreadRadius: 0,
-                    offset: const Offset(0, 3),
-                  ),
-                ]
-              : null,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 18,
-              color: isSelected ? const Color(0xFF4158D0) : Colors.grey,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? const Color(0xFF4158D0) : Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUserStat(
-      BuildContext context, String value, IconData icon, String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.25),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 14, color: Colors.white),
-              const SizedBox(width: 4),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10,
-              color: Colors.white.withOpacity(0.8),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSocialButton(
-      IconData icon, Color color, VoidCallback onPressed) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(30),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: FaIcon(
-          icon,
-          color: color,
-          size: 20,
-        ),
       ),
     );
   }

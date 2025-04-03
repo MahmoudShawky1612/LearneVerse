@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 
+import '../../../../core/constants/app_colors.dart';
+
 class BuildHeader extends StatelessWidget {
   const BuildHeader({super.key});
+
   final Color _textColor = const Color(0xFF2D3748);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -14,22 +17,20 @@ class BuildHeader extends StatelessWidget {
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
-            color: _textColor,
+            color: AppColors.textPrimary,
             letterSpacing: -0.5,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           "Communities, people and more...",
           style: TextStyle(
             fontSize: 16,
-            color: _textColor.withOpacity(0.7),
+            color: AppColors.textSecondary,
             fontWeight: FontWeight.w400,
           ),
         ),
       ],
     );
-
   }
 }
-

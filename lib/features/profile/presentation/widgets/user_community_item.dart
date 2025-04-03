@@ -1,18 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/home/models/community_model.dart';
-import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 
 class UserCommunityItem extends StatelessWidget {
   final bool flag;
   final Community community;
 
-  const UserCommunityItem({
-    super.key,
-    required this.community,  this.flag=true
-  });
+  const UserCommunityItem(
+      {super.key, required this.community, this.flag = true});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +77,8 @@ class UserCommunityItem extends StatelessWidget {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: const Color(0xFFEBF5FF),
                               borderRadius: BorderRadius.circular(12),
@@ -109,7 +105,8 @@ class UserCommunityItem extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF9F9F9),
                               borderRadius: BorderRadius.circular(12),
@@ -160,19 +157,21 @@ class UserCommunityItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    flag ? TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        minimumSize: const Size(80, 30),
-                        padding: EdgeInsets.zero,
-                        textStyle: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      child: const Text("Leave Group"),
-                    ): Container(),
+                    flag
+                        ? TextButton(
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.red,
+                              minimumSize: const Size(80, 30),
+                              padding: EdgeInsets.zero,
+                              textStyle: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            child: const Text("Leave Group"),
+                          )
+                        : Container(),
                   ],
                 ),
               ],

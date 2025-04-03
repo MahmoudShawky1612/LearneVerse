@@ -1,10 +1,13 @@
+import 'package:flutterwidgets/features/comments/presentation/views/comments_screen.dart';
 import 'package:flutterwidgets/features/discover/presentation/views/discover_screen.dart';
+import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/views/home_screen.dart';
 import 'package:flutterwidgets/features/home/presentation/views/main_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/calendar/presentation/views/calendar_screen.dart';
 import '../features/profile/presentation/views/profile_screen.dart';
+
 
 //context.push('/profile'); // Pushes ProfileScreen onto the stack
 //context.go('/profile'); // Replaces current screen
@@ -16,4 +19,6 @@ final GoRouter route = GoRouter(initialLocation: '/', routes: [
       path: '/discover', builder: (context, state) => const DiscoverScreen()),
   GoRoute(
       path: '/calendar', builder: (context, state) => const CalendarScreen()),
+  GoRoute(
+      path: '/comments', builder: (context, state) => CommentsScreen(post: state.extra,), ),
 ]);

@@ -8,7 +8,7 @@ class BuildPosts extends StatelessWidget {
   final  shrinkWrap;
   final  scrollPhysics;
   final posts;
-   BuildPosts({super.key, this.shrinkWrap=true, required this.scrollPhysics, required this.posts});
+   const BuildPosts({super.key, this.shrinkWrap=true, required this.scrollPhysics, required this.posts});
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
