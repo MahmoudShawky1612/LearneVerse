@@ -32,13 +32,13 @@ class _PostItemState extends State<PostItem> {
         curve: Curves.easeInOut,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         decoration: BoxDecoration(
-          color: Colors.white, // Updated comfy gradient
+          color: Colors.white,
           boxShadow: [
             BoxShadow(
               color: AppColors.textSecondary.withOpacity(0.2),
               blurRadius: 8,
               spreadRadius: 1,
-              offset: const Offset(0, 2), // Softer, less dramatic
+              offset: const Offset(0, 2),
             ),
           ],
         ),

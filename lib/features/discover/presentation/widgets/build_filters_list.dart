@@ -1,20 +1,31 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutterwidgets/features/discover/presentation/widgets/build_filter_chip.dart';
+
+import 'build_filter_chip.dart';
 
 class BuildFiltersList extends StatelessWidget {
-  BuildFiltersList({super.key});
-  final List<String> _filters = [
-    'C',
-    'Java',
-    'Data Structure',
-    'Algorithms',
-    'Operating System',
-    'Database',
-    'Problem Solving',
-    'Go Lang',
-    'Flutter',
-    'TypeScript',
-    'Node.js'
+  final List<String> selectedFilters;
+  final Function(String) onFilterToggle;
+
+  BuildFiltersList({
+    super.key,
+    this.selectedFilters = const [],
+    required this.onFilterToggle,
+  });
+
+  final List<String> filters = [
+    'beginner',
+    'go lang',
+    'angular',
+    'c',
+    'problem solving',
+    'intermediate',
+    'advanced',
+    'node.js',
+    'popular',
+    'database',
+    'react',
+    'new',
+    'typescript'
   ];
 
   @override
@@ -22,12 +33,17 @@ class BuildFiltersList extends StatelessWidget {
     return SizedBox(
       height: 45,
       child: ListView.builder(
-        itemCount: _filters.length,
+        itemCount: filters.length,
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 2),
         itemBuilder: (context, index) {
-          return BuildFilterChip(index:index);
+          return BuildFilterChip(
+            index: index,
+            filters: filters,
+            isSelected: selectedFilters.contains(filters[index]),
+            onToggle: onFilterToggle,
+          );
         },
       ),
     );

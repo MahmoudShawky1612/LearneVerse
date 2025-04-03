@@ -23,6 +23,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   List<Community> _foundCommunities = [];
   List<Author> _foundUsers = [];
+  List<String> _selectedFilters = [];
 
   @override
   void initState() {
@@ -39,11 +40,28 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   void _search(String query) {
     setState(() {
-      _foundCommunities = Community.searchCommunities(query);
+      if (_selectedFilters.isNotEmpty) {
+        _foundCommunities = Community.searchWithFilters(_selectedFilters, query);
+      } else {
+        _foundCommunities = Community.searchCommunities(query);
+      }
       _foundUsers = Author.searchUsers(query);
     });
   }
 
+
+  void _toggleFilter(String filter) {
+    setState(() {
+      if (_selectedFilters.contains(filter)) {
+        _selectedFilters.remove(filter);
+      } else {
+        _selectedFilters.add(filter);
+      }
+      if (_searchController.text.isNotEmpty) {
+        _search(_searchController.text);
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -59,7 +77,10 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               const SizedBox(height: 24),
               CustomSearchBar(_searchController, _search),
               const SizedBox(height: 24),
-              BuildFiltersList(),
+              BuildFiltersList(
+                selectedFilters: _selectedFilters,
+                onFilterToggle: _toggleFilter,
+              ),
               const SizedBox(height: 24),
               _isSearchActive()
                   ? Expanded(

@@ -24,12 +24,13 @@ class Community {
         image: 'assets/images/c.jpg',
         name: "C",
         memberCount: 245,
-        tags: ['beginner', 'c']), Community(
+        tags: ['beginner', 'c']),
+    Community(
         id: 2,
         image: 'assets/images/c.jpg',
         name: "C",
         memberCount: 245,
-        tags: ['advanced', 'c']),
+        tags: ['advanced']),
     Community(
         id: 3,
         image: 'assets/images/go.jpg',
@@ -95,7 +96,10 @@ class Community {
   static List<Community> searchCommunities(String communityName) {
     List<Community> foundCommunities = [];
     for (int i = 0; i < communities.length; i++) {
-      if (communities[i].name.toLowerCase() == communityName.toLowerCase()) {
+      if (communities[i]
+          .name
+          .toLowerCase()
+          .contains(communityName.toLowerCase())) {
         foundCommunities.add(communities[i]);
       }
     }
@@ -114,39 +118,22 @@ class Community {
 
   static List<Community> searchWithFilters(
       List<String> filters, String communityName) {
-    List<Community> foundCommunities = searchUsers(communityName);
-    List<String> communitiesFilters = [];
-    for (int i = 0; i < foundCommunities.length; i++) {
-      communitiesFilters.add(foundCommunities[i].tags[i]);
+    List<Community> foundCommunities = searchCommunities(communityName);
+    if (foundCommunities.isEmpty || filters.isEmpty) {
+      return foundCommunities;
     }
-    int communitiesFiltersLength = communitiesFilters.length;
-    int filtersLength = filters.length;
 
     List<Community> matched = [];
-    if (filtersLength < communitiesFiltersLength) {
-      for (int i = 0; i < filtersLength; i++) {
-        for (int j = 0; j < communitiesFiltersLength; j++) {
-          if (filters[i] == communitiesFilters[j]) {
-            matched.add(foundCommunities[i]);
-          }
-        }
-      }
-    }
-    if (filtersLength > communitiesFiltersLength) {
-      for (int i = 0; i < communitiesFiltersLength; i++) {
-        for (int j = 0; j < filtersLength; j++) {
-          if (communitiesFilters[i] == filters[j]) {
-            matched.add(foundCommunities[i]);
-          }
-        }
-      }
-    } else {
-      for (int i = 0; i < communitiesFiltersLength; i++) {
-        for (int j = 0; j < filtersLength; j++) {
-          if (communitiesFilters[i] == filters[j]) {
-            matched.add(foundCommunities[i]);
-          }
-        }
+
+    for (int i = 0; i < foundCommunities.length; i++) {
+      Set<String> communityTags =
+          foundCommunities[i].tags.map((tag) => tag.toLowerCase()).toSet();
+
+      bool allFiltersMatch = filters
+          .every((filter) => communityTags.contains(filter.toLowerCase()));
+
+      if (allFiltersMatch) {
+        matched.add(foundCommunities[i]);
       }
     }
     return matched;
