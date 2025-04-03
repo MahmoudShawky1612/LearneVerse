@@ -91,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     UserComments(),
-                    UserPosts(),
+                    UserPostsScreen(),
                   ],
                 ),
               ),

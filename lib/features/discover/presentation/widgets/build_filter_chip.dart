@@ -1,23 +1,26 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/features/home/models/community_model.dart';
 
 class BuildFilterChip extends StatelessWidget {
   final int index;
+
   BuildFilterChip({super.key, required this.index});
 
   final List<String> _filters = [
-    'C',
-    'Java',
-    'Data Structure',
-    'Algorithms',
-    'Operating System',
-    'Database',
-    'Problem Solving',
-    'Go Lang',
-    'Flutter',
-    'TypeScript',
-    'Node.js'
+    'beginner',
+    'go lang',
+    'angular',
+    'c' ,
+    'problem solving',
+    'intermediate',
+    'advanced',
+    'node.js',
+    'popular',
+    'database',
+    'react',
+    'new',
+    'typescript'
   ];
 
   @override
@@ -28,7 +31,7 @@ class BuildFilterChip extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // Filter selection logic would go here
+            print(_filters[index]);
           },
           splashColor: AppColors.primary.withOpacity(0.3),
           borderRadius: BorderRadius.circular(30),

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_filter_chip.dart';
 
 class BuildFiltersList extends StatelessWidget {
-   BuildFiltersList({super.key});
+  BuildFiltersList({super.key});
   final List<String> _filters = [
     'C',
     'Java',

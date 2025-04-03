@@ -63,11 +63,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               const SizedBox(height: 24),
               _isSearchActive()
                   ? Expanded(
-                      child: BuildSearchResults(
-                        foundCommunities: _foundCommunities,
-                        foundUsers: _foundUsers,
-                      ),
-                    )
+                child: BuildSearchResults(
+                  foundCommunities: _foundCommunities,
+                  foundUsers: _foundUsers,
+                ),
+              )
                   : const BuildDefaultContent(),
             ],
           ),

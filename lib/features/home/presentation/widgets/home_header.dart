@@ -25,7 +25,7 @@ class _HomeHeaderState extends State<HomeHeader> {
         height: 200,
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
+          gradient: AppColors.backgroundGradient ,
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(30),
             bottomRight: Radius.circular(30),

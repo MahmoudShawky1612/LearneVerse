@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/discover/presentation/views/discover_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../core/constants/app_colors.dart';
 import '../../../calendar/presentation/views/calendar_screen.dart';
 import 'home_screen.dart';
 
@@ -32,41 +33,40 @@ class _MainScreenState extends State<MainScreen> {
             right: 0,
             bottom: 0,
             child: Container(
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+              height: 75,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
+              color: AppColors.backgroundLight,
+                borderRadius: BorderRadius.circular(22),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 30,
-                    offset: const Offset(0, 10),
+                    color: AppColors.primary.withOpacity(0.1),
+                    blurRadius: 25,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 5),
                   ),
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: BottomNavigationBar(
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  type: BottomNavigationBarType.fixed,
-                  currentIndex: _currentIndex,
-                  onTap: (index) {
-                    setState(() {
-                      _currentIndex = index;
-                    });
-                  },
-                  selectedItemColor: Colors.pink,
-                  unselectedItemColor: Colors.black,
-                  selectedFontSize: 12,
-                  unselectedFontSize: 12,
-                  items: [
+                borderRadius: BorderRadius.circular(30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
                     _buildNavItem(
-                        FontAwesomeIcons.house, Icons.home_outlined, "Home"),
-                    _buildNavItem(FontAwesomeIcons.compass,
-                        FontAwesomeIcons.compass, "Discover"),
-                    _buildNavItem(FontAwesomeIcons.calendarDays,
-                        FontAwesomeIcons.calendar, "Calendar"),
+                      index: 0,
+                      icon: FontAwesomeIcons.house,
+                      label: "Home",
+                    ),
+                    _buildNavItem(
+                      index: 1,
+                      icon: FontAwesomeIcons.compass,
+                      label: "Discover",
+                    ),
+                    _buildNavItem(
+                      index: 2,
+                      icon: FontAwesomeIcons.calendarDays,
+                      label: "Calendar",
+                    ),
                   ],
                 ),
               ),
@@ -77,20 +77,49 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  BottomNavigationBarItem _buildNavItem(
-      IconData selectedIcon, IconData unselectedIcon, String label) {
-    return BottomNavigationBarItem(
-      icon: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 200),
-        child: Icon(
-          _currentIndex == items.indexOf(label) ? selectedIcon : unselectedIcon,
-          key: ValueKey<bool>(_currentIndex == items.indexOf(label)),
-          size: _currentIndex == items.indexOf(label) ? 28 : 24,
+  Widget _buildNavItem({
+    required int index,
+    required IconData icon,
+    required String label,
+  }) {
+    final isSelected = _currentIndex == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      child: Container(
+        width: 90,
+        color: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.secondary.withOpacity(0.15) : Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: isSelected ? AppColors.secondary : AppColors.textSecondary,
+                size: isSelected ? 26 : 22,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              isSelected ? label : "",
+              style: const TextStyle(
+                color: AppColors.secondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
-      label: _currentIndex == items.indexOf(label) ? label : '',
     );
   }
-
-  List<String> get items => ["Home", "Discover", "Calendar"];
 }

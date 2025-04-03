@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/features/home/models/post_model.dart';
 
 import '../../../home/presentation/widgets/build_posts.dart';
+import '../../models/user_posts_model.dart';
 
-class UserPosts extends StatelessWidget {
-  List<Post> userPosts = Post.generateDummyPosts(15);
+class UserPostsScreen extends StatelessWidget {
+  List<UserPosts> userPosts = UserPosts.generateDummyUserPosts(15);
 
   @override
   Widget build(BuildContext context) {
@@ -15,4 +15,5 @@ class UserPosts extends StatelessWidget {
       posts: userPosts,
     );
   }
+
 }

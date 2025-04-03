@@ -37,5 +37,4 @@ class BuildSearchResults extends StatelessWidget {
       ),
     );
   }
-  }
-
+}
