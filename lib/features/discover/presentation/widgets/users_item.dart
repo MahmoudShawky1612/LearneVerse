@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_colors.dart';
 import '../../../home/models/author_model.dart';
 
 class UserItem extends StatelessWidget {
-  final Author user;
+  final  user;
   final Color _accentColor = const Color(0xFF00B2FF);
 
   const UserItem({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
+    final String role = user.role;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -59,33 +61,62 @@ class UserItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        "@${user.userName}",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            "@${user.userName}",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(width: 5,),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF9F9F9),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              role,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: role == "Member"
+                                    ? AppColors.textPrimary
+                                    : AppColors.accent,
+                              ),
+                            ),
+                          ),
+
+                        ],
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _accentColor,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: AppColors.backgroundGradient,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text(
-                    "Profile",
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                  child: InkWell(
+                    onTap: () {},
+                    borderRadius: BorderRadius.circular(10),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Text(
+                        "Profile",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
+
               ],
             ),
           ),

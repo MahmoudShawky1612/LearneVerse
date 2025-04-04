@@ -7,9 +7,10 @@ import '../../../profile/presentation/widgets/vertical_community_list.dart';
 class BuildSearchResults extends StatelessWidget {
   final communities;
   final users;
+  final owners;
 
   const BuildSearchResults(
-      {super.key, required this.communities, required this.users});
+      {super.key, required this.communities, required this.users, required this.owners});
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +41,10 @@ class BuildSearchResults extends StatelessWidget {
                 children: [
                   VerticalCommunityList(
                     communities: communities,
-                    flag: false,
+                    isJoined: false,
                   ),
                   VerticalUserList(users: users),
+                  VerticalUserList(users: owners),
                 ],
               ),
             ),

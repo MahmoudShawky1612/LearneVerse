@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/post_item.dart';
 
 
@@ -16,7 +17,12 @@ class BuildPosts extends StatelessWidget {
         physics:  scrollPhysics,
         itemCount: posts.length,
         itemBuilder: (BuildContext context, int index) {
-          return PostItem(post: posts[index]);
+          return Column(
+            children: [
+              PostItem(post: posts[index]),
+              const Divider(),
+            ],
+          );
         });
   }
 }

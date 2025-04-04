@@ -117,7 +117,7 @@ class _CommentItemState extends State<CommentItem> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                comment.communityName,
+                                'c/${comment.communityName}',
                                 style: TextStyle(
                                   color:
                                       AppColors.textSecondary.withOpacity(0.8),

@@ -5,7 +5,7 @@ import 'package:flutterwidgets/features/discover/presentation/widgets/users_item
 import '../../../home/models/author_model.dart';
 
 class VerticalUserList extends StatelessWidget {
-  final List<Author> users;
+  final  users;
 
   const VerticalUserList({super.key, required this.users});
 

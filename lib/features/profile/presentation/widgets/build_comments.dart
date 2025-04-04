@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-import '../../models/user_comments_model.dart';
 import 'comment_item.dart';
 
 class BuildComments extends StatelessWidget {
@@ -24,9 +23,14 @@ class BuildComments extends StatelessWidget {
       physics: scrollPhysics,
       itemCount: comments.length,
       itemBuilder: (BuildContext context, int index) {
-        return CommentItem(
-          comment: comments[index],
-          flag: flag,
+        return Column(
+          children: [
+            CommentItem(
+              comment: comments[index],
+              flag: flag,
+            ),
+            const Divider(),
+          ],
         );
       },
     );

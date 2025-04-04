@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/build_search_results.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/main_content.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../discover/presentation/widgets/vertical_users_list.dart';
-import '../../../profile/presentation/widgets/vertical_community_list.dart';
+import '../../../community/models/owner_model.dart';
 import '../../models/author_model.dart';
 import '../../models/community_model.dart';
 import '../widgets/home_header.dart';
@@ -23,12 +21,14 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
   List<Community> _foundCommunities = [];
   List<Author> _foundUsers = [];
+  List<Owner> _foundOwners = [];
 
   @override
   void initState() {
     super.initState();
     _foundCommunities = [];
     _foundUsers = [];
+    _foundOwners = [];
   }
 
   @override
@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _foundCommunities = Community.searchCommunities(query);
       _foundUsers = Author.searchUsers(query);
+      _foundOwners = Owner.searchOwners(query);
     });
   }
 
@@ -60,11 +61,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 right: 0,
                 child: CustomSearchBar(searchController, _search)),
             const NotificationPanel(),
-            _foundCommunities.isEmpty && _foundUsers.isEmpty
+            _foundCommunities.isEmpty && _foundUsers.isEmpty && _foundOwners.isEmpty
                 ? Container()
                 : BuildSearchResults(
                     communities: _foundCommunities,
                     users: _foundUsers,
+                    owners: _foundOwners,
                   ),
           ],
         ),

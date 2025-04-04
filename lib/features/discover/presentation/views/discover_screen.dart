@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/features/community/models/owner_model.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_default_content.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_header.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_search_results.dart';
@@ -24,12 +25,14 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   List<Community> _foundCommunities = [];
   List<Author> _foundUsers = [];
   List<String> _selectedFilters = [];
+  List<Owner> _foundOwners = [];
 
   @override
   void initState() {
     super.initState();
     _foundCommunities = [];
     _foundUsers = [];
+    _foundOwners=[];
   }
 
   @override
@@ -46,6 +49,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         _foundCommunities = Community.searchCommunities(query);
       }
       _foundUsers = Author.searchUsers(query);
+      _foundOwners = Owner.searchOwners(query);
     });
   }
 
@@ -87,6 +91,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 child: BuildSearchResults(
                   foundCommunities: _foundCommunities,
                   foundUsers: _foundUsers,
+                  foundOwners: _foundOwners
                 ),
               )
                   : const BuildDefaultContent(),
@@ -98,6 +103,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }
 
   bool _isSearchActive() {
-    return _foundCommunities.isNotEmpty || _foundUsers.isNotEmpty;
+    return _foundCommunities.isNotEmpty || _foundUsers.isNotEmpty || _foundOwners.isNotEmpty;
   }
 }
