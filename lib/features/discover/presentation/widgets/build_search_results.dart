@@ -29,7 +29,7 @@ class BuildSearchResults extends StatelessWidget {
           children: [
             if (foundCommunities.isNotEmpty) ...[
               const BuildSectionTitle(title: "Communities"),
-              VerticalCommunityList(communities: foundCommunities, isJoined: false,),
+              VerticalCommunityList(communities: foundCommunities,),
             ],
             if (foundUsers.isNotEmpty) ...[
               const BuildSectionTitle(title: "People"),

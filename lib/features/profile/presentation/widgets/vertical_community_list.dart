@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/profile/presentation/widgets/user_community_item.dart';
 
 class VerticalCommunityList extends StatelessWidget {
-  final bool isJoined;
   final communities;
 
   const VerticalCommunityList(
-      {super.key, required this.communities, this.isJoined = true});
+      {super.key, required this.communities});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,6 @@ class VerticalCommunityList extends StatelessWidget {
           children: [
             UserCommunityItem(
               community: communities[index],
-              isJoined: isJoined,
             ),
             const Divider(),
           ],

@@ -41,7 +41,6 @@ class BuildSearchResults extends StatelessWidget {
                 children: [
                   VerticalCommunityList(
                     communities: communities,
-                    isJoined: false,
                   ),
                   VerticalUserList(users: users),
                   VerticalUserList(users: owners),

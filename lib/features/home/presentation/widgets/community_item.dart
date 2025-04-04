@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/features/home/presentation/widgets/home_header.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class CommunityItem extends StatefulWidget {
   final community;
@@ -123,7 +125,9 @@ class _CommunityItemState extends State<CommunityItem> {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    context.push('/community',extra: community );
+                  },
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(22),
                     bottomRight: Radius.circular(22),

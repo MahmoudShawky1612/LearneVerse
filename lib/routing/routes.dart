@@ -1,4 +1,5 @@
 import 'package:flutterwidgets/features/comments/presentation/views/comments_screen.dart';
+import 'package:flutterwidgets/features/community/presentation/views/community_screen.dart';
 import 'package:flutterwidgets/features/discover/presentation/views/discover_screen.dart';
 import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/views/home_screen.dart';
@@ -21,4 +22,6 @@ final GoRouter route = GoRouter(initialLocation: '/', routes: [
       path: '/calendar', builder: (context, state) => const CalendarScreen()),
   GoRoute(
       path: '/comments', builder: (context, state) => CommentsScreen(post: state.extra,), ),
+  GoRoute(
+      path: '/community', builder: (context, state) =>  CommunityScreen(community: state.extra,), ),
 ]);
