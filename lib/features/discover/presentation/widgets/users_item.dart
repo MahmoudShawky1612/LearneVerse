@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../core/constants/app_colors.dart';
 import '../../../home/models/author_model.dart';
+import '../../../profile/presentation/views/profile_screen.dart';
 
 class UserItem extends StatelessWidget {
-  final  user;
+  final user;
   final Color _accentColor = const Color(0xFF00B2FF);
 
   const UserItem({super.key, required this.user});
@@ -70,7 +69,9 @@ class UserItem extends StatelessWidget {
                               color: Colors.grey[600],
                             ),
                           ),
-                          const SizedBox(width: 5,),
+                          const SizedBox(
+                            width: 5,
+                          ),
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
@@ -89,7 +90,6 @@ class UserItem extends StatelessWidget {
                               ),
                             ),
                           ),
-
                         ],
                       ),
                     ],
@@ -102,10 +102,24 @@ class UserItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      // Find the user by their username or another unique identifier
+                      List<Author> users = Author.users;
+                      final selectedUser = users
+                          .firstWhere((u) => u.userName == user.userName);
+
+                      // Navigate to the profile screen with the selected user
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileScreen(userInfo: selectedUser),
+                        ),
+                      );
+                    },
                     borderRadius: BorderRadius.circular(10),
                     child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Text(
                         "Profile",
                         style: TextStyle(
@@ -116,7 +130,6 @@ class UserItem extends StatelessWidget {
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
