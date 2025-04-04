@@ -1,26 +1,32 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/post_item.dart';
 
-
 class BuildPosts extends StatelessWidget {
-  final  shrinkWrap;
-  final  scrollPhysics;
+  final shrinkWrap;
+  final scrollPhysics;
   final posts;
+  final userInfo;
 
-   const BuildPosts({super.key, this.shrinkWrap=true, required this.scrollPhysics, required this.posts});
+  const BuildPosts(
+      {super.key,
+      this.shrinkWrap = true,
+      required this.scrollPhysics,
+      required this.posts,
+      this.userInfo});
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
         shrinkWrap: shrinkWrap,
-        physics:  scrollPhysics,
+        physics: scrollPhysics,
         itemCount: posts.length,
         itemBuilder: (BuildContext context, int index) {
           return Column(
             children: [
-              PostItem(post: posts[index]),
+              PostItem(
+                post: posts[index],
+                userInfo: userInfo,
+              ),
               const Divider(),
             ],
           );

@@ -7,13 +7,14 @@ class BuildComments extends StatelessWidget {
   final ScrollPhysics scrollPhysics;
   final comments;
   final bool flag;
+  final userInfo;
 
   const BuildComments({
     super.key,
     this.shrinkWrap = true,
     required this.scrollPhysics,
     required this.comments,
-    this.flag = true,
+    this.flag = true, this.userInfo,
   });
 
   @override
@@ -28,6 +29,7 @@ class BuildComments extends StatelessWidget {
             CommentItem(
               comment: comments[index],
               flag: flag,
+              userInfo:userInfo,
             ),
             const Divider(),
           ],

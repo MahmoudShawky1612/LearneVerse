@@ -11,8 +11,14 @@ import '../views/profile_screen.dart';
 class CommentItem extends StatefulWidget {
   final comment;
   final bool flag;
+  final dynamic userInfo;  // Added userInfo parameter
 
-  const CommentItem({super.key, required this.comment, required this.flag});
+  const CommentItem({
+    super.key,
+    required this.comment,
+    required this.flag,
+    this.userInfo,  // Optionally passed userInfo for dynamic avatar and name
+  });
 
   @override
   _CommentItemState createState() => _CommentItemState();
@@ -31,6 +37,12 @@ class _CommentItemState extends State<CommentItem> {
 
     final comment = widget.comment;
     final flag = widget.flag;
+    final userInfo = widget.userInfo;  // Get userInfo passed to CommentItem
+
+    // Use userInfo if not null, otherwise fallback to comment data
+    final String avatar = userInfo != null ? userInfo.avatar : comment.avatar;
+    final String name = userInfo != null ? userInfo.name : comment.author;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
@@ -63,7 +75,7 @@ class _CommentItemState extends State<CommentItem> {
                     onTap: () {
                       List<Author> users = Author.users;
                       final user = users
-                          .firstWhere((user) => user.avatar == comment.avatar);
+                          .firstWhere((user) => user.avatar == avatar);  // Use avatar from userInfo or comment
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -73,7 +85,7 @@ class _CommentItemState extends State<CommentItem> {
                     },
                     child: CircleAvatar(
                       radius: 16,
-                      backgroundImage: AssetImage(comment.avatar),
+                      backgroundImage: AssetImage(avatar),
                       backgroundColor: AppColors.backgroundLight,
                     ),
                   ),
@@ -85,7 +97,7 @@ class _CommentItemState extends State<CommentItem> {
                     Row(
                       children: [
                         Text(
-                          comment.author,
+                          name,  // Use name from userInfo or comment
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
@@ -94,24 +106,24 @@ class _CommentItemState extends State<CommentItem> {
                         ),
                         flag
                             ? Row(
-                                children: [
-                                  const SizedBox(width: 4),
-                                  const FaIcon(
-                                    FontAwesomeIcons.solidCircle,
-                                    size: 6,
-                                    color: AppColors.textSecondary,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    comment.repliedTo,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                  ),
-                                ],
-                              )
+                          children: [
+                            const SizedBox(width: 4),
+                            const FaIcon(
+                              FontAwesomeIcons.solidCircle,
+                              size: 6,
+                              color: AppColors.textSecondary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              comment.repliedTo,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        )
                             : Container(),
                       ],
                     ),
@@ -129,46 +141,46 @@ class _CommentItemState extends State<CommentItem> {
                   children: [
                     flag
                         ? GestureDetector(
-                            onTap: () {
-                              context.push('/community', extra: community);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color:
-                                        AppColors.primaryDark.withOpacity(0.15),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 9,
-                                    backgroundImage:
-                                        AssetImage(comment.communityImage),
-                                    backgroundColor: AppColors.backgroundLight,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'c/${comment.communityName}',
-                                    style: TextStyle(
-                                      color: AppColors.textSecondary
-                                          .withOpacity(0.9),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
+                      onTap: () {
+                        context.push('/community', extra: community);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color:
+                              AppColors.primaryDark.withOpacity(0.15),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 9,
+                              backgroundImage:
+                              AssetImage(comment.communityImage),
+                              backgroundColor: AppColors.backgroundLight,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'c/${comment.communityName}',
+                              style: TextStyle(
+                                color: AppColors.textSecondary
+                                    .withOpacity(0.9),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                          )
+                          ],
+                        ),
+                      ),
+                    )
                         : Container(),
                     const SizedBox(width: 6),
                     Stack(
@@ -211,7 +223,7 @@ class _CommentItemState extends State<CommentItem> {
                                 children: [
                                   Padding(
                                     padding:
-                                        EdgeInsets.symmetric(horizontal: 4),
+                                    EdgeInsets.symmetric(horizontal: 4),
                                     child: Text(
                                       'Edit',
                                       style: TextStyle(
@@ -223,7 +235,7 @@ class _CommentItemState extends State<CommentItem> {
                                   ),
                                   Padding(
                                     padding:
-                                        EdgeInsets.symmetric(horizontal: 4),
+                                    EdgeInsets.symmetric(horizontal: 4),
                                     child: Text(
                                       'Delete',
                                       style: TextStyle(
@@ -308,8 +320,8 @@ class _CommentItemState extends State<CommentItem> {
                         color: comment.voteCount > 0
                             ? AppColors.upVote
                             : comment.voteCount < 0
-                                ? AppColors.downVote
-                                : AppColors.textSecondary,
+                            ? AppColors.downVote
+                            : AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(width: 6),
@@ -321,8 +333,8 @@ class _CommentItemState extends State<CommentItem> {
                             isDownVoted = false;
                           } else {
                             comment.voteCount--;
-                            isDownVoted = true;
                             isUpVoted = false;
+                            isDownVoted = true;
                           }
                         });
                       },
@@ -341,24 +353,13 @@ class _CommentItemState extends State<CommentItem> {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () {},
-                  child: const Row(
-                    children: [
-                      FaIcon(
-                        FontAwesomeIcons.reply,
-                        size: 14,
-                        color: AppColors.primaryDark,
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        'Reply',
-                        style: TextStyle(
-                          color: AppColors.primaryDark,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
+                  onTap: () => setState(() {
+                    isExpanded = !isExpanded;
+                  }),
+                  child: const Icon(
+                    Icons.reply_outlined,
+                    size: 18,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ],

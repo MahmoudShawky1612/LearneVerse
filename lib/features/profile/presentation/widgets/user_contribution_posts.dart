@@ -5,6 +5,8 @@ import '../../../home/presentation/widgets/build_posts.dart';
 import '../../models/user_posts_model.dart';
 
 class UserPostsScreen extends StatelessWidget {
+  final userInfo;
+  UserPostsScreen({super.key, this.userInfo});
 
   List<UserPosts> userPosts = UserPosts.generateDummyUserPosts(15);
 
@@ -14,6 +16,7 @@ class UserPostsScreen extends StatelessWidget {
       shrinkWrap: true,
       scrollPhysics: const BouncingScrollPhysics(),
       posts: userPosts,
+      userInfo:userInfo,
     );
   }
 

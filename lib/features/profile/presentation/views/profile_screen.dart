@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+
 import '../widgets/contribution_header.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_tab_button.dart';
@@ -9,6 +10,7 @@ import '../widgets/user_joined_communities.dart';
 
 class ProfileScreen extends StatefulWidget {
   final userInfo;
+
   const ProfileScreen({super.key, this.userInfo});
 
   @override
@@ -24,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: AppColors.backgroundLight,
       body: CustomScrollView(
         slivers: [
-          ProfileHeader(userInfo:widget.userInfo),
+          ProfileHeader(userInfo: widget.userInfo),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(
@@ -91,8 +93,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               sliver: SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    UserComments(),
-                    UserPostsScreen(),
+                    UserComments(userInfo: widget.userInfo),
+                    UserPostsScreen(userInfo: widget.userInfo),
                   ],
                 ),
               ),

@@ -4,9 +4,8 @@ import '../../models/user_comments_model.dart';
 import 'build_comments.dart';
 
 class UserComments extends StatelessWidget {
-  final name;
-  final image;
-  UserComments({super.key, this.name, this.image});
+  final userInfo;
+  UserComments({super.key, this.userInfo});
 
   List<UserComment> userComment = UserComment.generateDummyUserComments(15);
 
@@ -16,6 +15,7 @@ class UserComments extends StatelessWidget {
       shrinkWrap: true,
       scrollPhysics: const BouncingScrollPhysics(),
       comments: userComment,
+      userInfo:userInfo,
     );
   }
 }
