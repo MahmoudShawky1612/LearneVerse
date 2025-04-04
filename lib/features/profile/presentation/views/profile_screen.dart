@@ -8,7 +8,8 @@ import '../widgets/user_contribution_posts.dart';
 import '../widgets/user_joined_communities.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final userInfo;
+  const ProfileScreen({super.key, this.userInfo});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -23,7 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: AppColors.backgroundLight,
       body: CustomScrollView(
         slivers: [
-          ProfileHeader(),
+          ProfileHeader(userInfo:widget.userInfo),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(

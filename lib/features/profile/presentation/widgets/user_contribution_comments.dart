@@ -4,7 +4,9 @@ import '../../models/user_comments_model.dart';
 import 'build_comments.dart';
 
 class UserComments extends StatelessWidget {
-  UserComments({super.key});
+  final name;
+  final image;
+  UserComments({super.key, this.name, this.image});
 
   List<UserComment> userComment = UserComment.generateDummyUserComments(15);
 

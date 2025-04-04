@@ -10,6 +10,10 @@ class Author {
   final String role;
   final int points;
   final List<Community> joinedCommunities;
+  final String quote;
+  final int totalJoinedCommunities;
+  final int totalPostUpvotes;
+  final int totalCommentUpvotes;
 
   Author({
     required this.id,
@@ -19,7 +23,28 @@ class Author {
     this.role = "Member",
     required this.points,
     required this.joinedCommunities,
+    required this.quote,
+    required this.totalJoinedCommunities,
+    required this.totalPostUpvotes,
+    required this.totalCommentUpvotes,
   });
+
+  static final List<String> quotes = [
+    "العبقرية ليست سوى الألم والمثابرة.",
+    "العقل البشري مثل المظلة، لا يعمل إلا عندما يكون مفتوحًا.",
+    "قد تنسى الذي ضحكت معه، لكن لن تنسى الذي بكيت معه.",
+    "الخوف لا يمنع من الموت، لكنه يمنع من الحياة.",
+    "حين تحب لا تتمسك بالقيد، بل أعطِ الحرية لمن تحب.",
+    "If you only read the books that everyone else is reading, you can only think what everyone else is thinking.",
+    "Life is just an illusion, and bad times are just reflections of that illusion.",
+    "Freedom means responsibility; that is why most men dread it.",
+    "Do not compare your life to others. You have no idea what they have been through.",
+    "Be yourself; everyone else is already taken.",
+    "Happiness is not something ready-made. It comes from your own actions.",
+    "If you want to change the world, start by changing yourself.",
+  ];
+
+  static final Random _random = Random();
 
   static List<Community> userJoinedCommunities = [
     Community(
@@ -64,74 +89,32 @@ class Author {
         reviews: 180),
   ];
 
-  static List<Author> users = [
-    Author(
-      id: 1,
-      name: "Hassan",
-      avatar: 'assets/images/avatar1.jpg',
-      userName: "hassan",
+  static int jCL = userJoinedCommunities.length;
+  static List<Author> users = List.generate(6, (index) {
+    return Author(
+      id: index + 1,
+      name: ["Hassan", "Ahmed", "Mohamed", "Ali", "Maged", "Aslam"][index],
+      avatar: 'assets/images/avatar${index + 1}.jpg',
+      userName: ["hassan", "ahmed", "mohamed", "ali", "maged", "aslam"][index],
       points: 0,
-      // Placeholder, will be updated later
       joinedCommunities: userJoinedCommunities,
-    ),
-    Author(
-      id: 2,
-      name: "Ahmed",
-      avatar: 'assets/images/avatar2.jpg',
-      userName: "ahmed",
-      points: 0,
-      // Placeholder, will be updated later
-      joinedCommunities: userJoinedCommunities,
-    ),
-    Author(
-      id: 3,
-      name: "Mohamed",
-      avatar: 'assets/images/avatar3.jpg',
-      userName: "mohamed",
-      points: 0,
-      // Placeholder, will be updated later
-      joinedCommunities: userJoinedCommunities,
-    ),
-    Author(
-      id: 4,
-      name: "Ali",
-      avatar: 'assets/images/avatar4.jpg',
-      userName: "ali",
-      points: 0,
-      // Placeholder, will be updated later
-      joinedCommunities: userJoinedCommunities,
-    ),
-    Author(
-      id: 5,
-      name: "Maged",
-      avatar: 'assets/images/avatar5.jpg',
-      userName: "maged",
-      points: 0,
-      // Placeholder, will be updated later
-      joinedCommunities: userJoinedCommunities,
-    ),
-    Author(
-      id: 6,
-      name: "Aslam",
-      avatar: 'assets/images/avatar6.jpg',
-      userName: "aslam",
-      points: 0,
-      // Placeholder, will be updated later
-      joinedCommunities: userJoinedCommunities,
-    ),
-  ];
+      quote: quotes[_random.nextInt(quotes.length)],
+      totalJoinedCommunities: jCL,
+      totalPostUpvotes: _random.nextInt(2533),
+      totalCommentUpvotes: _random.nextInt(2533),
+    );
+  });
 
   static List<Author> generateDummyAuthors() {
     return users;
   }
 
   static List<Author> generateMoreDummyAuthors() {
-    int count =20;
+    int count = 20;
     List<Author> moreAuthors = [];
     Random random = Random();
 
     int baseId = users.length + 1;
-
     List<int> points = List.generate(count, (index) => random.nextInt(701));
     points.sort((a, b) => b.compareTo(a));
 
@@ -144,6 +127,10 @@ class Author {
           userName: users[i % users.length].userName,
           points: points[i],
           joinedCommunities: userJoinedCommunities,
+          quote: quotes[random.nextInt(quotes.length)],
+          totalJoinedCommunities: jCL,
+          totalPostUpvotes: random.nextInt(2533),
+          totalCommentUpvotes: random.nextInt(2533),
         ),
       );
     }
@@ -151,12 +138,9 @@ class Author {
   }
 
   static List<Author> searchUsers(String userName) {
-    List<Author> foundUsers = [];
-    for (int i = 0; i < users.length; i++) {
-      if (users[i].name.toLowerCase().contains(userName.toLowerCase())) {
-        foundUsers.add(users[i]);
-      }
-    }
-    return foundUsers;
+    return users
+        .where((user) =>
+        user.name.toLowerCase().contains(userName.toLowerCase()))
+        .toList();
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:flutterwidgets/features/home/models/community_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../profile/presentation/views/profile_screen.dart';
 
 class PostItem extends StatefulWidget {
   final post;
@@ -54,10 +57,21 @@ class _PostItemState extends State<PostItem> {
                     shape: BoxShape.circle,
                     gradient: AppColors.circleGradient,
                   ),
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: AssetImage(post.avatar),
-                    backgroundColor: AppColors.backgroundLight,
+                  child: GestureDetector(
+                    onTap: (){
+                      List<Author> users = Author.users;
+                     final user= users.firstWhere((user)=> user.avatar == post.avatar);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProfileScreen(userInfo:user)),
+                      );
+
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: AssetImage(post.avatar),
+                      backgroundColor: AppColors.backgroundLight,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),

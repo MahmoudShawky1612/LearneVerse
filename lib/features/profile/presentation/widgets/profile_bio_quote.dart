@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 class ProfileBioQuote extends StatelessWidget {
+  final userInfo;
+
+  ProfileBioQuote({super.key, this.userInfo});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,7 +24,7 @@ class ProfileBioQuote extends StatelessWidget {
           const SizedBox(width: 6),
           Expanded(
             child: Text(
-              "كَلَّا إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ",
+              userInfo?.quote ?? "كَلَّا إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ",
               style: TextStyle(
                 fontSize: 15,
                 fontStyle: FontStyle.italic,

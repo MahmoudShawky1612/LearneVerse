@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 class ProfileAvatarAndName extends StatelessWidget {
+  final  userInfo;
+  ProfileAvatarAndName({super.key, this.userInfo});
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -22,8 +24,8 @@ class ProfileAvatarAndName extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const CircleAvatar(
-                backgroundImage: AssetImage('assets/images/avatar.jpg'),
+              child:  CircleAvatar(
+                backgroundImage:AssetImage(userInfo?.avatar ?? 'assets/images/avatar.jpg'),
                 radius: 36,
               ),
             ),
@@ -43,13 +45,13 @@ class ProfileAvatarAndName extends StatelessWidget {
           ],
         ),
         const SizedBox(width: 16),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Dodje Shawky",
-                style: TextStyle(
+               userInfo?.name ?? "Dodje Shawky",
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
                   color: AppColors.backgroundLight,
@@ -58,7 +60,7 @@ class ProfileAvatarAndName extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
             ],
           ),
         ),

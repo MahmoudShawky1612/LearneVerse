@@ -7,6 +7,13 @@ import 'profile_social_links_row.dart';
 import 'profile_user_stats_row.dart';
 
 class ProfileHeader extends StatelessWidget {
+  final userInfo;
+
+  ProfileHeader({
+    super.key,
+    this.userInfo,
+  });
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -64,11 +71,11 @@ class ProfileHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 12),
-                    ProfileAvatarAndName(),
+                    ProfileAvatarAndName(userInfo:userInfo),
                     const SizedBox(height: 12),
-                    ProfileBioQuote(),
+                    ProfileBioQuote(userInfo:userInfo),
                     const SizedBox(height: 14),
-                    Center(child: ProfileUserStatsRow()),
+                    Center(child: ProfileUserStatsRow(userInfo:userInfo)),
                     const SizedBox(height: 18),
                     ProfileSocialLinksRow(),
                   ],

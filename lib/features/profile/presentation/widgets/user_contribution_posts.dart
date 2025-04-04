@@ -5,6 +5,7 @@ import '../../../home/presentation/widgets/build_posts.dart';
 import '../../models/user_posts_model.dart';
 
 class UserPostsScreen extends StatelessWidget {
+
   List<UserPosts> userPosts = UserPosts.generateDummyUserPosts(15);
 
   @override
