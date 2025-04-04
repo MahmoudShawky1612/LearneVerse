@@ -24,12 +24,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
   late final Author first;
   late final Author second;
   late final Author third;
+  late List<Author> foundUsers;
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _posts = Post.generateDummyPosts(15);
-    _members = Author.generateMoreDummyAuthors(widget.community.memberCount);
+    _members = Author.generateMoreDummyAuthors();
     // Assume the first user is the current user
     _currentUser = Author.users[0];
     // Check if user has joined this community
@@ -38,6 +40,20 @@ class _CommunityScreenState extends State<CommunityScreen> {
     first = _members[0];
     second = _members[1];
     third = _members[2];
+    foundUsers = [];
+    searchController.clear();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void searchUsers(String query) {
+    setState(() {
+      foundUsers = Author.searchUsers(query);
+    });
   }
 
   bool _checkIfUserJoined() {
@@ -668,41 +684,21 @@ class _CommunityScreenState extends State<CommunityScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const SizedBox(height: 24),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const Text(
+            Text(
               'Learning Sections',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            TextButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.sort),
-              label: const Text('Sort'),
-            ),
           ],
         ),
         const SizedBox(height: 16),
         ...sections.map((section) => _buildSectionCard(section)).toList(),
         const SizedBox(height: 24),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.add),
-            label: const Text('Request New Content'),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              side: BorderSide(color: AppColors.primary),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ),
         const SizedBox(height: 36),
       ],
     );
@@ -866,53 +862,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
             ],
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search forum posts...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.grey[100],
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
           child: BuildPosts(
             scrollPhysics: const NeverScrollableScrollPhysics(),
             posts: _posts,
           ),
         ),
-        const SizedBox(height: 24),
-        Center(
-          child: TextButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.refresh),
-            label: const Text('Load More Posts'),
-          ),
-        ),
-        const SizedBox(height: 36),
       ],
     );
   }
@@ -960,7 +914,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             },
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              side: BorderSide(color: AppColors.primary),
+              side: const BorderSide(color: AppColors.primary),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -1190,6 +1144,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ],
           ),
           child: TextField(
+            controller: searchController,
+            onChanged: searchUsers,
             decoration: InputDecoration(
               hintText: 'Search members...',
               prefixIcon: const Icon(Icons.search),
@@ -1226,17 +1182,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
             ],
           ),
-          child: VerticalUserList(users: _members),
+          child: foundUsers.isEmpty
+              ? VerticalUserList(users: _members)
+              : VerticalUserList(users: foundUsers),
         ),
         const SizedBox(height: 24),
-        Center(
-          child: TextButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.refresh),
-            label: const Text('Load More Members'),
-          ),
-        ),
-        const SizedBox(height: 36),
       ],
     );
   }

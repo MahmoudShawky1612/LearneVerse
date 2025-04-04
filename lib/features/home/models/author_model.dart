@@ -70,7 +70,8 @@ class Author {
       name: "Hassan",
       avatar: 'assets/images/avatar1.jpg',
       userName: "hassan",
-      points: 0, // Placeholder, will be updated later
+      points: 0,
+      // Placeholder, will be updated later
       joinedCommunities: userJoinedCommunities,
     ),
     Author(
@@ -78,7 +79,8 @@ class Author {
       name: "Ahmed",
       avatar: 'assets/images/avatar2.jpg',
       userName: "ahmed",
-      points: 0, // Placeholder, will be updated later
+      points: 0,
+      // Placeholder, will be updated later
       joinedCommunities: userJoinedCommunities,
     ),
     Author(
@@ -86,7 +88,8 @@ class Author {
       name: "Mohamed",
       avatar: 'assets/images/avatar3.jpg',
       userName: "mohamed",
-      points: 0, // Placeholder, will be updated later
+      points: 0,
+      // Placeholder, will be updated later
       joinedCommunities: userJoinedCommunities,
     ),
     Author(
@@ -94,7 +97,8 @@ class Author {
       name: "Ali",
       avatar: 'assets/images/avatar4.jpg',
       userName: "ali",
-      points: 0, // Placeholder, will be updated later
+      points: 0,
+      // Placeholder, will be updated later
       joinedCommunities: userJoinedCommunities,
     ),
     Author(
@@ -102,7 +106,8 @@ class Author {
       name: "Maged",
       avatar: 'assets/images/avatar5.jpg',
       userName: "maged",
-      points: 0, // Placeholder, will be updated later
+      points: 0,
+      // Placeholder, will be updated later
       joinedCommunities: userJoinedCommunities,
     ),
     Author(
@@ -110,7 +115,8 @@ class Author {
       name: "Aslam",
       avatar: 'assets/images/avatar6.jpg',
       userName: "aslam",
-      points: 0, // Placeholder, will be updated later
+      points: 0,
+      // Placeholder, will be updated later
       joinedCommunities: userJoinedCommunities,
     ),
   ];
@@ -119,7 +125,8 @@ class Author {
     return users;
   }
 
-  static List<Author> generateMoreDummyAuthors(int count) {
+  static List<Author> generateMoreDummyAuthors() {
+    int count =20;
     List<Author> moreAuthors = [];
     Random random = Random();
 
