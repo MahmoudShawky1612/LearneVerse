@@ -19,16 +19,12 @@ class BuildPosts extends StatelessWidget {
     return ListView.builder(
         shrinkWrap: shrinkWrap,
         physics: scrollPhysics,
+        padding: EdgeInsets.zero,
         itemCount: posts.length,
         itemBuilder: (BuildContext context, int index) {
-          return Column(
-            children: [
-              PostItem(
-                post: posts[index],
-                userInfo: userInfo,
-              ),
-              const Divider(),
-            ],
+          return PostItem(
+            post: posts[index],
+            userInfo: userInfo,
           );
         });
   }

@@ -73,53 +73,53 @@ class MainContent extends StatelessWidget {
         : posts;
     
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.only(top: 60, bottom: 80),
+          margin: const EdgeInsets.only(top: 50, bottom: 75),
           decoration: BoxDecoration(
             gradient: themeExtension?.containerGradient,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
                 color: colorScheme.onSurface.withOpacity(0.15),
-                blurRadius: 8,
+                blurRadius: 6,
                 spreadRadius: 1,
                 offset: const Offset(0, 2),
               ),
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
+                  padding: const EdgeInsets.only(left: 4.0),
                   child: Text(
                     'Recommended Communities',
                     style: textTheme.headlineSmall?.copyWith(
-                      fontSize: 22, // Slightly larger for emphasis
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                CommunityGrid(communities: communitiesToShow),
-                const SizedBox(height: 28),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    'Posts For You',
-                    style: textTheme.headlineSmall?.copyWith(
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.2,
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
+                CommunityGrid(communities: communitiesToShow),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    'Posts For You',
+                    style: textTheme.headlineSmall?.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
                 BuildPosts(
                   scrollPhysics: const NeverScrollableScrollPhysics(),
                   posts: postsToShow,

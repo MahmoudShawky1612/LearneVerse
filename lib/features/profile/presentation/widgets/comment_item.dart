@@ -35,6 +35,7 @@ class _CommentItemState extends State<CommentItem> {
     Community community = Community.communities
         .firstWhere((comm) => comm.image == widget.comment.communityImage);
 
+
     final comment = widget.comment;
     final flag = widget.flag;
     final userInfo = widget.userInfo;  // Get userInfo passed to CommentItem
@@ -51,20 +52,20 @@ class _CommentItemState extends State<CommentItem> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       decoration: BoxDecoration(
         gradient: themeExtension?.containerGradient,
         boxShadow: [
           BoxShadow(
-            color: colorScheme.onSurface.withOpacity(0.25),
-            blurRadius: 10,
-            spreadRadius: 2, // Slight spread to "get out" without depth
-            offset: const Offset(0, 0), // Centered, no directional depth
+            color: colorScheme.onSurface.withOpacity(0.2),
+            blurRadius: 6,
+            spreadRadius: 1,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -89,13 +90,13 @@ class _CommentItemState extends State<CommentItem> {
                       );
                     },
                     child: CircleAvatar(
-                      radius: 16,
+                      radius: 14,
                       backgroundImage: AssetImage(avatar),
                       backgroundColor: theme.scaffoldBackgroundColor,
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
                 Flexible(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +109,7 @@ class _CommentItemState extends State<CommentItem> {
                               name,  // Use name from userInfo or comment
                               style: textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                                fontSize: 13,
                               ),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -131,7 +132,7 @@ class _CommentItemState extends State<CommentItem> {
                                         comment.repliedTo,
                                         style: textTheme.bodyMedium?.copyWith(
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 14,
+                                          fontSize: 13,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
@@ -277,13 +278,13 @@ class _CommentItemState extends State<CommentItem> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             Text(
               comment.comment,
               style: textTheme.bodyMedium?.copyWith(
-                fontSize: 13,
+                fontSize: 12,
                 color: colorScheme.onSurface.withOpacity(0.9),
-                height: 1.5,
+                height: 1.4,
               ),
               maxLines: isExpanded ? null : 3,
             ),

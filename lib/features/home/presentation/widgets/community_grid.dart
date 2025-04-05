@@ -10,7 +10,7 @@ class CommunityGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 220,
+      height: 180,
       child: ListView.builder(
         itemCount: communities.length,
         scrollDirection: Axis.horizontal,

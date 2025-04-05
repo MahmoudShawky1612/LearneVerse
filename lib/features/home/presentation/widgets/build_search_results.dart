@@ -85,14 +85,17 @@ class BuildSearchResults extends StatelessWidget {
                 ),
                 Expanded(
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        VerticalCommunityList(
-                          communities: communities,
-                        ),
-                        VerticalUserList(users: users),
-                        VerticalUserList(users: owners),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 80.0),
+                      child: Column(
+                        children: [
+                          VerticalCommunityList(
+                            communities: communities,
+                          ),
+                          VerticalUserList(users: users),
+                          VerticalUserList(users: owners),
+                        ],
+                      ),
                     ),
                   ),
                 ),

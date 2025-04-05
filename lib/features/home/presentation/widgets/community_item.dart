@@ -27,17 +27,17 @@ class _CommunityItemState extends State<CommunityItem> {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
-      width: 165,
-      margin: const EdgeInsets.only(right: 15, left: 15),
+      width: 145,
+      margin: const EdgeInsets.only(right: 10, left: 10),
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
             color: colorScheme.onSurface.withOpacity(0.15),
-            blurRadius: 12,
+            blurRadius: 8,
             spreadRadius: 0.5,
-            offset: const Offset(0, 3),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -46,16 +46,16 @@ class _CommunityItemState extends State<CommunityItem> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 20, 15, 8),
+            padding: const EdgeInsets.fromLTRB(10, 15, 10, 6),
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(7),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: theme.cardColor,
                 boxShadow: [
                   BoxShadow(
                     color: colorScheme.onSurface.withOpacity(0.08),
-                    blurRadius: 8,
+                    blurRadius: 6,
                     spreadRadius: 0,
                     offset: const Offset(0, 2),
                   ),
@@ -63,18 +63,18 @@ class _CommunityItemState extends State<CommunityItem> {
               ),
               child: Image(
                 image: AssetImage(community.image),
-                width: 55,
-                height: 55,
+                width: 45,
+                height: 45,
                 fit: BoxFit.contain,
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
               community.name,
               style: textTheme.titleMedium?.copyWith(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 height: 1.2,
               ),
@@ -84,26 +84,26 @@ class _CommunityItemState extends State<CommunityItem> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
                 color: colorScheme.surface,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   FaIcon(
                     FontAwesomeIcons.userFriends,
-                    size: 12,
+                    size: 10,
                     color: colorScheme.onSurface.withOpacity(0.7),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 5),
                   Text(
                     '${community.memberCount}',
                     style: textTheme.bodySmall?.copyWith(
-                      fontSize: 12,
+                      fontSize: 11,
                       fontWeight: FontWeight.w500,
                     ),
                     maxLines: 1,
@@ -113,15 +113,15 @@ class _CommunityItemState extends State<CommunityItem> {
               ),
             ),
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 3),
           Expanded(
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
                 gradient: themeExtension?.buttonGradient,
                 borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(22),
-                  bottomRight: Radius.circular(22),
+                  bottomLeft: Radius.circular(18),
+                  bottomRight: Radius.circular(18),
                 ),
               ),
               child: Material(
@@ -131,8 +131,8 @@ class _CommunityItemState extends State<CommunityItem> {
                     context.push('/community',extra: community );
                   },
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(22),
-                    bottomRight: Radius.circular(22),
+                    bottomLeft: Radius.circular(18),
+                    bottomRight: Radius.circular(18),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -141,7 +141,7 @@ class _CommunityItemState extends State<CommunityItem> {
                         'View community',
                         style: TextStyle(
                           color: colorScheme.onPrimary,
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0.3,
                         ),
@@ -149,7 +149,7 @@ class _CommunityItemState extends State<CommunityItem> {
                       Icon(
                         Icons.arrow_forward_rounded,
                         color: colorScheme.onPrimary,
-                        size: 16,
+                        size: 14,
                       ),
                     ],
                   ),

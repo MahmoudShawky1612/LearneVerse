@@ -26,19 +26,19 @@ class _HomeHeaderState extends State<HomeHeader> {
     final currentUser = userProvider.currentUser;
     
     return Container(
-      height: 200,
+      height: 170,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         gradient: themeExtension?.backgroundGradient,
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
+          bottomLeft: Radius.circular(25),
+          bottomRight: Radius.circular(25),
         ),
         boxShadow: const [
           BoxShadow(
             color: Color.fromRGBO(0, 0, 0, 0.1),
-            blurRadius: 10,
-            offset: Offset(0, 5),
+            blurRadius: 8,
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -48,7 +48,7 @@ class _HomeHeaderState extends State<HomeHeader> {
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.red, width: 2),
+              border: Border.all(color: Colors.red, width: 1.5),
             ),
             child: GestureDetector(
               onTap: () {
@@ -65,7 +65,7 @@ class _HomeHeaderState extends State<HomeHeader> {
               },
               child: isClicked == false
                   ? CircleAvatar(
-                      radius: screenWidth < 360 ? 25 : 30,
+                      radius: screenWidth < 360 ? 22 : 26,
                       backgroundImage: AssetImage(currentUser.avatar),
                     )
                   : const CircularProgressIndicator(),
@@ -77,7 +77,7 @@ class _HomeHeaderState extends State<HomeHeader> {
               'Welcome,',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: baseFontSize,
+                fontSize: baseFontSize - 4,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -88,7 +88,7 @@ class _HomeHeaderState extends State<HomeHeader> {
               currentUser.name.toUpperCase(),
               style: TextStyle(
                 color: Colors.white,
-                fontSize: baseFontSize,
+                fontSize: baseFontSize - 4,
                 fontWeight: FontWeight.bold,
                 overflow: TextOverflow.ellipsis,
               ),

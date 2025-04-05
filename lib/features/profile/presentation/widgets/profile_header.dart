@@ -9,7 +9,7 @@ import 'profile_user_stats_row.dart';
 class ProfileHeader extends StatelessWidget {
   final userInfo;
 
-  ProfileHeader({
+  const ProfileHeader({
     super.key,
     this.userInfo,
   });
@@ -19,9 +19,13 @@ class ProfileHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+    final size = MediaQuery.of(context).size;
+
+    // Dynamically calculate expandedHeight based on screen size
+    final expandedHeight = size.height * 0.45;
+
     return SliverAppBar(
-      expandedHeight: 360,
+      expandedHeight: expandedHeight,
       pinned: true,
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -39,89 +43,103 @@ class ProfileHeader extends StatelessWidget {
         ),
       ],
       flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: themeExtension?.backgroundGradient ?? LinearGradient(
-                  colors: [
-                    colorScheme.primary.withOpacity(0.9),
-                    colorScheme.primary,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 16,
-                decoration: BoxDecoration(
-                  color: theme.scaffoldBackgroundColor,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(20),
+        background: LayoutBuilder(
+          builder: (context, constraints) {
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: themeExtension?.backgroundGradient ?? LinearGradient(
+                      colors: [
+                        colorScheme.primary.withOpacity(0.9),
+                        colorScheme.primary,
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
                   ),
                 ),
-              ),
-            ),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 12),
-                    ProfileAvatarAndName(userInfo:userInfo),
-                    const SizedBox(height: 12),
-                    ProfileBioQuote(userInfo:userInfo),
-                    const SizedBox(height: 14),
-                    
-                    // User interests
-                    if (userInfo != null && userInfo.interests.isNotEmpty)
-                      Container(
-                        width: double.infinity,
-                        margin: const EdgeInsets.only(bottom: 14),
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: userInfo.interests.map<Widget>((interest) {
-                            return Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: colorScheme.primary.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: colorScheme.primary.withOpacity(0.5),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Text(
-                                interest,
-                                style: TextStyle(
-                                  color: colorScheme.onPrimary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            );
-                          }).toList(),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: theme.scaffoldBackgroundColor,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                  ),
+                ),
+                SafeArea(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    physics: const BouncingScrollPhysics(),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight - 16,
+                      ),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 12),
+                            ProfileAvatarAndName(userInfo: userInfo),
+                            const SizedBox(height: 12),
+                            ProfileBioQuote(userInfo: userInfo),
+                            const SizedBox(height: 14),
+                            if (userInfo != null &&
+                                userInfo.interests != null &&
+                                userInfo.interests.isNotEmpty)
+                              _buildInterestTags(colorScheme, userInfo),
+                            const SizedBox(height: 14),
+                            Center(child: ProfileUserStatsRow(userInfo: userInfo)),
+                            const SizedBox(height: 12),
+                            Center(child: ProfileSocialLinksRow()),
+                          ],
                         ),
                       ),
-                    
-                    Center(child: ProfileUserStatsRow(userInfo:userInfo)),
-                    const SizedBox(height: 18),
-                    ProfileSocialLinksRow(),
-                  ],
+                    ),
+                  ),
                 ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInterestTags(ColorScheme colorScheme, dynamic userInfo) {
+    return Center(
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 8,
+        runSpacing: 8,
+        children: userInfo.interests.map<Widget>((interest) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: colorScheme.primary.withOpacity(0.5),
+                width: 1,
               ),
             ),
-          ],
-        ),
+            child: Text(
+              interest,
+              style: TextStyle(
+                color: colorScheme.onPrimary,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }

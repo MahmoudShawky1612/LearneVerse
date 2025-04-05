@@ -43,24 +43,24 @@ class _MainScreenState extends State<MainScreen> {
             bottom: 0,
             child: Container(
               margin: EdgeInsets.symmetric(
-                vertical: 20, 
+                vertical: 15, 
                 horizontal: horizontalMargin
               ),
-              height: 65, // Reduced height to prevent vertical overflow
+              height: 60, // Reduced height for a more compact navbar
               decoration: BoxDecoration(
                 color: colorScheme.surface,
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
                     color: colorScheme.primary.withOpacity(0.1),
-                    blurRadius: 25,
-                    spreadRadius: 2,
-                    offset: const Offset(0, 5),
+                    blurRadius: 20,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -111,14 +111,14 @@ class _MainScreenState extends State<MainScreen> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(vertical: 4),
         color: Colors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: isSelected ? colorScheme.secondary.withOpacity(0.15) : Colors.transparent,
                 shape: BoxShape.circle,
@@ -126,7 +126,7 @@ class _MainScreenState extends State<MainScreen> {
               child: Icon(
                 icon,
                 color: isSelected ? colorScheme.secondary : colorScheme.onSurface.withOpacity(0.7),
-                size: isSelected ? 20 : 18,
+                size: isSelected ? 18 : 16,
               ),
             ),
             if (isSelected)

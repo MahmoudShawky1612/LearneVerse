@@ -65,20 +65,20 @@ class _PostItemState extends State<PostItem> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       decoration: BoxDecoration(
         color: theme.cardColor,
         boxShadow: [
           BoxShadow(
             color: colorScheme.onSurface.withOpacity(0.2),
-            blurRadius: 8,
+            blurRadius: 6,
             spreadRadius: 1,
             offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -95,12 +95,12 @@ class _PostItemState extends State<PostItem> {
                     );
                   },
                   child: CircleAvatar(
-                    radius: 20,
+                    radius: 18,
                     backgroundImage: AssetImage(avatar),
                     backgroundColor: theme.scaffoldBackgroundColor,
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +113,7 @@ class _PostItemState extends State<PostItem> {
                               author, 
                               style: textTheme.bodyLarge?.copyWith(
                                 fontWeight: FontWeight.w700, 
-                                fontSize: 15
+                                fontSize: 14
                               ),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -124,11 +124,11 @@ class _PostItemState extends State<PostItem> {
                             child: GestureDetector(
                               onTap: () => context.push('/community', extra: community),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: theme.cardColor,
                                   borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [BoxShadow(color: colorScheme.primary.withOpacity(0.15), blurRadius: 4, offset: const Offset(0, 2))],
+                                  boxShadow: [BoxShadow(color: colorScheme.primary.withOpacity(0.15), blurRadius: 3, offset: const Offset(0, 1))],
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -174,14 +174,14 @@ class _PostItemState extends State<PostItem> {
               ],
             ),
             // Post title and description
-            const SizedBox(height: 12),
-            Text(post.title, style: textTheme.titleMedium?.copyWith(fontSize: 17, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
+            Text(post.title, style: textTheme.titleMedium?.copyWith(fontSize: 16, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 6),
             Text(
               post.description,
               maxLines: isExpanded ? null : 3,
               overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-              style: textTheme.bodyMedium?.copyWith(fontSize: 13, height: 1.5, fontWeight: FontWeight.w400, color: colorScheme.onSurface.withOpacity(0.9)),
+              style: textTheme.bodyMedium?.copyWith(fontSize: 12, height: 1.4, fontWeight: FontWeight.w400, color: colorScheme.onSurface.withOpacity(0.9)),
             ),
             if (post.description.length > 200)
               GestureDetector(
