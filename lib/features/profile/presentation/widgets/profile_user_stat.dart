@@ -14,10 +14,13 @@ class ProfileUserStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.backgroundLight.withOpacity(0.2),
+        color: colorScheme.onPrimary.withOpacity(0.2),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -26,14 +29,14 @@ class ProfileUserStat extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 12, color: AppColors.backgroundLight),
+              Icon(icon, size: 12, color: colorScheme.onPrimary),
               const SizedBox(width: 3),
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.backgroundLight,
+                  color: colorScheme.onPrimary,
                 ),
               ),
             ],
@@ -43,7 +46,7 @@ class ProfileUserStat extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 9,
-              color: AppColors.backgroundLight.withOpacity(0.85),
+              color: colorScheme.onPrimary.withOpacity(0.85),
             ),
           ),
         ],

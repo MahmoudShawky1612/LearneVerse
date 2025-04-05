@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../../../core/constants/app_colors.dart';
 
 import 'notification_item.dart';
 
@@ -50,6 +51,10 @@ class _NotificationPanelState extends State<NotificationPanel>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final themeExtension = theme.extension<AppThemeExtension>();
+    
     final List<String> avatars = [
       'assets/images/avatar1.jpg',
       'assets/images/avatar2.jpg',
@@ -100,15 +105,15 @@ class _NotificationPanelState extends State<NotificationPanel>
                 height: 42,
                 decoration: BoxDecoration(
                   color: isExpanded
-                      ? Colors.white
-                      : Colors.white.withOpacity(0.15),
+                      ? colorScheme.primary.withOpacity(0.15)
+                      : colorScheme.surface.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: IconButton(
                   icon: FaIcon(
                     FontAwesomeIcons.bell,
                     size: 18,
-                    color: isExpanded ? Colors.blue : Colors.white,
+                    color: isExpanded ? colorScheme.primary : colorScheme.onSurface,
                   ),
                   onPressed: _toggleNotifications,
                   tooltip: 'Notifications',
@@ -122,9 +127,9 @@ class _NotificationPanelState extends State<NotificationPanel>
                   width: 10,
                   height: 10,
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: colorScheme.error,
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 1.5),
+                    border: Border.all(color: theme.scaffoldBackgroundColor, width: 1.5),
                   ),
                 ),
               ),
@@ -146,11 +151,11 @@ class _NotificationPanelState extends State<NotificationPanel>
                     width: 380,
                     height: 500,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: theme.cardColor,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
+                          color: theme.shadowColor.withOpacity(0.15),
                           blurRadius: 20,
                           spreadRadius: 0,
                           offset: const Offset(0, 5),
@@ -164,35 +169,36 @@ class _NotificationPanelState extends State<NotificationPanel>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
+                              Text(
                                 'Notifications',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
+                                  color: colorScheme.onSurface,
                                 ),
                               ),
                               TextButton(
                                 onPressed: () {},
                                 style: TextButton.styleFrom(
-                                  foregroundColor: Colors.blue,
+                                  foregroundColor: colorScheme.primary,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 5),
                                   tapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                 ),
-                                child: const Text(
+                                child: Text(
                                   'Mark all as read',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
+                                    color: colorScheme.primary,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        const Divider(height: 1),
+                        Divider(color: colorScheme.onSurface.withOpacity(0.1), height: 1),
                         Expanded(
                           child: ListView.builder(
                             padding: const EdgeInsets.symmetric(vertical: 8),
@@ -205,12 +211,12 @@ class _NotificationPanelState extends State<NotificationPanel>
                             },
                           ),
                         ),
-                        const Divider(height: 1),
+                        Divider(color: colorScheme.onSurface.withOpacity(0.1), height: 1),
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(20),
                               bottomRight: Radius.circular(20),
                             ),
@@ -219,13 +225,14 @@ class _NotificationPanelState extends State<NotificationPanel>
                             child: TextButton(
                               onPressed: () {},
                               style: TextButton.styleFrom(
-                                foregroundColor: Colors.blue,
+                                foregroundColor: colorScheme.primary,
                               ),
-                              child: const Text(
+                              child: Text(
                                 'View all notifications',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
+                                  color: colorScheme.primary,
                                 ),
                               ),
                             ),

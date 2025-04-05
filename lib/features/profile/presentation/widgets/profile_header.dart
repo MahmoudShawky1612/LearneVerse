@@ -16,6 +16,10 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
     return SliverAppBar(
       expandedHeight: 360,
       pinned: true,
@@ -25,7 +29,7 @@ class ProfileHeader extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 12.0),
           child: IconButton(
-            icon: const Icon(Icons.edit, color: AppColors.backgroundLight),
+            icon: Icon(Icons.edit, color: colorScheme.onPrimary),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Edit Profile')),
@@ -40,10 +44,10 @@ class ProfileHeader extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: themeExtension?.backgroundGradient ?? LinearGradient(
                   colors: [
-                    AppColors.primary.withOpacity(0.9),
-                    AppColors.primaryDark,
+                    colorScheme.primary.withOpacity(0.9),
+                    colorScheme.primary,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -56,9 +60,9 @@ class ProfileHeader extends StatelessWidget {
               right: 0,
               child: Container(
                 height: 16,
-                decoration: const BoxDecoration(
-                  color: AppColors.backgroundLight,
-                  borderRadius: BorderRadius.vertical(
+                decoration: BoxDecoration(
+                  color: theme.scaffoldBackgroundColor,
+                  borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(20),
                   ),
                 ),

@@ -4,29 +4,33 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfileSocialButton extends StatelessWidget {
   final IconData icon;
-  final Color color;
+  final Color? color;
   final VoidCallback onPressed;
 
   const ProfileSocialButton({
     required this.icon,
-    required this.color,
+    this.color,
     required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final buttonColor = color ?? colorScheme.onPrimary;
+    
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(24),
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: AppColors.backgroundLight.withOpacity(0.15),
+          color: colorScheme.onPrimary.withOpacity(0.15),
           borderRadius: BorderRadius.circular(24),
         ),
         child: FaIcon(
           icon,
-          color: color,
+          color: buttonColor,
           size: 18,
         ),
       ),

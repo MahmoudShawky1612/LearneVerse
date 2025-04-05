@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/core/widgets/theme_toggle_button.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/build_search_results.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/main_content.dart';
 
@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Community> _foundCommunities = [];
   List<Author> _foundUsers = [];
   List<Owner> _foundOwners = [];
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -31,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _foundOwners = [];
   }
 
-
   @override
   void dispose() {
     searchController.dispose();
@@ -39,18 +39,42 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _search(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        _foundCommunities = [];
+        _foundUsers = [];
+        _foundOwners = [];
+        _isSearching = false;
+      });
+      return;
+    }
+    
     setState(() {
+      _isSearching = true;
       _foundCommunities = Community.searchCommunities(query);
       _foundUsers = Author.searchUsers(query);
       _foundOwners = Owner.searchOwners(query);
     });
   }
 
+  void _clearSearch() {
+    setState(() {
+      searchController.clear();
+      _foundCommunities = [];
+      _foundUsers = [];
+      _foundOwners = [];
+      _isSearching = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Using theme instead of direct color references
+    final theme = Theme.of(context);
+    
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: theme.scaffoldBackgroundColor,
         body: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -61,17 +85,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 left: 0,
                 right: 0,
                 child: CustomSearchBar(searchController, _search)),
+            // Toggle button for theme positioned to left of notifications
+            const Positioned(
+              right: 90, // Position to the left of notification icon
+              top: 15,
+              child: ThemeToggleButton(
+                isCompact: true,
+                size: 18,
+              ),
+            ),
             const NotificationPanel(),
-            _foundCommunities.isEmpty && _foundUsers.isEmpty && _foundOwners.isEmpty
-                ? Container()
-                : BuildSearchResults(
-                    communities: _foundCommunities,
-                    users: _foundUsers,
-                    owners: _foundOwners,
-                  ),
+            if (_hasSearchResults())
+              GestureDetector(
+                onTap: _clearSearch,
+                child: Container(
+                  color: Colors.black.withOpacity(0.4),
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
+              ),
+            if (_hasSearchResults())
+              BuildSearchResults(
+                communities: _foundCommunities,
+                users: _foundUsers,
+                owners: _foundOwners,
+                onClose: _clearSearch,
+              ),
           ],
         ),
       ),
     );
+  }
+
+  bool _hasSearchResults() {
+    return _isSearching && (_foundCommunities.isNotEmpty || _foundUsers.isNotEmpty || _foundOwners.isNotEmpty);
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
+import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 class BuildFilterChip extends StatelessWidget {
   final int index;
@@ -17,6 +17,10 @@ class BuildFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
     return Container(
       margin: const EdgeInsets.only(right: 10),
       child: Material(
@@ -34,22 +38,18 @@ class BuildFilterChip extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: isSelected
                   ? null
-                  : const LinearGradient(
-                colors: [AppColors.primary, AppColors.primaryDark],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              color: isSelected ? Colors.white : null,
+                  : themeExtension?.buttonGradient,
+              color: isSelected ? theme.cardColor : null,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: isSelected ? AppColors.primary : Colors.transparent,
+                color: isSelected ? colorScheme.primary : Colors.transparent,
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
                   color: isSelected
-                      ? Colors.black.withOpacity(0.08)
-                      : AppColors.primary.withOpacity(0.25),
+                      ? theme.shadowColor.withOpacity(0.08)
+                      : colorScheme.primary.withOpacity(0.25),
                   blurRadius: 8,
                   spreadRadius: 0,
                   offset: const Offset(0, 2),
@@ -60,7 +60,7 @@ class BuildFilterChip extends StatelessWidget {
               child: Text(
                 filters[index],
                 style: TextStyle(
-                  color: isSelected ? AppColors.primary : Colors.white,
+                  color: isSelected ? colorScheme.primary : colorScheme.onPrimary,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   fontSize: 14,
                   letterSpacing: 0.2,

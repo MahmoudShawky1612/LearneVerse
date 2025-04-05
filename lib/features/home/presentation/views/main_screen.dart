@@ -3,6 +3,7 @@ import 'package:flutterwidgets/features/discover/presentation/views/discover_scr
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/theme_toggle_button.dart';
 import '../../../calendar/presentation/views/calendar_screen.dart';
 import 'home_screen.dart';
 
@@ -23,6 +24,9 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
       extendBody: true,
       body: Stack(
@@ -36,11 +40,11 @@ class _MainScreenState extends State<MainScreen> {
               margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
               height: 75,
               decoration: BoxDecoration(
-              color: AppColors.backgroundLight,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(22),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: colorScheme.primary.withOpacity(0.1),
                     blurRadius: 25,
                     spreadRadius: 2,
                     offset: const Offset(0, 5),
@@ -83,6 +87,8 @@ class _MainScreenState extends State<MainScreen> {
     required String label,
   }) {
     final isSelected = _currentIndex == index;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return GestureDetector(
       onTap: () {
@@ -99,20 +105,20 @@ class _MainScreenState extends State<MainScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.secondary.withOpacity(0.15) : Colors.transparent,
+                color: isSelected ? colorScheme.secondary.withOpacity(0.15) : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
-                color: isSelected ? AppColors.secondary : AppColors.textSecondary,
+                color: isSelected ? colorScheme.secondary : colorScheme.onSurface.withOpacity(0.7),
                 size: isSelected ? 26 : 22,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               isSelected ? label : "",
-              style: const TextStyle(
-                color: AppColors.secondary,
+              style: TextStyle(
+                color: colorScheme.secondary,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),

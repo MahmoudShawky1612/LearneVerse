@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 import '../widgets/contribution_header.dart';
 import '../widgets/profile_header.dart';
@@ -22,8 +21,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           ProfileHeader(userInfo: widget.userInfo),
@@ -37,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    color: AppColors.surfaceLight,
+                    color: theme.cardColor,
                     child: const Padding(
                       padding: EdgeInsets.all(14),
                       child: ContributionHeader(),
@@ -46,11 +48,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 20),
                   Container(
                     decoration: BoxDecoration(
-                      color: AppColors.lightGrey,
+                      color: colorScheme.surface,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.textSecondary.withOpacity(0.1),
+                          color: colorScheme.onSurface.withOpacity(0.1),
                           blurRadius: 6,
                           spreadRadius: 0,
                           offset: const Offset(0, 2),

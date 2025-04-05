@@ -18,9 +18,14 @@ class UserCommunityItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      decoration: _buildShadowDecoration(),
+      decoration: _buildShadowDecoration(theme),
       child: Material(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(16),
@@ -31,9 +36,9 @@ class UserCommunityItem extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                _buildCommunityImage(),
+                _buildCommunityImage(theme),
                 const SizedBox(width: 16),
-                _buildCommunityDetails(),
+                _buildCommunityDetails(context),
                 const SizedBox(width: 12),
                 _buildActionButtons(context),
               ],
@@ -44,24 +49,24 @@ class UserCommunityItem extends StatelessWidget {
     );
   }
 
-  BoxDecoration _buildShadowDecoration() => BoxDecoration(
-        color: Colors.white,
+  BoxDecoration _buildShadowDecoration(ThemeData theme) => BoxDecoration(
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: theme.shadowColor.withOpacity(0.06),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
         ],
       );
 
-  Widget _buildCommunityImage() => Container(
+  Widget _buildCommunityImage(ThemeData theme) => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: theme.shadowColor.withOpacity(0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -78,53 +83,70 @@ class UserCommunityItem extends StatelessWidget {
         ),
       );
 
-  Widget _buildCommunityDetails() => Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              community.name,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF2D3748),
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+  Widget _buildCommunityDetails(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            community.name,
+            style: textTheme.titleMedium?.copyWith(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
             ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 5,
-              runSpacing: 2,
-              children: [
-                _buildMemberCount(),
-                _buildPrivacyBadge(),
-              ],
-            ),
-          ],
-        ),
-      );
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 5,
+            runSpacing: 2,
+            children: [
+              _buildMemberCount(context),
+              _buildPrivacyBadge(context),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget _buildMemberCount() => _buildBadge(
-        color: const Color(0xFFEBF5FF),
-        textColor: Colors.blue.shade700,
-        icon: FontAwesomeIcons.userFriends,
-        label: '${community.memberCount}',
-      );
+  Widget _buildMemberCount(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return _buildBadge(
+      context: context,
+      color: colorScheme.primary.withOpacity(0.1),
+      textColor: colorScheme.primary,
+      icon: FontAwesomeIcons.userFriends,
+      label: '${community.memberCount}',
+    );
+  }
 
-  Widget _buildPrivacyBadge() => _buildBadge(
-        color: const Color(0xFFF9F9F9),
-        textColor: community.communityPrivacy == "Public"
-            ? AppColors.upVote
-            : AppColors.downVote,
-        icon: community.communityPrivacy == "Public"
-            ? FontAwesomeIcons.lockOpen
-            : FontAwesomeIcons.lock,
-        label: community.communityPrivacy,
-        fontSize: 10,
-      );
+  Widget _buildPrivacyBadge(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
+    return _buildBadge(
+      context: context,
+      color: colorScheme.surfaceVariant,
+      textColor: community.communityPrivacy == "Public"
+          ? themeExtension?.upVote ?? colorScheme.primary
+          : themeExtension?.downVote ?? colorScheme.error,
+      icon: community.communityPrivacy == "Public"
+          ? FontAwesomeIcons.lockOpen
+          : FontAwesomeIcons.lock,
+      label: community.communityPrivacy,
+      fontSize: 10,
+    );
+  }
 
   Widget _buildBadge({
+    required BuildContext context,
     required Color color,
     required Color textColor,
     required IconData icon,
@@ -156,42 +178,48 @@ class UserCommunityItem extends StatelessWidget {
         ),
       );
 
-  Widget _buildActionButtons(BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: AppColors.buttonGradient,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: InkWell(
-              onTap: () {
-                {
-                  context.push('/community', extra: community);
-                }
-              },
-              borderRadius: BorderRadius.circular(10),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "View",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
+  Widget _buildActionButtons(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            gradient: themeExtension?.buttonGradient,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: InkWell(
+            onTap: () {
+              {
+                context.push('/community', extra: community);
+              }
+            },
+            borderRadius: BorderRadius.circular(10),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "View",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: colorScheme.onPrimary,
                     ),
-                    SizedBox(width: 4),
-                    Icon(Icons.arrow_forward, size: 16, color: Colors.white),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(Icons.arrow_forward, size: 16, color: colorScheme.onPrimary),
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 8),
-        ],
-      );
+        ),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
 }

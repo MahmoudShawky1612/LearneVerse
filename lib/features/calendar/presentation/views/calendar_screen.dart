@@ -50,10 +50,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
     return Container(
       child: Scaffold(
         body: Container(
-          color: AppColors.backgroundLight,
+          color: theme.scaffoldBackgroundColor,
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -68,7 +72,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         style: GoogleFonts.poppins(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: colorScheme.onBackground,
                         ),
                       ),
                       IconButton(
@@ -85,7 +89,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           _calendarFormat == CalendarFormat.month
                               ? Icons.view_week_rounded
                               : Icons.calendar_view_month_rounded,
-                          color: AppColors.textPrimary,
+                          color: colorScheme.onBackground,
                         ),
                       ),
                     ],
@@ -93,10 +97,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   const SizedBox(height: 20),
                   Card(
                     elevation: 8,
-                    shadowColor: AppColors.primary,
+                    shadowColor: colorScheme.primary.withOpacity(0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
+                    color: theme.cardColor,
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: TableCalendar(
@@ -112,41 +117,46 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           titleTextStyle: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
+                            color: colorScheme.onSurface,
                           ),
-                          leftChevronIcon: const Icon(
+                          leftChevronIcon: Icon(
                             Icons.chevron_left_rounded,
-                            color: AppColors.textPrimary,
+                            color: colorScheme.onSurface,
                             size: 28,
                           ),
-                          rightChevronIcon: const Icon(
+                          rightChevronIcon: Icon(
                             Icons.chevron_right_rounded,
-                            color: AppColors.textPrimary,
+                            color: colorScheme.onSurface,
                             size: 28,
                           ),
                         ),
                         daysOfWeekStyle: DaysOfWeekStyle(
                           weekdayStyle: GoogleFonts.poppins(
-                            color: AppColors.textPrimary,
+                            color: colorScheme.onSurface,
                             fontWeight: FontWeight.w500,
                           ),
                           weekendStyle: GoogleFonts.poppins(
-                            color: AppColors.textSecondary,
+                            color: colorScheme.onSurface.withOpacity(0.6),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         calendarStyle: CalendarStyle(
-                          defaultTextStyle: GoogleFonts.poppins(),
+                          defaultTextStyle: GoogleFonts.poppins(
+                            color: colorScheme.onSurface,
+                          ),
                           weekendTextStyle: GoogleFonts.poppins(
-                            color: AppColors.textSecondary,
+                            color: colorScheme.onSurface.withOpacity(0.6),
                           ),
-                          todayDecoration:  BoxDecoration(
-                            color: Colors.blue.shade300,
+                          todayDecoration: BoxDecoration(
+                            color: colorScheme.primary.withOpacity(0.5),
                             shape: BoxShape.circle,
                           ),
-                          selectedDecoration: const BoxDecoration(
-                            color: AppColors.primary,
+                          selectedDecoration: BoxDecoration(
+                            color: colorScheme.primary,
                             shape: BoxShape.circle,
+                          ),
+                          outsideTextStyle: GoogleFonts.poppins(
+                            color: colorScheme.onSurface.withOpacity(0.4),
                           ),
                         ),
                         onDaySelected: _selectedDay,
@@ -164,7 +174,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: (events.first as Map)['color'] ??
-                                        Colors.blue,
+                                        colorScheme.primary,
                                   ),
                                 ),
                               );
@@ -183,7 +193,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: colorScheme.onBackground,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -196,10 +206,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               return Card(
                                 margin: const EdgeInsets.only(bottom: 70),
                                 elevation: 4,
-                                shadowColor: AppColors.primary,
+                                shadowColor: colorScheme.primary.withOpacity(0.3),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
+                                color: theme.cardColor,
                                 child: ListTile(
                                   contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 20,
@@ -209,7 +220,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     width: 12,
                                     height: double.infinity,
                                     decoration: BoxDecoration(
-                                      color: event['color'] ?? Colors.blue,
+                                      color: event['color'] ?? colorScheme.primary,
                                       borderRadius: BorderRadius.circular(30),
                                     ),
                                   ),
@@ -218,11 +229,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     style: GoogleFonts.poppins(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
+                                      color: colorScheme.onSurface,
                                     ),
                                   ),
                                   trailing: IconButton(
-                                    icon: const Icon(Icons.arrow_forward_ios,
-                                        size: 16),
+                                    icon: Icon(Icons.arrow_forward_ios,
+                                        size: 16,
+                                        color: colorScheme.onSurface),
                                     onPressed: () {
                                       // Event details navigation
                                     },
@@ -235,10 +248,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.event_busy,
                                   size: 80,
-                                  color: AppColors.textSecondary,
+                                  color: colorScheme.onSurface.withOpacity(0.5),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
@@ -246,7 +259,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   style: GoogleFonts.poppins(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors.textSecondary,
+                                    color: colorScheme.onSurface.withOpacity(0.5),
                                   ),
                                 ),
                               ],

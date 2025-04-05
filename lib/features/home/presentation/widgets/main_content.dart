@@ -15,6 +15,11 @@ class MainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
     return Padding(
       padding: const EdgeInsets.only(top: 200.0, left: 16.0, right: 16.0),
       // Adjusted for balance
@@ -22,11 +27,11 @@ class MainContent extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.only(top: 40, bottom: 80),
           decoration: BoxDecoration(
-            gradient: AppColors.containerGradient,
+            gradient: themeExtension?.containerGradient,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: AppColors.textSecondary.withOpacity(0.15),
+                color: colorScheme.onSurface.withOpacity(0.15),
                 blurRadius: 8,
                 spreadRadius: 1,
                 offset: const Offset(0, 2),
@@ -38,14 +43,13 @@ class MainContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 8.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
                     'Recently Viewed Communities',
-                    style: TextStyle(
+                    style: textTheme.headlineSmall?.copyWith(
                       fontSize: 22, // Slightly larger for emphasis
                       fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
                       letterSpacing: 0.2,
                     ),
                   ),

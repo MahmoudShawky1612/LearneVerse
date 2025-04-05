@@ -17,6 +17,8 @@ bool isClicked = false;
 class _HomeHeaderState extends State<HomeHeader> {
   @override
   Widget build(BuildContext context) {
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
     return Positioned(
       left: 0,
       right: 0,
@@ -24,13 +26,13 @@ class _HomeHeaderState extends State<HomeHeader> {
       child: Container(
         height: 200,
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient ,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          gradient: themeExtension?.backgroundGradient,
+          borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(30),
             bottomRight: Radius.circular(30),
           ),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.1),
               blurRadius: 10,
@@ -44,7 +46,7 @@ class _HomeHeaderState extends State<HomeHeader> {
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.red!, width: 2),
+                border: Border.all(color: Colors.red, width: 2),
               ),
               child: GestureDetector(
                 onTap: () {

@@ -38,6 +38,11 @@ class _CommentItemState extends State<CommentItem> {
     final comment = widget.comment;
     final flag = widget.flag;
     final userInfo = widget.userInfo;  // Get userInfo passed to CommentItem
+    
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
     // Use userInfo if not null, otherwise fallback to comment data
     final String avatar = userInfo != null ? userInfo.avatar : comment.avatar;
@@ -48,10 +53,10 @@ class _CommentItemState extends State<CommentItem> {
       curve: Curves.easeInOut,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       decoration: BoxDecoration(
-        gradient: AppColors.containerGradient,
+        gradient: themeExtension?.containerGradient,
         boxShadow: [
           BoxShadow(
-            color: AppColors.textSecondary.withOpacity(0.25),
+            color: colorScheme.onSurface.withOpacity(0.25),
             blurRadius: 10,
             spreadRadius: 2, // Slight spread to "get out" without depth
             offset: const Offset(0, 0), // Centered, no directional depth
@@ -69,7 +74,7 @@ class _CommentItemState extends State<CommentItem> {
                   padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: AppColors.circleGradient,
+                    gradient: themeExtension?.circleGradient,
                   ),
                   child: GestureDetector(
                     onTap: () {
@@ -86,7 +91,7 @@ class _CommentItemState extends State<CommentItem> {
                     child: CircleAvatar(
                       radius: 16,
                       backgroundImage: AssetImage(avatar),
-                      backgroundColor: AppColors.backgroundLight,
+                      backgroundColor: theme.scaffoldBackgroundColor,
                     ),
                   ),
                 ),
@@ -98,28 +103,26 @@ class _CommentItemState extends State<CommentItem> {
                       children: [
                         Text(
                           name,  // Use name from userInfo or comment
-                          style: const TextStyle(
+                          style: textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
-                            color: AppColors.textPrimary,
                           ),
                         ),
                         flag
                             ? Row(
                           children: [
                             const SizedBox(width: 4),
-                            const FaIcon(
+                            FaIcon(
                               FontAwesomeIcons.solidCircle,
                               size: 6,
-                              color: AppColors.textSecondary,
+                              color: colorScheme.onSurface.withOpacity(0.7),
                             ),
                             const SizedBox(width: 4),
                             Text(
                               comment.repliedTo,
-                              style: const TextStyle(
+                              style: textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
-                                color: AppColors.textPrimary,
                               ),
                             ),
                           ],
@@ -129,8 +132,8 @@ class _CommentItemState extends State<CommentItem> {
                     ),
                     Text(
                       '${comment.time}h ago',
-                      style: TextStyle(
-                        color: AppColors.textSecondary.withOpacity(0.8),
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurface.withOpacity(0.8),
                         fontSize: 11,
                       ),
                     ),
@@ -148,12 +151,11 @@ class _CommentItemState extends State<CommentItem> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: theme.cardColor,
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                              AppColors.primaryDark.withOpacity(0.15),
+                              color: colorScheme.primary.withOpacity(0.15),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -165,14 +167,13 @@ class _CommentItemState extends State<CommentItem> {
                               radius: 9,
                               backgroundImage:
                               AssetImage(comment.communityImage),
-                              backgroundColor: AppColors.backgroundLight,
+                              backgroundColor: theme.scaffoldBackgroundColor,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               'c/${comment.communityName}',
                               style: TextStyle(
-                                color: AppColors.textSecondary
-                                    .withOpacity(0.9),
+                                color: colorScheme.onSurface.withOpacity(0.9),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -189,7 +190,7 @@ class _CommentItemState extends State<CommentItem> {
                         IconButton(
                           icon: Icon(
                             Icons.more_horiz,
-                            color: AppColors.textSecondary.withOpacity(0.8),
+                            color: colorScheme.onSurface.withOpacity(0.8),
                             size: 18,
                           ),
                           onPressed: () {
@@ -207,39 +208,36 @@ class _CommentItemState extends State<CommentItem> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: AppColors.surfaceLight,
+                                color: theme.cardColor,
                                 borderRadius: BorderRadius.circular(6),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.textSecondary
-                                        .withOpacity(0.3),
+                                    color: colorScheme.onSurface.withOpacity(0.3),
                                     blurRadius: 4,
                                     spreadRadius: 0,
                                   ),
                                 ],
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(horizontal: 4),
+                                    padding: const EdgeInsets.symmetric(horizontal: 4),
                                     child: Text(
                                       'Edit',
                                       style: TextStyle(
-                                        color: AppColors.primaryDark,
+                                        color: colorScheme.primary,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
                                   Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(horizontal: 4),
+                                    padding: const EdgeInsets.symmetric(horizontal: 4),
                                     child: Text(
                                       'Delete',
                                       style: TextStyle(
-                                        color: AppColors.secondaryDark,
+                                        color: colorScheme.secondary,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -258,9 +256,9 @@ class _CommentItemState extends State<CommentItem> {
             const SizedBox(height: 10),
             Text(
               comment.comment,
-              style: TextStyle(
+              style: textTheme.bodyMedium?.copyWith(
                 fontSize: 13,
-                color: AppColors.textPrimary.withOpacity(0.9),
+                color: colorScheme.onSurface.withOpacity(0.9),
                 height: 1.5,
               ),
               maxLines: isExpanded ? null : 3,
@@ -272,8 +270,8 @@ class _CommentItemState extends State<CommentItem> {
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(
                     isExpanded ? 'Show less' : 'Read more',
-                    style: const TextStyle(
-                      color: AppColors.primaryDark,
+                    style: TextStyle(
+                      color: colorScheme.primary,
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
                     ),
@@ -306,8 +304,8 @@ class _CommentItemState extends State<CommentItem> {
                           CupertinoIcons.arrow_up_circle_fill,
                           size: 22,
                           color: isUpVoted
-                              ? AppColors.upVote
-                              : AppColors.textSecondary.withOpacity(0.7),
+                              ? themeExtension?.upVote
+                              : colorScheme.onSurface.withOpacity(0.7),
                         ),
                       ),
                     ),
@@ -318,10 +316,10 @@ class _CommentItemState extends State<CommentItem> {
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                         color: comment.voteCount > 0
-                            ? AppColors.upVote
+                            ? themeExtension?.upVote
                             : comment.voteCount < 0
-                            ? AppColors.downVote
-                            : AppColors.textPrimary,
+                            ? themeExtension?.downVote
+                            : colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(width: 6),
@@ -345,8 +343,8 @@ class _CommentItemState extends State<CommentItem> {
                           CupertinoIcons.arrow_down_circle_fill,
                           size: 22,
                           color: isDownVoted
-                              ? AppColors.downVote
-                              : AppColors.textSecondary.withOpacity(0.7),
+                              ? themeExtension?.downVote
+                              : colorScheme.onSurface.withOpacity(0.7),
                         ),
                       ),
                     ),
@@ -356,10 +354,10 @@ class _CommentItemState extends State<CommentItem> {
                   onTap: () => setState(() {
                     isExpanded = !isExpanded;
                   }),
-                  child: const Icon(
+                  child: Icon(
                     Icons.reply_outlined,
                     size: 18,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/community/models/owner_model.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_default_content.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_header.dart';
@@ -68,9 +67,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: theme.scaffoldBackgroundColor,
         extendBody: true,
         body: Padding(
           padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),

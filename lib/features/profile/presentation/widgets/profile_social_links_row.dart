@@ -7,6 +7,9 @@ import 'profile_social_button.dart';
 class ProfileSocialLinksRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
@@ -14,7 +17,6 @@ class ProfileSocialLinksRow extends StatelessWidget {
         children: [
           ProfileSocialButton(
             icon: FontAwesomeIcons.github,
-            color: AppColors.backgroundLight,
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('GitHub Profile')),
@@ -24,7 +26,6 @@ class ProfileSocialLinksRow extends StatelessWidget {
           const SizedBox(width: 16),
           ProfileSocialButton(
             icon: FontAwesomeIcons.linkedin,
-            color: AppColors.backgroundLight,
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('LinkedIn Profile')),
@@ -34,7 +35,6 @@ class ProfileSocialLinksRow extends StatelessWidget {
           const SizedBox(width: 16),
           ProfileSocialButton(
             icon: FontAwesomeIcons.facebook,
-            color: AppColors.backgroundLight,
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Facebook Profile')),
@@ -44,7 +44,6 @@ class ProfileSocialLinksRow extends StatelessWidget {
           const SizedBox(width: 16),
           ProfileSocialButton(
             icon: FontAwesomeIcons.twitter,
-            color: AppColors.backgroundLight,
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Twitter Profile')),

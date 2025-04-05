@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../community/models/owner_model.dart';
 import '../../../home/models/author_model.dart';
+import '../../../home/models/community_model.dart';
 import '../../../profile/presentation/views/profile_screen.dart';
 
 class UserItem extends StatelessWidget {
   final user;
-  final Color _accentColor = const Color(0xFF00B2FF);
 
   const UserItem({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     final String role = user.role;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final themeExtension = theme.extension<AppThemeExtension>();
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: theme.shadowColor.withOpacity(0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -51,10 +57,9 @@ class UserItem extends StatelessWidget {
                     children: [
                       Text(
                         user.name,
-                        style: const TextStyle(
+                        style: textTheme.bodyLarge?.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF2D3748),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -66,7 +71,7 @@ class UserItem extends StatelessWidget {
                             "@${user.userName}",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[600],
+                              color: colorScheme.onSurface.withOpacity(0.7),
                             ),
                           ),
                           const SizedBox(
@@ -76,7 +81,7 @@ class UserItem extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF9F9F9),
+                              color: colorScheme.surface,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -85,8 +90,8 @@ class UserItem extends StatelessWidget {
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: role == "Member"
-                                    ? AppColors.textPrimary
-                                    : AppColors.accent,
+                                    ? colorScheme.onSurface
+                                    : colorScheme.tertiary,
                               ),
                             ),
                           ),
@@ -98,33 +103,23 @@ class UserItem extends StatelessWidget {
                 const SizedBox(width: 8),
                 Container(
                   decoration: BoxDecoration(
-                    gradient: AppColors.backgroundGradient,
+                    gradient: themeExtension?.buttonGradient,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: InkWell(
                     onTap: () {
-                      // Find the user by their username or another unique identifier
-                      List<Author> users = Author.users;
-                      final selectedUser = users
-                          .firstWhere((u) => u.userName == user.userName);
-
-                      // Navigate to the profile screen with the selected user
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfileScreen(userInfo: selectedUser),
-                        ),
-                      );
+                      // Navigate to profile based on user type
+                      navigateToProfile(context);
                     },
                     borderRadius: BorderRadius.circular(10),
-                    child: const Padding(
+                    child: Padding(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Text(
                         "Profile",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -136,5 +131,50 @@ class UserItem extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  void navigateToProfile(BuildContext context) {
+    // Check if user is an Owner type or Author type
+    if (user is Owner) {
+      // Create a compatible Author object for the Owner
+      final ownerUser = user as Owner;
+      final authorFromOwner = Author(
+        id: ownerUser.id,
+        name: ownerUser.name,
+        avatar: ownerUser.avatar,
+        userName: ownerUser.userName,
+        role: ownerUser.role,
+        points: 0, // Default values for required fields
+        joinedCommunities: [], // Empty list as a default
+        quote: "Owner of communities", // Default quote for owners
+        totalJoinedCommunities: 0,
+        totalPostUpvotes: 0,
+        totalCommentUpvotes: 0,
+      );
+      
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfileScreen(userInfo: authorFromOwner),
+        ),
+      );
+    } else {
+      // Regular Author user
+      try {
+        List<Author> users = Author.users;
+        final selectedUser = users.firstWhere((u) => u.userName == user.userName);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(userInfo: selectedUser),
+          ),
+        );
+      } catch (e) {
+        // Fallback for user not found
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile not available')),
+        );
+      }
+    }
   }
 }

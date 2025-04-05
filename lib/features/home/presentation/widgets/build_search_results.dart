@@ -8,12 +8,21 @@ class BuildSearchResults extends StatelessWidget {
   final communities;
   final users;
   final owners;
+  final VoidCallback? onClose;
 
-  const BuildSearchResults(
-      {super.key, required this.communities, required this.users, required this.owners});
+  const BuildSearchResults({
+    super.key, 
+    required this.communities, 
+    required this.users, 
+    required this.owners,
+    this.onClose,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Positioned(
         left: 0,
         right: 0,
@@ -29,23 +38,65 @@ class BuildSearchResults extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.06),
+                    color: theme.shadowColor.withOpacity(0.1),
                     blurRadius: 12,
                     spreadRadius: 0,
                     offset: const Offset(0, 6),
                   ),
                 ],
-                color: Colors.white),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  VerticalCommunityList(
-                    communities: communities,
+                color: theme.cardColor),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface,
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(22),
+                      topLeft: Radius.circular(22),
+                    ),
                   ),
-                  VerticalUserList(users: users),
-                  VerticalUserList(users: owners),
-                ],
-              ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Search Results',
+                        style: TextStyle(
+                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          color: colorScheme.onSurface.withOpacity(0.7),
+                          size: 20,
+                        ),
+                        onPressed: onClose,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(
+                          minWidth: 30,
+                          minHeight: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        VerticalCommunityList(
+                          communities: communities,
+                        ),
+                        VerticalUserList(users: users),
+                        VerticalUserList(users: owners),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ));

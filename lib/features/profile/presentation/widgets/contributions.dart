@@ -8,6 +8,9 @@ class YearContributionChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     // Generate random contribution data (52 weeks x 7 days)
     final Random random = Random(42); // Fixed seed for consistent preview
     final List<List<int>> contributionData = List.generate(
@@ -43,7 +46,7 @@ class YearContributionChart extends StatelessWidget {
             children: months
                 .map((month) => Text(
                       month,
-                      style: const TextStyle(fontSize: 10, color: Colors.grey),
+                      style: TextStyle(fontSize: 10, color: colorScheme.onSurface.withOpacity(0.6)),
                     ))
                 .toList(),
           ),
@@ -69,22 +72,22 @@ class YearContributionChart extends StatelessWidget {
               Color cellColor;
               switch (value) {
                 case 0:
-                  cellColor = Colors.green.withOpacity(0.1);
+                  cellColor = colorScheme.primary.withOpacity(0.1);
                   break;
                 case 1:
-                  cellColor = Colors.green.shade100;
+                  cellColor = colorScheme.primary.withOpacity(0.3);
                   break;
                 case 2:
-                  cellColor = Colors.green.shade300;
+                  cellColor = colorScheme.primary.withOpacity(0.5);
                   break;
                 case 3:
-                  cellColor = Colors.green.shade500;
+                  cellColor = colorScheme.primary.withOpacity(0.7);
                   break;
                 case 4:
-                  cellColor = Colors.green.shade700;
+                  cellColor = colorScheme.primary;
                   break;
                 default:
-                  cellColor = Colors.green.withOpacity(0.1);
+                  cellColor = colorScheme.primary.withOpacity(0.1);
               }
 
               return Container(

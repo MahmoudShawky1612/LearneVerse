@@ -53,6 +53,10 @@ class _PostItemState extends State<PostItem> {
   Widget build(BuildContext context) {
     Community community = Community.communities.firstWhere((comm) => comm.image == widget.post.communityImage);
     final post = widget.post;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
     // Check if userInfo is provided and use that instead of post fields
     final avatar = widget.userInfo != null ? widget.userInfo.avatar : post.avatar;
@@ -63,10 +67,10 @@ class _PostItemState extends State<PostItem> {
       curve: Curves.easeInOut,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         boxShadow: [
           BoxShadow(
-            color: AppColors.textSecondary.withOpacity(0.2),
+            color: colorScheme.onSurface.withOpacity(0.2),
             blurRadius: 8,
             spreadRadius: 1,
             offset: const Offset(0, 2),
@@ -93,7 +97,7 @@ class _PostItemState extends State<PostItem> {
                   child: CircleAvatar(
                     radius: 20,
                     backgroundImage: AssetImage(avatar),
-                    backgroundColor: AppColors.backgroundLight,
+                    backgroundColor: theme.scaffoldBackgroundColor,
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -102,38 +106,38 @@ class _PostItemState extends State<PostItem> {
                   children: [
                     Row(
                       children: [
-                        Text(author, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15, color: AppColors.textPrimary)),
+                        Text(author, style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700, fontSize: 15)),
                         const SizedBox(width: 6),
                         GestureDetector(
                           onTap: () => context.push('/community', extra: community),
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: theme.cardColor,
                               borderRadius: BorderRadius.circular(20),
-                              boxShadow: [BoxShadow(color: AppColors.primaryDark.withOpacity(0.15), blurRadius: 4, offset: const Offset(0, 2))],
+                              boxShadow: [BoxShadow(color: colorScheme.primary.withOpacity(0.15), blurRadius: 4, offset: const Offset(0, 2))],
                             ),
                             child: Row(
                               children: [
                                 CircleAvatar(
                                   radius: 9,
                                   backgroundImage: AssetImage(post.communityImage),
-                                  backgroundColor: AppColors.backgroundLight,
+                                  backgroundColor: theme.scaffoldBackgroundColor,
                                 ),
                                 const SizedBox(width: 4),
-                                Text('c/${post.communityName}', style: TextStyle(color: AppColors.textSecondary.withOpacity(0.9), fontSize: 12, fontWeight: FontWeight.w500)),
+                                Text('c/${post.communityName}', style: TextStyle(color: colorScheme.onSurface.withOpacity(0.9), fontSize: 12, fontWeight: FontWeight.w500)),
                               ],
                             ),
                           ),
                         ),
                       ],
                     ),
-                    Text('${post.time}h ago', style: TextStyle(color: AppColors.textSecondary.withOpacity(0.8), fontSize: 11)),
+                    Text('${post.time}h ago', style: TextStyle(color: colorScheme.onSurface.withOpacity(0.8), fontSize: 11)),
                   ],
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: Icon(Icons.more_horiz, color: AppColors.textPrimary.withOpacity(0.8), size: 20),
+                  icon: Icon(Icons.more_horiz, color: colorScheme.onSurface.withOpacity(0.8), size: 20),
                   onPressed: () {
                     setState(() {
                       showOptions = !showOptions;
@@ -144,13 +148,13 @@ class _PostItemState extends State<PostItem> {
             ),
             // Post title and description
             const SizedBox(height: 12),
-            Text(post.title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+            Text(post.title, style: textTheme.titleMedium?.copyWith(fontSize: 17, fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
             Text(
               post.description,
               maxLines: isExpanded ? null : 3,
               overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 13, color: AppColors.textPrimary.withOpacity(0.9), height: 1.5, fontWeight: FontWeight.w400),
+              style: textTheme.bodyMedium?.copyWith(fontSize: 13, height: 1.5, fontWeight: FontWeight.w400, color: colorScheme.onSurface.withOpacity(0.9)),
             ),
             if (post.description.length > 200)
               GestureDetector(
@@ -159,7 +163,7 @@ class _PostItemState extends State<PostItem> {
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     isExpanded ? 'Show less' : 'Read more',
-                    style: const TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w600, fontSize: 12),
+                    style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w600, fontSize: 12),
                   ),
                 ),
               ),
@@ -178,7 +182,7 @@ class _PostItemState extends State<PostItem> {
                         child: Icon(
                           CupertinoIcons.arrow_up_circle_fill,
                           size: 24,
-                          color: isUpVoted ? AppColors.upVote : AppColors.textSecondary.withOpacity(0.7),
+                          color: isUpVoted ? themeExtension?.upVote : colorScheme.onSurface.withOpacity(0.7),
                         ),
                       ),
                     ),
@@ -188,7 +192,7 @@ class _PostItemState extends State<PostItem> {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
-                        color: post.voteCount > 0 ? AppColors.upVote : post.voteCount < 0 ? AppColors.downVote : AppColors.textSecondary,
+                        color: post.voteCount > 0 ? themeExtension?.upVote : post.voteCount < 0 ? themeExtension?.downVote : colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -200,7 +204,7 @@ class _PostItemState extends State<PostItem> {
                         child: Icon(
                           CupertinoIcons.arrow_down_circle_fill,
                           size: 24,
-                          color: isDownVoted ? AppColors.downVote : AppColors.textSecondary.withOpacity(0.7),
+                          color: isDownVoted ? themeExtension?.downVote : colorScheme.onSurface.withOpacity(0.7),
                         ),
                       ),
                     ),
@@ -211,15 +215,15 @@ class _PostItemState extends State<PostItem> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: theme.cardColor,
                       borderRadius: BorderRadius.circular(20),
-                      boxShadow: [BoxShadow(color: AppColors.primaryDark.withOpacity(0.15), blurRadius: 4, offset: const Offset(0, 2))],
+                      boxShadow: [BoxShadow(color: colorScheme.primary.withOpacity(0.15), blurRadius: 4, offset: const Offset(0, 2))],
                     ),
                     child: Row(
                       children: [
-                        const FaIcon(FontAwesomeIcons.comment, size: 16, color: AppColors.textSecondary),
+                        FaIcon(FontAwesomeIcons.comment, size: 16, color: colorScheme.onSurface),
                         const SizedBox(width: 6),
-                        Text('${post.commentCount}', style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600, fontSize: 13)),
+                        Text('${post.commentCount}', style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.w600, fontSize: 13)),
                       ],
                     ),
                   ),

@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutterwidgets/features/home/models/author_model.dart';
+import 'package:flutterwidgets/features/home/models/community_model.dart';
+import 'package:flutterwidgets/features/home/models/post_model.dart';
+import 'package:flutterwidgets/features/home/presentation/widgets/build_posts.dart';
+import 'package:flutterwidgets/features/profile/presentation/views/profile_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../discover/presentation/widgets/vertical_users_list.dart';
 import '../../../home/models/author_model.dart';
@@ -63,6 +70,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -95,6 +107,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
   }
 
   Widget _buildSliverAppBar() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return SliverAppBar(
       expandedHeight: 400.0,
       pinned: true,
@@ -119,8 +134,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ),
         title: Text(
           widget.community.name,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: theme.colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -140,6 +155,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
   }
 
   Widget _buildCommunityHeader() {
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Row(
       children: <Widget>[
         CircleAvatar(
@@ -164,13 +183,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   Icon(
                     Icons.people,
                     size: 16,
-                    color: Colors.grey[600],
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     '${widget.community.memberCount} members',
                     style: TextStyle(
-                      color: Colors.grey[600],
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -180,16 +199,16 @@ class _CommunityScreenState extends State<CommunityScreen> {
                         : Icons.lock,
                     size: 16,
                     color: widget.community.communityPrivacy == "Public"
-                        ? AppColors.upVote
-                        : AppColors.downVote,
+                        ? themeExtension?.upVote
+                        : themeExtension?.downVote,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     widget.community.communityPrivacy,
                     style: TextStyle(
                       color: widget.community.communityPrivacy == "Public"
-                          ? AppColors.upVote
-                          : AppColors.downVote,
+                          ? themeExtension?.upVote
+                          : themeExtension?.downVote,
                     ),
                   ),
                 ],
@@ -202,7 +221,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   Text(
                     '(${widget.community.reviews} reviews)',
                     style: TextStyle(
-                      color: Colors.grey[600],
+                      color: theme.colorScheme.onSurfaceVariant,
                       fontSize: 12,
                     ),
                   ),
@@ -248,200 +267,64 @@ class _CommunityScreenState extends State<CommunityScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: tabs.length,
         itemBuilder: (context, index) {
-          final isSelected = _currentIndex == index;
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.only(right: 12),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : Colors.transparent,
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                  color: isSelected ? Colors.transparent : Colors.grey[300]!,
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  tabs[index],
-                  style: TextStyle(
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
-                    color: isSelected ? Colors.white : Colors.grey[700],
-                  ),
-                ),
-              ),
-            ),
-          );
+          return _buildTabItem(tabs[index], index);
         },
       ),
     );
   }
 
-  Widget _buildSelectedScreen() {
-    // If community is private and user hasn't joined, only show info screen
-    if (widget.community.communityPrivacy == "Private" && !_userHasJoined) {
-      return _buildPrivateCommunityMessage();
-    }
-
-    switch (_currentIndex) {
-      case 0:
-        return _buildInfoScreen();
-      case 1:
-        return _buildClassroomScreen();
-      case 2:
-        return _buildForumScreen();
-      case 3:
-        return _buildLeaderboardScreen();
-      case 4:
-        return _buildMembersScreen();
-      default:
-        return _buildInfoScreen();
-    }
-  }
-
-  Widget _buildPrivateCommunityMessage() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        const SizedBox(height: 40),
-        Icon(
-          Icons.lock,
-          size: 80,
-          color: AppColors.downVote.withOpacity(0.7),
+  Widget _buildTabItem(String title, int index) {
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    final bool isSelected = _currentIndex == index;
+    return GestureDetector(
+      onTap: () => setState(() => _currentIndex = index),
+      child: Container(
+        margin: const EdgeInsets.only(right: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          gradient: isSelected ? themeExtension?.buttonGradient : null,
+          color: isSelected ? null : theme.colorScheme.surfaceVariant,
+          borderRadius: BorderRadius.circular(20),
         ),
-        const SizedBox(height: 24),
-        const Text(
-          'Private Community',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Center(
           child: Text(
-            'You need to join this community to access its content. Join now to interact with members and access all resources.',
+            title,
             style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[700],
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        const SizedBox(height: 32),
-        SizedBox(
-          width: 200,
-          child: ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _userHasJoined = true;
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  margin: const EdgeInsets.all(16),
-                  padding: EdgeInsets.zero,
-                  elevation: 6,
-                  backgroundColor: Colors.transparent,
-                  content: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      gradient: AppColors.buttonGradient,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: AppColors.circleGradient,
-                          ),
-                          child: const Icon(
-                            Icons.celebration,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text(
-                                "Welcome aboard!",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                "You're now part of ${widget.community.name}",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white.withOpacity(0.9),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.white),
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  duration: const Duration(seconds: 5),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text(
-              'Join Community',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: AppColors.backgroundLight,
-              ),
+              color: isSelected ? colorScheme.onPrimary : theme.colorScheme.onSurfaceVariant,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
         ),
-        const SizedBox(height: 50),
-      ],
+      ),
     );
   }
 
-  Widget _buildInfoScreen() {
+  Widget _buildSelectedScreen() {
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
+    switch (_currentIndex) {
+      case 0:
+        return _buildInfoTab();
+      case 1:
+        return _buildClassroomTab();
+      case 2:
+        return _buildForumTab();
+      case 3:
+        return _buildLeaderboardTab();
+      case 4:
+        return _buildMembersTab();
+      default:
+        return _buildInfoTab();
+    }
+  }
+
+  Widget _buildInfoTab() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -457,7 +340,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         Text(
           'This is a community where members can learn, share, and grow together. Join us to access exclusive content, participate in discussions, and connect with like-minded individuals.',
           style: TextStyle(
-            color: Colors.grey[700],
+            color: theme.colorScheme.onSurfaceVariant,
             height: 1.5,
           ),
         ),
@@ -476,7 +359,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
           children: List<Widget>.from(widget.community.tags.map((tag) {
             return Chip(
               label: Text(tag),
-              backgroundColor: AppColors.lightGrey,
+              backgroundColor: theme.colorScheme.surface,
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             );
           })),
@@ -509,104 +392,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         if (!_userHasJoined)
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _userHasJoined = true;
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    margin: const EdgeInsets.all(16),
-                    padding: EdgeInsets.zero,
-                    elevation: 6,
-                    backgroundColor: Colors.transparent,
-                    content: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        gradient: AppColors.buttonGradient,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: AppColors.circleGradient,
-                            ),
-                            child: const Icon(
-                              Icons.celebration,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text(
-                                  "Welcome aboard!",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  "You're now part of ${widget.community.name}",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white.withOpacity(0.9),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white),
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    duration: const Duration(seconds: 5),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                'Join Community',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.backgroundLight,
-                ),
-              ),
-            ),
+            child: _buildJoinButton(),
           ),
         const SizedBox(height: 36),
       ],
@@ -618,6 +404,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
     required String title,
     required String description,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -625,7 +414,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         children: <Widget>[
           Icon(
             icon,
-            color: AppColors.primary,
+            color: colorScheme.primary,
             size: 20,
           ),
           const SizedBox(width: 12),
@@ -644,7 +433,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 Text(
                   description,
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -655,7 +444,42 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
-  Widget _buildClassroomScreen() {
+  Widget _buildJoinButton() {
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _userHasJoined = !_userHasJoined;
+        });
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          gradient: themeExtension?.buttonGradient,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Text(
+            _userHasJoined ? 'Leave Community' : 'Join Community',
+            style: TextStyle(
+              color: colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClassroomTab() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     final List<Map<String, dynamic>> sections = [
       {
         'title': 'Introduction to the Community',
@@ -705,14 +529,17 @@ class _CommunityScreenState extends State<CommunityScreen> {
   }
 
   Widget _buildSectionCard(Map<String, dynamic> section) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: theme.shadowColor.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -766,15 +593,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
                       LinearProgressIndicator(
                         value: (section['completed'] as int) /
                             (section['lessons'] as int),
-                        backgroundColor: Colors.grey[200],
-                        color: AppColors.primary,
+                        backgroundColor: theme.colorScheme.surfaceVariant,
+                        color: colorScheme.primary,
                         borderRadius: BorderRadius.circular(2),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         '${section['completed']}/${section['lessons']} completed',
                         style: TextStyle(
-                          color: Colors.grey[600],
+                          color: theme.colorScheme.onSurfaceVariant,
                           fontSize: 12,
                         ),
                       ),
@@ -791,10 +618,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
   }
 
   Widget _buildInfoChip(IconData icon, String label) {
+    final theme = Theme.of(context);
+    
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: theme.colorScheme.surfaceVariant,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -803,14 +632,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
           Icon(
             icon,
             size: 14,
-            color: Colors.grey[700],
+            color: theme.colorScheme.onSurfaceVariant,
           ),
           const SizedBox(width: 4),
           Text(
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.grey[700],
+              color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -818,7 +647,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
-  Widget _buildForumScreen() {
+  Widget _buildForumTab() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -826,20 +659,23 @@ class _CommunityScreenState extends State<CommunityScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const Text(
+            Text(
               'Community Forum',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
               ),
             ),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                _showCreatePostDialog();
+              },
               icon: const Icon(Icons.add),
               label: const Text('New Post'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 shape: RoundedRectangleBorder(
@@ -852,11 +688,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: theme.shadowColor.withOpacity(0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -871,198 +707,379 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
-  Widget _buildLeaderboardScreen() {
-    final List<Author> topMembers = _members.take(10).toList();
+  void _showCreatePostDialog() {
+    final titleController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final currentUser = Author.users[0]; // Use the first user as current user
+    final currentCommunity = widget.community;
 
+    showDialog(
+      context: context,
+      builder: (context) {
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+        final themeExtension = theme.extension<AppThemeExtension>();
+
+        return AlertDialog(
+          backgroundColor: theme.cardColor,
+          title: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage(currentUser.avatar),
+                radius: 16,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Create Post',
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleController,
+                  style: TextStyle(color: colorScheme.onSurface),
+                  decoration: InputDecoration(
+                    hintText: 'Title',
+                    hintStyle: TextStyle(color: theme.hintColor),
+                    filled: true,
+                    fillColor: theme.inputDecorationTheme.fillColor ?? theme.scaffoldBackgroundColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: descriptionController,
+                  style: TextStyle(color: colorScheme.onSurface),
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: 'Description',
+                    hintStyle: TextStyle(color: theme.hintColor),
+                    filled: true,
+                    fillColor: theme.inputDecorationTheme.fillColor ?? theme.scaffoldBackgroundColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: colorScheme.onSurfaceVariant),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: themeExtension?.buttonGradient,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  if (titleController.text.isNotEmpty && descriptionController.text.isNotEmpty) {
+                    _createNewPost(titleController.text, descriptionController.text, currentUser, currentCommunity);
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text(
+                  'Post',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _createNewPost(String title, String description, Author author, Community community) {
+    final newPost = Post(
+      title: title,
+      description: description,
+      voteCount: 0,
+      upvote: 0,
+      downVote: 0,
+      author: author.name,
+      avatar: author.avatar,
+      time: 0, // Just posted
+      commentCount: 0,
+      communityName: community.name,
+      communityImage: community.image,
+    );
+
+    setState(() {
+      _posts.insert(0, newPost); // Add to the beginning to show newest first
+    });
+  }
+
+  Widget _buildLeaderboardTab() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const SizedBox(height: 24),
-        const Text(
-          'Community Leaderboard',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Top Contributors',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: <Widget>[
+            _buildTimeFilterChip('Weekly', isActive: true),
+            const SizedBox(width: 8),
+            _buildTimeFilterChip('Monthly'),
+            const SizedBox(width: 8),
+            _buildTimeFilterChip('All Time'),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Container(
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.shadowColor.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: <Widget>[
+                    const Text(
+                      'Rank',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    const Expanded(
+                      child: Text(
+                        'User',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const Text(
+                      'Points',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+              ...List.generate(
+                5,
+                (index) => _buildTopMemberItem(
+                  rank: index + 1,
+                  name: _members[index].name,
+                  username: _members[index].userName,
+                  avatarUrl: _members[index].avatar,
+                  points: _members[index].points,
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 24),
-        _buildTopThreeMembers(topMembers.take(3).toList()),
-        const SizedBox(height: 32),
         const Text(
-          'Top Contributors',
+          'Your Contribution',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 16),
-        ...topMembers
-            .skip(3)
-            .take(7)
-            .map((member) => _buildLeaderboardItem(
-                  member,
-                  topMembers.indexOf(member) + 1,
-                ))
-            .toList(),
-        const SizedBox(height: 24),
-        Center(
-          child: OutlinedButton(
-            onPressed: () {
-              setState(() {
-                _currentIndex = 4; // Switch to Members tab
-              });
-            },
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              side: const BorderSide(color: AppColors.primary),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.shadowColor.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
               ),
-            ),
-            child: const Text('View All Members'),
+            ],
+          ),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.analytics,
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Text(
+                        'Your Rank',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        '27th out of 152 members',
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      '230 pts',
+                      style: TextStyle(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  _buildStatItem('Posts', '5'),
+                  _buildStatItem('Comments', '12'),
+                  _buildStatItem('Likes', '43'),
+                  _buildStatItem('Solutions', '2'),
+                ],
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 36),
       ],
     );
   }
 
-  Widget _buildTopThreeMembers(List<Author> topThree) {
-    final List<Widget> children = [];
-
-    if (topThree.length > 1) {
-      children.add(_buildTopMemberItem(second, 2, 100));
-    }
-
-    if (topThree.isNotEmpty) {
-      children.add(_buildTopMemberItem(first, 1, 120));
-    }
-
-    if (topThree.length > 2) {
-      children.add(_buildTopMemberItem(third, 3, 80));
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: children,
-    );
-  }
-
-  Widget _buildTopMemberItem(Author member, int position, double height) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        children: <Widget>[
-          Container(
-            width: position == 1 ? 40 : 30,
-            height: position == 1 ? 40 : 30,
-            decoration: BoxDecoration(
-              color: position == 1
-                  ? Colors.amber
-                  : position == 2
-                      ? Colors.grey[400]
-                      : Colors.brown[300],
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                '$position',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Stack(
-            alignment: Alignment.topCenter,
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                width: 80,
-                height: height,
-                decoration: BoxDecoration(
-                  gradient: AppColors.circleGradient,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.white,
-                child: CircleAvatar(
-                  radius: 36,
-                  backgroundImage: AssetImage(member.avatar),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            member.name,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '${member.points} points',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 14,
-            ),
-          ),
-        ],
+  Widget _buildTimeFilterChip(String label, {bool isActive = false}) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    
+    return ChoiceChip(
+      label: Text(label),
+      selected: isActive,
+      onSelected: (bool selected) {},
+      backgroundColor: theme.colorScheme.surfaceVariant,
+      selectedColor: colorScheme.primary.withOpacity(0.2),
+      labelStyle: TextStyle(
+        color: isActive ? colorScheme.primary : theme.colorScheme.onSurfaceVariant,
+        fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: isActive ? colorScheme.primary : Colors.transparent,
+        ),
       ),
     );
   }
 
-  Widget _buildLeaderboardItem(Author member, int position) {
+  Widget _buildTopMemberItem({
+    required int rank,
+    required String name,
+    required String username,
+    required String avatarUrl,
+    required int points,
+  }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+        border: Border(
+          bottom: BorderSide(
+            color: theme.dividerColor,
+            width: 0.5,
           ),
-        ],
+        ),
       ),
       child: Row(
         children: <Widget>[
+          Text(
+            '$rank',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: rank <= 3 ? colorScheme.primary : null,
+            ),
+          ),
+          const SizedBox(width: 24),
           Container(
-            width: 30,
-            height: 30,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
-              color: position <= 3
-                  ? position == 1
-                      ? Colors.amber
-                      : position == 2
-                          ? Colors.grey[400]
-                          : Colors.brown[300]
-                  : Colors.grey[200],
               shape: BoxShape.circle,
+              gradient: themeExtension?.circleGradient,
             ),
             child: Center(
               child: Text(
-                '$position',
+                avatarUrl,
                 style: TextStyle(
-                  color: position <= 3 ? Colors.white : Colors.grey[800],
+                  color: colorScheme.onPrimary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 12),
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: AssetImage(member.avatar),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -1070,35 +1087,67 @@ class _CommunityScreenState extends State<CommunityScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  member.name,
+                  name,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
                   ),
                 ),
                 Text(
-                  member.userName,
+                  '@$username',
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color: theme.colorScheme.onSurfaceVariant,
                     fontSize: 12,
                   ),
                 ),
               ],
             ),
           ),
-          Text(
-            '${member.points} pts',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              '$points pts',
+              style: TextStyle(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
       ),
     );
   }
+  
+  Widget _buildStatItem(String label, String value) {
+    final theme = Theme.of(context);
+    
+    return Column(
+      children: <Widget>[
+        Text(
+          value,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
 
-  Widget _buildMembersScreen() {
+  Widget _buildMembersTab() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -1116,13 +1165,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppColors.lightGrey,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 '${widget.community.memberCount} members',
                 style: TextStyle(
-                  color: Colors.grey[700],
+                  color: theme.colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -1133,11 +1182,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: theme.shadowColor.withOpacity(0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -1154,7 +1203,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 borderSide: BorderSide.none,
               ),
               filled: true,
-              fillColor: Colors.grey[100],
+              fillColor: theme.colorScheme.surfaceVariant,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 12,
@@ -1165,18 +1214,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(12),
           ),
         ),
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: theme.shadowColor.withOpacity(0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -1188,6 +1237,23 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ),
         const SizedBox(height: 24),
       ],
+    );
+  }
+
+  // Add the _buildMemberAvatar method
+  Widget _buildMemberAvatar(Author member) {
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    
+    return Container(
+      padding: const EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: themeExtension?.circleGradient,
+      ),
+      child: CircleAvatar(
+        radius: 22,
+        backgroundImage: AssetImage(member.avatar),
+      ),
     );
   }
 }

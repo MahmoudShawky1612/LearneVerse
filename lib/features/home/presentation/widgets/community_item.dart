@@ -20,17 +20,21 @@ class _CommunityItemState extends State<CommunityItem> {
   @override
   Widget build(BuildContext context) {
     final community = widget.community;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       width: 165,
       margin: const EdgeInsets.only(right: 15, left: 15),
       decoration: BoxDecoration(
-        color: AppColors.backgroundLight,
+        color: theme.scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: AppColors.textSecondary.withOpacity(0.15),
+            color: colorScheme.onSurface.withOpacity(0.15),
             blurRadius: 12,
             spreadRadius: 0.5,
             offset: const Offset(0, 3),
@@ -47,10 +51,10 @@ class _CommunityItemState extends State<CommunityItem> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.surfaceLight,
+                color: theme.cardColor,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.textSecondary.withOpacity(0.08),
+                    color: colorScheme.onSurface.withOpacity(0.08),
                     blurRadius: 8,
                     spreadRadius: 0,
                     offset: const Offset(0, 2),
@@ -69,10 +73,9 @@ class _CommunityItemState extends State<CommunityItem> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
               community.name,
-              style: const TextStyle(
+              style: textTheme.titleMedium?.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
                 height: 1.2,
               ),
               textAlign: TextAlign.center,
@@ -85,24 +88,23 @@ class _CommunityItemState extends State<CommunityItem> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppColors.lightGrey,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const FaIcon(
+                  FaIcon(
                     FontAwesomeIcons.userFriends,
                     size: 12,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurface.withOpacity(0.7),
                   ),
                   const SizedBox(width: 6),
                   Text(
                     '${community.memberCount}',
-                    style: const TextStyle(
+                    style: textTheme.bodySmall?.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textSecondary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -115,9 +117,9 @@ class _CommunityItemState extends State<CommunityItem> {
           Expanded(
             child: Container(
               width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: AppColors.buttonGradient,
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                gradient: themeExtension?.buttonGradient,
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(22),
                   bottomRight: Radius.circular(22),
                 ),
@@ -132,13 +134,13 @@ class _CommunityItemState extends State<CommunityItem> {
                     bottomLeft: Radius.circular(22),
                     bottomRight: Radius.circular(22),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'View community',
                         style: TextStyle(
-                          color: AppColors.backgroundLight,
+                          color: colorScheme.onPrimary,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0.3,
@@ -146,7 +148,7 @@ class _CommunityItemState extends State<CommunityItem> {
                       ),
                       Icon(
                         Icons.arrow_forward_rounded,
-                        color: AppColors.backgroundLight,
+                        color: colorScheme.onPrimary,
                         size: 16,
                       ),
                     ],

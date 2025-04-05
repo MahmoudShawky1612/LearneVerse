@@ -8,16 +8,25 @@ class CommentSortOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      decoration: const BoxDecoration(
-        color: AppColors.backgroundLight,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: theme.scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Sort Comments By', style: GoogleFonts.poppins(fontSize: 16)),
+          Text(
+            'Sort Comments By', 
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              color: colorScheme.onBackground,
+            )
+          ),
           _buildSortOption(context, 'Most Recent', Icons.access_time),
           _buildSortOption(context, 'Top Comments', Icons.thumb_up),
         ],
@@ -26,9 +35,15 @@ class CommentSortOptions extends StatelessWidget {
   }
 
   Widget _buildSortOption(BuildContext context, String title, IconData icon) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
+      leading: Icon(icon, color: colorScheme.primary),
+      title: Text(
+        title,
+        style: TextStyle(color: colorScheme.onSurface),
+      ),
       onTap: () => Navigator.pop(context),
     );
   }

@@ -14,10 +14,14 @@ class NotificationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isNew = notification['isNew'] ?? false;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Container(
       decoration: BoxDecoration(
-        color: isNew ? Colors.blue.withOpacity(0.05) : Colors.transparent,
+        color: isNew 
+            ? colorScheme.primary.withOpacity(0.08) 
+            : Colors.transparent,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -39,9 +43,9 @@ class NotificationItem extends StatelessWidget {
                       width: 10,
                       height: 10,
                       decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: colorScheme.primary,
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 1.5),
+                        border: Border.all(color: theme.scaffoldBackgroundColor, width: 1.5),
                       ),
                     ),
                   ),
@@ -65,7 +69,7 @@ class NotificationItem extends StatelessWidget {
                             fontSize: 14,
                             fontWeight:
                                 isNew ? FontWeight.w600 : FontWeight.w500,
-                            color: Colors.black87,
+                            color: colorScheme.onSurface,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -76,7 +80,7 @@ class NotificationItem extends StatelessWidget {
                         notification['timeAgo'],
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey.shade600,
+                          color: colorScheme.onSurface.withOpacity(0.6),
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -89,7 +93,7 @@ class NotificationItem extends StatelessWidget {
                     notification['detailed'],
                     style: TextStyle(
                       fontSize: 13,
-                      color: Colors.grey.shade600,
+                      color: colorScheme.onSurface.withOpacity(0.7),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -102,7 +106,7 @@ class NotificationItem extends StatelessWidget {
               icon: Icon(
                 Icons.chevron_right,
                 size: 20,
-                color: Colors.grey.shade400,
+                color: colorScheme.onSurface.withOpacity(0.4),
               ),
               onPressed: () {},
               padding: EdgeInsets.zero,

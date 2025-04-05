@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 class ProfileTabButton extends StatelessWidget {
   final String title;
@@ -19,17 +18,20 @@ class ProfileTabButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = selectedIndex == index;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return GestureDetector(
       onTap: () => onTap(index),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.surfaceLight : Colors.transparent,
+          color: isSelected ? theme.cardColor : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.textSecondary.withOpacity(0.1),
+                    color: colorScheme.onSurface.withOpacity(0.1),
                     blurRadius: 6,
                     spreadRadius: 0,
                     offset: const Offset(0, 2),
@@ -44,7 +46,7 @@ class ProfileTabButton extends StatelessWidget {
               icon,
               size: 16,
               color:
-                  isSelected ? AppColors.primaryDark : AppColors.textSecondary,
+                  isSelected ? colorScheme.primary : colorScheme.onSurface.withOpacity(0.7),
             ),
             const SizedBox(width: 6),
             Text(
@@ -53,8 +55,8 @@ class ProfileTabButton extends StatelessWidget {
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color: isSelected
-                    ? AppColors.primaryDark
-                    : AppColors.textSecondary,
+                    ? colorScheme.primary
+                    : colorScheme.onSurface.withOpacity(0.7),
               ),
             ),
           ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/comments/models/comments_model.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../home/models/author_model.dart';
 import '../../../home/presentation/widgets/post_item.dart';
 import '../../../profile/presentation/widgets/build_comments.dart';
 import '../widgets/comment_input_field.dart';
@@ -19,12 +20,14 @@ class CommentsScreen extends StatefulWidget {
 class _CommentsScreenState extends State<CommentsScreen> {
   late List<Comments> comments;
   late TextEditingController _commentController;
+  late Author currentUser;
 
   @override
   void initState() {
     super.initState();
     comments = Comments.generateDummyComments(widget.post.commentCount);
     _commentController = TextEditingController();
+    currentUser = Author.users[0]; // Using the first user as the current user
   }
 
   @override
@@ -33,10 +36,36 @@ class _CommentsScreenState extends State<CommentsScreen> {
     super.dispose();
   }
 
+  void _onCommentSubmitted(String commentText) {
+    if (commentText.isNotEmpty) {
+      final newComment = Comments(
+        author: currentUser.name,
+        comment: commentText,
+        repliedTo: "", // No reply in this case
+        voteCount: 0,
+        upvote: 0,
+        downVote: 0,
+        avatar: currentUser.avatar,
+        time: 0, // Just now
+        communityName: widget.post.communityName,
+        communityImage: widget.post.communityImage,
+      );
+      
+      setState(() {
+        comments.insert(0, newComment); // Add to the beginning to show newest first
+      });
+      
+      _commentController.clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: _buildAppBar(context),
       body: Column(
         children: [
@@ -62,14 +91,14 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.textPrimary,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: AppColors.textSecondaryDark,
+                              color: colorScheme.surfaceVariant,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: GestureDetector(
@@ -82,14 +111,14 @@ class _CommentsScreenState extends State<CommentsScreen> {
                               },
                               child: Row(
                                 children: [
-                                  const Icon(Icons.sort,
-                                      size: 16, color: AppColors.textPrimary),
+                                  Icon(Icons.sort,
+                                      size: 16, color: colorScheme.onSurface),
                                   const SizedBox(width: 4),
                                   Text(
                                     'Recent',
                                     style: GoogleFonts.poppins(
                                       fontSize: 12,
-                                      color: AppColors.textPrimary,
+                                      color: colorScheme.onSurface,
                                     ),
                                   ),
                                 ],
@@ -111,7 +140,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
           ),
           CommentInputField(
             commentController: _commentController,
-            onCommentSubmitted: useless,
+            onCommentSubmitted: _onCommentSubmitted,
+            currentUser: currentUser,
           ),
         ],
       ),
@@ -119,23 +149,16 @@ class _CommentsScreenState extends State<CommentsScreen> {
   }
 }
 
-void useless(String commentText) {}
-// void _onCommentSubmitted(String commentText) {
-//   if (commentText.isNotEmpty) {
-//     setState(() {
-//       comments.add(Comments(author: "You", comment: commentText));
-//     });
-//     _commentController.clear();
-//   }
-// }
-
 AppBar _buildAppBar(BuildContext context) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+  
   return AppBar(
     elevation: 0,
-    backgroundColor: AppColors.backgroundLight,
+    backgroundColor: theme.scaffoldBackgroundColor,
     centerTitle: true,
     leading: IconButton(
-      icon: const Icon(Icons.arrow_back_ios, color: AppColors.backgroundDark),
+      icon: Icon(Icons.arrow_back_ios, color: colorScheme.onSurface),
       onPressed: () => Navigator.pop(context),
     ),
     title: Text(
@@ -143,7 +166,7 @@ AppBar _buildAppBar(BuildContext context) {
       style: GoogleFonts.poppins(
         fontSize: 18,
         fontWeight: FontWeight.w600,
-        color: AppColors.backgroundDark,
+        color: colorScheme.onSurface,
       ),
     ),
   );
