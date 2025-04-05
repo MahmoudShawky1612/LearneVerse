@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/utils/responsive_utils.dart';
 
 import 'notification_item.dart';
 
@@ -54,6 +55,7 @@ class _NotificationPanelState extends State<NotificationPanel>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final themeExtension = theme.extension<AppThemeExtension>();
+    final screenWidth = MediaQuery.of(context).size.width;
     
     final List<String> avatars = [
       'assets/images/avatar1.jpg',
@@ -91,18 +93,26 @@ class _NotificationPanelState extends State<NotificationPanel>
       },
     );
 
+    // UI sizing variables
+    final double buttonSize = 42;
+    final double buttonIconSize = 18;
+    final double indicatorSize = 10;
+    final double panelWidth = screenWidth < 600 ? screenWidth * 0.9 : 350;
+    final double panelHeight = 450;
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
+        // Notification button
         Positioned(
-          right: 30,
-          top: 15,
+          right: 30, // Fixed position for notification button
+          top: 15,  // Same top position as theme toggle button
           child: Stack(
             clipBehavior: Clip.none,
             children: [
               Container(
-                width: 42,
-                height: 42,
+                width: buttonSize,
+                height: buttonSize,
                 decoration: BoxDecoration(
                   color: isExpanded
                       ? colorScheme.primary.withOpacity(0.15)
@@ -112,7 +122,7 @@ class _NotificationPanelState extends State<NotificationPanel>
                 child: IconButton(
                   icon: FaIcon(
                     FontAwesomeIcons.bell,
-                    size: 18,
+                    size: buttonIconSize,
                     color: isExpanded ? colorScheme.primary : colorScheme.onSurface,
                   ),
                   onPressed: _toggleNotifications,
@@ -124,8 +134,8 @@ class _NotificationPanelState extends State<NotificationPanel>
                 top: 6,
                 right: 8,
                 child: Container(
-                  width: 10,
-                  height: 10,
+                  width: indicatorSize,
+                  height: indicatorSize,
                   decoration: BoxDecoration(
                     color: colorScheme.error,
                     shape: BoxShape.circle,
@@ -136,6 +146,7 @@ class _NotificationPanelState extends State<NotificationPanel>
             ],
           ),
         ),
+        // Notification panel
         AnimatedBuilder(
           animation: _animation,
           builder: (context, child) {
@@ -148,8 +159,8 @@ class _NotificationPanelState extends State<NotificationPanel>
                 child: Visibility(
                   visible: isExpanded,
                   child: Container(
-                    width: 380,
-                    height: 500,
+                    width: panelWidth,
+                    height: panelHeight,
                     decoration: BoxDecoration(
                       color: theme.cardColor,
                       borderRadius: BorderRadius.circular(20),
@@ -182,9 +193,10 @@ class _NotificationPanelState extends State<NotificationPanel>
                                 style: TextButton.styleFrom(
                                   foregroundColor: colorScheme.primary,
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
+                                    horizontal: 10,
+                                    vertical: 5
+                                  ),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: Text(
                                   'Mark all as read',

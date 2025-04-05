@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutterwidgets/core/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/contribution_header.dart';
 import '../widgets/profile_header.dart';
@@ -24,11 +26,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
+    // Use the provided userInfo or get it from the provider
+    final userInfo = widget.userInfo ?? Provider.of<UserProvider>(context).currentUser;
+    
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
-          ProfileHeader(userInfo: widget.userInfo),
+          ProfileHeader(userInfo: userInfo),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(
@@ -95,8 +100,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               sliver: SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    UserComments(userInfo: widget.userInfo),
-                    UserPostsScreen(userInfo: widget.userInfo),
+                    UserComments(userInfo: userInfo),
+                    UserPostsScreen(userInfo: userInfo),
                   ],
                 ),
               ),
@@ -105,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: UserJoinedCommunities(),
+                child: UserJoinedCommunities(userInfo: userInfo),
               ),
             ),
           const SliverToBoxAdapter(

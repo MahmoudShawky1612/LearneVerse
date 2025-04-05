@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/utils/responsive_utils.dart';
 
 class NotificationItem extends StatelessWidget {
   final Map<String, dynamic> notification;
@@ -16,6 +17,14 @@ class NotificationItem extends StatelessWidget {
     final bool isNew = notification['isNew'] ?? false;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    
+    // Use screen width for responsive sizing
+    final screenWidth = MediaQuery.of(context).size.width;
+    final double avatarSize = screenWidth > 600 ? 24.0 : 20.0;
+    final double horizontalPadding = screenWidth > 600 ? 20.0 : 12.0;
+    final double verticalPadding = screenWidth > 600 ? 10.0 : 8.0;
+    final double horizontalSpacing = screenWidth > 600 ? 12.0 : 8.0;
+    final double verticalSpacing = screenWidth > 600 ? 3.0 : 2.0;
 
     return Container(
       decoration: BoxDecoration(
@@ -24,7 +33,10 @@ class NotificationItem extends StatelessWidget {
             : Colors.transparent,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: EdgeInsets.symmetric(
+          vertical: verticalPadding, 
+          horizontal: horizontalPadding
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -33,26 +45,29 @@ class NotificationItem extends StatelessWidget {
               children: [
                 CircleAvatar(
                   backgroundImage: AssetImage(notification['image']),
-                  radius: 24,
+                  radius: avatarSize,
                 ),
                 if (isNew)
                   Positioned(
                     right: 0,
                     top: 0,
                     child: Container(
-                      width: 10,
-                      height: 10,
+                      width: 8,
+                      height: 8,
                       decoration: BoxDecoration(
                         color: colorScheme.primary,
                         shape: BoxShape.circle,
-                        border: Border.all(color: theme.scaffoldBackgroundColor, width: 1.5),
+                        border: Border.all(
+                          color: theme.scaffoldBackgroundColor, 
+                          width: 1.5
+                        ),
                       ),
                     ),
                   ),
               ],
             ),
 
-            const SizedBox(width: 12),
+            SizedBox(width: horizontalSpacing),
 
             Expanded(
               child: Column(
@@ -66,7 +81,7 @@ class NotificationItem extends StatelessWidget {
                         child: Text(
                           notification['title'],
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: screenWidth > 600 ? 14.0 : 13.0,
                             fontWeight:
                                 isNew ? FontWeight.w600 : FontWeight.w500,
                             color: colorScheme.onSurface,
@@ -75,11 +90,11 @@ class NotificationItem extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: horizontalSpacing),
                       Text(
                         notification['timeAgo'],
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: screenWidth > 600 ? 12.0 : 11.0,
                           color: colorScheme.onSurface.withOpacity(0.6),
                           fontWeight: FontWeight.w400,
                         ),
@@ -87,12 +102,12 @@ class NotificationItem extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 3),
+                  SizedBox(height: verticalSpacing),
 
                   Text(
                     notification['detailed'],
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: screenWidth > 600 ? 13.0 : 12.0,
                       color: colorScheme.onSurface.withOpacity(0.7),
                     ),
                     maxLines: 1,
@@ -105,14 +120,14 @@ class NotificationItem extends StatelessWidget {
             IconButton(
               icon: Icon(
                 Icons.chevron_right,
-                size: 20,
+                size: screenWidth > 600 ? 20.0 : 18.0,
                 color: colorScheme.onSurface.withOpacity(0.4),
               ),
               onPressed: () {},
               padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(
-                minWidth: 30,
-                minHeight: 30,
+              constraints: BoxConstraints(
+                minWidth: screenWidth > 600 ? 30.0 : 25.0,
+                minHeight: screenWidth > 600 ? 30.0 : 25.0,
               ),
             ),
           ],

@@ -96,51 +96,65 @@ class _CommentItemState extends State<CommentItem> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          name,  // Use name from userInfo or comment
-                          style: textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                        ),
-                        flag
-                            ? Row(
-                          children: [
-                            const SizedBox(width: 4),
-                            FaIcon(
-                              FontAwesomeIcons.solidCircle,
-                              size: 6,
-                              color: colorScheme.onSurface.withOpacity(0.7),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              comment.repliedTo,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              name,  // Use name from userInfo or comment
                               style: textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
                               ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
-                          ],
-                        )
-                            : Container(),
-                      ],
-                    ),
-                    Text(
-                      '${comment.time}h ago',
-                      style: textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurface.withOpacity(0.8),
-                        fontSize: 11,
+                          ),
+                          flag
+                              ? Flexible(
+                                  child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(width: 4),
+                                    FaIcon(
+                                      FontAwesomeIcons.solidCircle,
+                                      size: 6,
+                                      color: colorScheme.onSurface.withOpacity(0.7),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Flexible(
+                                      child: Text(
+                                        comment.repliedTo,
+                                        style: textTheme.bodyMedium?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                              : Container(),
+                        ],
                       ),
-                    ),
-                  ],
+                      Text(
+                        '${comment.time}h ago',
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurface.withOpacity(0.8),
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const Spacer(),
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     flag
                         ? GestureDetector(
@@ -149,7 +163,7 @@ class _CommentItemState extends State<CommentItem> {
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 6, vertical: 3),
                         decoration: BoxDecoration(
                           color: theme.cardColor,
                           borderRadius: BorderRadius.circular(20),
@@ -162,20 +176,25 @@ class _CommentItemState extends State<CommentItem> {
                           ],
                         ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             CircleAvatar(
-                              radius: 9,
+                              radius: 7,
                               backgroundImage:
                               AssetImage(comment.communityImage),
                               backgroundColor: theme.scaffoldBackgroundColor,
                             ),
                             const SizedBox(width: 4),
-                            Text(
-                              'c/${comment.communityName}',
-                              style: TextStyle(
-                                color: colorScheme.onSurface.withOpacity(0.9),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
+                            Flexible(
+                              child: Text(
+                                'c/${comment.communityName}',
+                                style: TextStyle(
+                                  color: colorScheme.onSurface.withOpacity(0.9),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
                             ),
                           ],
@@ -198,6 +217,11 @@ class _CommentItemState extends State<CommentItem> {
                               showOptions = !showOptions;
                             });
                           },
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(
+                            minWidth: 30,
+                            minHeight: 30,
+                          ),
                         ),
                         if (showOptions)
                           Positioned(
@@ -227,7 +251,7 @@ class _CommentItemState extends State<CommentItem> {
                                       'Edit',
                                       style: TextStyle(
                                         color: colorScheme.primary,
-                                        fontSize: 12,
+                                        fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -238,7 +262,7 @@ class _CommentItemState extends State<CommentItem> {
                                       'Delete',
                                       style: TextStyle(
                                         color: colorScheme.secondary,
-                                        fontSize: 12,
+                                        fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),

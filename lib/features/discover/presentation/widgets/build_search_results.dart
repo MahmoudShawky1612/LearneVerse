@@ -23,7 +23,7 @@ class BuildSearchResults extends StatelessWidget {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 50),
+        margin: const EdgeInsets.only(bottom: 100),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

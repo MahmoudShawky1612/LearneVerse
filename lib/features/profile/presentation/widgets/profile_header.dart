@@ -79,6 +79,40 @@ class ProfileHeader extends StatelessWidget {
                     const SizedBox(height: 12),
                     ProfileBioQuote(userInfo:userInfo),
                     const SizedBox(height: 14),
+                    
+                    // User interests
+                    if (userInfo != null && userInfo.interests.isNotEmpty)
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(bottom: 14),
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: userInfo.interests.map<Widget>((interest) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: colorScheme.primary.withOpacity(0.5),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                interest,
+                                style: TextStyle(
+                                  color: colorScheme.onPrimary,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    
                     Center(child: ProfileUserStatsRow(userInfo:userInfo)),
                     const SizedBox(height: 18),
                     ProfileSocialLinksRow(),

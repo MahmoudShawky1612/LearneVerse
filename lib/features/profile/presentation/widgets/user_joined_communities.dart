@@ -5,14 +5,17 @@ import '../../../home/models/author_model.dart';
 import '../../../home/models/community_model.dart';
 
 class UserJoinedCommunities extends StatelessWidget {
-  UserJoinedCommunities({super.key});
-
-  final List<Community> userCommunities = Author.userJoinedCommunities;
+  final userInfo;
+  
+  UserJoinedCommunities({super.key, this.userInfo});
 
   @override
   Widget build(BuildContext context) {
+    // Use the provided user's communities or default
+    final communities = userInfo?.joinedCommunities ?? Author.userJoinedCommunities;
+    
     return VerticalCommunityList(
-      communities: userCommunities,
+      communities: communities,
     );
   }
 }

@@ -74,7 +74,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -109,7 +109,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   Widget _buildSliverAppBar() {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return SliverAppBar(
       expandedHeight: 400.0,
       pinned: true,
@@ -158,7 +158,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Row(
       children: <Widget>[
         CircleAvatar(
@@ -242,9 +242,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
           index < widget.community.rating.floor()
               ? Icons.star
               : (index == widget.community.rating.floor() &&
-                      widget.community.rating % 1 > 0)
-                  ? Icons.star_half
-                  : Icons.star_border,
+              widget.community.rating % 1 > 0)
+              ? Icons.star_half
+              : Icons.star_border,
           color: Colors.amber,
           size: 18,
         );
@@ -277,7 +277,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     final bool isSelected = _currentIndex == index;
     return GestureDetector(
       onTap: () => setState(() => _currentIndex = index),
@@ -293,7 +293,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
           child: Text(
             title,
             style: TextStyle(
-              color: isSelected ? colorScheme.onPrimary : theme.colorScheme.onSurfaceVariant,
+              color: isSelected ? colorScheme.onPrimary : theme.colorScheme
+                  .onSurfaceVariant,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -304,7 +305,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   Widget _buildSelectedScreen() {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     switch (_currentIndex) {
       case 0:
         return _buildInfoTab();
@@ -324,7 +325,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   Widget _buildInfoTab() {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -404,9 +405,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
     required String title,
     required String description,
   }) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = Theme
+        .of(context)
+        .colorScheme;
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -448,7 +451,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -479,7 +482,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   Widget _buildClassroomTab() {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     final List<Map<String, dynamic>> sections = [
       {
         'title': 'Introduction to the Community',
@@ -531,7 +534,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   Widget _buildSectionCard(Map<String, dynamic> section) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -619,7 +622,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   Widget _buildInfoChip(IconData icon, String label) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -651,7 +654,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -677,7 +680,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 backgroundColor: colorScheme.primary,
                 foregroundColor: colorScheme.onPrimary,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -750,7 +753,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     hintText: 'Title',
                     hintStyle: TextStyle(color: theme.hintColor),
                     filled: true,
-                    fillColor: theme.inputDecorationTheme.fillColor ?? theme.scaffoldBackgroundColor,
+                    fillColor: theme.inputDecorationTheme.fillColor ??
+                        theme.scaffoldBackgroundColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -766,7 +770,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     hintText: 'Description',
                     hintStyle: TextStyle(color: theme.hintColor),
                     filled: true,
-                    fillColor: theme.inputDecorationTheme.fillColor ?? theme.scaffoldBackgroundColor,
+                    fillColor: theme.inputDecorationTheme.fillColor ??
+                        theme.scaffoldBackgroundColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -791,8 +796,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
               child: TextButton(
                 onPressed: () {
-                  if (titleController.text.isNotEmpty && descriptionController.text.isNotEmpty) {
-                    _createNewPost(titleController.text, descriptionController.text, currentUser, currentCommunity);
+                  if (titleController.text.isNotEmpty &&
+                      descriptionController.text.isNotEmpty) {
+                    _createNewPost(
+                        titleController.text, descriptionController.text,
+                        currentUser, currentCommunity);
                     Navigator.pop(context);
                   }
                 },
@@ -808,7 +816,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
-  void _createNewPost(String title, String description, Author author, Community community) {
+  void _createNewPost(String title, String description, Author author,
+      Community community) {
     final newPost = Post(
       title: title,
       description: description,
@@ -817,10 +826,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
       downVote: 0,
       author: author.name,
       avatar: author.avatar,
-      time: 0, // Just posted
+      time: 0,
+      // Just posted
       commentCount: 0,
       communityName: community.name,
       communityImage: community.image,
+      tags: [],
     );
 
     setState(() {
@@ -832,34 +843,63 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const SizedBox(height: 24),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'Top Contributors',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+        const Text(
+          'Top Contributors',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // Podium for top 3 users
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            // 2nd place
+            _buildPodiumItem(
+              _members[1],
+              2,
+              height: 120,
+              theme: theme,
+              colorScheme: colorScheme,
+              themeExtension: themeExtension,
+            ),
+            const SizedBox(width: 12),
+
+            // 1st place
+            _buildPodiumItem(
+              _members[0],
+              1,
+              height: 150,
+              theme: theme,
+              colorScheme: colorScheme,
+              themeExtension: themeExtension,
+              isFirst: true,
+            ),
+            const SizedBox(width: 12),
+
+            // 3rd place
+            _buildPodiumItem(
+              _members[2],
+              3,
+              height: 100,
+              theme: theme,
+              colorScheme: colorScheme,
+              themeExtension: themeExtension,
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        Row(
-          children: <Widget>[
-            _buildTimeFilterChip('Weekly', isActive: true),
-            const SizedBox(width: 8),
-            _buildTimeFilterChip('Monthly'),
-            const SizedBox(width: 8),
-            _buildTimeFilterChip('All Time'),
-          ],
-        ),
-        const SizedBox(height: 16),
+
+        const SizedBox(height: 32),
+
+        // List for users 4-10
         Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
@@ -904,104 +944,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
               const Divider(height: 1),
               ...List.generate(
-                5,
-                (index) => _buildTopMemberItem(
-                  rank: index + 1,
-                  name: _members[index].name,
-                  username: _members[index].userName,
-                  avatarUrl: _members[index].avatar,
-                  points: _members[index].points,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 24),
-        const Text(
-          'Your Contribution',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: theme.cardColor,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: theme.shadowColor.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+                7,
+                    (index) =>
+                    _buildTopMemberItem(
+                      rank: index + 4,
+                      name: _members[index + 3].name,
+                      username: _members[index + 3].userName,
+                      avatarUrl: _members[index + 3].avatar,
+                      points: _members[index + 3].points,
                     ),
-                    child: Icon(
-                      Icons.analytics,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text(
-                        'Your Rank',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        '27th out of 152 members',
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      '230 pts',
-                      style: TextStyle(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const Divider(),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  _buildStatItem('Posts', '5'),
-                  _buildStatItem('Comments', '12'),
-                  _buildStatItem('Likes', '43'),
-                  _buildStatItem('Solutions', '2'),
-                ],
               ),
             ],
           ),
@@ -1010,26 +961,145 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
-  Widget _buildTimeFilterChip(String label, {bool isActive = false}) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final theme = Theme.of(context);
-    
-    return ChoiceChip(
-      label: Text(label),
-      selected: isActive,
-      onSelected: (bool selected) {},
-      backgroundColor: theme.colorScheme.surfaceVariant,
-      selectedColor: colorScheme.primary.withOpacity(0.2),
-      labelStyle: TextStyle(
-        color: isActive ? colorScheme.primary : theme.colorScheme.onSurfaceVariant,
-        fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: isActive ? colorScheme.primary : Colors.transparent,
+  Widget _buildPodiumItem(dynamic user, int rank, {
+    required double height,
+    required ThemeData theme,
+    required ColorScheme colorScheme,
+    required themeExtension,
+    bool isFirst = false,
+  }) {
+    Color medalColor;
+    switch (rank) {
+      case 1:
+        medalColor = const Color(0xFFFFD700); // Gold
+        break;
+      case 2:
+        medalColor = const Color(0xFFC0C0C0); // Silver
+        break;
+      case 3:
+        medalColor = const Color(0xFFCD7F32); // Bronze
+        break;
+      default:
+        medalColor = colorScheme.primary;
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Avatar
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: medalColor, width: 3),
+            boxShadow: [
+              BoxShadow(
+                color: medalColor.withOpacity(0.3),
+                blurRadius: 8,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: ClipOval(
+            child: Image.asset(
+              user.avatar,
+              width: 60,
+              height: 60,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
-      ),
+        const SizedBox(height: 8),
+        // Name
+        Text(
+          user.name,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: isFirst ? 16 : 14,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 4),
+        // Points badge
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: medalColor.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: medalColor.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Text(
+            '${user.points} pts',
+            style: TextStyle(
+              color: medalColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        // Podium stand
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            // Modern podium design
+            Container(
+              width: 80,
+              height: height,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    medalColor.withOpacity(0.7),
+                    medalColor.withOpacity(0.4),
+                  ],
+                ),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: medalColor.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+            ),
+            // Rank number
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: medalColor.withOpacity(0.5),
+                    blurRadius: 8,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                '#$rank',
+                style: TextStyle(
+                  color: medalColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -1043,7 +1113,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
@@ -1071,13 +1141,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
               shape: BoxShape.circle,
               gradient: themeExtension?.circleGradient,
             ),
-            child: Center(
-              child: Text(
+            child: ClipOval(
+              child: Image.asset(
                 avatarUrl,
-                style: TextStyle(
-                  color: colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold,
-                ),
+                width: 36,
+                height: 36,
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -1120,34 +1189,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
       ),
     );
   }
-  
-  Widget _buildStatItem(String label, String value) {
-    final theme = Theme.of(context);
-    
-    return Column(
-      children: <Widget>[
-        Text(
-          value,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildMembersTab() {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -1243,7 +1289,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   // Add the _buildMemberAvatar method
   Widget _buildMemberAvatar(Author member) {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     return Container(
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(

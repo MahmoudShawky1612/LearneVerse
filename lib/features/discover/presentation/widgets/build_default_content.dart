@@ -44,7 +44,7 @@ class _BuildDefaultContentState extends State<BuildDefaultContent> {
               },
             ),
             if (_isFavoriteExpanded) CommunityGrid(communities: _communities),
-            const SizedBox(height: 50),
+            const SizedBox(height: 100),
           ],
         ),
       ),

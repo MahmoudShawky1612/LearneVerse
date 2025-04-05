@@ -101,39 +101,66 @@ class _PostItemState extends State<PostItem> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(author, style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700, fontSize: 15)),
-                        const SizedBox(width: 6),
-                        GestureDetector(
-                          onTap: () => context.push('/community', extra: community),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: theme.cardColor,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [BoxShadow(color: colorScheme.primary.withOpacity(0.15), blurRadius: 4, offset: const Offset(0, 2))],
-                            ),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 9,
-                                  backgroundImage: AssetImage(post.communityImage),
-                                  backgroundColor: theme.scaffoldBackgroundColor,
-                                ),
-                                const SizedBox(width: 4),
-                                Text('c/${post.communityName}', style: TextStyle(color: colorScheme.onSurface.withOpacity(0.9), fontSize: 12, fontWeight: FontWeight.w500)),
-                              ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              author, 
+                              style: textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w700, 
+                                fontSize: 15
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Text('${post.time}h ago', style: TextStyle(color: colorScheme.onSurface.withOpacity(0.8), fontSize: 11)),
-                  ],
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: GestureDetector(
+                              onTap: () => context.push('/community', extra: community),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: theme.cardColor,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [BoxShadow(color: colorScheme.primary.withOpacity(0.15), blurRadius: 4, offset: const Offset(0, 2))],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 6,
+                                      backgroundImage: AssetImage(post.communityImage),
+                                      backgroundColor: theme.scaffoldBackgroundColor,
+                                    ),
+                                    const SizedBox(width: 2),
+                                    Flexible(
+                                      child: Text(
+                                        'c/${post.communityName}', 
+                                        style: TextStyle(
+                                          color: colorScheme.onSurface.withOpacity(0.9), 
+                                          fontSize: 9, 
+                                          fontWeight: FontWeight.w500
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text('${post.time}h ago', style: TextStyle(color: colorScheme.onSurface.withOpacity(0.8), fontSize: 11)),
+                    ],
+                  ),
                 ),
                 const Spacer(),
                 IconButton(
@@ -167,63 +194,95 @@ class _PostItemState extends State<PostItem> {
                   ),
                 ),
               ),
+            
+            // Post tags
+            if (post.tags != null && post.tags.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: post.tags.map<Widget>((tag) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '#$tag',
+                        style: TextStyle(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+                
             // Vote and comment buttons
             const SizedBox(height: 14),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => toggleVote(true),
-                      child: AnimatedScale(
-                        duration: const Duration(milliseconds: 150),
-                        scale: isUpVoted ? 1.1 : 1.0,
-                        child: Icon(
-                          CupertinoIcons.arrow_up_circle_fill,
-                          size: 24,
-                          color: isUpVoted ? themeExtension?.upVote : colorScheme.onSurface.withOpacity(0.7),
+                Flexible(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: () => toggleVote(true),
+                        child: AnimatedScale(
+                          duration: const Duration(milliseconds: 150),
+                          scale: isUpVoted ? 1.1 : 1.0,
+                          child: Icon(
+                            CupertinoIcons.arrow_up_circle_fill,
+                            size: 22,
+                            color: isUpVoted ? themeExtension?.upVote : colorScheme.onSurface.withOpacity(0.7),
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${post.voteCount}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: post.voteCount > 0 ? themeExtension?.upVote : post.voteCount < 0 ? themeExtension?.downVote : colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () => toggleVote(false),
-                      child: AnimatedScale(
-                        duration: const Duration(milliseconds: 150),
-                        scale: isDownVoted ? 1.1 : 1.0,
-                        child: Icon(
-                          CupertinoIcons.arrow_down_circle_fill,
-                          size: 24,
-                          color: isDownVoted ? themeExtension?.downVote : colorScheme.onSurface.withOpacity(0.7),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${post.voteCount}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                          color: post.voteCount > 0 ? themeExtension?.upVote : post.voteCount < 0 ? themeExtension?.downVote : colorScheme.onSurface,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 6),
+                      GestureDetector(
+                        onTap: () => toggleVote(false),
+                        child: AnimatedScale(
+                          duration: const Duration(milliseconds: 150),
+                          scale: isDownVoted ? 1.1 : 1.0,
+                          child: Icon(
+                            CupertinoIcons.arrow_down_circle_fill,
+                            size: 22,
+                            color: isDownVoted ? themeExtension?.downVote : colorScheme.onSurface.withOpacity(0.7),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 GestureDetector(
                   onTap: () => context.push('/comments', extra: post),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                     decoration: BoxDecoration(
                       color: theme.cardColor,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [BoxShadow(color: colorScheme.primary.withOpacity(0.15), blurRadius: 4, offset: const Offset(0, 2))],
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        FaIcon(FontAwesomeIcons.comment, size: 16, color: colorScheme.onSurface),
-                        const SizedBox(width: 6),
-                        Text('${post.commentCount}', style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.w600, fontSize: 13)),
+                        FaIcon(FontAwesomeIcons.comment, size: 14, color: colorScheme.onSurface),
+                        const SizedBox(width: 5),
+                        Text('${post.commentCount}', style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.w600, fontSize: 12)),
                       ],
                     ),
                   ),

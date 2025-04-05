@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutterwidgets/core/providers/user_provider.dart';
+import 'package:flutterwidgets/core/utils/responsive_utils.dart';
 import 'package:flutterwidgets/features/home/presentation/views/home_screen.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:provider/provider.dart';
@@ -6,15 +9,28 @@ import 'package:flutterwidgets/core/providers/theme_provider.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+  
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
-      child: MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
@@ -24,6 +40,19 @@ class MyApp extends StatelessWidget {
           themeMode: themeProvider.themeMode,
           darkTheme: _buildDarkTheme(),
           theme: _buildLightTheme(),
+          builder: (context, child) {
+            // Get the device pixel ratio to adjust font sizes
+            final mediaQueryData = MediaQuery.of(context);
+            final scale = mediaQueryData.textScaleFactor.clamp(0.8, 1.2);
+            
+            // Apply responsive sizing to the entire app
+            return MediaQuery(
+              data: mediaQueryData.copyWith(
+                textScaleFactor: scale,
+              ),
+              child: child!,
+            );
+          },
         );
       },
     );

@@ -26,6 +26,11 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    // Calculate responsive horizontal margin based on screen width
+    final horizontalMargin = screenWidth < 360 ? 10.0 : 
+                            screenWidth < 600 ? 30.0 : 50.0;
 
     return Scaffold(
       extendBody: true,
@@ -37,8 +42,11 @@ class _MainScreenState extends State<MainScreen> {
             right: 0,
             bottom: 0,
             child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-              height: 75,
+              margin: EdgeInsets.symmetric(
+                vertical: 20, 
+                horizontal: horizontalMargin
+              ),
+              height: 65, // Reduced height to prevent vertical overflow
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(22),
@@ -52,24 +60,30 @@ class _MainScreenState extends State<MainScreen> {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(22),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildNavItem(
-                      index: 0,
-                      icon: FontAwesomeIcons.house,
-                      label: "Home",
+                    Expanded(
+                      child: _buildNavItem(
+                        index: 0,
+                        icon: FontAwesomeIcons.house,
+                        label: "Home",
+                      ),
                     ),
-                    _buildNavItem(
-                      index: 1,
-                      icon: FontAwesomeIcons.compass,
-                      label: "Discover",
+                    Expanded(
+                      child: _buildNavItem(
+                        index: 1,
+                        icon: FontAwesomeIcons.compass,
+                        label: "Discover",
+                      ),
                     ),
-                    _buildNavItem(
-                      index: 2,
-                      icon: FontAwesomeIcons.calendarDays,
-                      label: "Calendar",
+                    Expanded(
+                      child: _buildNavItem(
+                        index: 2,
+                        icon: FontAwesomeIcons.calendarDays,
+                        label: "Calendar",
+                      ),
                     ),
                   ],
                 ),
@@ -97,13 +111,14 @@ class _MainScreenState extends State<MainScreen> {
         });
       },
       child: Container(
-        width: 90,
+        padding: const EdgeInsets.symmetric(vertical: 5),
         color: Colors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isSelected ? colorScheme.secondary.withOpacity(0.15) : Colors.transparent,
                 shape: BoxShape.circle,
@@ -111,18 +126,26 @@ class _MainScreenState extends State<MainScreen> {
               child: Icon(
                 icon,
                 color: isSelected ? colorScheme.secondary : colorScheme.onSurface.withOpacity(0.7),
-                size: isSelected ? 26 : 22,
+                size: isSelected ? 20 : 18,
               ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              isSelected ? label : "",
-              style: TextStyle(
-                color: colorScheme.secondary,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+            if (isSelected)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: colorScheme.secondary,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
-            ),
           ],
         ),
       ),
