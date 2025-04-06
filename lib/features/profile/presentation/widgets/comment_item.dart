@@ -13,6 +13,7 @@ class CommentItem extends StatefulWidget {
   final bool flag;
   final dynamic userInfo;
   final Function? delete;
+  final Function? edit;
 
   const CommentItem({
     super.key,
@@ -20,6 +21,7 @@ class CommentItem extends StatefulWidget {
     required this.flag,
     this.userInfo,
     this.delete,
+    this.edit,
   });
 
   @override
@@ -31,6 +33,7 @@ class _CommentItemState extends State<CommentItem> {
   bool isDownVoted = false;
   bool isExpanded = false;
   bool showOptions = false;
+  TextEditingController commentEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +50,9 @@ class _CommentItemState extends State<CommentItem> {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final bool isMobileDevice = context.isMobile;
 
-    // Use userInfo if not null, otherwise fallback to comment data
     final String avatar = userInfo != null ? userInfo.avatar : comment.avatar;
     final String name = userInfo != null ? userInfo.name : comment.author;
-
+    TextEditingController commentController = TextEditingController();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -217,7 +219,9 @@ class _CommentItemState extends State<CommentItem> {
                               'Edit',
                               Icons.edit_outlined,
                               colorScheme.primary,
-                              () {},
+                              () {
+                                _showCreatePostDialog(comment.comment);
+                              },
                             ),
                             Divider(
                                 height: 8,
@@ -361,39 +365,6 @@ class _CommentItemState extends State<CommentItem> {
     );
   }
 
-  Widget _buildActionButton({
-    required IconData icon,
-    required String text,
-    required VoidCallback onTap,
-  }) {
-    final theme = Theme.of(context);
-    final isMobileDevice = context.isMobile;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FaIcon(
-            icon,
-            size: isMobileDevice ? 14 : 16,
-            color: theme.colorScheme.onSurface.withOpacity(0.8),
-          ),
-          if (text.isNotEmpty) ...[
-            SizedBox(width: context.w(4)),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: isMobileDevice ? 12 : 14,
-                fontWeight: FontWeight.w500,
-                color: theme.colorScheme.onSurface.withOpacity(0.8),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
 
   Widget _buildOptionsItem(
     String text,
@@ -430,6 +401,94 @@ class _CommentItemState extends State<CommentItem> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showCreatePostDialog(String comment) {
+    final currentUser = widget.userInfo.avatar;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+        final themeExtension = theme.extension<AppThemeExtension>();
+        TextEditingController commentController =  TextEditingController(text: comment);
+        return AlertDialog(
+          backgroundColor: theme.cardColor,
+          title: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage(currentUser),
+                radius: 16,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Edit Comment',
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller:commentController ,
+                  style: TextStyle(color: colorScheme.onSurface),
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(color: theme.hintColor),
+                    filled: true,
+                    fillColor: theme.inputDecorationTheme.fillColor ??
+                        theme.scaffoldBackgroundColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: colorScheme.onSurfaceVariant),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: themeExtension?.buttonGradient,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: TextButton(
+                onPressed: () {
+                    if (widget.edit != null) {
+                        setState(() {
+                          showOptions =! showOptions;
+                        });
+                        Future.delayed(Duration.zero, () {
+                          widget.edit!(widget.comment.id, commentController.text);
+
+                      });
+                      Navigator.pop(context);
+                  }
+                },
+                child: const Text(
+                  'Comment',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

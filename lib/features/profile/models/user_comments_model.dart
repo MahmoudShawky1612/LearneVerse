@@ -3,7 +3,7 @@ import '../../home/models/community_model.dart';
 class UserComment {
   final String id; // ✅ Added ID
   final String author;
-  final String comment;
+   String comment;
   final String repliedTo;
   int voteCount;
   final int upvote;

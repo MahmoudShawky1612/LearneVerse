@@ -10,6 +10,7 @@ class BuildComments extends StatelessWidget {
   final bool flag;
   final userInfo;
   final Function? delete;
+  final Function? edit;
 
   const BuildComments({
     super.key,
@@ -18,7 +19,7 @@ class BuildComments extends StatelessWidget {
     required this.comments,
     this.flag = true, 
     this.userInfo, 
-    this.delete,
+    this.delete, this.edit,
   });
 
   @override
@@ -41,6 +42,7 @@ class BuildComments extends StatelessWidget {
           flag: flag,
           userInfo: userInfo,
           delete: delete,
+          edit: edit,
         );
       },
     );

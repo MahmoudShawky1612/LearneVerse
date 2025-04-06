@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../comments/models/comments_model.dart';
 import '../../models/user_comments_model.dart';
 import 'build_comments.dart';
 
@@ -15,6 +16,12 @@ class UserComments extends StatefulWidget {
 class _UserCommentsState extends State<UserComments> {
   List<UserComment> userComment = UserComment.generateDummyUserComments(15);
 
+  void _onCommentEdit(String id, String commentDescription){
+   UserComment commentToBeEdited = userComment.firstWhere(((uc)=> uc.id == id ));
+   setState(() {
+     commentToBeEdited.comment = commentDescription;
+   });
+  }
   void _onCommentDelete(String id) {
     setState(() {
       userComment.removeWhere((uc) => uc.id == id);
@@ -41,6 +48,7 @@ class _UserCommentsState extends State<UserComments> {
                 comments: userComment,
                 userInfo: widget.userInfo,
                 delete: _onCommentDelete,
+              edit : _onCommentEdit,
               ),
             const Divider(),
           ],

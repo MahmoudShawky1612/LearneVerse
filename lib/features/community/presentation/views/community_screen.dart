@@ -653,7 +653,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
   Widget _buildForumTab() {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -804,7 +803,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     Navigator.pop(context);
                   }
                 },
-                child: Text(
+                child: const Text(
                   'Post',
                   style: TextStyle(color: Colors.white),
                 ),
@@ -914,18 +913,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
           ),
           child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16),
+              const Padding(
+                padding: EdgeInsets.all(16),
                 child: Row(
                   children: <Widget>[
-                    const Text(
+                    Text(
                       'Rank',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 24),
-                    const Expanded(
+                    SizedBox(width: 24),
+                    Expanded(
                       child: Text(
                         'User',
                         style: TextStyle(
@@ -933,7 +932,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                         ),
                       ),
                     ),
-                    const Text(
+                    Text(
                       'Points',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
