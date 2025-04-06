@@ -12,6 +12,7 @@ class PostItem extends StatefulWidget {
   final post;
   final userInfo; // Add userInfo as a parameter to the widget
   final Function? delete; // Add delete callback
+  final Function? edit;
   final isUserPost;
 
   const PostItem({
@@ -19,7 +20,7 @@ class PostItem extends StatefulWidget {
     required this.post,
     this.userInfo,
     this.delete,
-    this.isUserPost,
+    this.isUserPost, this.edit,
   }) : super(key: key);
 
   @override
@@ -182,7 +183,6 @@ class _PostItemState extends State<PostItem> {
                 ],
               ),
 
-              // Post title and content
               SizedBox(height: context.h(12)),
               Padding(
                 padding:
@@ -329,7 +329,9 @@ class _PostItemState extends State<PostItem> {
                         'Edit',
                         Icons.edit_outlined,
                         colorScheme.primary,
-                        () {},
+                        () {
+                          _showEditPostDialog(post.id,post.title, post.description);
+                        },
                       ),
                       Divider(
                           height: 8,
@@ -342,10 +344,8 @@ class _PostItemState extends State<PostItem> {
                           setState(() {
                             showOptions = false;
                           });
-
                           if (widget.delete != null) {
                             widget.delete!(post.id);
-                            print("deleeeeeeeeeeeeted");
                             setState(() {});
                           }
                         },
@@ -451,4 +451,109 @@ class _PostItemState extends State<PostItem> {
       ),
     );
   }
+
+  void _showEditPostDialog(String id, String title, String description) {
+    final titleController = TextEditingController(text: title);
+    final descriptionController = TextEditingController(text: description);
+    final currentUser = Author.users[0]; // Use the first user as current user
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+        final themeExtension = theme.extension<AppThemeExtension>();
+
+        return AlertDialog(
+          backgroundColor: theme.cardColor,
+          title: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage(currentUser.avatar),
+                radius: 16,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Edit Post',
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleController,
+                  style: TextStyle(color: colorScheme.onSurface),
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(color: theme.hintColor),
+                    filled: true,
+                    fillColor: theme.inputDecorationTheme.fillColor ??
+                        theme.scaffoldBackgroundColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: descriptionController,
+                  style: TextStyle(color: colorScheme.onSurface),
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: 'Description',
+                    hintStyle: TextStyle(color: theme.hintColor),
+                    filled: true,
+                    fillColor: theme.inputDecorationTheme.fillColor ??
+                        theme.scaffoldBackgroundColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: colorScheme.onSurfaceVariant),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: themeExtension?.buttonGradient,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: TextButton(
+                onPressed: () {
+                 if(widget.edit != null ){
+                  setState(() {
+                    showOptions != showOptions;
+                    widget.edit!(id, titleController.text, descriptionController.text);
+                  });
+                 }
+                 Navigator.pop(context);
+                },
+                child: const Text(
+                  'Post',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

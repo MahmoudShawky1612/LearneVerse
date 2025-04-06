@@ -220,7 +220,7 @@ class _CommentItemState extends State<CommentItem> {
                               Icons.edit_outlined,
                               colorScheme.primary,
                               () {
-                                _showCreatePostDialog(comment.comment);
+                                _showEditCommentDialog(comment.comment);
                               },
                             ),
                             Divider(
@@ -365,7 +365,6 @@ class _CommentItemState extends State<CommentItem> {
     );
   }
 
-
   Widget _buildOptionsItem(
     String text,
     IconData icon,
@@ -404,7 +403,7 @@ class _CommentItemState extends State<CommentItem> {
     );
   }
 
-  void _showCreatePostDialog(String comment) {
+  void _showEditCommentDialog(String comment) {
     final currentUser = widget.userInfo.avatar;
 
     showDialog(
@@ -413,7 +412,8 @@ class _CommentItemState extends State<CommentItem> {
         final theme = Theme.of(context);
         final colorScheme = theme.colorScheme;
         final themeExtension = theme.extension<AppThemeExtension>();
-        TextEditingController commentController =  TextEditingController(text: comment);
+        TextEditingController commentController =
+            TextEditingController(text: comment);
         return AlertDialog(
           backgroundColor: theme.cardColor,
           title: Row(
@@ -438,7 +438,7 @@ class _CommentItemState extends State<CommentItem> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
-                  controller:commentController ,
+                  controller: commentController,
                   style: TextStyle(color: colorScheme.onSurface),
                   decoration: InputDecoration(
                     hintStyle: TextStyle(color: theme.hintColor),
@@ -469,15 +469,15 @@ class _CommentItemState extends State<CommentItem> {
               ),
               child: TextButton(
                 onPressed: () {
-                    if (widget.edit != null) {
-                        setState(() {
-                          showOptions =! showOptions;
-                        });
-                        Future.delayed(Duration.zero, () {
-                          widget.edit!(widget.comment.id, commentController.text);
-
+                  if (widget.edit != null) {
+                    setState(() {
+                      showOptions = !showOptions;
+                      Future.delayed(Duration.zero, () {
+                        widget.edit!(widget.comment.id, commentController.text);
                       });
-                      Navigator.pop(context);
+                    });
+
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text(

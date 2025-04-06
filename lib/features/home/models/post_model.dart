@@ -4,8 +4,8 @@ import 'community_model.dart';
 
 class Post {
   final String id;
-  final String title;
-  final String description;
+   String title;
+   String description;
   int voteCount;
   final int upvote;
   final int downVote;

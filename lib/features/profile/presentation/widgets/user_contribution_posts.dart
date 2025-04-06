@@ -18,10 +18,17 @@ final posts = Post.generateDummyPosts(15);
 class _UserPostsScreenState extends State<UserPostsScreen> {
   @override
   Widget build(BuildContext context) {
-    // Use regular posts instead of UserPosts
     void onDeletePost(String id){
       setState(() {
         posts.removeWhere((p)=> p.id == id);
+      });
+    }
+
+    void onEditPost(String id, String title, String description){
+      setState(() {
+        Post postToBeEdited = posts.firstWhere((p)=> p.id == id);
+        postToBeEdited.title = title;
+        postToBeEdited.description = description;
       });
     }
 
@@ -32,6 +39,7 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
       userInfo: widget.userInfo,
       delete: onDeletePost,
       isUserPost: true,
+      edit: onEditPost,
     );
   }
 }
