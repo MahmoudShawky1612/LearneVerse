@@ -26,7 +26,7 @@ class _HomeHeaderState extends State<HomeHeader> {
     final currentUser = userProvider.currentUser;
     
     return Container(
-      height: 170,
+      height: 150,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         gradient: themeExtension?.backgroundGradient,

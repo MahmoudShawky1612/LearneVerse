@@ -130,51 +130,6 @@ class _MainContentState extends State<MainContent> {
               right: isMobile ? context.w(12) : context.w(16),
               bottom: context.h(8),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                  onTap: isRefreshing ? null : _refreshContent,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.w(12),
-                      vertical: context.h(8),
-                    ),
-                    decoration: BoxDecoration(
-                      color: isRefreshing
-                          ? colorScheme.primary.withOpacity(0.3)
-                          : colorScheme.primary,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (isRefreshing)
-                          SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        else
-                          Icon(Icons.refresh, color: Colors.white, size: 16),
-                        SizedBox(width: context.w(4)),
-                        Text(
-                          isRefreshing ? 'Refreshing...' : 'Refresh For You',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
           
           Container(
@@ -238,6 +193,52 @@ class _MainContentState extends State<MainContent> {
                           ),
                         ),
                       ),
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: isRefreshing ? null : _refreshContent,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.w(12),
+                              vertical: context.h(8),
+                            ),
+                            decoration: BoxDecoration(
+                              color: isRefreshing
+                                  ? colorScheme.primary.withOpacity(0.3)
+                                  : colorScheme.primary,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (isRefreshing)
+                                  const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                else
+                                  const Icon(Icons.refresh, color: Colors.white, size: 16),
+                                SizedBox(width: context.w(4)),
+                                Text(
+                                  isRefreshing ? 'Refreshing...' : 'Refresh For You',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
                   ],
                 ),
                 SizedBox(height: context.h(16)),

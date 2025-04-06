@@ -20,7 +20,7 @@ class BuildFilterChip extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     return Container(
       margin: const EdgeInsets.only(right: 10),
       child: Material(
@@ -29,16 +29,14 @@ class BuildFilterChip extends StatelessWidget {
           onTap: () => onToggle(filters[index]),
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
-            width: 110,
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            width: 70,
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
             decoration: BoxDecoration(
-              gradient: isSelected
-                  ? null
-                  : themeExtension?.buttonGradient,
+              gradient: isSelected ? null : themeExtension?.buttonGradient,
               color: isSelected ? theme.cardColor : null,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
@@ -50,7 +48,7 @@ class BuildFilterChip extends StatelessWidget {
                   color: isSelected
                       ? theme.shadowColor.withOpacity(0.08)
                       : colorScheme.primary.withOpacity(0.25),
-                  blurRadius: 8,
+                  blurRadius: 6, // Reduced from 8
                   spreadRadius: 0,
                   offset: const Offset(0, 2),
                 ),
@@ -60,9 +58,10 @@ class BuildFilterChip extends StatelessWidget {
               child: Text(
                 filters[index],
                 style: TextStyle(
-                  color: isSelected ? colorScheme.primary : colorScheme.onPrimary,
+                  color:
+                      isSelected ? colorScheme.primary : colorScheme.onPrimary,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  fontSize: 14,
+                  fontSize: 12, // Reduced from 14
                   letterSpacing: 0.2,
                 ),
                 maxLines: 1,

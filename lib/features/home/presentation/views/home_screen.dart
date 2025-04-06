@@ -90,18 +90,16 @@ class _HomeScreenState extends State<HomeScreen> {
               tablet: _buildTabletLayout(),
               desktop: _buildDesktopLayout(),
             ),
-            
-            // Search bar positioned to float over the content
+
             Positioned(
-              top: 170, // Adjusted to sit at the bottom of header
+              top: 140,
               left: 0,
               right: 0,
               child: CustomSearchBar(searchController, _search),
             ),
             
-            // Theme toggle button with fixed size and position
             Positioned(
-              right: 30 + buttonSize + buttonSpacing, // Position it with fixed spacing from notification button
+              right: 30 + buttonSize + buttonSpacing,
               top: 15,
               child: Container(
                 width: buttonSize,

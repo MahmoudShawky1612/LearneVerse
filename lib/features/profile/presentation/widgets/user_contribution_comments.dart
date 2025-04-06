@@ -33,12 +33,17 @@ class _UserCommentsState extends State<UserComments> {
               ),
             ),
           )
-        : BuildComments(
-            shrinkWrap: true,
-            scrollPhysics: const BouncingScrollPhysics(),
-            comments: userComment,
-            userInfo: widget.userInfo,
-            delete: _onCommentDelete,
-          );
+        : Column(
+          children: [
+            BuildComments(
+                shrinkWrap: true,
+                scrollPhysics: const BouncingScrollPhysics(),
+                comments: userComment,
+                userInfo: widget.userInfo,
+                delete: _onCommentDelete,
+              ),
+            const Divider(),
+          ],
+        );
   }
 }
