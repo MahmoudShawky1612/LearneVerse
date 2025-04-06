@@ -12,13 +12,14 @@ class PostItem extends StatefulWidget {
   final post;
   final userInfo; // Add userInfo as a parameter to the widget
   final Function? delete; // Add delete callback
-
+  final isUserPost;
 
   const PostItem({
     Key? key,
     required this.post,
     this.userInfo,
     this.delete,
+    this.isUserPost,
   }) : super(key: key);
 
   @override
@@ -163,7 +164,7 @@ class _PostItemState extends State<PostItem> {
                       ),
                     ),
                   ),
-                  IconButton(
+                  widget.isUserPost ?IconButton(
                     icon: Icon(Icons.more_horiz,
                         color: colorScheme.onSurface.withOpacity(0.8),
                         size: isMobileDevice ? 18 : 20),
@@ -177,7 +178,7 @@ class _PostItemState extends State<PostItem> {
                       minWidth: isMobileDevice ? 32 : 36,
                       minHeight: isMobileDevice ? 32 : 36,
                     ),
-                  ),
+                  ) : Container(),
                 ],
               ),
 
@@ -288,12 +289,6 @@ class _PostItemState extends State<PostItem> {
                             context.push('/comments', extra: post);
                           },
                         ),
-                        SizedBox(width: context.w(20)),
-                        _buildActionButton(
-                          icon: FontAwesomeIcons.share,
-                          text: '',
-                          onTap: () {},
-                        ),
                       ],
                     ),
                   ],
@@ -351,9 +346,7 @@ class _PostItemState extends State<PostItem> {
                           if (widget.delete != null) {
                             widget.delete!(post.id);
                             print("deleeeeeeeeeeeeted");
-                            setState(() {
-
-                            });
+                            setState(() {});
                           }
                         },
                       ),

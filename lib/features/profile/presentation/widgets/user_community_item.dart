@@ -22,7 +22,7 @@ class UserCommunityItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       decoration: _buildShadowDecoration(theme),
@@ -85,7 +85,7 @@ class UserCommunityItem extends StatelessWidget {
 
   Widget _buildCommunityDetails(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    
+
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +116,7 @@ class UserCommunityItem extends StatelessWidget {
   Widget _buildMemberCount(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return _buildBadge(
       context: context,
       color: colorScheme.primary.withOpacity(0.1),
@@ -130,7 +130,7 @@ class UserCommunityItem extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     return _buildBadge(
       context: context,
       color: colorScheme.surfaceVariant,
@@ -182,7 +182,7 @@ class UserCommunityItem extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

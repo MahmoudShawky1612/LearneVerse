@@ -31,6 +31,7 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
       posts: posts,
       userInfo: widget.userInfo,
       delete: onDeletePost,
+      isUserPost: true,
     );
   }
 }

@@ -8,6 +8,7 @@ class BuildPosts extends StatelessWidget {
   final posts;
   final userInfo;
   final Function? delete;
+  final isUserPost;
 
   const BuildPosts({
     super.key,
@@ -15,7 +16,7 @@ class BuildPosts extends StatelessWidget {
     required this.scrollPhysics,
     required this.posts,
     this.userInfo,
-    this.delete,
+    this.delete, this.isUserPost=false,
   });
 
   @override
@@ -47,6 +48,7 @@ class BuildPosts extends StatelessWidget {
                 post: posts[index],
                 userInfo: userInfo,
                 delete: delete,
+                isUserPost:isUserPost,
               );
             });
   }

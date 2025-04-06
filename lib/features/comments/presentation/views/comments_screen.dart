@@ -76,7 +76,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: PostItem(post: widget.post),
+                    child: PostItem(post: widget.post, isUserPost: false,),
                   ),
                   Padding(
                     padding:
