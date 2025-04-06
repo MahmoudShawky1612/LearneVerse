@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/core/utils/responsive_utils.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -11,13 +12,15 @@ import '../views/profile_screen.dart';
 class CommentItem extends StatefulWidget {
   final comment;
   final bool flag;
-  final dynamic userInfo;  // Added userInfo parameter
+  final dynamic userInfo;
+  final Function? delete;
 
   const CommentItem({
     super.key,
     required this.comment,
     required this.flag,
-    this.userInfo,  // Optionally passed userInfo for dynamic avatar and name
+    this.userInfo,
+    this.delete,
   });
 
   @override
@@ -35,357 +38,396 @@ class _CommentItemState extends State<CommentItem> {
     Community community = Community.communities
         .firstWhere((comm) => comm.image == widget.comment.communityImage);
 
-
     final comment = widget.comment;
     final flag = widget.flag;
-    final userInfo = widget.userInfo;  // Get userInfo passed to CommentItem
-    
+    final userInfo = widget.userInfo;
+
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    final bool isMobileDevice = context.isMobile;
 
     // Use userInfo if not null, otherwise fallback to comment data
     final String avatar = userInfo != null ? userInfo.avatar : comment.avatar;
     final String name = userInfo != null ? userInfo.name : comment.author;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-      decoration: BoxDecoration(
-        gradient: themeExtension?.containerGradient,
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.onSurface.withOpacity(0.2),
-            blurRadius: 6,
-            spreadRadius: 1,
-            offset: const Offset(0, 2),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: context.h(8),
+            horizontal: isMobileDevice ? 8 : 12
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: themeExtension?.circleGradient,
-                  ),
-                  child: GestureDetector(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
                     onTap: () {
                       List<Author> users = Author.users;
-                      final user = users
-                          .firstWhere((user) => user.avatar == avatar);  // Use avatar from userInfo or comment
+                      final user = users.firstWhere((user) => user.avatar == avatar);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ProfileScreen(userInfo: user)),
+                            builder: (context) => ProfileScreen(userInfo: user)),
                       );
                     },
                     child: CircleAvatar(
-                      radius: 14,
+                      radius: isMobileDevice ? 12 : 14,
                       backgroundImage: AssetImage(avatar),
-                      backgroundColor: theme.scaffoldBackgroundColor,
+                      backgroundColor: Colors.transparent,
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              name,  // Use name from userInfo or comment
-                              style: textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13,
+                  SizedBox(width: context.w(8)),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                name,
+                                style: textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: isMobileDevice ? 12 : 13,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
                             ),
-                          ),
-                          flag
-                              ? Flexible(
-                                  child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const SizedBox(width: 4),
-                                    FaIcon(
-                                      FontAwesomeIcons.solidCircle,
-                                      size: 6,
-                                      color: colorScheme.onSurface.withOpacity(0.7),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Flexible(
-                                      child: Text(
-                                        comment.repliedTo,
-                                        style: textTheme.bodyMedium?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
+                            if (flag)
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(width: context.w(4)),
+                                  FaIcon(
+                                    FontAwesomeIcons.solidCircle,
+                                    size: isMobileDevice ? 4 : 6,
+                                    color: colorScheme.onSurface.withOpacity(0.7),
+                                  ),
+                                  SizedBox(width: context.w(4)),
+                                  Flexible(
+                                    child: Text(
+                                      comment.repliedTo,
+                                      style: textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: isMobileDevice ? 12 : 13,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  ],
-                                ))
-                              : Container(),
-                        ],
-                      ),
-                      Text(
-                        '${comment.time}h ago',
-                        style: textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurface.withOpacity(0.8),
-                          fontSize: 11,
+                                  ),
+                                ],
+                              ),
+                          ],
                         ),
-                      ),
-                    ],
+                        SizedBox(height: context.h(2)),
+                        Text(
+                          '${comment.time}h ago',
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurface.withOpacity(0.7),
+                            fontSize: isMobileDevice ? 10 : 11,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const Spacer(),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    flag
-                        ? GestureDetector(
+                  if (flag)
+                    GestureDetector(
                       onTap: () {
                         context.push('/community', extra: community);
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 3),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.w(6), 
+                          vertical: context.h(2)
+                        ),
                         decoration: BoxDecoration(
-                          color: theme.cardColor,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: colorScheme.primary.withOpacity(0.15),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                          color: colorScheme.surface.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             CircleAvatar(
-                              radius: 7,
-                              backgroundImage:
-                              AssetImage(comment.communityImage),
-                              backgroundColor: theme.scaffoldBackgroundColor,
+                              radius: isMobileDevice ? 6 : 7,
+                              backgroundImage: AssetImage(comment.communityImage),
+                              backgroundColor: Colors.transparent,
                             ),
-                            const SizedBox(width: 4),
-                            Flexible(
-                              child: Text(
-                                'c/${comment.communityName}',
-                                style: TextStyle(
-                                  color: colorScheme.onSurface.withOpacity(0.9),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                            SizedBox(width: context.w(2)),
+                            Text(
+                              'c/${comment.communityName}',
+                              style: TextStyle(
+                                color: colorScheme.onSurface.withOpacity(0.8),
+                                fontSize: isMobileDevice ? 10 : 12,
+                                fontWeight: FontWeight.w500,
                               ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
                       ),
-                    )
-                        : Container(),
-                    const SizedBox(width: 6),
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.more_horiz,
-                            color: colorScheme.onSurface.withOpacity(0.8),
-                            size: 18,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              showOptions = !showOptions;
-                            });
-                          },
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(
-                            minWidth: 30,
-                            minHeight: 30,
-                          ),
+                    ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.more_horiz,
+                      color: colorScheme.onSurface.withOpacity(0.8),
+                      size: isMobileDevice ? 16 : 18,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        showOptions = !showOptions;
+                      });
+                    },
+                    padding: EdgeInsets.zero,
+                    constraints: BoxConstraints(
+                      minWidth: isMobileDevice ? 28 : 30,
+                      minHeight: isMobileDevice ? 28 : 30,
+                    ),
+                  ),
+                  if (showOptions)
+                    Positioned(
+                      right: 30,
+                      top: 30,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.w(8),
+                          vertical: context.h(6),
                         ),
-                        if (showOptions)
-                          Positioned(
-                            right: 30,
-                            top: -8,
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: theme.cardColor,
-                                borderRadius: BorderRadius.circular(6),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: colorScheme.onSurface.withOpacity(0.3),
-                                    blurRadius: 4,
-                                    spreadRadius: 0,
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                                    child: Text(
-                                      'Edit',
-                                      style: TextStyle(
-                                        color: colorScheme.primary,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                                    child: Text(
-                                      'Delete',
-                                      style: TextStyle(
-                                        color: colorScheme.secondary,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                        decoration: BoxDecoration(
+                          color: theme.cardColor,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: colorScheme.onSurface.withOpacity(0.2),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildOptionsItem(
+                              'Edit',
+                              Icons.edit_outlined,
+                              colorScheme.primary,
+                              () {},
+                            ),
+                            Divider(height: 8, color: colorScheme.onSurface.withOpacity(0.1)),
+                            _buildOptionsItem(
+                              'Delete',
+                              Icons.delete_outline,
+                              colorScheme.error,
+                              () {
+                                // Close the options menu
+                                setState(() {
+                                  showOptions = false;
+                                });
+                                
+                                // Call delete function after menu closes
+                                if (widget.delete != null) {
+                                  Future.delayed(Duration.zero, () {
+                                    widget.delete!(comment.id);
+                                  });
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              SizedBox(height: context.h(8)),
+              Padding(
+                padding: EdgeInsets.only(left: context.w(isMobileDevice ? 30 : 36)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      comment.comment ?? comment.comment ?? "",
+                      style: textTheme.bodyMedium?.copyWith(
+                        fontSize: isMobileDevice ? 13 : 14,
+                        color: colorScheme.onSurface.withOpacity(0.9),
+                        height: 1.4,
+                      ),
+                      maxLines: isExpanded ? null : 3,
+                    ),
+                    if ((comment.comment?.length ?? 0) > 100 || (comment.comment?.length ?? 0) > 100)
+                      GestureDetector(
+                        onTap: () => setState(() => isExpanded = !isExpanded),
+                        child: Padding(
+                          padding: EdgeInsets.only(top: context.h(4)),
+                          child: Text(
+                            isExpanded ? 'Show less' : 'Read more',
+                            style: TextStyle(
+                              color: colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: isMobileDevice ? 11 : 12,
                             ),
                           ),
+                        ),
+                      ),
+                    SizedBox(height: context.h(8)),
+                    Row(
+                      children: [
+                        _buildVoteButton(
+                          icon: FontAwesomeIcons.arrowUp,
+                          isActive: isUpVoted,
+                          color: themeExtension?.upVote ?? Colors.green,
+                          onTap: () {
+                            setState(() {
+                              if (isUpVoted) {
+                                comment.voteCount--;
+                                isUpVoted = false;
+                              } else {
+                                comment.voteCount++;
+                                isUpVoted = true;
+                                isDownVoted = false;
+                              }
+                            });
+                          },
+                        ),
+                        SizedBox(width: context.w(2)),
+                        Text(
+                          '${comment.voteCount}',
+                          style: TextStyle(
+                            fontSize: isMobileDevice ? 12 : 14,
+                            fontWeight: FontWeight.w500,
+                            color: isUpVoted
+                                ? themeExtension?.upVote
+                                : isDownVoted
+                                    ? themeExtension?.downVote
+                                    : theme.colorScheme.onSurface.withOpacity(0.8),
+                          ),
+                        ),
+                        SizedBox(width: context.w(8)),
+                        _buildVoteButton(
+                          icon: FontAwesomeIcons.arrowDown,
+                          isActive: isDownVoted,
+                          color: themeExtension?.downVote ?? Colors.red,
+                          onTap: () {
+                            setState(() {
+                              if (isDownVoted) {
+                                comment.voteCount++;
+                                isDownVoted = false;
+                              } else {
+                                comment.voteCount--;
+                                isUpVoted = false;
+                                isDownVoted = true;
+                              }
+                            });
+                          },
+                        ),
+                       SizedBox(width: context.w(16)),
+                        flag?_buildActionButton(
+                          icon: FontAwesomeIcons.comment,
+                          text: '${comment.repliedTo ?? 0}',
+                          onTap: () {},
+                        ):Container(),
+
                       ],
                     ),
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVoteButton({
+    required IconData icon,
+    required bool isActive,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    final isMobileDevice = context.isMobile;
+    
+    return GestureDetector(
+      onTap: onTap,
+      child: FaIcon(
+        icon,
+        size: isMobileDevice ? 14 : 16,
+        color: isActive
+            ? color
+            : Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    final isMobileDevice = context.isMobile;
+    
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FaIcon(
+            icon,
+            size: isMobileDevice ? 14 : 16,
+            color: theme.colorScheme.onSurface.withOpacity(0.8),
+          ),
+          if (text.isNotEmpty) ...[
+            SizedBox(width: context.w(4)),
             Text(
-              comment.comment,
-              style: textTheme.bodyMedium?.copyWith(
-                fontSize: 12,
-                color: colorScheme.onSurface.withOpacity(0.9),
-                height: 1.4,
+              text,
+              style: TextStyle(
+                fontSize: isMobileDevice ? 12 : 14,
+                fontWeight: FontWeight.w500,
+                color: theme.colorScheme.onSurface.withOpacity(0.8),
               ),
-              maxLines: isExpanded ? null : 3,
             ),
-            if (comment.comment.length > 100)
-              GestureDetector(
-                onTap: () => setState(() => isExpanded = !isExpanded),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Text(
-                    isExpanded ? 'Show less' : 'Read more',
-                    style: TextStyle(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
+          ],
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildOptionsItem(
+    String text,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    final isMobileDevice = context.isMobile;
+    
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: context.h(4),
+          horizontal: context.w(2),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: isMobileDevice ? 14 : 16,
+              color: color,
+            ),
+            SizedBox(width: context.w(6)),
+            Text(
+              text,
+              style: TextStyle(
+                color: color,
+                fontSize: isMobileDevice ? 12 : 13,
+                fontWeight: FontWeight.w500,
               ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (isUpVoted) {
-                            comment.voteCount--;
-                            isUpVoted = false;
-                          } else {
-                            comment.voteCount++;
-                            isUpVoted = true;
-                            isDownVoted = false;
-                          }
-                        });
-                      },
-                      child: AnimatedScale(
-                        duration: const Duration(milliseconds: 150),
-                        scale: isUpVoted ? 1.1 : 1.0,
-                        child: Icon(
-                          CupertinoIcons.arrow_up_circle_fill,
-                          size: 22,
-                          color: isUpVoted
-                              ? themeExtension?.upVote
-                              : colorScheme.onSurface.withOpacity(0.7),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${comment.voteCount}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                        color: comment.voteCount > 0
-                            ? themeExtension?.upVote
-                            : comment.voteCount < 0
-                            ? themeExtension?.downVote
-                            : colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (isDownVoted) {
-                            comment.voteCount++;
-                            isDownVoted = false;
-                          } else {
-                            comment.voteCount--;
-                            isUpVoted = false;
-                            isDownVoted = true;
-                          }
-                        });
-                      },
-                      child: AnimatedScale(
-                        duration: const Duration(milliseconds: 150),
-                        scale: isDownVoted ? 1.1 : 1.0,
-                        child: Icon(
-                          CupertinoIcons.arrow_down_circle_fill,
-                          size: 22,
-                          color: isDownVoted
-                              ? themeExtension?.downVote
-                              : colorScheme.onSurface.withOpacity(0.7),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () => setState(() {
-                    isExpanded = !isExpanded;
-                  }),
-                  child: Icon(
-                    Icons.reply_outlined,
-                    size: 18,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-              ],
             ),
           ],
         ),

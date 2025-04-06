@@ -1,6 +1,7 @@
 import '../../home/models/community_model.dart';
 
 class UserComment {
+  final String id; // ✅ Added ID
   final String author;
   final String comment;
   final String repliedTo;
@@ -13,6 +14,7 @@ class UserComment {
   final String communityImage;
 
   UserComment({
+    required this.id, // ✅ Marked required
     this.author = "Dodje",
     required this.comment,
     required this.repliedTo,
@@ -32,6 +34,7 @@ class UserComment {
       final community = communities[index % communities.length];
 
       return UserComment(
+        id: '$index', //
         comment: "You can use Cubit for this one",
         repliedTo: "Sweet potato",
         voteCount: _calculateVoteCount(index),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/core/utils/responsive_utils.dart';
 import '../../../profile/presentation/widgets/build_comments.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../profile/models/user_comments_model.dart';
@@ -12,10 +13,16 @@ class CommentsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = context.isMobile;
+    
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 8 : 16, 
+            vertical: isMobile ? 8 : 12
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

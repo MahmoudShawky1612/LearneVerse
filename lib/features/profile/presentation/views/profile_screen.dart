@@ -26,7 +26,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
-    // Use the provided userInfo or get it from the provider
     final userInfo = widget.userInfo ?? Provider.of<UserProvider>(context).currentUser;
     
     return Scaffold(
