@@ -1,10 +1,9 @@
 import 'dart:math';
-
 import 'author_model.dart';
 import 'community_model.dart';
 
-
 class Post {
+  final String id;
   final String title;
   final String description;
   int voteCount;
@@ -19,6 +18,7 @@ class Post {
   final List<String> tags;
 
   Post({
+    required this.id,
     required this.title,
     required this.description,
     required this.voteCount,
@@ -38,7 +38,6 @@ class Post {
     final communities = Community.generateDummyCommunities();
     final random = Random();
 
-    // Define some common post tags across programming topics
     final Map<String, List<String>> topicTags = {
       'Web Development': ['JavaScript', 'React', 'Angular', 'Vue', 'HTML', 'CSS', 'Frontend', 'Web Development', 'Responsive Design'],
       'Mobile Apps': ['Flutter', 'React Native', 'Swift', 'Kotlin', 'Android', 'iOS', 'Mobile Apps', 'UI/UX', 'App Development'],
@@ -48,18 +47,13 @@ class Post {
       'Security': ['Cybersecurity', 'Blockchain', 'Cryptography', 'Ethical Hacking', 'Network Security', 'Security', 'Privacy'],
       'General': ['Programming', 'Algorithms', 'System Design', 'Best Practices', 'Performance', 'Code Review', 'Tutorial', 'Beginner', 'Advanced']
     };
-    
+
     return List.generate(count, (index) {
       final author = authors[index % authors.length];
       final community = communities[index % communities.length];
-
-      // Get primary topic for this post based on index
       final String primaryTopic = topicTags.keys.elementAt(index % topicTags.length);
-      
-      // Generate relevant tags for the post
+
       List<String> postTags = [];
-      
-      // Add 1-2 tags from the primary topic
       final primaryTagCount = random.nextInt(2) + 1;
       for (int i = 0; i < primaryTagCount; i++) {
         final tagList = topicTags[primaryTopic]!;
@@ -68,48 +62,33 @@ class Post {
           postTags.add(tag);
         }
       }
-      
-      // 50% chance to include a tag from the community
       if (random.nextBool() && community.tags.isNotEmpty) {
         final communityTag = community.tags[random.nextInt(community.tags.length)];
         if (!postTags.contains(communityTag)) {
           postTags.add(communityTag);
         }
       }
-      
-      // 50% chance to include a tag from the author's interests
       if (random.nextBool() && author.interests.isNotEmpty) {
         final interestTag = author.interests[random.nextInt(author.interests.length)];
         if (!postTags.contains(interestTag)) {
           postTags.add(interestTag);
         }
       }
-      
-      // Ensure each post has at least 2 tags
       if (postTags.length < 2) {
         final generalTags = topicTags['General']!;
         postTags.add(generalTags[random.nextInt(generalTags.length)]);
       }
 
-      // Generate post title based on tags
       String postTitle = "Post about ";
-      if (postTags.isNotEmpty) {
-        postTitle += postTags[random.nextInt(postTags.length)];
-      } else {
-        postTitle += "programming";
-      }
+      postTitle += postTags.isNotEmpty ? postTags[random.nextInt(postTags.length)] : "programming";
       postTitle += " ${index + 1}";
 
-      // Generate post description based on tags
       String postDescription = "This is a detailed post about ";
-      if (postTags.isNotEmpty) {
-        postDescription += postTags.join(" and ");
-      } else {
-        postDescription += "programming concepts";
-      }
-      postDescription += ". It covers important topics that developers should know about...";
+      postDescription += postTags.isNotEmpty ? postTags.join(" and ") : "programming concepts";
+      postDescription += ". It covers important topics that developers should know about...............................................................................................................................................";
 
       return Post(
+        id: '$index',
         title: postTitle,
         description: postDescription,
         voteCount: _calculateVoteCount(index),

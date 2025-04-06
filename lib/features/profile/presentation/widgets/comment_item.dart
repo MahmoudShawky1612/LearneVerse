@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/core/utils/responsive_utils.dart';
@@ -57,9 +56,7 @@ class _CommentItemState extends State<CommentItem> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(
-            vertical: context.h(8),
-            horizontal: isMobileDevice ? 8 : 12
-          ),
+              vertical: context.h(8), horizontal: isMobileDevice ? 8 : 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,11 +66,13 @@ class _CommentItemState extends State<CommentItem> {
                   GestureDetector(
                     onTap: () {
                       List<Author> users = Author.users;
-                      final user = users.firstWhere((user) => user.avatar == avatar);
+                      final user =
+                          users.firstWhere((user) => user.avatar == avatar);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ProfileScreen(userInfo: user)),
+                            builder: (context) =>
+                                ProfileScreen(userInfo: user)),
                       );
                     },
                     child: CircleAvatar(
@@ -107,7 +106,8 @@ class _CommentItemState extends State<CommentItem> {
                                   FaIcon(
                                     FontAwesomeIcons.solidCircle,
                                     size: isMobileDevice ? 4 : 6,
-                                    color: colorScheme.onSurface.withOpacity(0.7),
+                                    color:
+                                        colorScheme.onSurface.withOpacity(0.7),
                                   ),
                                   SizedBox(width: context.w(4)),
                                   Flexible(
@@ -142,9 +142,7 @@ class _CommentItemState extends State<CommentItem> {
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: context.w(6), 
-                          vertical: context.h(2)
-                        ),
+                            horizontal: context.w(6), vertical: context.h(2)),
                         decoration: BoxDecoration(
                           color: colorScheme.surface.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(12),
@@ -154,7 +152,8 @@ class _CommentItemState extends State<CommentItem> {
                           children: [
                             CircleAvatar(
                               radius: isMobileDevice ? 6 : 7,
-                              backgroundImage: AssetImage(comment.communityImage),
+                              backgroundImage:
+                                  AssetImage(comment.communityImage),
                               backgroundColor: Colors.transparent,
                             ),
                             SizedBox(width: context.w(2)),
@@ -171,23 +170,25 @@ class _CommentItemState extends State<CommentItem> {
                         ),
                       ),
                     ),
-                flag?  IconButton(
-                    icon: Icon(
-                      Icons.more_horiz,
-                      color: colorScheme.onSurface.withOpacity(0.8),
-                      size: isMobileDevice ? 16 : 18,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        showOptions = !showOptions;
-                      });
-                    },
-                    padding: EdgeInsets.zero,
-                    constraints: BoxConstraints(
-                      minWidth: isMobileDevice ? 28 : 30,
-                      minHeight: isMobileDevice ? 28 : 30,
-                    ),
-                  ) : Container(),
+                  flag
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.more_horiz,
+                            color: colorScheme.onSurface.withOpacity(0.8),
+                            size: isMobileDevice ? 16 : 18,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              showOptions = !showOptions;
+                            });
+                          },
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(
+                            minWidth: isMobileDevice ? 28 : 30,
+                            minHeight: isMobileDevice ? 28 : 30,
+                          ),
+                        )
+                      : Container(),
                   if (showOptions)
                     Positioned(
                       right: 30,
@@ -218,18 +219,18 @@ class _CommentItemState extends State<CommentItem> {
                               colorScheme.primary,
                               () {},
                             ),
-                            Divider(height: 8, color: colorScheme.onSurface.withOpacity(0.1)),
+                            Divider(
+                                height: 8,
+                                color: colorScheme.onSurface.withOpacity(0.1)),
                             _buildOptionsItem(
                               'Delete',
                               Icons.delete_outline,
                               colorScheme.error,
                               () {
-                                // Close the options menu
                                 setState(() {
                                   showOptions = false;
                                 });
-                                
-                                // Call delete function after menu closes
+
                                 if (widget.delete != null) {
                                   Future.delayed(Duration.zero, () {
                                     widget.delete!(comment.id);
@@ -245,7 +246,8 @@ class _CommentItemState extends State<CommentItem> {
               ),
               SizedBox(height: context.h(8)),
               Padding(
-                padding: EdgeInsets.only(left: context.w(isMobileDevice ? 30 : 36)),
+                padding:
+                    EdgeInsets.only(left: context.w(isMobileDevice ? 30 : 36)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -258,7 +260,8 @@ class _CommentItemState extends State<CommentItem> {
                       ),
                       maxLines: isExpanded ? null : 3,
                     ),
-                    if ((comment.comment?.length ?? 0) > 100 || (comment.comment?.length ?? 0) > 100)
+                    if ((comment.comment?.length ?? 0) > 100 ||
+                        (comment.comment?.length ?? 0) > 100)
                       GestureDetector(
                         onTap: () => setState(() => isExpanded = !isExpanded),
                         child: Padding(
@@ -293,7 +296,7 @@ class _CommentItemState extends State<CommentItem> {
                             });
                           },
                         ),
-                        SizedBox(width: context.w(2)),
+                        SizedBox(width: context.w(8)),
                         Text(
                           '${comment.voteCount}',
                           style: TextStyle(
@@ -303,7 +306,8 @@ class _CommentItemState extends State<CommentItem> {
                                 ? themeExtension?.upVote
                                 : isDownVoted
                                     ? themeExtension?.downVote
-                                    : theme.colorScheme.onSurface.withOpacity(0.8),
+                                    : theme.colorScheme.onSurface
+                                        .withOpacity(0.8),
                           ),
                         ),
                         SizedBox(width: context.w(8)),
@@ -324,13 +328,7 @@ class _CommentItemState extends State<CommentItem> {
                             });
                           },
                         ),
-                       SizedBox(width: context.w(16)),
-                        flag?_buildActionButton(
-                          icon: FontAwesomeIcons.comment,
-                          text: '${comment.repliedTo ?? 0}',
-                          onTap: () {},
-                        ):Container(),
-
+                        SizedBox(width: context.w(16)),
                       ],
                     ),
                   ],
@@ -350,7 +348,7 @@ class _CommentItemState extends State<CommentItem> {
     required VoidCallback onTap,
   }) {
     final isMobileDevice = context.isMobile;
-    
+
     return GestureDetector(
       onTap: onTap,
       child: FaIcon(
@@ -370,7 +368,7 @@ class _CommentItemState extends State<CommentItem> {
   }) {
     final theme = Theme.of(context);
     final isMobileDevice = context.isMobile;
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Row(
@@ -396,7 +394,7 @@ class _CommentItemState extends State<CommentItem> {
       ),
     );
   }
-  
+
   Widget _buildOptionsItem(
     String text,
     IconData icon,
@@ -404,7 +402,7 @@ class _CommentItemState extends State<CommentItem> {
     VoidCallback onTap,
   ) {
     final isMobileDevice = context.isMobile;
-    
+
     return InkWell(
       onTap: onTap,
       child: Padding(

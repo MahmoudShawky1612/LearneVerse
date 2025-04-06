@@ -52,7 +52,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
       );
       
       setState(() {
-        comments.insert(0, newComment); // Add to the beginning to show newest first
+        comments.insert(0, newComment);
       });
       
       _commentController.clear();

@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               sliver: SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    UserComments(userInfo: userInfo),
+                    UserComments(userInfo: userInfo, ),
                     UserPostsScreen(userInfo: userInfo),
                   ],
                 ),

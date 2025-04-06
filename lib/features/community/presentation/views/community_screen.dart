@@ -831,7 +831,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
       commentCount: 0,
       communityName: community.name,
       communityImage: community.image,
-      tags: [],
+      tags: [], id: '${_posts.length}',
     );
 
     setState(() {
