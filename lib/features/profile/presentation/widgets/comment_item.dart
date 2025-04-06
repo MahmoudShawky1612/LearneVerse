@@ -171,7 +171,7 @@ class _CommentItemState extends State<CommentItem> {
                         ),
                       ),
                     ),
-                  IconButton(
+                flag?  IconButton(
                     icon: Icon(
                       Icons.more_horiz,
                       color: colorScheme.onSurface.withOpacity(0.8),
@@ -187,7 +187,7 @@ class _CommentItemState extends State<CommentItem> {
                       minWidth: isMobileDevice ? 28 : 30,
                       minHeight: isMobileDevice ? 28 : 30,
                     ),
-                  ),
+                  ) : Container(),
                   if (showOptions)
                     Positioned(
                       right: 30,
