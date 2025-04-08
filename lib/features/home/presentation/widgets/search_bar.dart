@@ -1,18 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
-class CustomSearchBar extends StatelessWidget {
+class CustomSearchBar extends StatefulWidget {
   final TextEditingController searchController;
   final void Function(String) searchFunction;
 
-  const CustomSearchBar(this.searchController, this.searchFunction,
-      {super.key});
+  const CustomSearchBar(this.searchController, this.searchFunction, {Key? key})
+      : super(key: key);
+
+  @override
+  State<CustomSearchBar> createState() => _CustomSearchBarState();
+}
+
+class _CustomSearchBarState extends State<CustomSearchBar> {
+  final SpeechToText _speechToText = SpeechToText();
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
+  }
+
+  Future<void> _initSpeech() async {
+    setState(() {});
+  }
+
+  Future<void> _startListening() async {
+    await _speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  Future<void> _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      widget.searchController.text = result.recognizedWords;
+    });
+    widget.searchFunction(result.recognizedWords);
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final themeExtension = theme.extension<AppThemeExtension>();
 
     return Center(
       child: Container(
@@ -40,27 +74,27 @@ class CustomSearchBar extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: TextField(
-                controller: searchController,
-                onChanged: searchFunction,
+              child: TextFormField(
+                controller: widget.searchController,
+                onChanged: widget.searchFunction,
                 decoration: InputDecoration(
                   hintText: 'Search...',
-                  hintStyle:
-                      TextStyle(color: colorScheme.onSurface.withOpacity(0.4)),
+                  hintStyle: TextStyle(
+                      color: colorScheme.onSurface.withOpacity(0.4)),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 20),
-                  suffixIcon: searchController.text.isNotEmpty
+                  suffixIcon: widget.searchController.text.isNotEmpty
                       ? GestureDetector(
-                          onTap: () {
-                            searchController.clear();
-                            searchFunction('');
-                          },
-                          child: Icon(
-                            Icons.close,
-                            color: colorScheme.onSurface.withOpacity(0.6),
-                            size: 20,
-                          ),
-                        )
+                    onTap: () {
+                      widget.searchController.clear();
+                      widget.searchFunction('');
+                    },
+                    child: Icon(
+                      Icons.close,
+                      color: colorScheme.onSurface.withOpacity(0.6),
+                      size: 20,
+                    ),
+                  )
                       : null,
                 ),
                 style: TextStyle(
@@ -71,20 +105,24 @@ class CustomSearchBar extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                // Microphone functionality
+                _speechToText.isNotListening
+                    ? _startListening()
+                    : _stopListening();
               },
               child: Container(
                 margin: const EdgeInsets.only(right: 16),
                 height: 36,
                 width: 36,
                 decoration: BoxDecoration(
-                  gradient: themeExtension?.buttonGradient,
+                  color: _speechToText.isListening
+                      ? Colors.redAccent
+                      : colorScheme.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.mic,
-                  color: colorScheme.onPrimary,
+                  _speechToText.isListening ? Icons.mic_off : Icons.mic,
                   size: 20,
+                  color: colorScheme.onPrimary,
                 ),
               ),
             ),

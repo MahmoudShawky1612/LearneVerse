@@ -1,17 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:flutterwidgets/features/home/models/community_model.dart';
 import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/build_posts.dart';
-import 'package:flutterwidgets/features/profile/presentation/views/profile_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../discover/presentation/widgets/vertical_users_list.dart';
-import '../../../home/models/author_model.dart';
-import '../../../home/models/post_model.dart';
-import '../../../home/presentation/widgets/build_posts.dart';
 
 class CommunityScreen extends StatefulWidget {
   final dynamic community;
@@ -33,15 +31,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
   late final Author third;
   late List<Author> foundUsers;
   TextEditingController searchController = TextEditingController();
+  File? _image;
 
   @override
   void initState() {
     super.initState();
     _posts = Post.generateDummyPosts(15);
     _members = Author.generateMoreDummyAuthors();
-    // Assume the first user is the current user
     _currentUser = Author.users[0];
-    // Check if user has joined this community
     _userHasJoined = _checkIfUserJoined();
 
     first = _members[0];
@@ -68,13 +65,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
         .any((community) => community.id == widget.community.id);
   }
 
+  Future<void> imagePicker() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
-    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -777,6 +779,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     ),
                   ),
                 ),
+                IconButton(onPressed: imagePicker, icon: Icon(Icons.image_outlined)),
               ],
             ),
           ),
@@ -826,11 +829,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
       author: author.name,
       avatar: author.avatar,
       time: 0,
-      // Just posted
       commentCount: 0,
       communityName: community.name,
       communityImage: community.image,
-      tags: [], id: '${_posts.length}',
+      tags: [],
+      id: '${_posts.length}',
+      image: _image,
     );
 
     setState(() {
@@ -1285,7 +1289,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
-  // Add the _buildMemberAvatar method
   Widget _buildMemberAvatar(Author member) {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 

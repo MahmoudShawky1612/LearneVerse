@@ -1,11 +1,12 @@
 import 'dart:math';
+
 import 'author_model.dart';
 import 'community_model.dart';
 
 class Post {
   final String id;
-   String title;
-   String description;
+  String title;
+  String description;
   int voteCount;
   final int upvote;
   final int downVote;
@@ -16,8 +17,10 @@ class Post {
   final String communityName;
   final String communityImage;
   final List<String> tags;
+  dynamic image;
 
   Post({
+    this.image,
     required this.id,
     required this.title,
     required this.description,
@@ -39,19 +42,88 @@ class Post {
     final random = Random();
 
     final Map<String, List<String>> topicTags = {
-      'Web Development': ['JavaScript', 'React', 'Angular', 'Vue', 'HTML', 'CSS', 'Frontend', 'Web Development', 'Responsive Design'],
-      'Mobile Apps': ['Flutter', 'React Native', 'Swift', 'Kotlin', 'Android', 'iOS', 'Mobile Apps', 'UI/UX', 'App Development'],
-      'Backend': ['Node.js', 'Express', 'Spring', 'Django', 'API', 'REST', 'GraphQL', 'Backend', 'Server', 'Microservices'],
-      'Data Science': ['Python', 'Machine Learning', 'Data Science', 'Data Analysis', 'Statistical Analysis', 'Pandas', 'NumPy', 'TensorFlow'],
-      'DevOps': ['Docker', 'Kubernetes', 'CI/CD', 'AWS', 'Azure', 'Cloud Computing', 'DevOps', 'Infrastructure', 'Deployment'],
-      'Security': ['Cybersecurity', 'Blockchain', 'Cryptography', 'Ethical Hacking', 'Network Security', 'Security', 'Privacy'],
-      'General': ['Programming', 'Algorithms', 'System Design', 'Best Practices', 'Performance', 'Code Review', 'Tutorial', 'Beginner', 'Advanced']
+      'Web Development': [
+        'JavaScript',
+        'React',
+        'Angular',
+        'Vue',
+        'HTML',
+        'CSS',
+        'Frontend',
+        'Web Development',
+        'Responsive Design'
+      ],
+      'Mobile Apps': [
+        'Flutter',
+        'React Native',
+        'Swift',
+        'Kotlin',
+        'Android',
+        'iOS',
+        'Mobile Apps',
+        'UI/UX',
+        'App Development'
+      ],
+      'Backend': [
+        'Node.js',
+        'Express',
+        'Spring',
+        'Django',
+        'API',
+        'REST',
+        'GraphQL',
+        'Backend',
+        'Server',
+        'Microservices'
+      ],
+      'Data Science': [
+        'Python',
+        'Machine Learning',
+        'Data Science',
+        'Data Analysis',
+        'Statistical Analysis',
+        'Pandas',
+        'NumPy',
+        'TensorFlow'
+      ],
+      'DevOps': [
+        'Docker',
+        'Kubernetes',
+        'CI/CD',
+        'AWS',
+        'Azure',
+        'Cloud Computing',
+        'DevOps',
+        'Infrastructure',
+        'Deployment'
+      ],
+      'Security': [
+        'Cybersecurity',
+        'Blockchain',
+        'Cryptography',
+        'Ethical Hacking',
+        'Network Security',
+        'Security',
+        'Privacy'
+      ],
+      'General': [
+        'Programming',
+        'Algorithms',
+        'System Design',
+        'Best Practices',
+        'Performance',
+        'Code Review',
+        'Tutorial',
+        'Beginner',
+        'Advanced'
+      ]
     };
 
     return List.generate(count, (index) {
       final author = authors[index % authors.length];
       final community = communities[index % communities.length];
-      final String primaryTopic = topicTags.keys.elementAt(index % topicTags.length);
+      final String primaryTopic =
+          topicTags.keys.elementAt(index % topicTags.length);
 
       List<String> postTags = [];
       final primaryTagCount = random.nextInt(2) + 1;
@@ -63,13 +135,15 @@ class Post {
         }
       }
       if (random.nextBool() && community.tags.isNotEmpty) {
-        final communityTag = community.tags[random.nextInt(community.tags.length)];
+        final communityTag =
+            community.tags[random.nextInt(community.tags.length)];
         if (!postTags.contains(communityTag)) {
           postTags.add(communityTag);
         }
       }
       if (random.nextBool() && author.interests.isNotEmpty) {
-        final interestTag = author.interests[random.nextInt(author.interests.length)];
+        final interestTag =
+            author.interests[random.nextInt(author.interests.length)];
         if (!postTags.contains(interestTag)) {
           postTags.add(interestTag);
         }
@@ -80,12 +154,16 @@ class Post {
       }
 
       String postTitle = "Post about ";
-      postTitle += postTags.isNotEmpty ? postTags[random.nextInt(postTags.length)] : "programming";
+      postTitle += postTags.isNotEmpty
+          ? postTags[random.nextInt(postTags.length)]
+          : "programming";
       postTitle += " ${index + 1}";
 
       String postDescription = "This is a detailed post about ";
-      postDescription += postTags.isNotEmpty ? postTags.join(" and ") : "programming concepts";
-      postDescription += ". It covers important topics that developers should know about...............................................................................................................................................";
+      postDescription +=
+          postTags.isNotEmpty ? postTags.join(" and ") : "programming concepts";
+      postDescription +=
+          ". It covers important topics that developers should know about...............................................................................................................................................";
 
       return Post(
         id: '$index',

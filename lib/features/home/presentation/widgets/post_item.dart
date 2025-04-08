@@ -220,7 +220,10 @@ class _PostItemState extends State<PostItem> {
                           ),
                         ),
                       ),
-
+                      SizedBox(height: 5,),
+                    post.image != null ?Container(
+                      child: Image.file(post.image),
+                    ): Container(),
                     // Post tags
                     if (post.tags != null && post.tags.isNotEmpty)
                       Padding(
