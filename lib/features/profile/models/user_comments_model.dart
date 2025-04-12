@@ -13,6 +13,7 @@ class UserComment {
   final String communityName;
   final String communityImage;
 
+
   UserComment({
     required this.id, // ✅ Marked required
     this.author = "Dodje",

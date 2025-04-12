@@ -80,7 +80,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             children: [
               const BuildHeader(),
               const SizedBox(height: 24),
-              CustomSearchBar(_searchController, _search),
+              CustomSearchBar(searchController: _searchController, searchFunction: _search),
               const SizedBox(height: 24),
               BuildFiltersList(
                 selectedFilters: _selectedFilters,

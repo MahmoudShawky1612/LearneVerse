@@ -109,7 +109,7 @@ class _MainContentState extends State<MainContent> {
         Community postCommunity = matchingCommunities.first;
         communityMatches = matchesInterests(postCommunity.tags, currentUser.interests);
       }
-      
+        
       return tagMatches || communityMatches;
     }).toList();
     
@@ -146,34 +146,34 @@ class _MainContentState extends State<MainContent> {
             decoration: isMobile
                 ? null
                 : BoxDecoration(
-                    gradient: themeExtension?.containerGradient,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colorScheme.onSurface.withOpacity(0.15),
-                        blurRadius: 6,
-                        spreadRadius: 1,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
+            gradient: themeExtension?.containerGradient,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.onSurface.withOpacity(0.15),
+                blurRadius: 6,
+                spreadRadius: 1,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Expanded(
-                      child: Text(
+                  child: Text(
                         recommendedCommunities.isNotEmpty 
                             ? 'Communities For You' 
                             : 'Popular Communities',
-                        style: textTheme.headlineSmall?.copyWith(
+                    style: textTheme.headlineSmall?.copyWith(
                           fontSize: isMobile ? 17 : 18,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2,
                     ),
+                  ),
+                ),
                     if (recommendedCommunities.isNotEmpty)
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -246,7 +246,7 @@ class _MainContentState extends State<MainContent> {
                 
                 // Show message when no communities match user interests
                 if (recommendedCommunities.isEmpty && currentUser.interests.isNotEmpty)
-                  Padding(
+                Padding(
                     padding: EdgeInsets.only(top: context.h(12)),
                     child: Container(
                       padding: EdgeInsets.all(context.w(8)),
@@ -316,17 +316,17 @@ class _MainContentState extends State<MainContent> {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(
+                  child: Text(
                         recommendedPosts.isNotEmpty 
                             ? 'Posts For You' 
                             : 'Popular Posts',
-                        style: textTheme.headlineSmall?.copyWith(
+                    style: textTheme.headlineSmall?.copyWith(
                           fontSize: isMobile ? 17 : 18,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2,
                     ),
+                  ),
+                ),
                     if (recommendedPosts.isNotEmpty)
                       Container(
                         padding: EdgeInsets.symmetric(

@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:flutterwidgets/features/home/models/community_model.dart';
 import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/build_posts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../discover/presentation/widgets/vertical_users_list.dart';
@@ -32,6 +32,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   late List<Author> foundUsers;
   TextEditingController searchController = TextEditingController();
   File? _image;
+  late VideoPlayerController _controller;
 
   @override
   void initState() {
@@ -46,11 +47,22 @@ class _CommunityScreenState extends State<CommunityScreen> {
     third = _members[2];
     foundUsers = [];
     searchController.clear();
+
+    _controller = VideoPlayerController.asset(widget.community.introVideo)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+    _controller.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override
   void dispose() {
     searchController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -75,6 +87,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
       });
     }
   }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$minutes:$seconds';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +109,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 children: <Widget>[
                   _buildCommunityHeader(),
                   const SizedBox(height: 24),
-                  // Only show tab selector if community is public or user has joined
                   if (widget.community.communityPrivacy == "Public" ||
                       _userHasJoined)
                     _buildTabSelector(),
@@ -244,9 +263,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
           index < widget.community.rating.floor()
               ? Icons.star
               : (index == widget.community.rating.floor() &&
-              widget.community.rating % 1 > 0)
-              ? Icons.star_half
-              : Icons.star_border,
+                      widget.community.rating % 1 > 0)
+                  ? Icons.star_half
+                  : Icons.star_border,
           color: Colors.amber,
           size: 18,
         );
@@ -295,8 +314,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
           child: Text(
             title,
             style: TextStyle(
-              color: isSelected ? colorScheme.onPrimary : theme.colorScheme
-                  .onSurfaceVariant,
+              color: isSelected
+                  ? colorScheme.onPrimary
+                  : theme.colorScheme.onSurfaceVariant,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -326,7 +346,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   Widget _buildInfoTab() {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -368,6 +387,57 @@ class _CommunityScreenState extends State<CommunityScreen> {
           })),
         ),
         const SizedBox(height: 24),
+        Text(
+          "Intro video to ${widget.community.name}",
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
+        const SizedBox(height: 10),
+        if (_controller.value.isInitialized)
+          Column(
+            children: [
+              AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              ),
+              Slider(
+                  value: _controller.value.position.inSeconds.toDouble(),
+                  min: 0,
+                  max: _controller.value.duration.inSeconds.toDouble(),
+                  onChanged: (value) {
+                    setState(() {
+                      _controller.seekTo(Duration(seconds: value.toInt()));
+                    });
+                  }),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(_formatDuration(_controller.value.position)),
+                    Text(_formatDuration(_controller.value.duration)),
+                  ],
+                ),
+              ),
+            ],
+          )
+        else
+          const CircularProgressIndicator(),
+        const SizedBox(height: 24),
+        Center(
+          child: FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                _controller.value.isPlaying
+                    ? _controller.pause()
+                    : _controller.play();
+              });
+            },
+            child: Icon(
+              _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
         const Text(
           'Community Guidelines',
           style: TextStyle(
@@ -407,9 +477,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     required String title,
     required String description,
   }) {
-    final colorScheme = Theme
-        .of(context)
-        .colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
 
     return Padding(
@@ -681,7 +749,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 backgroundColor: colorScheme.primary,
                 foregroundColor: colorScheme.onPrimary,
                 padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -779,7 +847,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     ),
                   ),
                 ),
-                IconButton(onPressed: imagePicker, icon: Icon(Icons.image_outlined)),
+                IconButton(
+                    onPressed: imagePicker,
+                    icon: const Icon(Icons.image_outlined)),
               ],
             ),
           ),
@@ -801,8 +871,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   if (titleController.text.isNotEmpty &&
                       descriptionController.text.isNotEmpty) {
                     _createNewPost(
-                        titleController.text, descriptionController.text,
-                        currentUser, currentCommunity);
+                        titleController.text,
+                        descriptionController.text,
+                        currentUser,
+                        currentCommunity);
                     Navigator.pop(context);
                   }
                 },
@@ -818,8 +890,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
-  void _createNewPost(String title, String description, Author author,
-      Community community) {
+  void _createNewPost(
+      String title, String description, Author author, Community community) {
     final newPost = Post(
       title: title,
       description: description,
@@ -948,14 +1020,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
               const Divider(height: 1),
               ...List.generate(
                 7,
-                    (index) =>
-                    _buildTopMemberItem(
-                      rank: index + 4,
-                      name: _members[index + 3].name,
-                      username: _members[index + 3].userName,
-                      avatarUrl: _members[index + 3].avatar,
-                      points: _members[index + 3].points,
-                    ),
+                (index) => _buildTopMemberItem(
+                  rank: index + 4,
+                  name: _members[index + 3].name,
+                  username: _members[index + 3].userName,
+                  avatarUrl: _members[index + 3].avatar,
+                  points: _members[index + 3].points,
+                ),
               ),
             ],
           ),
@@ -964,7 +1035,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
-  Widget _buildPodiumItem(dynamic user, int rank, {
+  Widget _buildPodiumItem(
+    dynamic user,
+    int rank, {
     required double height,
     required ThemeData theme,
     required ColorScheme colorScheme,
