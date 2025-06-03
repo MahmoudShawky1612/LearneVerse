@@ -3,6 +3,7 @@ import 'package:flutterwidgets/features/community/presentation/views/community_s
 import 'package:flutterwidgets/features/discover/presentation/views/discover_screen.dart';
 import 'package:flutterwidgets/features/home/presentation/views/home_screen.dart';
 import 'package:flutterwidgets/features/home/presentation/views/main_screen.dart';
+import 'package:flutterwidgets/features/login/presentation/views/login_screen.dart';
 import 'package:flutterwidgets/features/user_selection_screen.dart';
 import 'package:flutterwidgets/features/calendar/presentation/views/calendar_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -49,6 +50,10 @@ final GoRouter route = GoRouter(
     GoRoute(
       path: '/splash',
       builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginScreen(),
     ),
   ],
 );
