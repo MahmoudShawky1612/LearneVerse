@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
 import 'package:flutterwidgets/routing/routes.dart';
+import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:flutterwidgets/core/providers/theme_provider.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
-void main() {
+import 'features/login/logic/cubit/auth_cubit.dart';
+import 'features/login/services/auth_api_service.dart';
+import 'features/profile/logic/cubit/profile_cubit.dart';
+import 'features/profile/services/profile_api_services.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final token = await TokenStorage.getToken();
+
   runApp(
-    MultiProvider(
+    MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        BlocProvider<AuthCubit>(
+          create: (_) => AuthCubit(AuthApiService()),
+        ),
+        BlocProvider<ProfileCubit>(
+          create: (_) => ProfileCubit(UserProfileApiService(), token ?? ''),
+        ),
       ],
       child: const MyApp(),
     ),

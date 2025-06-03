@@ -4,21 +4,15 @@ import 'package:flutterwidgets/features/discover/presentation/views/discover_scr
 import 'package:flutterwidgets/features/home/presentation/views/home_screen.dart';
 import 'package:flutterwidgets/features/home/presentation/views/main_screen.dart';
 import 'package:flutterwidgets/features/login/presentation/views/login_screen.dart';
-import 'package:flutterwidgets/features/user_selection_screen.dart';
 import 'package:flutterwidgets/features/calendar/presentation/views/calendar_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../features/profile/presentation/views/profile_screen.dart';
 import '../features/splash screen/splash_screen.dart';
 
-//context.push('/profile'); // Pushes ProfileScreen onto the stack
-//context.go('/profile'); // Replaces current screen
 final GoRouter route = GoRouter(
   initialLocation: '/splash',
   routes: [
-    GoRoute(
-      path: '/user-selection',
-      builder: (context, state) => const UserSelectionScreen(),
-    ),
+
     GoRoute(
       path: '/',
       builder: (context, state) => const MainScreen(),

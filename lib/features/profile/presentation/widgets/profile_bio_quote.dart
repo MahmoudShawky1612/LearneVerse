@@ -27,7 +27,7 @@ class ProfileBioQuote extends StatelessWidget {
           SizedBox(width: 6.w),
           Expanded(
             child: Text(
-              userInfo?.quote ?? "كَلَّا إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ",
+              userInfo?.bio ?? "كَلَّا إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ",
               style: TextStyle(
                 fontSize: 15.sp,
                 fontStyle: FontStyle.italic,

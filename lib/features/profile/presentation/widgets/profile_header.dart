@@ -22,7 +22,6 @@ class ProfileHeader extends StatelessWidget {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final size = MediaQuery.of(context).size;
 
-    // Dynamically calculate expandedHeight based on screen size
     final expandedHeight = (size.height * 0.45).h;
 
     return SliverAppBar(
@@ -93,8 +92,8 @@ class ProfileHeader extends StatelessWidget {
                             ProfileBioQuote(userInfo: userInfo),
                             SizedBox(height: 14.h),
                             if (userInfo != null &&
-                                userInfo.interests != null &&
-                                userInfo.interests.isNotEmpty)
+                                userInfo.tags != null &&
+                                userInfo.tags.isNotEmpty)
                               _buildInterestTags(colorScheme, userInfo),
                             SizedBox(height: 14.h),
                             Center(child: ProfileUserStatsRow(userInfo: userInfo)),

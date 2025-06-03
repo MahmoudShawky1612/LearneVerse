@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import '../../logic/cubit/auth_cubit.dart';
+import '../../logic/cubit/auth_state.dart';
 import '../widgets/login_footer.dart';
 import '../widgets/login_form.dart';
 import '../widgets/login_header.dart';
@@ -56,59 +60,78 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
 
   Future<void> _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-      await Future.delayed(const Duration(seconds: 2));
-      setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login Successful!')),
-        );
-      }
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+      context.read<AuthCubit>().login(email, password);
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                return FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const LoginHeader(),
-                        SizedBox(height: 40.h),
-                        LoginForm(
-                          formKey: _formKey,
-                          emailController: _emailController,
-                          passwordController: _passwordController,
-                          isPasswordVisible: _isPasswordVisible,
-                          isLoading: _isLoading,
-                          onPasswordVisibilityToggle: () {
-                            setState(() => _isPasswordVisible = !_isPasswordVisible);
-                          },
-                          onLoginPressed: _handleLogin,
-                        ),
-                        SizedBox(height: 24.h),
-                        const LoginFooter(),
-                      ],
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthLoading) {
+          setState(() => _isLoading = true);
+        } else {
+          setState(() => _isLoading = false);
+        }
+
+        if (state is AuthSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Login Successful!')),
+          );
+          context.pushReplacement('/home');
+        }
+
+        if (state is AuthFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) {
+                  return FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const LoginHeader(),
+                          SizedBox(height: 40.h),
+                          LoginForm(
+                            formKey: _formKey,
+                            emailController: _emailController,
+                            passwordController: _passwordController,
+                            isPasswordVisible: _isPasswordVisible,
+                            isLoading: _isLoading,
+                            onPasswordVisibilityToggle: () {
+                              setState(() => _isPasswordVisible = !_isPasswordVisible);
+                            },
+                            onLoginPressed: _handleLogin,
+                          ),
+                          SizedBox(height: 24.h),
+                          const LoginFooter(),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
 }

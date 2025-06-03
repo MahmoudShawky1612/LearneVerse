@@ -32,13 +32,7 @@ class LoginForm extends StatelessWidget {
             controller: emailController,
             icon: Icons.email_outlined,
             isObscure: false,
-            validator: (value) {
-              if (value?.isEmpty ?? true) return 'Please enter your email';
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value!)) {
-                return 'Please enter a valid email';
-              }
-              return null;
-            },
+            validator: null,
           ),
           SizedBox(height: 16.h),
           _buildInputField(
@@ -53,11 +47,7 @@ class LoginForm extends StatelessWidget {
               ),
               onPressed: onPasswordVisibilityToggle,
             ),
-            validator: (value) {
-              if (value?.isEmpty ?? true) return 'Please enter your password';
-              if (value!.length < 6) return 'Password must be at least 6 characters';
-              return null;
-            },
+            validator: null,
           ),
           SizedBox(height: 12.h),
           Align(
@@ -120,8 +110,7 @@ class LoginForm extends StatelessWidget {
       children: [
         Text(
           label,
-          style:
-          TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Colors.black87),
+          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Colors.black87),
         ),
         SizedBox(height: 8.h),
         TextFormField(
@@ -129,7 +118,7 @@ class LoginForm extends StatelessWidget {
           obscureText: isObscure,
           style: TextStyle(fontSize: 16.sp, color: Colors.black87),
           decoration: InputDecoration(
-            hintText: 'Enter your $label'.toLowerCase(),
+            hintText: 'Enter your ${label.toLowerCase()}',
             prefixIcon: Icon(icon, color: Colors.grey[500], size: 20.r),
             suffixIcon: suffixIcon,
             border: OutlineInputBorder(
