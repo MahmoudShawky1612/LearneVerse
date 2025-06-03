@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
-import 'package:flutterwidgets/core/utils/responsive_utils.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:flutterwidgets/features/home/models/community_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../profile/presentation/views/profile_screen.dart';
 
@@ -16,12 +16,13 @@ class PostItem extends StatefulWidget {
   final isUserPost;
 
   const PostItem({
-    Key? key,
+    super.key,
     required this.post,
     this.userInfo,
     this.delete,
-    this.isUserPost, this.edit,
-  }) : super(key: key);
+    this.isUserPost,
+    this.edit,
+  });
 
   @override
   _PostItemState createState() => _PostItemState();
@@ -68,9 +69,7 @@ class _PostItemState extends State<PostItem> {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    final isMobileDevice = context.isMobile;
 
-    // Always use the post's original author information
     final avatar = userInfo != null ? userInfo.avatar : post.avatar;
     final author = userInfo != null ? userInfo.name : post.author;
 
@@ -78,213 +77,205 @@ class _PostItemState extends State<PostItem> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: context.h(10), horizontal: isMobileDevice ? 12 : 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Avatar and author section
-            Row(
+          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Avatar and author section
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    List<Author> users = Author.users;
-                      // Find the author by their exact avatar to ensure correct profile navigation
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      List<Author> users = Author.users;
                       final user = users.firstWhere(
                         (user) => user.avatar == post.avatar,
-                        orElse: () =>
-                            users.first, // Fallback in case avatar not found
+                        orElse: () => users.first,
                       );
-                    Navigator.push(
-                      context,
+                      Navigator.push(
+                        context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ProfileScreen(userInfo: user)),
-                    );
-                  },
-                  child: CircleAvatar(
-                      radius: isMobileDevice ? 16 : 18,
-                    backgroundImage: AssetImage(avatar),
+                            builder: (context) => ProfileScreen(userInfo: user)),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 16.r,
+                      backgroundImage: AssetImage(avatar),
                       backgroundColor: Colors.transparent,
                     ),
                   ),
-                  SizedBox(width: context.w(10)),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              author, 
-                              style: textTheme.bodyLarge?.copyWith(
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                author,
+                                style: textTheme.bodyLarge?.copyWith(
                                     fontWeight: FontWeight.w600,
-                                    fontSize: isMobileDevice ? 14 : 15),
+                                    fontSize: 14.sp),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: context.h(2)),
+                        SizedBox(height: 2.h),
                         Text('${post.time}h ago',
                             style: TextStyle(
                                 color: colorScheme.onSurface.withOpacity(0.7),
-                                fontSize: isMobileDevice ? 11 : 12)),
+                                fontSize: 11.sp)),
                       ],
                     ),
                   ),
                   GestureDetector(
-                              onTap: () => context.push('/community', extra: community),
-                              child: Container(
+                    onTap: () => context.push('/community', extra: community),
+                    child: Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: context.w(8), vertical: context.h(3)),
-                                decoration: BoxDecoration(
+                          horizontal: 8.w, vertical: 3.h),
+                      decoration: BoxDecoration(
                         color: colorScheme.surface.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    CircleAvatar(
-                            radius: isMobileDevice ? 7 : 8,
-                                      backgroundImage: AssetImage(post.communityImage),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircleAvatar(
+                            radius: 7.r,
+                            backgroundImage: AssetImage(post.communityImage),
                             backgroundColor: Colors.transparent,
-                                    ),
-                          SizedBox(width: context.w(4)),
+                          ),
+                          SizedBox(width: 4.w),
                           Text(
-                                        'c/${post.communityName}', 
-                                        style: TextStyle(
+                            'c/${post.communityName}',
+                            style: TextStyle(
                                 color: colorScheme.onSurface.withOpacity(0.8),
-                                fontSize: isMobileDevice ? 11 : 12,
+                                fontSize: 11.sp,
                                 fontWeight: FontWeight.w500),
-                                        overflow: TextOverflow.ellipsis,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
                     ),
                   ),
-                  widget.isUserPost ?IconButton(
-                    icon: Icon(Icons.more_horiz,
-                        color: colorScheme.onSurface.withOpacity(0.8),
-                        size: isMobileDevice ? 18 : 20),
-                  onPressed: () {
-                    setState(() {
-                      showOptions = !showOptions;
-                    });
-                  },
-                    padding: EdgeInsets.zero,
-                    constraints: BoxConstraints(
-                      minWidth: isMobileDevice ? 32 : 36,
-                      minHeight: isMobileDevice ? 32 : 36,
-                    ),
-                  ) : Container(),
+                  widget.isUserPost
+                      ? IconButton(
+                          icon: Icon(Icons.more_horiz,
+                              color: colorScheme.onSurface.withOpacity(0.8),
+                              size: 18.r),
+                          onPressed: () {
+                            setState(() {
+                              showOptions = !showOptions;
+                            });
+                          },
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(
+                            minWidth: 32.w,
+                            minHeight: 32.w,
+                          ),
+                        )
+                      : Container(),
                 ],
               ),
-
-              SizedBox(height: context.h(12)),
+              SizedBox(height: 12.h),
               Padding(
-                padding:
-                    EdgeInsets.only(left: context.w(isMobileDevice ? 40 : 46)),
+                padding: EdgeInsets.only(left: 40.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(post.title,
                         style: textTheme.titleMedium?.copyWith(
-                            fontSize: isMobileDevice ? 16 : 17,
-                            fontWeight: FontWeight.w700)),
-                    SizedBox(height: context.h(8)),
-            Text(
-              post.description,
-              maxLines: isExpanded ? null : 3,
+                            fontSize: 16.sp, fontWeight: FontWeight.w700)),
+                    SizedBox(height: 8.h),
+                    Text(
+                      post.description,
+                      maxLines: isExpanded ? null : 3,
                       overflow: isExpanded
                           ? TextOverflow.visible
                           : TextOverflow.ellipsis,
                       style: textTheme.bodyMedium?.copyWith(
-                          fontSize: isMobileDevice ? 14 : 15,
+                          fontSize: 14.sp,
                           height: 1.4,
                           color: colorScheme.onSurface.withOpacity(0.9)),
-            ),
-            if (post.description.length > 200)
-              GestureDetector(
-                onTap: () => setState(() => isExpanded = !isExpanded),
-                child: Padding(
-                          padding: EdgeInsets.only(top: context.h(6)),
-                  child: Text(
-                    isExpanded ? 'Show less' : 'Read more',
+                    ),
+                    if (post.description.length > 200)
+                      GestureDetector(
+                        onTap: () => setState(() => isExpanded = !isExpanded),
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 6.h),
+                          child: Text(
+                            isExpanded ? 'Show less' : 'Read more',
                             style: TextStyle(
                                 color: colorScheme.primary,
                                 fontWeight: FontWeight.w600,
-                                fontSize: isMobileDevice ? 12 : 13),
-                  ),
-                ),
-              ),
-                      SizedBox(height: 5,),
-                    post.image != null ?Container(
-                      child: Image.file(post.image),
-                    ): Container(),
-            // Post tags
-            if (post.tags != null && post.tags.isNotEmpty)
-              Padding(
-                        padding: EdgeInsets.only(top: context.h(12)),
-                child: Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: post.tags.map<Widget>((tag) {
-                    return Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: context.w(8),
-                                  vertical: context.h(4)),
-                      decoration: BoxDecoration(
-                        color: colorScheme.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        '#$tag',
-                        style: TextStyle(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w500,
-                                  fontSize: isMobileDevice ? 12 : 13,
+                                fontSize: 12.sp),
+                          ),
                         ),
                       ),
-                    );
-                  }).toList(),
-                ),
-              ),
-                
-            // Vote and comment buttons
-                    SizedBox(height: context.h(12)),
-            Row(
-              children: [
+                    SizedBox(height: 5.h),
+                    post.image != null
+                        ? Container(
+                            child: Image.file(post.image),
+                          )
+                        : Container(),
+                    if (post.tags != null && post.tags.isNotEmpty)
+                      Padding(
+                        padding: EdgeInsets.only(top: 12.h),
+                        child: Wrap(
+                          spacing: 6,
+                          runSpacing: 6,
+                          children: post.tags.map<Widget>((tag) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w, vertical: 4.h),
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                '#$tag',
+                                style: TextStyle(
+                                  color: colorScheme.primary,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12.sp,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    SizedBox(height: 12.h),
+                    Row(
+                      children: [
                         _buildVoteButton(
                           icon: FontAwesomeIcons.arrowUp,
                           isActive: isUpVoted,
                           color: themeExtension?.upVote ?? Colors.green,
-                        onTap: () => toggleVote(true),
+                          onTap: () => toggleVote(true),
                         ),
-                        SizedBox(width: context.w(4)),
+                        SizedBox(width: 4.w),
                         Text(
                           '${post.voteCount}',
                           style: TextStyle(
-                            fontSize: isMobileDevice ? 13 : 14,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.w500,
                             color: isUpVoted
                                 ? themeExtension?.upVote
                                 : isDownVoted
                                     ? themeExtension?.downVote
-                                    : theme.colorScheme.onSurface
-                                        .withOpacity(0.8),
+                                    : theme.colorScheme.onSurface.withOpacity(0.8),
                           ),
                         ),
-                        SizedBox(width: context.w(10)),
+                        SizedBox(width: 10.w),
                         _buildVoteButton(
                           icon: FontAwesomeIcons.arrowDown,
                           isActive: isDownVoted,
                           color: themeExtension?.downVote ?? Colors.red,
                           onTap: () => toggleVote(false),
                         ),
-                        SizedBox(width: context.w(20)),
+                        SizedBox(width: 20.w),
                         _buildActionButton(
                           icon: FontAwesomeIcons.comment,
                           text: '${post.commentCount}',
@@ -300,18 +291,17 @@ class _PostItemState extends State<PostItem> {
             ],
           ),
         ),
-        // Floating options menu that appears when "more" is clicked
         if (showOptions)
           Align(
             alignment: Alignment.topRight,
             child: Padding(
-              padding: EdgeInsets.only(right: context.w(12)),
+              padding: EdgeInsets.only(right: 12.w),
               child: Transform.translate(
-                offset: Offset(0, -10),
+                offset: const Offset(0, -10),
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: context.w(10),
-                    vertical: context.h(8),
+                    horizontal: 10.w,
+                    vertical: 8.h,
                   ),
                   decoration: BoxDecoration(
                     color: theme.cardColor,
@@ -333,7 +323,7 @@ class _PostItemState extends State<PostItem> {
                         Icons.edit_outlined,
                         colorScheme.primary,
                         () {
-                          _showEditPostDialog(post.id,post.title, post.description);
+                          _showEditPostDialog(post.id, post.title, post.description);
                         },
                       ),
                       Divider(
@@ -369,13 +359,11 @@ class _PostItemState extends State<PostItem> {
     required Color color,
     required VoidCallback onTap,
   }) {
-    final isMobileDevice = context.isMobile;
-
     return GestureDetector(
       onTap: onTap,
       child: FaIcon(
         icon,
-        size: isMobileDevice ? 16 : 18,
+        size: 16.r,
         color: isActive
             ? color
             : Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
@@ -389,8 +377,6 @@ class _PostItemState extends State<PostItem> {
     required VoidCallback onTap,
   }) {
     final theme = Theme.of(context);
-    final isMobileDevice = context.isMobile;
-
     return GestureDetector(
       onTap: onTap,
       child: Row(
@@ -398,15 +384,15 @@ class _PostItemState extends State<PostItem> {
         children: [
           FaIcon(
             icon,
-            size: isMobileDevice ? 16 : 18,
+            size: 16.r,
             color: theme.colorScheme.onSurface.withOpacity(0.8),
           ),
           if (text.isNotEmpty) ...[
-            SizedBox(width: context.w(4)),
+            SizedBox(width: 4.w),
             Text(
               text,
               style: TextStyle(
-                fontSize: isMobileDevice ? 13 : 14,
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurface.withOpacity(0.8),
               ),
@@ -423,29 +409,27 @@ class _PostItemState extends State<PostItem> {
     Color color,
     VoidCallback onTap,
   ) {
-    final isMobileDevice = context.isMobile;
-
     return InkWell(
       onTap: onTap,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: context.h(6),
-          horizontal: context.w(4),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
+          vertical: 6.h,
+          horizontal: 4.w,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
             Icon(
               icon,
-              size: isMobileDevice ? 16 : 18,
+              size: 16.r,
               color: color,
             ),
-            SizedBox(width: context.w(8)),
+            SizedBox(width: 8.w),
             Text(
               text,
               style: TextStyle(
                 color: color,
-                fontSize: isMobileDevice ? 13 : 14,
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -473,14 +457,14 @@ class _PostItemState extends State<PostItem> {
             children: [
               CircleAvatar(
                 backgroundImage: AssetImage(currentUser.avatar),
-                radius: 16,
+                radius: 16.r,
               ),
               const SizedBox(width: 10),
               Text(
                 'Edit Post',
                 style: TextStyle(
                   color: colorScheme.onSurface,
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -499,7 +483,7 @@ class _PostItemState extends State<PostItem> {
                     fillColor: theme.inputDecorationTheme.fillColor ??
                         theme.scaffoldBackgroundColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -516,7 +500,7 @@ class _PostItemState extends State<PostItem> {
                     fillColor: theme.inputDecorationTheme.fillColor ??
                         theme.scaffoldBackgroundColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -535,17 +519,18 @@ class _PostItemState extends State<PostItem> {
             Container(
               decoration: BoxDecoration(
                 gradient: themeExtension?.buttonGradient,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
               ),
               child: TextButton(
                 onPressed: () {
-                 if(widget.edit != null ){
-                  setState(() {
-                    showOptions != showOptions;
-                    widget.edit!(id, titleController.text, descriptionController.text);
-                  });
-                 }
-                 Navigator.pop(context);
+                  if (widget.edit != null) {
+                    setState(() {
+                      showOptions != showOptions;
+                      widget.edit!(
+                          id, titleController.text, descriptionController.text);
+                    });
+                  }
+                  Navigator.pop(context);
                 },
                 child: const Text(
                   'Post',
@@ -558,5 +543,4 @@ class _PostItemState extends State<PostItem> {
       },
     );
   }
-
 }

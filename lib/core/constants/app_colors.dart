@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutterwidgets/core/providers/theme_provider.dart';
 
 @immutable
 class AppThemeExtension extends ThemeExtension<AppThemeExtension> {

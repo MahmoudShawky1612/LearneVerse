@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../comments/models/comments_model.dart';
 import '../../models/user_comments_model.dart';
 import 'build_comments.dart';
 
 class UserComments extends StatefulWidget {
   final userInfo;
-  UserComments({super.key, this.userInfo});
+  const UserComments({super.key, this.userInfo});
 
   @override
   State<UserComments> createState() => _UserCommentsState();
@@ -33,7 +32,7 @@ class _UserCommentsState extends State<UserComments> {
     return userComment.isEmpty 
         ? Center(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding:   EdgeInsets.all(20.0.w),
               child: Text(
                 'No comments yet',
                 style: Theme.of(context).textTheme.titleMedium,

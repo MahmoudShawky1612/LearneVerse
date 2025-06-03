@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../home/presentation/widgets/post_item.dart';
 
 class PostCard extends StatelessWidget {
@@ -10,7 +10,7 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding:   EdgeInsets.all(8.0.w),
       child: PostItem(post: post),
     );
   }

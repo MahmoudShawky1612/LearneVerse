@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
-import 'package:flutterwidgets/core/utils/responsive_utils.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UserSelectionScreen extends StatelessWidget {
   const UserSelectionScreen({super.key});
@@ -19,66 +19,59 @@ class UserSelectionScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            // Determine if we're on a mobile device
-            final isMobile = constraints.maxWidth < 600;
-            
-            return Center(
-              child: Container(
-                constraints: BoxConstraints(
-                  maxWidth: isMobile ? double.infinity : 600,
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.w(isMobile ? 24 : 32),
-                  vertical: context.h(isMobile ? 24 : 32),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Welcome to LearneVerse',
-                        style: TextStyle(
-                          fontSize: context.fontSize(28),
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onBackground,
-                        ),
-                      ),
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: 600.w,
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: 32.w,
+              vertical: 32.h,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Welcome to LearneVerse',
+                    style: TextStyle(
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
                     ),
-                    SizedBox(height: context.h(12)),
-                    Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Please select a user to continue',
-                        style: TextStyle(
-                          fontSize: context.fontSize(16),
-                          color: colorScheme.onSurface.withOpacity(0.8),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: context.h(40)),
-                    Expanded(
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: isMobile ? 2 : 3,
-                          childAspectRatio: 0.6,
-                          crossAxisSpacing: context.w(16),
-                          mainAxisSpacing: context.h(16),
-                        ),
-                        itemCount: users.length,
-                        itemBuilder: (context, index) {
-                          final user = users[index];
-                          return _buildUserCard(context, user, theme, colorScheme, themeExtension);
-                        },
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            );
-          },
+                SizedBox(height: 12.h),
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Please select a user to continue',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: colorScheme.onSurface.withOpacity(0.8),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 40.h),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: 0.6,
+                      crossAxisSpacing: 16.w,
+                      mainAxisSpacing: 16.h,
+                    ),
+                    itemCount: users.length,
+                    itemBuilder: (context, index) {
+                      final user = users[index];
+                      return _buildUserCard(context, user, theme, colorScheme, themeExtension);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -87,19 +80,17 @@ class UserSelectionScreen extends StatelessWidget {
   Widget _buildUserCard(BuildContext context, Author user, ThemeData theme, ColorScheme colorScheme, themeExtension) {
     return GestureDetector(
       onTap: () {
-        // Store selected user in the provider
         Provider.of<UserProvider>(context, listen: false).setUser(user);
-        // Navigate to the main screen
         context.go('/');
       },
       child: Container(
         decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: theme.shadowColor.withOpacity(0.1),
-              blurRadius: 8,
+              blurRadius: 8.r,
               spreadRadius: 1,
               offset: const Offset(0, 4),
             ),
@@ -111,15 +102,15 @@ class UserSelectionScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 60,
-                height: 60,
+                width: 60.w,
+                height: 60.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: colorScheme.primary, width: 2),
+                  border: Border.all(color: colorScheme.primary, width: 2.w),
                   boxShadow: [
                     BoxShadow(
                       color: colorScheme.primary.withOpacity(0.3),
-                      blurRadius: 8,
+                      blurRadius: 8.r,
                       spreadRadius: 1,
                     ),
                   ],
@@ -127,17 +118,17 @@ class UserSelectionScreen extends StatelessWidget {
                 child: ClipOval(
                   child: Image.asset(
                     user.avatar,
-                    width: 60,
-                    height: 60,
+                    width: 60.w,
+                    height: 60.w,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6.h),
               Text(
                 user.name,
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 13.sp,
                   fontWeight: FontWeight.bold,
                   color: colorScheme.onSurface,
                 ),
@@ -145,31 +136,30 @@ class UserSelectionScreen extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2.h),
               Text(
                 '@${user.userName}',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 11.sp,
                   color: colorScheme.onSurface.withOpacity(0.7),
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 6),
-              // Show the first interest if any
+              SizedBox(height: 6.h),
               if (user.interests.isNotEmpty)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                   decoration: BoxDecoration(
                     color: colorScheme.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Text(
                     user.interests.first,
                     style: TextStyle(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.w500,
-                      fontSize: 9,
+                      fontSize: 9.sp,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -177,11 +167,11 @@ class UserSelectionScreen extends StatelessWidget {
                 ),
               if (user.interests.length > 1)
                 Padding(
-                  padding: const EdgeInsets.only(top: 3),
+                  padding: EdgeInsets.only(top: 3.h),
                   child: Text(
                     '+${user.interests.length - 1} more',
                     style: TextStyle(
-                      fontSize: 9,
+                      fontSize: 9.sp,
                       color: colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
@@ -192,4 +182,5 @@ class UserSelectionScreen extends StatelessWidget {
       ),
     );
   }
-} 
+}
+

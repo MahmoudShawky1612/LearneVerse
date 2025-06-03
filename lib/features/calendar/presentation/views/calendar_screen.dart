@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -23,12 +24,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
       'color': Colors.pink
     },
     {
-      'day': DateTime(2025, 4, 15),
+      'day': DateTime(2025, 6, 3),
       'event': 'Dart Basics',
       'color': Colors.green
     },
     {
-      'day': DateTime(2025, 4, 20),
+      'day': DateTime(2025, 6, 4),
       'event': 'Data Structures',
       'color': Colors.orange
     },
@@ -60,7 +61,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           color: theme.scaffoldBackgroundColor,
           child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding:   EdgeInsets.all(16.h),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,9 +72,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         Text(
                           'My Calendar',
                           style: GoogleFonts.poppins(
-                            fontSize: 28,
+                            fontSize: 28.sp,
                             fontWeight: FontWeight.bold,
-                            color: colorScheme.onBackground,
+                            color: colorScheme.onSurface,
                           ),
                         ),
                         IconButton(
@@ -90,12 +91,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             _calendarFormat == CalendarFormat.month
                                 ? Icons.view_week_rounded
                                 : Icons.calendar_view_month_rounded,
-                            color: colorScheme.onBackground,
+                            color: colorScheme.onSurface,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                     Card(
                       elevation: 8,
                       shadowColor: colorScheme.primary.withOpacity(0.3),
@@ -104,31 +105,31 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                       color: theme.cardColor,
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding:   EdgeInsets.all(12.0.w),
                         child: TableCalendar(
                           focusedDay: focusedDay,
                           firstDay: DateTime(2025, 1, 1),
                           lastDay: DateTime(2050, 12, 31),
                           calendarFormat: _calendarFormat,
-                          rowHeight: 50,
-                          daysOfWeekHeight: 30,
+                          rowHeight: 50.h,
+                          daysOfWeekHeight: 30.h,
                           headerStyle: HeaderStyle(
                             titleCentered: true,
                             formatButtonVisible: false,
                             titleTextStyle: GoogleFonts.poppins(
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
                               color: colorScheme.onSurface,
                             ),
                             leftChevronIcon: Icon(
                               Icons.chevron_left_rounded,
                               color: colorScheme.onSurface,
-                              size: 28,
+                              size: 28.w,
                             ),
                             rightChevronIcon: Icon(
                               Icons.chevron_right_rounded,
                               color: colorScheme.onSurface,
-                              size: 28,
+                              size: 28.w,
                             ),
                           ),
                           daysOfWeekStyle: DaysOfWeekStyle(
@@ -167,11 +168,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             markerBuilder: (context, day, events) {
                               if (events.isNotEmpty) {
                                 return Positioned(
-                                  bottom: 2,
-                                  right: 47,
+                                  bottom: 9.w,
+                                  right: 17.w,
                                   child: Container(
-                                    width: 8,
-                                    height: 8,
+                                    width: 8.w,
+                                    height: 8.h,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: (events.first as Map)['color'] ??
@@ -186,20 +187,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                      SizedBox(height: 24.h),
                     Text(
                       selectedEvents.isEmpty
                           ? 'No events on ${today.day}/${today.month}/${today.year}'
                           : 'Events on ${today.day}/${today.month}/${today.year}',
                       style: GoogleFonts.poppins(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
-                        color: colorScheme.onBackground,
+                        color: colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                      SizedBox(height: 12.h),
                     Container(
-                      constraints: const BoxConstraints(maxHeight: 200),
+                      constraints:   BoxConstraints(maxHeight: 200.h),
                       child: selectedEvents.isNotEmpty
                           ? ListView.builder(
                               shrinkWrap: true,
@@ -207,11 +208,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               itemBuilder: (context, index) {
                                 final event = selectedEvents[index];
                                 return Card(
-                                  margin: const EdgeInsets.only(bottom: 12),
+                                  margin:   EdgeInsets.only(bottom: 12.h),
                                   elevation: 4,
                                   shadowColor: colorScheme.primary.withOpacity(0.3),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(16.r),
                                   ),
                                   color: theme.cardColor,
                                   child: ListTile(
@@ -220,24 +221,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       vertical: 12,
                                     ),
                                     leading: Container(
-                                      width: 12,
+                                      width: 12.w,
                                       height: double.infinity,
                                       decoration: BoxDecoration(
                                         color: event['color'] ?? colorScheme.primary,
-                                        borderRadius: BorderRadius.circular(30),
+                                        borderRadius: BorderRadius.circular(30.r),
                                       ),
                                     ),
                                     title: Text(
                                       event['event'],
                                       style: GoogleFonts.poppins(
-                                        fontSize: 16,
+                                        fontSize: 16.w,
                                         fontWeight: FontWeight.w600,
                                         color: colorScheme.onSurface,
                                       ),
                                     ),
                                     trailing: IconButton(
                                       icon: Icon(Icons.arrow_forward_ios,
-                                          size: 16,
+                                          size: 16.w,
                                           color: colorScheme.onSurface),
                                       onPressed: () {
                                         // Event details navigation
@@ -254,10 +255,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 children: [
                                   Icon(
                                     Icons.event_busy,
-                                    size: 60,
+                                    size: 60.w,
                                     color: colorScheme.onSurface.withOpacity(0.5),
                                   ),
-                                  const SizedBox(height: 10),
+                                    SizedBox(height: 10.h),
                                   Text(
                                     "No events scheduled",
                                     style: GoogleFonts.poppins(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 import 'profile_avatar_and_name.dart';
@@ -22,7 +23,7 @@ class ProfileHeader extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     // Dynamically calculate expandedHeight based on screen size
-    final expandedHeight = size.height * 0.45;
+    final expandedHeight = (size.height * 0.45).h;
 
     return SliverAppBar(
       expandedHeight: expandedHeight,
@@ -31,7 +32,7 @@ class ProfileHeader extends StatelessWidget {
       elevation: 0,
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 12.0),
+          padding: EdgeInsets.only(right: 12.w),
           child: IconButton(
             icon: Icon(Icons.edit, color: colorScheme.onPrimary),
             onPressed: () {
@@ -65,40 +66,40 @@ class ProfileHeader extends StatelessWidget {
                   left: 0,
                   right: 0,
                   child: Container(
-                    height: 16,
+                    height: 16.h,
                     decoration: BoxDecoration(
                       color: theme.scaffoldBackgroundColor,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(20),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20.r),
                       ),
                     ),
                   ),
                 ),
                 SafeArea(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
                     physics: const BouncingScrollPhysics(),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight - 16,
+                        minHeight: constraints.maxHeight - 16.h,
                       ),
                       child: IntrinsicHeight(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: 12),
+                            SizedBox(height: 12.h),
                             ProfileAvatarAndName(userInfo: userInfo),
-                            const SizedBox(height: 12),
+                            SizedBox(height: 12.h),
                             ProfileBioQuote(userInfo: userInfo),
-                            const SizedBox(height: 14),
+                            SizedBox(height: 14.h),
                             if (userInfo != null &&
                                 userInfo.interests != null &&
                                 userInfo.interests.isNotEmpty)
                               _buildInterestTags(colorScheme, userInfo),
-                            const SizedBox(height: 14),
+                            SizedBox(height: 14.h),
                             Center(child: ProfileUserStatsRow(userInfo: userInfo)),
-                            const SizedBox(height: 12),
-                            Center(child: ProfileSocialLinksRow()),
+                            SizedBox(height: 12.h),
+                            const Center(child: ProfileSocialLinksRow()),
                           ],
                         ),
                       ),
@@ -117,17 +118,17 @@ class ProfileHeader extends StatelessWidget {
     return Center(
       child: Wrap(
         alignment: WrapAlignment.center,
-        spacing: 8,
-        runSpacing: 8,
+        spacing: 8.w,
+        runSpacing: 8.h,
         children: userInfo.interests.map<Widget>((interest) {
           return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
             decoration: BoxDecoration(
               color: colorScheme.primary.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
                 color: colorScheme.primary.withOpacity(0.5),
-                width: 1,
+                width: 1.w,
               ),
             ),
             child: Text(
@@ -135,7 +136,7 @@ class ProfileHeader extends StatelessWidget {
               style: TextStyle(
                 color: colorScheme.onPrimary,
                 fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontSize: 12.sp,
               ),
             ),
           );
@@ -144,3 +145,4 @@ class ProfileHeader extends StatelessWidget {
     );
   }
 }
+

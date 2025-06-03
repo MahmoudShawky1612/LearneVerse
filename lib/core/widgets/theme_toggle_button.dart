@@ -8,11 +8,11 @@ class ThemeToggleButton extends StatefulWidget {
   final bool isCompact;
 
   const ThemeToggleButton({
-    Key? key,
+    super.key,
     this.size,
     this.showLabel = false,
     this.isCompact = false,
-  }) : super(key: key);
+  });
 
   @override
   State<ThemeToggleButton> createState() => _ThemeToggleButtonState();

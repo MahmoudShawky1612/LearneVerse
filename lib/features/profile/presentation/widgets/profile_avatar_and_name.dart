@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 class ProfileAvatarAndName extends StatelessWidget {
   final  userInfo;
-  ProfileAvatarAndName({super.key, this.userInfo});
+  const ProfileAvatarAndName({super.key, this.userInfo});
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -17,8 +18,8 @@ class ProfileAvatarAndName extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: colorScheme.onPrimary, width: 3),
-                borderRadius: BorderRadius.circular(40),
+                border: Border.all(color: colorScheme.onPrimary, width: 3.w),
+                borderRadius: BorderRadius.circular(40.r),
                 boxShadow: [
                   BoxShadow(
                     color: theme.shadowColor.withOpacity(0.15),
@@ -37,18 +38,18 @@ class ProfileAvatarAndName extends StatelessWidget {
               right: 0,
               bottom: 0,
               child: Container(
-                width: 18,
-                height: 18,
+                width: 18.w,
+                height: 18.h,
                 decoration: BoxDecoration(
                   color: themeExtension?.upVote ?? colorScheme.primary,
-                  border: Border.all(color: colorScheme.onPrimary, width: 2),
-                  borderRadius: BorderRadius.circular(9),
+                  border: Border.all(color: colorScheme.onPrimary, width: 2.w),
+                  borderRadius: BorderRadius.circular(9.r),
                 ),
               ),
             ),
           ],
         ),
-        const SizedBox(width: 16),
+          SizedBox(width: 16.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +57,7 @@ class ProfileAvatarAndName extends StatelessWidget {
               Text(
                userInfo?.name ?? "Dodje Shawky",
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 22.sp,
                   fontWeight: FontWeight.w700,
                   color: colorScheme.onPrimary,
                   letterSpacing: -0.2,
@@ -64,7 +65,7 @@ class ProfileAvatarAndName extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 2),
+                SizedBox(height: 2.h),
             ],
           ),
         ),

@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BuildSectionTitle extends StatelessWidget {
   final title;
@@ -13,13 +12,13 @@ class BuildSectionTitle extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     
     return Padding(
-      padding: const EdgeInsets.only(left: 10, top: 16, bottom: 8),
+      padding:   EdgeInsets.only(left: 10.w, top: 16.w, bottom: 8.w),
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 20,
+          fontSize: 20.sp,
           fontWeight: FontWeight.bold,
-          color: colorScheme.onBackground,
+          color: colorScheme.onSurface,
         ),
       ),
     );

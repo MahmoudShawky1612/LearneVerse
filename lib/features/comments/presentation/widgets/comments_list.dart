@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
-import 'package:flutterwidgets/core/utils/responsive_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../profile/presentation/widgets/build_comments.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../profile/models/user_comments_model.dart';
 import '../../models/comments_model.dart';
 
 class CommentsList extends StatelessWidget {
@@ -18,16 +16,15 @@ class CommentsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobile = context.isMobile;
     final theme = Theme.of(context);
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 12 : 16, 
-            vertical: isMobile ? 10 : 12
+          padding:   EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical:  12.w
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,9 +32,9 @@ class CommentsList extends StatelessWidget {
               Text(
                 'Comments (${comments.length})',
                 style: GoogleFonts.poppins(
-                  fontSize: isMobile ? 16 : 18,
+                  fontSize:  18.sp,
                   fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],
@@ -46,7 +43,7 @@ class CommentsList extends StatelessWidget {
         if (comments.isEmpty)
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding:   EdgeInsets.all(20.0.w),
               child: Text(
                 'No comments yet',
                 style: Theme.of(context).textTheme.titleMedium,
@@ -54,7 +51,7 @@ class CommentsList extends StatelessWidget {
             ),
           )
         else ...[
-          const Divider(height: 1),
+            Divider(height: 1.h),
           Expanded(
             child: BuildComments(
               comments: comments,

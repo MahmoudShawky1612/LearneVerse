@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/models/owner_model.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_default_content.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_header.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_search_results.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:flutterwidgets/features/home/models/community_model.dart';
-import 'package:flutterwidgets/features/home/presentation/widgets/community_grid.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/search_bar.dart';
-import '../../../profile/presentation/widgets/vertical_community_list.dart';
 import '../widgets/build_filters_list.dart';
 
 class DiscoverScreen extends StatefulWidget {
@@ -18,12 +17,11 @@ class DiscoverScreen extends StatefulWidget {
 }
 
 class _DiscoverScreenState extends State<DiscoverScreen> {
-  // Controllers
   final TextEditingController _searchController = TextEditingController();
 
   List<Community> _foundCommunities = [];
   List<Author> _foundUsers = [];
-  List<String> _selectedFilters = [];
+  final List<String> _selectedFilters = [];
   List<Owner> _foundOwners = [];
 
   @override
@@ -74,19 +72,19 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         backgroundColor: theme.scaffoldBackgroundColor,
         extendBody: true,
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 40, 20, 80),
+          padding:   EdgeInsets.fromLTRB(20.w, 40.w, 20.w, 80.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const BuildHeader(),
-              const SizedBox(height: 24),
+                SizedBox(height: 24.h),
               CustomSearchBar(searchController: _searchController, searchFunction: _search),
-              const SizedBox(height: 24),
+                SizedBox(height: 24.h),
               BuildFiltersList(
                 selectedFilters: _selectedFilters,
                 onFilterToggle: _toggleFilter,
               ),
-              const SizedBox(height: 24),
+                SizedBox(height: 24.h),
               _isSearchActive()
                   ? Expanded(
                 child: BuildSearchResults(

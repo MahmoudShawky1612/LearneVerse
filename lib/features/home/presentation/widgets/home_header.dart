@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/routing/routes.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
@@ -21,18 +20,18 @@ class _HomeHeaderState extends State<HomeHeader> {
   Widget build(BuildContext context) {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final screenWidth = MediaQuery.of(context).size.width;
-    final baseFontSize = screenWidth < 360 ? 20.0 : screenWidth < 600 ? 24.0 : 28.0;
+    final baseFontSize = screenWidth < 360 ? 20.sp : screenWidth < 600 ? 24.sp : 28.sp;
     final userProvider = Provider.of<UserProvider>(context);
     final currentUser = userProvider.currentUser;
     
     return Container(
-      height: 150,
+      height: 115.h,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         gradient: themeExtension?.backgroundGradient,
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(25),
-          bottomRight: Radius.circular(25),
+        borderRadius:   BorderRadius.only(
+          bottomLeft: Radius.circular(25.r),
+          bottomRight: Radius.circular(25.r),
         ),
         boxShadow: const [
           BoxShadow(
@@ -48,7 +47,7 @@ class _HomeHeaderState extends State<HomeHeader> {
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.red, width: 1.5),
+              border: Border.all(color: Colors.red, width: 1.5.w),
             ),
             child: GestureDetector(
               onTap: () {
@@ -65,30 +64,30 @@ class _HomeHeaderState extends State<HomeHeader> {
               },
               child: isClicked == false
                   ? CircleAvatar(
-                      radius: screenWidth < 360 ? 22 : 26,
+                      radius:  17.r,
                       backgroundImage: AssetImage(currentUser.avatar),
                     )
                   : const CircularProgressIndicator(),
             ),
           ),
-          SizedBox(width: screenWidth < 360 ? 4 : 5),
+          SizedBox(width: screenWidth < 360 ? 4.w : 5.w),
           Flexible(
             child: Text(
               'Welcome,',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: baseFontSize - 4,
+                fontSize: baseFontSize - 4.sp,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
-          SizedBox(width: screenWidth < 360 ? 4 : 5),
+          SizedBox(width: screenWidth < 360 ? 4.w : 5.w),
           Flexible(
             child: Text(
               currentUser.name.toUpperCase(),
               style: TextStyle(
                 color: Colors.white,
-                fontSize: baseFontSize - 4,
+                fontSize: baseFontSize - 4.sp,
                 fontWeight: FontWeight.bold,
                 overflow: TextOverflow.ellipsis,
               ),

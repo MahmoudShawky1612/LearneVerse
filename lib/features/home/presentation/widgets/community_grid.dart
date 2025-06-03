@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutterwidgets/features/home/models/community_model.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/community_item.dart';
 
 class CommunityGrid extends StatelessWidget {
@@ -10,7 +10,7 @@ class CommunityGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 180,
+      height: 155.h,
       child: ListView.builder(
         itemCount: communities.length,
         scrollDirection: Axis.horizontal,

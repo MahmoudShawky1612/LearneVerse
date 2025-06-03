@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
-import 'package:flutterwidgets/core/utils/responsive_utils.dart';
-import 'package:flutterwidgets/features/home/presentation/views/home_screen.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:flutterwidgets/core/providers/theme_provider.dart';
@@ -10,13 +8,6 @@ import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
-  
   runApp(
     MultiProvider(
       providers: [
@@ -29,30 +20,24 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, _) {
-        return MaterialApp.router(
-          routerConfig: route,
-          themeMode: themeProvider.themeMode,
-          darkTheme: _buildDarkTheme(),
-          theme: _buildLightTheme(),
-          builder: (context, child) {
-            // Get the device pixel ratio to adjust font sizes
-            final mediaQueryData = MediaQuery.of(context);
-            final scale = mediaQueryData.textScaleFactor.clamp(0.8, 1.2);
-            
-            // Apply responsive sizing to the entire app
-            return MediaQuery(
-              data: mediaQueryData.copyWith(
-                textScaleFactor: scale,
-              ),
-              child: child!,
-            );
-          },
+        return ScreenUtilInit(
+          minTextAdapt: true,
+          designSize: const Size(360, 690),
+          child: MaterialApp.router(
+            routerConfig: route,
+            themeMode: themeProvider.themeMode,
+            darkTheme: _buildDarkTheme(),
+            theme: _buildLightTheme(),
+            builder: (context, child) {
+              return child!;
+            },
+          ),
         );
       },
     );
@@ -63,13 +48,11 @@ class MyApp extends StatelessWidget {
       useMaterial3: true,
       brightness: Brightness.light,
       primaryColor: AppColors.primary,
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
         onPrimary: Colors.white,
         secondary: AppColors.secondary,
         onSecondary: Colors.white,
-        background: AppColors.backgroundLight,
-        onBackground: AppColors.textPrimary,
         surface: AppColors.surfaceLight,
         onSurface: AppColors.textPrimary,
         tertiary: AppColors.accent,
@@ -87,13 +70,6 @@ class MyApp extends StatelessWidget {
         backgroundColor: AppColors.backgroundLight,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-      ),
-      cardTheme: CardTheme(
-        color: AppColors.surfaceLight,
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -118,13 +94,11 @@ class MyApp extends StatelessWidget {
       useMaterial3: true,
       brightness: Brightness.dark,
       primaryColor: AppColors.primary,
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: AppColors.primary,
         onPrimary: Colors.white,
         secondary: AppColors.secondary,
         onSecondary: Colors.white,
-        background: AppColors.backgroundDark,
-        onBackground: AppColors.textPrimaryDark,
         surface: AppColors.surfaceDark,
         onSurface: AppColors.textPrimaryDark,
         tertiary: AppColors.accent,
@@ -142,13 +116,6 @@ class MyApp extends StatelessWidget {
         backgroundColor: AppColors.backgroundDark,
         foregroundColor: AppColors.textPrimaryDark,
         elevation: 0,
-      ),
-      cardTheme: CardTheme(
-        color: AppColors.surfaceDark,
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

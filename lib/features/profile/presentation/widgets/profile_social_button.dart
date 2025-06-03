@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfileSocialButton extends StatelessWidget {
@@ -7,7 +7,7 @@ class ProfileSocialButton extends StatelessWidget {
   final Color? color;
   final VoidCallback onPressed;
 
-  const ProfileSocialButton({
+  const ProfileSocialButton({super.key, 
     required this.icon,
     this.color,
     required this.onPressed,
@@ -21,17 +21,17 @@ class ProfileSocialButton extends StatelessWidget {
     
     return InkWell(
       onTap: onPressed,
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(24.r),
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding:   EdgeInsets.all(8.w),
         decoration: BoxDecoration(
           color: colorScheme.onPrimary.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(24.r),
         ),
         child: FaIcon(
           icon,
           color: buttonColor,
-          size: 18,
+          size: 18.r,
         ),
       ),
     );

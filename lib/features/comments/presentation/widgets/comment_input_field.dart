@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../home/models/author_model.dart';
 
@@ -8,11 +9,11 @@ class CommentInputField extends StatelessWidget {
   final Author currentUser;
 
   const CommentInputField({
-    Key? key,
+    super.key,
     required this.commentController,
     required this.onCommentSubmitted,
     required this.currentUser,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +22,9 @@ class CommentInputField extends StatelessWidget {
     final themeExtension = theme.extension<AppThemeExtension>();
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 8.0,
+      padding:   EdgeInsets.symmetric(
+        horizontal: 8.0.w,
+        vertical: 8.0.w,
       ),
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
@@ -40,9 +41,9 @@ class CommentInputField extends StatelessWidget {
         children: [
           CircleAvatar(
             backgroundImage: AssetImage(currentUser.avatar),
-            radius: 18,
+            radius: 18.r,
           ),
-          const SizedBox(width: 8.0),
+            SizedBox(width: 8.0.w),
           Expanded(
             child: TextField(
               controller: commentController,
@@ -51,37 +52,37 @@ class CommentInputField extends StatelessWidget {
                 hintText: 'Write a comment...',
                 hintStyle: TextStyle(
                   color: theme.hintColor,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                 ),
                 filled: true,
                 fillColor: theme.cardColor,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
+                contentPadding:   EdgeInsets.symmetric(
+                  horizontal: 16.0.w,
+                  vertical: 8.0.w,
                 ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20.r),
                   borderSide: BorderSide.none,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 8.0),
+            SizedBox(width: 8.0.w),
           GestureDetector(
             onTap: () {
               onCommentSubmitted(commentController.text);
             },
             child: Container(
-              height: 40,
-              width: 40,
+              height: 40.h,
+              width: 40.w,
               decoration: BoxDecoration(
                 gradient: themeExtension?.buttonGradient,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20.r),
               ),
-              child: const Icon(
+              child:  Icon(
                 Icons.send_rounded,
                 color: Colors.white,
-                size: 20,
+                size: 20.w,
               ),
             ),
           ),

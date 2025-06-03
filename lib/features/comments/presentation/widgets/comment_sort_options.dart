@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/constants/app_colors.dart';
 
 class CommentSortOptions extends StatelessWidget {
   const CommentSortOptions({super.key});
@@ -12,10 +12,10 @@ class CommentSortOptions extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding:   EdgeInsets.symmetric(vertical: 20.w),
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius:   BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -23,8 +23,8 @@ class CommentSortOptions extends StatelessWidget {
           Text(
             'Sort Comments By', 
             style: GoogleFonts.poppins(
-              fontSize: 16,
-              color: colorScheme.onBackground,
+              fontSize: 16.sp,
+              color: colorScheme.onSurface,
             )
           ),
           _buildSortOption(context, 'Most Recent', Icons.access_time),

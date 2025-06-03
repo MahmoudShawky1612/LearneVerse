@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/utils/responsive_utils.dart';
-import 'package:flutterwidgets/core/widgets/responsive_wrapper.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/widgets/theme_toggle_button.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/build_search_results.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/main_content.dart';
-
 import '../../../community/models/owner_model.dart';
 import '../../models/author_model.dart';
 import '../../models/community_model.dart';
 import '../widgets/home_header.dart';
-import '../widgets/notification_panel.dart';
 import '../widgets/search_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -71,54 +68,46 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Using theme instead of direct color references
     final theme = Theme.of(context);
-    
-    // Fixed button sizes for consistency
-    const double buttonSize = 42;
-    const double buttonSpacing = 12;
-    
+     double buttonSize = 30.h;
+
+    Widget layout;
+
+      layout = _buildMobileLayout();
+
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         body: Stack(
           clipBehavior: Clip.none,
           children: [
-            // Use responsive wrapper for different device layouts
-            ResponsiveWrapper(
-              mobile: _buildMobileLayout(),
-              tablet: _buildTabletLayout(),
-              desktop: _buildDesktopLayout(),
-            ),
-
+            layout,
             Positioned(
-              top: 140,
+              top: 120.h,
               left: 0,
               right: 0,
               child: CustomSearchBar(searchController: searchController,searchFunction:  _search),
             ),
-            
+            // Theme toggle button overlay
             Positioned(
-              right: 30 + buttonSize + buttonSpacing,
-              top: 15,
+              right:  buttonSize ,
+              top: 10.h,
               child: Container(
                 width: buttonSize,
                 height: buttonSize,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                   color: theme.colorScheme.surface.withOpacity(0.15),
                 ),
-                child: const Center(
+                child:  Center(
                   child: ThemeToggleButton(
                     isCompact: true,
-                    size: 18,
+                    size: 15.w,
                   ),
                 ),
               ),
             ),
-            
-            const NotificationPanel(),
-            
             if (_hasSearchResults())
               GestureDetector(
                 onTap: _clearSearch,
@@ -128,7 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: double.infinity,
                 ),
               ),
-              
             if (_hasSearchResults())
               BuildSearchResults(
                 communities: _foundCommunities,
@@ -146,60 +134,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         const HomeHeader(),
-        // No space between header and content
         Expanded(
           child: Container(
             margin: EdgeInsets.zero,
             padding: EdgeInsets.zero,
-            child: MainContent(),
+            child: const MainContent(),
           ),
         ),
       ],
     );
   }
   
-  Widget _buildTabletLayout() {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: context.w(16)),
-          child: const HomeHeader(),
-        ),
-        // No space between header and content
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.zero,
-            padding: EdgeInsets.symmetric(horizontal: context.w(16)),
-            child: MainContent(),
-          ),
-        ),
-      ],
-    );
-  }
-  
-  Widget _buildDesktopLayout() {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: context.w(32)),
-          child: const HomeHeader(),
-        ),
-        // No space between header and content
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.zero,
-            child: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 1200),
-                padding: EdgeInsets.symmetric(horizontal: context.w(32)),
-                child: MainContent(),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   bool _hasSearchResults() {
     return _isSearching && (_foundCommunities.isNotEmpty || _foundUsers.isNotEmpty || _foundOwners.isNotEmpty);

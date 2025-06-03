@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../discover/presentation/widgets/vertical_users_list.dart';
 import '../../../profile/presentation/widgets/vertical_community_list.dart';
@@ -32,9 +32,9 @@ class BuildSearchResults extends StatelessWidget {
             width: 380,
             height: 500,
             decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(22),
-                  topLeft: Radius.circular(22),
+                borderRadius:  BorderRadius.only(
+                  topRight: Radius.circular(22.r),
+                  topLeft: Radius.circular(22.r),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -48,12 +48,12 @@ class BuildSearchResults extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  padding:  EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
                   decoration: BoxDecoration(
                     color: colorScheme.surface,
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(22),
-                      topLeft: Radius.circular(22),
+                    borderRadius:  BorderRadius.only(
+                      topRight: Radius.circular(22.r),
+                      topLeft: Radius.circular(22.r),
                     ),
                   ),
                   child: Row(
@@ -63,7 +63,7 @@ class BuildSearchResults extends StatelessWidget {
                         style: TextStyle(
                           color: colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 16.sp,
                         ),
                       ),
                       const Spacer(),
@@ -71,13 +71,13 @@ class BuildSearchResults extends StatelessWidget {
                         icon: Icon(
                           Icons.close,
                           color: colorScheme.onSurface.withOpacity(0.7),
-                          size: 20,
+                          size: 20.w,
                         ),
                         onPressed: onClose,
                         padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(
-                          minWidth: 30,
-                          minHeight: 30,
+                        constraints:  BoxConstraints(
+                          minWidth: 30.w,
+                          minHeight: 30.h,
                         ),
                       ),
                     ],
@@ -86,7 +86,7 @@ class BuildSearchResults extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 80.0),
+                      padding:  EdgeInsets.only(bottom: 80.h),
                       child: Column(
                         children: [
                           VerticalCommunityList(

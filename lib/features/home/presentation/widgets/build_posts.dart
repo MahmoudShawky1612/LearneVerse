@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/utils/responsive_utils.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/post_item.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 class BuildPosts extends StatelessWidget {
   final shrinkWrap;
   final scrollPhysics;
@@ -27,7 +26,7 @@ class BuildPosts extends StatelessWidget {
     return posts.isEmpty 
         ? Center(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding:   EdgeInsets.all(20.w),
               child: Text(
                 'No posts yet',
                 style: Theme.of(context).textTheme.titleMedium,

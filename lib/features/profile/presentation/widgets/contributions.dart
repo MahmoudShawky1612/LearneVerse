@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class YearContributionChart extends StatelessWidget {
   const YearContributionChart({super.key});
@@ -40,7 +40,7 @@ class YearContributionChart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 20, right: 5),
+          padding:   EdgeInsets.only(left: 20.w, right: 5.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: months
@@ -51,15 +51,15 @@ class YearContributionChart extends StatelessWidget {
                 .toList(),
           ),
         ),
-        const SizedBox(height: 5),
+          SizedBox(height: 5.h),
         // Contribution grid
         Expanded(
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate:   SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
+              crossAxisSpacing: 2.w,
+              mainAxisSpacing: 2.w,
               childAspectRatio: 1,
             ),
             scrollDirection: Axis.horizontal,
@@ -93,7 +93,7 @@ class YearContributionChart extends StatelessWidget {
               return Container(
                 decoration: BoxDecoration(
                   color: cellColor,
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
               );
             },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/constants/app_colors.dart';
 
 class BuildHeader extends StatelessWidget {
   const BuildHeader({super.key});
@@ -16,18 +16,18 @@ class BuildHeader extends StatelessWidget {
         Text(
           "Discover",
           style: TextStyle(
-            fontSize: 32,
+            fontSize: 32.sp,
             fontWeight: FontWeight.bold,
-            color: colorScheme.onBackground,
+            color: colorScheme.onSurface,
             letterSpacing: -0.5,
           ),
         ),
-        SizedBox(height: 8),
+          SizedBox(height: 8.h),
         Text(
           "Communities, people and more...",
           style: TextStyle(
-            fontSize: 16,
-            color: colorScheme.onBackground.withOpacity(0.7),
+            fontSize: 16.sp,
+            color: colorScheme.onSurface.withOpacity(0.7),
             fontWeight: FontWeight.w400,
           ),
         ),

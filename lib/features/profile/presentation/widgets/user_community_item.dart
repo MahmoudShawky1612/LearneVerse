@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/home/models/community_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,27 +20,24 @@ class UserCommunityItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
-    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin:   EdgeInsets.only(bottom: 20.h),
       decoration: _buildShadowDecoration(theme),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding:   EdgeInsets.all(16.r),
             child: Row(
               children: [
                 _buildCommunityImage(theme),
-                const SizedBox(width: 16),
+                  SizedBox(width: 10.w),
                 _buildCommunityDetails(context),
-                const SizedBox(width: 12),
+                  SizedBox(width: 10.w),
                 _buildActionButtons(context),
               ],
             ),
@@ -63,7 +61,7 @@ class UserCommunityItem extends StatelessWidget {
 
   Widget _buildCommunityImage(ThemeData theme) => Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(14.r),
           boxShadow: [
             BoxShadow(
               color: theme.shadowColor.withOpacity(0.1),
@@ -73,11 +71,11 @@ class UserCommunityItem extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(14.r),
           child: Image.asset(
             community.image,
-            width: 69,
-            height: 70,
+            width: 40.w,
+            height: 40.h,
             fit: BoxFit.cover,
           ),
         ),
@@ -93,13 +91,13 @@ class UserCommunityItem extends StatelessWidget {
           Text(
             community.name,
             style: textTheme.titleMedium?.copyWith(
-              fontSize: 18,
+              fontSize: 13.sp,
               fontWeight: FontWeight.w700,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 8),
+           SizedBox(height: 5.h),
           Wrap(
             spacing: 5,
             runSpacing: 2,
@@ -133,7 +131,7 @@ class UserCommunityItem extends StatelessWidget {
 
     return _buildBadge(
       context: context,
-      color: colorScheme.surfaceVariant,
+      color: colorScheme.surfaceContainerHighest,
       textColor: community.communityPrivacy == "Public"
           ? themeExtension?.upVote ?? colorScheme.primary
           : themeExtension?.downVote ?? colorScheme.error,
@@ -141,7 +139,7 @@ class UserCommunityItem extends StatelessWidget {
           ? FontAwesomeIcons.lockOpen
           : FontAwesomeIcons.lock,
       label: community.communityPrivacy,
-      fontSize: 10,
+      fontSize: 6.sp,
     );
   }
 
@@ -151,19 +149,19 @@ class UserCommunityItem extends StatelessWidget {
     required Color textColor,
     required IconData icon,
     required String label,
-    double fontSize = 12,
+    double fontSize = 9,
   }) =>
       Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             FaIcon(icon, size: fontSize + 1, color: textColor),
-            const SizedBox(width: 3),
+              SizedBox(width: 3.w),
             Text(
               label,
               style: TextStyle(
@@ -189,7 +187,7 @@ class UserCommunityItem extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             gradient: themeExtension?.buttonGradient,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           child: InkWell(
             onTap: () {
@@ -197,9 +195,9 @@ class UserCommunityItem extends StatelessWidget {
                 context.push('/community', extra: community);
               }
             },
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              padding:   EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -207,12 +205,12 @@ class UserCommunityItem extends StatelessWidget {
                     "View",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: 10.sp,
                       color: colorScheme.onPrimary,
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  Icon(Icons.arrow_forward, size: 16, color: colorScheme.onPrimary),
+                    SizedBox(width: 4.w),
+                  Icon(Icons.arrow_forward, size: 14.w, color: colorScheme.onPrimary),
                 ],
               ),
             ),

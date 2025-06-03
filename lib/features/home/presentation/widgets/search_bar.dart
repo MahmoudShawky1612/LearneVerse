@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -7,7 +8,7 @@ class CustomSearchBar extends StatefulWidget {
   final void Function(String) searchFunction;
   final String hintText;
 
-  const CustomSearchBar({
+  const CustomSearchBar({super.key, 
      required this.searchController,
      required this.searchFunction,
     this.hintText = 'Search...',
@@ -22,7 +23,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
   bool _isSpeechAvailable = false;
   late AnimationController _micAnimationController;
   late Animation<double> _micScaleAnimation;
-  FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -115,19 +116,19 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
 
     return Center(
       child: Container(
-        width: 380,
-        height: 60,
+        width: 315.w,
+        height: 50.h,
         decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
             color: _focusNode.hasFocus ? colorScheme.primary : Colors.transparent,
-            width: 1.5,
+            width: 1.5.w,
           ),
           boxShadow: [
             BoxShadow(
               color: theme.shadowColor.withOpacity(0.1),
-              blurRadius: 20,
+              blurRadius: 20.r,
               offset: const Offset(0, 5),
             ),
           ],
@@ -135,11 +136,11 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
         child: Row(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding:   EdgeInsets.symmetric(horizontal: 16.w),
               child: Icon(
                 Icons.search,
                 color: colorScheme.onSurface.withOpacity(0.6),
-                size: 26,
+                size: 20.w,
               ),
             ),
             Expanded(
@@ -153,7 +154,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
                     color: colorScheme.onSurface.withOpacity(0.4),
                   ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 20),
+                  contentPadding:   EdgeInsets.symmetric(vertical: 10.h),
                   suffixIcon: widget.searchController.text.isNotEmpty
                       ? GestureDetector(
                     onTap: () {
@@ -163,13 +164,13 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
                     child: Icon(
                       Icons.close,
                       color: colorScheme.onSurface.withOpacity(0.6),
-                      size: 20,
+                      size: 20.h,
                     ),
                   )
                       : null,
                 ),
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14.sp,
                   color: colorScheme.onSurface,
                 ),
                 textInputAction: TextInputAction.search,
@@ -182,28 +183,28 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
                     : _stopListening();
               },
               child: Padding(
-                padding: const EdgeInsets.only(right: 16),
+                padding:   EdgeInsets.only(right: 16.w),
                 child: ScaleTransition(
                   scale: _micScaleAnimation,
                   child: Container(
-                    height: 36,
-                    width: 36,
+                    height: 25.h,
+                    width: 25.w,
                     decoration: BoxDecoration(
                       color: _speechToText.isListening
                           ? Colors.redAccent
                           : colorScheme.primary,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                       boxShadow: [
                         BoxShadow(
                           color: colorScheme.primary.withOpacity(0.3),
-                          blurRadius: 8,
+                          blurRadius: 8.r,
                           offset: const Offset(0, 2),
                         ),
                       ],
                     ),
                     child: Icon(
                       _speechToText.isListening ? Icons.mic_off : Icons.mic,
-                      size: 20,
+                      size: 15,
                       color: colorScheme.onPrimary,
                     ),
                   ),

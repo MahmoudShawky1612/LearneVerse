@@ -2,12 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutterwidgets/features/profile/presentation/widgets/vertical_community_list.dart';
 
 import '../../../home/models/author_model.dart';
-import '../../../home/models/community_model.dart';
 
 class UserJoinedCommunities extends StatelessWidget {
   final userInfo;
   
-  UserJoinedCommunities({super.key, this.userInfo});
+  const UserJoinedCommunities({super.key, this.userInfo});
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/comments/presentation/views/comments_screen.dart';
 import 'package:flutterwidgets/features/community/presentation/views/community_screen.dart';
 import 'package:flutterwidgets/features/discover/presentation/views/discover_screen.dart';
-import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/views/home_screen.dart';
 import 'package:flutterwidgets/features/home/presentation/views/main_screen.dart';
 import 'package:flutterwidgets/features/user_selection_screen.dart';

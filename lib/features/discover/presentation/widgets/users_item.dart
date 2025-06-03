@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/utils/responsive_utils.dart';
 import '../../../community/models/owner_model.dart';
 import '../../../home/models/author_model.dart';
-import '../../../home/models/community_model.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../profile/presentation/views/profile_screen.dart';
 
 class UserItem extends StatelessWidget {
@@ -21,44 +20,44 @@ class UserItem extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 600),
+      constraints: BoxConstraints(maxWidth: 600.w),
       child: Container(
         margin: EdgeInsets.symmetric(
-          vertical: context.h(8),
-          horizontal: context.w(16),
+          vertical: 8.h,
+          horizontal: 16.w,
         ),
         decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: theme.shadowColor.withOpacity(0.06),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              blurRadius: 12.r,
+              offset: Offset(0, 4.h),
             ),
           ],
         ),
         child: Material(
           color: Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () {},
             child: Padding(
-              padding: EdgeInsets.all(context.w(8)),
+              padding: EdgeInsets.all(8.w),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(14.r),
                     child: Image.asset(
                       user.avatar,
-                      width: screenWidth > 600 ? 60 : context.w(50),
-                      height: screenWidth > 600 ? 60 : context.w(50),
+                      width:  30.w,
+                      height: 30.w,
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(width: context.w(8)),
+                  SizedBox(width: 8.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,39 +66,39 @@ class UserItem extends StatelessWidget {
                         Text(
                           user.name,
                           style: textTheme.bodyLarge?.copyWith(
-                            fontSize: context.fontSize(16),
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w700,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: context.h(4)),
+                        SizedBox(height: 4.h),
                         Row(
                           children: [
                             Expanded(
                               child: Text(
                                 "@${user.userName}",
                                 style: TextStyle(
-                                  fontSize: context.fontSize(14),
+                                  fontSize: 12.sp,
                                   color: colorScheme.onSurface.withOpacity(0.7),
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            SizedBox(width: context.w(5)),
+                            SizedBox(width: 5.w),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: context.w(8),
-                                vertical: context.h(4),
+                                horizontal: 8.w,
+                                vertical: 4.h,
                               ),
                               decoration: BoxDecoration(
                                 color: colorScheme.surface,
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Text(
                                 role,
                                 style: TextStyle(
-                                  fontSize: context.fontSize(12),
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w600,
                                   color: role == "Member"
                                       ? colorScheme.onSurface
@@ -113,26 +112,26 @@ class UserItem extends StatelessWidget {
                     ),
                   ),
                   if (screenWidth > 400) ...[
-                    SizedBox(width: context.w(8)),
+                    SizedBox(width: 8.w),
                     Flexible(
                       child: Container(
-                        constraints: BoxConstraints(maxWidth: 100),
+                        constraints: BoxConstraints(maxWidth: 100.w),
                         decoration: BoxDecoration(
                           gradient: themeExtension?.buttonGradient,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10.r),
                         ),
                         child: InkWell(
                           onTap: () => navigateToProfile(context),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10.r),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                              horizontal: context.w(10),
-                              vertical: context.h(6),
+                              horizontal: 10.w,
+                              vertical: 6.h,
                             ),
                             child: Text(
                               "Profile",
                               style: TextStyle(
-                                fontSize: context.fontSize(10),
+                                fontSize: 10.sp,
                                 fontWeight: FontWeight.w600,
                                 color: colorScheme.onPrimary,
                               ),

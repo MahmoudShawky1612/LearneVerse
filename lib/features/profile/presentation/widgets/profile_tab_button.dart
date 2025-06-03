@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileTabButton extends StatelessWidget {
   final String title;
@@ -7,7 +8,7 @@ class ProfileTabButton extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTap;
 
-  const ProfileTabButton({
+  const ProfileTabButton({super.key, 
     required this.title,
     required this.index,
     required this.icon,
@@ -24,15 +25,15 @@ class ProfileTabButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(index),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding:   EdgeInsets.symmetric(vertical: 10.h),
         decoration: BoxDecoration(
           color: isSelected ? theme.cardColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           boxShadow: isSelected
               ? [
                   BoxShadow(
                     color: colorScheme.onSurface.withOpacity(0.1),
-                    blurRadius: 6,
+                    blurRadius: 6.r,
                     spreadRadius: 0,
                     offset: const Offset(0, 2),
                   ),
@@ -44,15 +45,15 @@ class ProfileTabButton extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 16,
+              size: 16.w,
               color:
                   isSelected ? colorScheme.primary : colorScheme.onSurface.withOpacity(0.7),
             ),
-            const SizedBox(width: 6),
+              SizedBox(width: 6.w),
             Text(
               title,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 13.sp,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color: isSelected
                     ? colorScheme.primary

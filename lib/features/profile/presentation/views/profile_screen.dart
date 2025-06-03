@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../widgets/contribution_header.dart';
 import '../widgets/profile_header.dart';
@@ -34,32 +35,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
         slivers: [
           ProfileHeader(userInfo: userInfo),
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             sliver: SliverToBoxAdapter(
               child: Column(
                 children: [
                   Card(
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                     color: theme.cardColor,
-                    child: const Padding(
-                      padding: EdgeInsets.all(14),
-                      child: ContributionHeader(),
+                    child: Padding(
+                      padding: EdgeInsets.all(14.w),
+                      child: const ContributionHeader(),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   Container(
                     decoration: BoxDecoration(
                       color: colorScheme.surface,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                       boxShadow: [
                         BoxShadow(
                           color: colorScheme.onSurface.withOpacity(0.1),
-                          blurRadius: 6,
+                          blurRadius: 6.r,
                           spreadRadius: 0,
-                          offset: const Offset(0, 2),
+                          offset: Offset(0, 2.h),
                         ),
                       ],
                     ),
@@ -88,18 +89,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                 ],
               ),
             ),
           ),
           if (selectedIndex == 0)
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               sliver: SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    UserComments(userInfo: userInfo, ),
+                    UserComments(userInfo: userInfo),
                     UserPostsScreen(userInfo: userInfo),
                   ],
                 ),
@@ -108,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           else if (selectedIndex == 1)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: UserJoinedCommunities(userInfo: userInfo),
               ),
             ),

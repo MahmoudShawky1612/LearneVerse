@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/users_item.dart';
 
-import '../../../home/models/author_model.dart';
 
 class VerticalUserList extends StatelessWidget {
   final  users;
@@ -15,7 +14,7 @@ class VerticalUserList extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: users.length,
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      padding:   EdgeInsets.symmetric(vertical: 8.w, horizontal: 8.w),
       itemBuilder: (BuildContext context, int index) {
         return Column(
           children: [

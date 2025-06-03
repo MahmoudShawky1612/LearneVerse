@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'contributions.dart';
 
@@ -14,11 +13,11 @@ class ContributionHeader extends StatelessWidget {
     
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(top: 20),
-      padding: const EdgeInsets.all(15),
+      margin:   EdgeInsets.only(top: 20.h),
+      padding:   EdgeInsets.all(15.h),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(15.r),
         boxShadow: [
           BoxShadow(
             color: theme.shadowColor.withOpacity(0.05),
@@ -33,12 +32,12 @@ class ContributionHeader extends StatelessWidget {
           Text(
             "Yearly Contributions",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18.sp,
               fontWeight: FontWeight.bold,
               color: colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 5),
+            SizedBox(height: 5.h),
           Text(
             "364 contributions in the last year",
             style: TextStyle(
@@ -46,65 +45,65 @@ class ContributionHeader extends StatelessWidget {
               color: colorScheme.onSurface.withOpacity(0.6),
             ),
           ),
-          const SizedBox(height: 15),
-          const SizedBox(
-            height: 130,
-            child: YearContributionChart(),
+            SizedBox(height: 15.h),
+            SizedBox(
+            height: 130.h,
+            child: const YearContributionChart(),
           ),
-          const SizedBox(height: 10),
+            SizedBox(height: 10.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text("Less",
-                  style: TextStyle(fontSize: 12, color: colorScheme.onSurface.withOpacity(0.6))),
-              const SizedBox(width: 4),
+                  style: TextStyle(fontSize: 12.sp, color: colorScheme.onSurface.withOpacity(0.6))),
+                SizedBox(width: 4.w),
               Container(
-                height: 10,
-                width: 10,
+                height: 10.h,
+                width: 10.w,
                 decoration: BoxDecoration(
                   color: colorScheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
-              const SizedBox(width: 2),
+                SizedBox(width: 2.w),
               Container(
-                height: 10,
-                width: 10,
+                height: 10.h,
+                width: 10.w,
                 decoration: BoxDecoration(
                   color: colorScheme.primary.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
-              const SizedBox(width: 2),
+                SizedBox(width: 2.w),
               Container(
-                height: 10,
-                width: 10,
+                height: 10.h,
+                width: 10.w,
                 decoration: BoxDecoration(
                   color: colorScheme.primary.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
-              const SizedBox(width: 2),
+                SizedBox(width: 2.w),
               Container(
-                height: 10,
-                width: 10,
+                height: 10.h,
+                width: 10.w,
                 decoration: BoxDecoration(
                   color: colorScheme.primary.withOpacity(0.7),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
-              const SizedBox(width: 2),
+                SizedBox(width: 2.w),
               Container(
-                height: 10,
-                width: 10,
+                height: 10.h,
+                width: 10.w,
                 decoration: BoxDecoration(
                   color: colorScheme.primary,
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
-              const SizedBox(width: 4),
+                SizedBox(width: 4.w),
               Text("More",
-                  style: TextStyle(fontSize: 12, color: colorScheme.onSurface.withOpacity(0.6))),
+                  style: TextStyle(fontSize: 12.sp, color: colorScheme.onSurface.withOpacity(0.6))),
             ],
           ),
         ],

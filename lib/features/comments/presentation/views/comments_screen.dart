@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/models/comments_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../home/models/author_model.dart';
@@ -75,31 +75,31 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding:   EdgeInsets.all(8.0.w),
                     child: PostItem(post: widget.post, isUserPost: false,),
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.w),
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:  EdgeInsets.all(8.0.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Comments (${comments.length})',
                             style: GoogleFonts.poppins(
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
                               color: colorScheme.onSurface,
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
+                            padding:   EdgeInsets.symmetric(
+                                horizontal: 12.w, vertical: 6.w),
                             decoration: BoxDecoration(
-                              color: colorScheme.surfaceVariant,
-                              borderRadius: BorderRadius.circular(20),
+                              color: colorScheme.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(20.r),
                             ),
                             child: GestureDetector(
                               onTap: () {
@@ -112,12 +112,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
                               child: Row(
                                 children: [
                                   Icon(Icons.sort,
-                                      size: 16, color: colorScheme.onSurface),
-                                  const SizedBox(width: 4),
+                                      size: 16.w, color: colorScheme.onSurface),
+                                   SizedBox(width: 4.w),
                                   Text(
                                     'Recent',
                                     style: GoogleFonts.poppins(
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                       color: colorScheme.onSurface,
                                     ),
                                   ),
@@ -164,7 +164,7 @@ AppBar _buildAppBar(BuildContext context) {
     title: Text(
       'Comments',
       style: GoogleFonts.poppins(
-        fontSize: 18,
+        fontSize: 18.sp,
         fontWeight: FontWeight.w600,
         color: colorScheme.onSurface,
       ),

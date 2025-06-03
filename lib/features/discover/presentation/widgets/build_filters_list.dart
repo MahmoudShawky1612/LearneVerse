@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'build_filter_chip.dart';
 
@@ -31,12 +32,12 @@ class BuildFiltersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 45,
+      height: 27.h,
       child: ListView.builder(
         itemCount: filters.length,
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 2),
+        padding:   EdgeInsets.symmetric(horizontal: 2.w),
         itemBuilder: (context, index) {
           return BuildFilterChip(
             index: index,

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_section_header.dart';
 
 import '../../../home/models/community_model.dart';
@@ -33,7 +34,7 @@ class _BuildDefaultContentState extends State<BuildDefaultContent> {
               },
             ),
             if (_isPendingExpanded) CommunityGrid(communities: _communities),
-            const SizedBox(height: 30),
+              SizedBox(height: 30.h),
             BuildSectionHeader(
               title: "Favorite Communities",
               isExpanded: _isFavoriteExpanded,
@@ -44,7 +45,7 @@ class _BuildDefaultContentState extends State<BuildDefaultContent> {
               },
             ),
             if (_isFavoriteExpanded) CommunityGrid(communities: _communities),
-            const SizedBox(height: 100),
+              SizedBox(height: 100.h),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:flutterwidgets/features/home/models/community_model.dart';
 import 'package:flutterwidgets/features/home/models/post_model.dart';
@@ -103,12 +104,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
           _buildSliverAppBar(),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding:   EdgeInsets.all(16.0.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _buildCommunityHeader(),
-                  const SizedBox(height: 24),
+                    SizedBox(height: 24.h),
                   if (widget.community.communityPrivacy == "Public" ||
                       _userHasJoined)
                     _buildTabSelector(),
@@ -117,7 +118,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding:   EdgeInsets.symmetric(horizontal: 16.0.w),
             sliver: SliverToBoxAdapter(
               child: _buildSelectedScreen(),
             ),
@@ -132,7 +133,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final colorScheme = theme.colorScheme;
 
     return SliverAppBar(
-      expandedHeight: 400.0,
+      expandedHeight: 400.0.h,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
@@ -178,42 +179,41 @@ class _CommunityScreenState extends State<CommunityScreen> {
   Widget _buildCommunityHeader() {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Row(
       children: <Widget>[
         CircleAvatar(
-          radius: 40,
+          radius: 40.r,
           backgroundImage: AssetImage(widget.community.image),
         ),
-        const SizedBox(width: 16),
+          SizedBox(width: 16.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 widget.community.name,
-                style: const TextStyle(
-                  fontSize: 22,
+                style:   TextStyle(
+                  fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 4),
+                SizedBox(height: 4.h),
               Row(
                 children: <Widget>[
                   Icon(
                     Icons.people,
-                    size: 16,
+                    size: 16.w,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
-                  const SizedBox(width: 4),
+                    SizedBox(width: 4.w),
                   Text(
                     '${widget.community.memberCount} members',
                     style: TextStyle(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                    SizedBox(width: 12.w),
                   Icon(
                     widget.community.communityPrivacy == "Public"
                         ? Icons.lock_open
@@ -223,7 +223,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                         ? themeExtension?.upVote
                         : themeExtension?.downVote,
                   ),
-                  const SizedBox(width: 4),
+                    SizedBox(width: 4.w),
                   Text(
                     widget.community.communityPrivacy,
                     style: TextStyle(
@@ -234,16 +234,16 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+                SizedBox(height: 8.h),
               Row(
                 children: <Widget>[
                   _buildRatingStars(),
-                  const SizedBox(width: 8),
+                    SizedBox(width: 8.w),
                   Text(
                     '(${widget.community.reviews} reviews)',
                     style: TextStyle(
                       color: theme.colorScheme.onSurfaceVariant,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                     ),
                   ),
                 ],
@@ -267,7 +267,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ? Icons.star_half
                   : Icons.star_border,
           color: Colors.amber,
-          size: 18,
+          size: 18.w,
         );
       }),
     );
@@ -283,7 +283,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     ];
 
     return SizedBox(
-      height: 50,
+      height: 50.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: tabs.length,
@@ -303,12 +303,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return GestureDetector(
       onTap: () => setState(() => _currentIndex = index),
       child: Container(
-        margin: const EdgeInsets.only(right: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin:   EdgeInsets.only(right: 16.w),
+        padding:   EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
         decoration: BoxDecoration(
           gradient: isSelected ? themeExtension?.buttonGradient : null,
-          color: isSelected ? null : theme.colorScheme.surfaceVariant,
-          borderRadius: BorderRadius.circular(20),
+          color: isSelected ? null : theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(20.r),
         ),
         child: Center(
           child: Text(
@@ -350,48 +350,48 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const SizedBox(height: 24),
-        const Text(
+          SizedBox(height: 24.h),
+          Text(
           'About this Community',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
+          SizedBox(height: 12.h),
         Text(
           'This is a community where members can learn, share, and grow together. Join us to access exclusive content, participate in discussions, and connect with like-minded individuals.',
           style: TextStyle(
             color: theme.colorScheme.onSurfaceVariant,
-            height: 1.5,
+            height: 1.5.h,
           ),
         ),
-        const SizedBox(height: 24),
-        const Text(
+          SizedBox(height: 24.h),
+          Text(
           'Tags',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
+          SizedBox(height: 12.h),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: 8.w,
+          runSpacing: 8.w,
           children: List<Widget>.from(widget.community.tags.map((tag) {
             return Chip(
               label: Text(tag),
               backgroundColor: theme.colorScheme.surface,
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 0),
             );
           })),
         ),
-        const SizedBox(height: 24),
+          SizedBox(height: 24.h),
         Text(
           "Intro video to ${widget.community.name}",
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          style:   TextStyle(fontWeight: FontWeight.bold, fontSize: 24.w),
         ),
-        const SizedBox(height: 10),
+          SizedBox(height: 10.h),
         if (_controller.value.isInitialized)
           Column(
             children: [
@@ -409,7 +409,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     });
                   }),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding:   EdgeInsets.symmetric(horizontal: 16.0.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -422,7 +422,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
           )
         else
           const CircularProgressIndicator(),
-        const SizedBox(height: 24),
+          SizedBox(height: 24.h),
         Center(
           child: FloatingActionButton(
             onPressed: () {
@@ -437,15 +437,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 24),
-        const Text(
+          SizedBox(height: 24.h),
+          Text(
           'Community Guidelines',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
+          SizedBox(height: 12.h),
         _buildGuideline(
           icon: Icons.check_circle_outline,
           title: 'Be Respectful',
@@ -461,13 +461,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
           title: 'Stay On Topic',
           description: 'Keep discussions relevant to the community focus.',
         ),
-        const SizedBox(height: 24),
+          SizedBox(height: 24.h),
         if (!_userHasJoined)
           SizedBox(
             width: double.infinity,
             child: _buildJoinButton(),
           ),
-        const SizedBox(height: 36),
+          SizedBox(height: 36.h),
       ],
     );
   }
@@ -481,28 +481,28 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding:   EdgeInsets.only(bottom: 16.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Icon(
             icon,
             color: colorScheme.primary,
-            size: 20,
+            size: 20.w,
           ),
-          const SizedBox(width: 12),
+            SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   title,
-                  style: const TextStyle(
+                  style:   TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
-                const SizedBox(height: 4),
+                  SizedBox(height: 4.h),
                 Text(
                   description,
                   style: TextStyle(
@@ -530,10 +530,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
       },
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding:   EdgeInsets.symmetric(vertical: 14.w),
         decoration: BoxDecoration(
           gradient: themeExtension?.buttonGradient,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Center(
           child: Text(
@@ -541,7 +541,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             style: TextStyle(
               color: colorScheme.onPrimary,
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: 16.sp,
             ),
           ),
         ),
@@ -580,23 +580,23 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const SizedBox(height: 24),
-        const Row(
+          SizedBox(height: 24.h),
+          Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
               'Learning Sections',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        ...sections.map((section) => _buildSectionCard(section)).toList(),
-        const SizedBox(height: 24),
-        const SizedBox(height: 36),
+          SizedBox(height: 16.h),
+        ...sections.map((section) => _buildSectionCard(section)),
+          SizedBox(height: 24.h),
+          SizedBox(height: 36.h),
       ],
     );
   }
@@ -606,10 +606,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin:   EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
             color: theme.shadowColor.withOpacity(0.05),
@@ -621,67 +621,67 @@ class _CommunityScreenState extends State<CommunityScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           onTap: () {},
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding:   EdgeInsets.all(16.w),
             child: Row(
               children: <Widget>[
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                   child: Image.asset(
                     section['image'] as String,
-                    width: 80,
-                    height: 80,
+                    width: 80.w,
+                    height: 80.h,
                     fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(width: 16),
+                  SizedBox(width: 16.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         section['title'] as String,
-                        style: const TextStyle(
+                        style:   TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 16.sp,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                       Row(
                         children: <Widget>[
                           _buildInfoChip(
                             Icons.book,
                             '${section['lessons']} lessons',
                           ),
-                          const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                           _buildInfoChip(
                             Icons.access_time,
                             section['duration'] as String,
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                       LinearProgressIndicator(
                         value: (section['completed'] as int) /
                             (section['lessons'] as int),
-                        backgroundColor: theme.colorScheme.surfaceVariant,
+                        backgroundColor: theme.colorScheme.surfaceContainerHighest,
                         color: colorScheme.primary,
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: BorderRadius.circular(2.r),
                       ),
-                      const SizedBox(height: 4),
+                        SizedBox(height: 4.h),
                       Text(
                         '${section['completed']}/${section['lessons']} completed',
                         style: TextStyle(
                           color: theme.colorScheme.onSurfaceVariant,
-                          fontSize: 12,
+                          fontSize: 12.sp,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const Icon(Icons.arrow_forward_ios, size: 16),
+                  Icon(Icons.arrow_forward_ios, size: 16.w),
               ],
             ),
           ),
@@ -694,24 +694,24 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceVariant,
-        borderRadius: BorderRadius.circular(12),
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Icon(
             icon,
-            size: 14,
+            size: 14.w,
             color: theme.colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(width: 4),
+            SizedBox(width: 4.w),
           Text(
             label,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 12.sp,
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
@@ -727,14 +727,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const SizedBox(height: 24),
+          SizedBox(height: 24.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
               'Community Forum',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
               ),
@@ -749,7 +749,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 backgroundColor: colorScheme.primary,
                 foregroundColor: colorScheme.onPrimary,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -757,11 +757,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+          SizedBox(height: 16.h),
         Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
                 color: theme.shadowColor.withOpacity(0.05),
@@ -798,14 +798,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
             children: [
               CircleAvatar(
                 backgroundImage: AssetImage(currentUser.avatar),
-                radius: 16,
+                radius: 16.r,
               ),
-              const SizedBox(width: 10),
+                SizedBox(width: 10.w),
               Text(
                 'Create Post',
                 style: TextStyle(
                   color: colorScheme.onSurface,
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -825,12 +825,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     fillColor: theme.inputDecorationTheme.fillColor ??
                         theme.scaffoldBackgroundColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                 TextField(
                   controller: descriptionController,
                   style: TextStyle(color: colorScheme.onSurface),
@@ -842,7 +842,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     fillColor: theme.inputDecorationTheme.fillColor ??
                         theme.scaffoldBackgroundColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -864,7 +864,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             Container(
               decoration: BoxDecoration(
                 gradient: themeExtension?.buttonGradient,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
               ),
               child: TextButton(
                 onPressed: () {
@@ -922,15 +922,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const SizedBox(height: 24),
-        const Text(
+          SizedBox(height: 24.h),
+          Text(
           'Top Contributors',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 24),
+          SizedBox(height: 24.h),
 
         // Podium for top 3 users
         Row(
@@ -941,30 +941,30 @@ class _CommunityScreenState extends State<CommunityScreen> {
             _buildPodiumItem(
               _members[1],
               2,
-              height: 120,
+              height: 120.h,
               theme: theme,
               colorScheme: colorScheme,
               themeExtension: themeExtension,
             ),
-            const SizedBox(width: 12),
+              SizedBox(width: 12.w),
 
             // 1st place
             _buildPodiumItem(
               _members[0],
               1,
-              height: 150,
+              height: 150.h,
               theme: theme,
               colorScheme: colorScheme,
               themeExtension: themeExtension,
               isFirst: true,
             ),
-            const SizedBox(width: 12),
+              SizedBox(width: 12.w),
 
             // 3rd place
             _buildPodiumItem(
               _members[2],
               3,
-              height: 100,
+              height: 100.h,
               theme: theme,
               colorScheme: colorScheme,
               themeExtension: themeExtension,
@@ -972,13 +972,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
           ],
         ),
 
-        const SizedBox(height: 32),
+          SizedBox(height: 32.h),
 
         // List for users 4-10
         Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
                 color: theme.shadowColor.withOpacity(0.05),
@@ -989,18 +989,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
           ),
           child: Column(
             children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: Row(
+                Padding(
+                padding: EdgeInsets.all(16.w),
+                child:   Row(
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Rank',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 24),
-                    Expanded(
+                    SizedBox(width: 24.w),
+                    const Expanded(
                       child: Text(
                         'User',
                         style: TextStyle(
@@ -1008,7 +1008,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                         ),
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Points',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -1017,7 +1017,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ],
                 ),
               ),
-              const Divider(height: 1),
+                Divider(height: 1.h),
               ...List.generate(
                 7,
                 (index) => _buildTopMemberItem(
@@ -1064,11 +1064,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
       children: [
         // Avatar
         Container(
-          width: 60,
-          height: 60,
+          width: 60.w,
+          height: 60.h,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: medalColor, width: 3),
+            border: Border.all(color: medalColor, width: 3.w),
             boxShadow: [
               BoxShadow(
                 color: medalColor.withOpacity(0.3),
@@ -1080,29 +1080,29 @@ class _CommunityScreenState extends State<CommunityScreen> {
           child: ClipOval(
             child: Image.asset(
               user.avatar,
-              width: 60,
-              height: 60,
+              width: 60.w,
+              height: 60.h,
               fit: BoxFit.cover,
             ),
           ),
         ),
-        const SizedBox(height: 8),
+          SizedBox(height: 8.h),
         // Name
         Text(
           user.name,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: isFirst ? 16 : 14,
+            fontSize: isFirst ? 16.sp : 14.sp,
           ),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 4),
+          SizedBox(height: 4.h),
         // Points badge
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          padding:   EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.w),
           decoration: BoxDecoration(
             color: medalColor.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
             boxShadow: [
               BoxShadow(
                 color: medalColor.withOpacity(0.1),
@@ -1119,7 +1119,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 12),
+          SizedBox(height: 12.h),
         // Podium stand
         Stack(
           alignment: Alignment.center,
@@ -1137,9 +1137,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     medalColor.withOpacity(0.4),
                   ],
                 ),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
+                borderRadius:   BorderRadius.only(
+                  topLeft: Radius.circular(12.r),
+                  topRight: Radius.circular(12.r),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -1169,7 +1169,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 style: TextStyle(
                   color: medalColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                 ),
               ),
             ),
@@ -1191,12 +1191,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding:   EdgeInsets.symmetric(vertical: 12.w, horizontal: 16.w),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
             color: theme.dividerColor,
-            width: 0.5,
+            width: 0.5.w,
           ),
         ),
       ),
@@ -1209,10 +1209,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
               color: rank <= 3 ? colorScheme.primary : null,
             ),
           ),
-          const SizedBox(width: 24),
+            SizedBox(width: 24.w),
           Container(
-            width: 36,
-            height: 36,
+            width: 36.w,
+            height: 36.h,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: themeExtension?.circleGradient,
@@ -1220,13 +1220,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
             child: ClipOval(
               child: Image.asset(
                 avatarUrl,
-                width: 36,
-                height: 36,
+                width: 36.w,
+                height: 36.h,
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          const SizedBox(width: 12),
+            SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1241,17 +1241,17 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   '@$username',
                   style: TextStyle(
                     color: theme.colorScheme.onSurfaceVariant,
-                    fontSize: 12,
+                    fontSize: 12.sp,
                   ),
                 ),
               ],
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding:   EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
             decoration: BoxDecoration(
               color: colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
               '$points pts',
@@ -1273,22 +1273,22 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const SizedBox(height: 24),
+          SizedBox(height: 24.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const Text(
+              Text(
               'All Members',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding:   EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
               decoration: BoxDecoration(
                 color: colorScheme.surface,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(
                 '${widget.community.memberCount} members',
@@ -1302,10 +1302,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ),
         const SizedBox(height: 16),
         Container(
-          padding: const EdgeInsets.all(16),
+          padding:   EdgeInsets.all(16.r),
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
                 color: theme.shadowColor.withOpacity(0.05),
@@ -1321,30 +1321,30 @@ class _CommunityScreenState extends State<CommunityScreen> {
               hintText: 'Search members...',
               prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
                 borderSide: BorderSide.none,
               ),
               filled: true,
-              fillColor: theme.colorScheme.surfaceVariant,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
+              fillColor: theme.colorScheme.surfaceContainerHighest,
+              contentPadding:   EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 12.h,
               ),
             ),
           ),
         ),
-        const SizedBox(height: 16),
+          SizedBox(height: 16.h),
         Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
         ),
-        const SizedBox(height: 16),
+          SizedBox(height: 16.h),
         Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
                 color: theme.shadowColor.withOpacity(0.05),
@@ -1357,24 +1357,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ? VerticalUserList(users: _members)
               : VerticalUserList(users: foundUsers),
         ),
-        const SizedBox(height: 24),
+         SizedBox(height: 24.h),
       ],
     );
   }
 
-  Widget _buildMemberAvatar(Author member) {
-    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-
-    return Container(
-      padding: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: themeExtension?.circleGradient,
-      ),
-      child: CircleAvatar(
-        radius: 22,
-        backgroundImage: AssetImage(member.avatar),
-      ),
-    );
-  }
 }

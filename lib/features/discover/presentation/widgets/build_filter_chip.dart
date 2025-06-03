@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 class BuildFilterChip extends StatelessWidget {
@@ -22,33 +23,33 @@ class BuildFilterChip extends StatelessWidget {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
     return Container(
-      margin: const EdgeInsets.only(right: 10),
+      margin:   EdgeInsets.only(right: 10.h),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: () => onToggle(filters[index]),
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
-            width: 70,
-            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+            width: 70.w,
+            padding:   EdgeInsets.symmetric(vertical: 6.w, horizontal: 10.h),
             decoration: BoxDecoration(
               gradient: isSelected ? null : themeExtension?.buttonGradient,
               color: isSelected ? theme.cardColor : null,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
                 color: isSelected ? colorScheme.primary : Colors.transparent,
-                width: 1.5,
+                width: 1.5.w,
               ),
               boxShadow: [
                 BoxShadow(
                   color: isSelected
                       ? theme.shadowColor.withOpacity(0.08)
                       : colorScheme.primary.withOpacity(0.25),
-                  blurRadius: 6, // Reduced from 8
+                  blurRadius: 6.r, // Reduced from 8
                   spreadRadius: 0,
                   offset: const Offset(0, 2),
                 ),
@@ -61,7 +62,7 @@ class BuildFilterChip extends StatelessWidget {
                   color:
                       isSelected ? colorScheme.primary : colorScheme.onPrimary,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  fontSize: 12, // Reduced from 14
+                  fontSize: 12.sp, // Reduced from 14
                   letterSpacing: 0.2,
                 ),
                 maxLines: 1,

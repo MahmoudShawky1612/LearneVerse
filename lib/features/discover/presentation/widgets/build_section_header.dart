@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/constants/app_colors.dart';
 
 class BuildSectionHeader extends StatelessWidget {
   final String title;
@@ -20,18 +19,18 @@ class BuildSectionHeader extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      margin: const EdgeInsets.only(bottom: 16),
+      padding:   EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+      margin:   EdgeInsets.only(bottom: 16.w),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceVariant,
-        borderRadius: BorderRadius.circular(12),
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         children: [
           Text(
             title,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 20.sp,
               fontWeight: FontWeight.bold,
               color: colorScheme.onSurface,
             ),
@@ -41,7 +40,7 @@ class BuildSectionHeader extends StatelessWidget {
             onPressed: onTap,
             icon: Icon(
               isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-              size: 28,
+              size: 28.w,
               color: colorScheme.onSurface,
             ),
           ),

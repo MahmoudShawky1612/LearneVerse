@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwidgets/core/utils/responsive_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'comment_item.dart';
 
@@ -32,7 +32,7 @@ class BuildComments extends StatelessWidget {
       padding: EdgeInsets.zero,
       itemCount: comments.length,
       separatorBuilder: (context, index) => Divider(
-        height: 1,
+        height: 1.h,
         thickness: 0.5,
         color: theme.dividerColor.withOpacity(0.5),
       ),

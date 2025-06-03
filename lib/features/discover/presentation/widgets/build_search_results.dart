@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/models/owner_model.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_section_title.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/vertical_users_list.dart';
@@ -23,7 +24,7 @@ class BuildSearchResults extends StatelessWidget {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 100),
+        margin:   EdgeInsets.only(bottom: 100.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

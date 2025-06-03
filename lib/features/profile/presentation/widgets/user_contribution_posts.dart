@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutterwidgets/core/providers/user_provider.dart';
 import 'package:flutterwidgets/features/home/models/post_model.dart';
 
 import '../../../home/presentation/widgets/build_posts.dart';
 
 class UserPostsScreen extends StatefulWidget {
   final userInfo;
-  UserPostsScreen({super.key, this.userInfo});
+  const UserPostsScreen({super.key, this.userInfo});
 
   @override
   State<UserPostsScreen> createState() => _UserPostsScreenState();
