@@ -12,7 +12,6 @@ class ProfileAvatarAndName extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    final userName = getUsernameFromToken(TokenStorage.getToken() as String) ?? "Dodje Shawky";
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -32,7 +31,7 @@ class ProfileAvatarAndName extends StatelessWidget {
                 ],
               ),
               child:  CircleAvatar(
-                backgroundImage:AssetImage(userInfo?.profilePictureURL ?? 'assets/images/avatar.jpg'),
+                backgroundImage:AssetImage(userInfo?.avatar ?? 'assets/images/avatar.jpg'),
                 radius: 36,
               ),
             ),
@@ -57,7 +56,7 @@ class ProfileAvatarAndName extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-               userName,
+               userInfo.name?? 'unknown',
                 style: TextStyle(
                   fontSize: 22.sp,
                   fontWeight: FontWeight.w700,

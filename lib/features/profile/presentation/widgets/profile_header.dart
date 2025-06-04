@@ -92,8 +92,8 @@ class ProfileHeader extends StatelessWidget {
                             ProfileBioQuote(userInfo: userInfo),
                             SizedBox(height: 14.h),
                             if (userInfo != null &&
-                                userInfo.tags != null &&
-                                userInfo.tags.isNotEmpty)
+                                userInfo.interests != null &&
+                                userInfo.interests.isNotEmpty)
                               _buildInterestTags(colorScheme, userInfo),
                             SizedBox(height: 14.h),
                             Center(child: ProfileUserStatsRow(userInfo: userInfo)),
