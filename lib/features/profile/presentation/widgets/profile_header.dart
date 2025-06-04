@@ -43,20 +43,24 @@ class ProfileHeader extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      backgroundColor: const Color(0xFF1E1E1E), // Dark background
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      title: Text(
+                      backgroundColor:
+                          const Color(0xFF1E1E1E), 
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      title: const Text(
                         'Confirm Logout',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
-                      content: Text(
+                      content: const Text(
                         'Are you sure you want to log out?',
                         style: TextStyle(color: Colors.white70),
                       ),
                       actions: [
                         TextButton(
-                          onPressed: () => Navigator.pop(context), // Cancel
-                          child: Text('Cancel', style: TextStyle(color: Colors.grey[400])),
+                          onPressed: () => Navigator.pop(context), 
+                          child: Text('Cancel',
+                              style: TextStyle(color: Colors.grey[400])),
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -66,7 +70,7 @@ class ProfileHeader extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.pop(context); // Close dialog
+                            Navigator.pop(context); 
                             TokenStorage.deleteToken();
                             context.go('/login');
                             showPremiumSnackbar(
@@ -75,7 +79,8 @@ class ProfileHeader extends StatelessWidget {
                               isSuccess: true,
                             );
                           },
-                          child: Text('Logout', style: TextStyle(color: Colors.white)),
+                          child: const Text('Logout',
+                              style: TextStyle(color: Colors.white)),
                         ),
                       ],
                     ),
@@ -94,14 +99,15 @@ class ProfileHeader extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    gradient: themeExtension?.backgroundGradient ?? LinearGradient(
-                      colors: [
-                        colorScheme.primary.withOpacity(0.9),
-                        colorScheme.primary,
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
+                    gradient: themeExtension?.backgroundGradient ??
+                        LinearGradient(
+                          colors: [
+                            colorScheme.primary.withOpacity(0.9),
+                            colorScheme.primary,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
                   ),
                 ),
                 Positioned(
@@ -140,7 +146,8 @@ class ProfileHeader extends StatelessWidget {
                                 userInfo.interests.isNotEmpty)
                               _buildInterestTags(colorScheme, userInfo),
                             SizedBox(height: 14.h),
-                            Center(child: ProfileUserStatsRow(userInfo: userInfo)),
+                            Center(
+                                child: ProfileUserStatsRow(userInfo: userInfo)),
                             SizedBox(height: 12.h),
                             const Center(child: ProfileSocialLinksRow()),
                           ],
@@ -188,4 +195,3 @@ class ProfileHeader extends StatelessWidget {
     );
   }
 }
-

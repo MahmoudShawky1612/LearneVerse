@@ -34,7 +34,7 @@ class _BuildDefaultContentState extends State<BuildDefaultContent> {
               },
             ),
             if (_isPendingExpanded) CommunityGrid(communities: _communities),
-              SizedBox(height: 30.h),
+            SizedBox(height: 30.h),
             BuildSectionHeader(
               title: "Favorite Communities",
               isExpanded: _isFavoriteExpanded,
@@ -45,7 +45,7 @@ class _BuildDefaultContentState extends State<BuildDefaultContent> {
               },
             ),
             if (_isFavoriteExpanded) CommunityGrid(communities: _communities),
-              SizedBox(height: 100.h),
+            SizedBox(height: 100.h),
           ],
         ),
       ),

@@ -52,7 +52,7 @@ class UserItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14.r),
                     child: Image.asset(
                       user.avatar,
-                      width:  30.w,
+                      width: 30.w,
                       height: 30.w,
                       fit: BoxFit.cover,
                     ),
@@ -111,9 +111,8 @@ class UserItem extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (screenWidth > 400) ...[
-                    SizedBox(width: 8.w),
-                    Flexible(
+                  Spacer(),
+                  Flexible(
                       child: Container(
                         constraints: BoxConstraints(maxWidth: 100.w),
                         decoration: BoxDecoration(
@@ -141,7 +140,6 @@ class UserItem extends StatelessWidget {
                       ),
                     ),
                   ],
-                ],
               ),
             ),
           ),
@@ -177,7 +175,8 @@ class UserItem extends StatelessWidget {
     } else {
       try {
         List<Author> users = Author.users;
-        final selectedUser = users.firstWhere((u) => u.userName == user.userName);
+        final selectedUser =
+            users.firstWhere((u) => u.userName == user.userName);
         Navigator.push(
           context,
           MaterialPageRoute(

@@ -18,7 +18,8 @@ class ThemeToggleButton extends StatefulWidget {
   State<ThemeToggleButton> createState() => _ThemeToggleButtonState();
 }
 
-class _ThemeToggleButtonState extends State<ThemeToggleButton> with SingleTickerProviderStateMixin {
+class _ThemeToggleButtonState extends State<ThemeToggleButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   @override
@@ -43,8 +44,8 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> with SingleTicker
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+
     
-    // Set the controller value based on theme
     if (isDarkMode) {
       _animationController.value = 1.0;
     } else {
@@ -66,7 +67,7 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> with SingleTicker
         child: Container(
           padding: EdgeInsets.all(widget.isCompact ? 8.0 : 12.0),
           decoration: BoxDecoration(
-            color: widget.isCompact 
+            color: widget.isCompact
                 ? colorScheme.surface.withOpacity(0.8)
                 : colorScheme.surface.withOpacity(0.2),
             borderRadius: BorderRadius.circular(widget.isCompact ? 12 : 20),
@@ -89,7 +90,7 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> with SingleTicker
                   return Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Sun icon that fades out
+                      
                       Opacity(
                         opacity: 1.0 - _animationController.value,
                         child: Icon(
@@ -98,7 +99,7 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> with SingleTicker
                           color: colorScheme.primary,
                         ),
                       ),
-                      // Moon icon that fades in
+                      
                       Opacity(
                         opacity: _animationController.value,
                         child: Icon(
@@ -127,4 +128,4 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> with SingleTicker
       ),
     );
   }
-} 
+}

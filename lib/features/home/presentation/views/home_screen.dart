@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       return;
     }
-    
+
     setState(() {
       _isSearching = true;
       _foundCommunities = Community.searchCommunities(query);
@@ -69,12 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-     double buttonSize = 30.h;
+    double buttonSize = 30.h;
 
     Widget layout;
 
-      layout = _buildMobileLayout();
-
+    layout = _buildMobileLayout();
 
     return SafeArea(
       child: Scaffold(
@@ -87,11 +86,12 @@ class _HomeScreenState extends State<HomeScreen> {
               top: 120.h,
               left: 0,
               right: 0,
-              child: CustomSearchBar(searchController: searchController,searchFunction:  _search),
+              child: CustomSearchBar(
+                  searchController: searchController, searchFunction: _search),
             ),
-            // Theme toggle button overlay
+            
             Positioned(
-              right:  buttonSize ,
+              right: buttonSize,
               top: 10.h,
               child: Container(
                 width: buttonSize,
@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(12.r),
                   color: theme.colorScheme.surface.withOpacity(0.15),
                 ),
-                child:  Center(
+                child: Center(
                   child: ThemeToggleButton(
                     isCompact: true,
                     size: 15.w,
@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-  
+
   Widget _buildMobileLayout() {
     return Column(
       children: [
@@ -144,9 +144,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
-  
 
   bool _hasSearchResults() {
-    return _isSearching && (_foundCommunities.isNotEmpty || _foundUsers.isNotEmpty || _foundOwners.isNotEmpty);
+    return _isSearching &&
+        (_foundCommunities.isNotEmpty ||
+            _foundUsers.isNotEmpty ||
+            _foundOwners.isNotEmpty);
   }
 }

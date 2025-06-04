@@ -111,36 +111,36 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1a1a1a), // Simple dark background
+      backgroundColor: const Color(0xFF1a1a1a), 
       body: AnimatedBuilder(
         animation: Listenable.merge([_mainController, _floatController]),
         builder: (context, child) {
           return Stack(
             children: [
-              // Subtle background decoration
+              
               _buildBackgroundDecoration(),
 
-              // Main content
+              
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Floating logo
+                    
                     _buildFloatingLogo(),
 
                     SizedBox(height: 30.h),
 
-                    // App name with slide animation
+                    
                     _buildAnimatedTitle(),
 
                     SizedBox(height: 12.h),
 
-                    // Simple tagline
+                    
                     _buildTagline(),
 
                     SizedBox(height: 50.h),
 
-                    // Minimalist loading dots
+                    
                     _buildLoadingDots(),
                   ],
                 ),
@@ -170,7 +170,7 @@ class _SplashScreenState extends State<SplashScreen>
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Soft glow background
+            
             Container(
               width: 120.w,
               height: 120.w,
@@ -186,7 +186,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
 
-            // Main logo container
+            
             Container(
               width: 100.w,
               height: 100.w,
@@ -285,7 +285,6 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-// Minimal background painter for subtle effects
 class MinimalBackgroundPainter extends CustomPainter {
   final double animationValue;
 
@@ -300,7 +299,7 @@ class MinimalBackgroundPainter extends CustomPainter {
 
     final center = Offset(size.width / 2, size.height / 2);
 
-    // Draw subtle expanding circles
+    
     for (int i = 0; i < 3; i++) {
       final radius = 150.0 + (i * 80) + (animationValue * 20);
       canvas.drawCircle(center, radius, paint);

@@ -54,14 +54,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-    
+
     return Container(
       child: Scaffold(
         body: Container(
           color: theme.scaffoldBackgroundColor,
           child: SafeArea(
             child: Padding(
-              padding:   EdgeInsets.all(16.h),
+              padding: EdgeInsets.all(16.h),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +96,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       ],
                     ),
-                      SizedBox(height: 20.h),
+                    SizedBox(height: 20.h),
                     Card(
                       elevation: 8,
                       shadowColor: colorScheme.primary.withOpacity(0.3),
@@ -105,7 +105,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                       color: theme.cardColor,
                       child: Padding(
-                        padding:   EdgeInsets.all(12.0.w),
+                        padding: EdgeInsets.all(12.0.w),
                         child: TableCalendar(
                           focusedDay: focusedDay,
                           firstDay: DateTime(2025, 1, 1),
@@ -187,7 +187,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       ),
                     ),
-                      SizedBox(height: 24.h),
+                    SizedBox(height: 24.h),
                     Text(
                       selectedEvents.isEmpty
                           ? 'No events on ${today.day}/${today.month}/${today.year}'
@@ -198,9 +198,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         color: colorScheme.onSurface,
                       ),
                     ),
-                      SizedBox(height: 12.h),
+                    SizedBox(height: 12.h),
                     Container(
-                      constraints:   BoxConstraints(maxHeight: 200.h),
+                      constraints: BoxConstraints(maxHeight: 200.h),
                       child: selectedEvents.isNotEmpty
                           ? ListView.builder(
                               shrinkWrap: true,
@@ -208,9 +208,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               itemBuilder: (context, index) {
                                 final event = selectedEvents[index];
                                 return Card(
-                                  margin:   EdgeInsets.only(bottom: 12.h),
+                                  margin: EdgeInsets.only(bottom: 12.h),
                                   elevation: 4,
-                                  shadowColor: colorScheme.primary.withOpacity(0.3),
+                                  shadowColor:
+                                      colorScheme.primary.withOpacity(0.3),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16.r),
                                   ),
@@ -224,8 +225,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       width: 12.w,
                                       height: double.infinity,
                                       decoration: BoxDecoration(
-                                        color: event['color'] ?? colorScheme.primary,
-                                        borderRadius: BorderRadius.circular(30.r),
+                                        color: event['color'] ??
+                                            colorScheme.primary,
+                                        borderRadius:
+                                            BorderRadius.circular(30.r),
                                       ),
                                     ),
                                     title: Text(
@@ -241,7 +244,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           size: 16.w,
                                           color: colorScheme.onSurface),
                                       onPressed: () {
-                                        // Event details navigation
+                                        
                                       },
                                     ),
                                   ),
@@ -256,15 +259,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   Icon(
                                     Icons.event_busy,
                                     size: 60.w,
-                                    color: colorScheme.onSurface.withOpacity(0.5),
+                                    color:
+                                        colorScheme.onSurface.withOpacity(0.5),
                                   ),
-                                    SizedBox(height: 10.h),
+                                  SizedBox(height: 10.h),
                                   Text(
                                     "No events scheduled",
                                     style: GoogleFonts.poppins(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      color: colorScheme.onSurface.withOpacity(0.5),
+                                      color: colorScheme.onSurface
+                                          .withOpacity(0.5),
                                     ),
                                     textAlign: TextAlign.center,
                                   ),

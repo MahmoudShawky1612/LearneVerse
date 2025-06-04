@@ -8,7 +8,8 @@ class ProfileTabButton extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTap;
 
-  const ProfileTabButton({super.key, 
+  const ProfileTabButton({
+    super.key,
     required this.title,
     required this.index,
     required this.icon,
@@ -21,11 +22,11 @@ class ProfileTabButton extends StatelessWidget {
     final isSelected = selectedIndex == index;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return GestureDetector(
       onTap: () => onTap(index),
       child: Container(
-        padding:   EdgeInsets.symmetric(vertical: 10.h),
+        padding: EdgeInsets.symmetric(vertical: 10.h),
         decoration: BoxDecoration(
           color: isSelected ? theme.cardColor : Colors.transparent,
           borderRadius: BorderRadius.circular(12.r),
@@ -46,10 +47,11 @@ class ProfileTabButton extends StatelessWidget {
             Icon(
               icon,
               size: 16.w,
-              color:
-                  isSelected ? colorScheme.primary : colorScheme.onSurface.withOpacity(0.7),
+              color: isSelected
+                  ? colorScheme.primary
+                  : colorScheme.onSurface.withOpacity(0.7),
             ),
-              SizedBox(width: 6.w),
+            SizedBox(width: 6.w),
             Text(
               title,
               style: TextStyle(

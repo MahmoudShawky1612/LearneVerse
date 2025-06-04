@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class BuildHeader extends StatelessWidget {
   const BuildHeader({super.key});
 
@@ -9,7 +8,7 @@ class BuildHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,7 +21,7 @@ class BuildHeader extends StatelessWidget {
             letterSpacing: -0.5,
           ),
         ),
-          SizedBox(height: 8.h),
+        SizedBox(height: 8.h),
         Text(
           "Communities, people and more...",
           style: TextStyle(

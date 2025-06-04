@@ -10,8 +10,8 @@ import '../../../profile/presentation/views/profile_screen.dart';
 
 class PostItem extends StatefulWidget {
   final post;
-  final userInfo; // Add userInfo as a parameter to the widget
-  final Function? delete; // Add delete callback
+  final userInfo; 
+  final Function? delete; 
   final Function? edit;
   final isUserPost;
 
@@ -34,7 +34,7 @@ class _PostItemState extends State<PostItem> {
   bool isDownVoted = false;
   bool showOptions = false;
 
-  // Function to toggle the vote
+  
   void toggleVote(bool isUpVote) {
     setState(() {
       if (isUpVote) {
@@ -81,7 +81,7 @@ class _PostItemState extends State<PostItem> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Avatar and author section
+              
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -95,7 +95,8 @@ class _PostItemState extends State<PostItem> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ProfileScreen(userInfo: user)),
+                            builder: (context) =>
+                                ProfileScreen(userInfo: user)),
                       );
                     },
                     child: CircleAvatar(
@@ -133,8 +134,8 @@ class _PostItemState extends State<PostItem> {
                   GestureDetector(
                     onTap: () => context.push('/community', extra: community),
                     child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 8.w, vertical: 3.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                       decoration: BoxDecoration(
                         color: colorScheme.surface.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(12.r),
@@ -265,7 +266,8 @@ class _PostItemState extends State<PostItem> {
                                 ? themeExtension?.upVote
                                 : isDownVoted
                                     ? themeExtension?.downVote
-                                    : theme.colorScheme.onSurface.withOpacity(0.8),
+                                    : theme.colorScheme.onSurface
+                                        .withOpacity(0.8),
                           ),
                         ),
                         SizedBox(width: 10.w),
@@ -323,7 +325,8 @@ class _PostItemState extends State<PostItem> {
                         Icons.edit_outlined,
                         colorScheme.primary,
                         () {
-                          _showEditPostDialog(post.id, post.title, post.description);
+                          _showEditPostDialog(
+                              post.id, post.title, post.description);
                         },
                       ),
                       Divider(
@@ -442,7 +445,7 @@ class _PostItemState extends State<PostItem> {
   void _showEditPostDialog(String id, String title, String description) {
     final titleController = TextEditingController(text: title);
     final descriptionController = TextEditingController(text: description);
-    final currentUser = Author.users[0]; // Use the first user as current user
+    final currentUser = Author.users[0]; 
 
     showDialog(
       context: context,

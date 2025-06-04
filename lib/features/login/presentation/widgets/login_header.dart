@@ -16,11 +16,11 @@ class PremiumLoginHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Animated logo container with multiple layers
+        
         Stack(
           alignment: Alignment.center,
           children: [
-            // Outer glow ring
+            
             Transform.rotate(
               angle: rotationAnimation.value * 2 * math.pi,
               child: Container(
@@ -40,7 +40,7 @@ class PremiumLoginHeader extends StatelessWidget {
               ),
             ),
 
-            // Middle pulsing ring
+            
             Transform.scale(
               scale: 1.0 + (floatingAnimation.value * 0.05),
               child: Container(
@@ -67,9 +67,10 @@ class PremiumLoginHeader extends StatelessWidget {
               ),
             ),
 
-            // Main logo container
+            
             Transform.translate(
-              offset: Offset(0, math.sin(floatingAnimation.value * 2 * math.pi) * 3),
+              offset: Offset(
+                  0, math.sin(floatingAnimation.value * 2 * math.pi) * 3),
               child: Container(
                 width: 100.w,
                 height: 100.w,
@@ -101,7 +102,7 @@ class PremiumLoginHeader extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    // Inner glow
+                    
                     Container(
                       width: 80.w,
                       height: 80.w,
@@ -116,7 +117,7 @@ class PremiumLoginHeader extends StatelessWidget {
                       ),
                     ),
 
-                    // Main icon
+                    
                     Transform.scale(
                       scale: 1.0 + (floatingAnimation.value * 0.03),
                       child: Icon(
@@ -126,17 +127,24 @@ class PremiumLoginHeader extends StatelessWidget {
                       ),
                     ),
 
-                    // Sparkle effects
+                    
                     ...List.generate(6, (index) {
                       final angle = (index * 60) * (math.pi / 180);
                       final radius = 35.r;
                       return Transform.translate(
                         offset: Offset(
-                          math.cos(angle + rotationAnimation.value * 2 * math.pi) * radius,
-                          math.sin(angle + rotationAnimation.value * 2 * math.pi) * radius,
+                          math.cos(angle +
+                                  rotationAnimation.value * 2 * math.pi) *
+                              radius,
+                          math.sin(angle +
+                                  rotationAnimation.value * 2 * math.pi) *
+                              radius,
                         ),
                         child: Transform.scale(
-                          scale: 0.5 + (math.sin(floatingAnimation.value * 4 * math.pi + index) * 0.3),
+                          scale: 0.5 +
+                              (math.sin(floatingAnimation.value * 4 * math.pi +
+                                      index) *
+                                  0.3),
                           child: Container(
                             width: 4.w,
                             height: 4.w,
@@ -164,7 +172,7 @@ class PremiumLoginHeader extends StatelessWidget {
 
         SizedBox(height: 24.h),
 
-        // App name with gradient text
+        
         ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
             colors: [
@@ -194,12 +202,15 @@ class PremiumLoginHeader extends StatelessWidget {
 
         SizedBox(height: 8.h),
 
-        // Tagline with typing effect
+        
         AnimatedBuilder(
           animation: floatingAnimation,
           builder: (context, child) {
             return Transform.translate(
-              offset: Offset(0, math.sin(floatingAnimation.value * 2 * math.pi + math.pi) * 2),
+              offset: Offset(
+                  0,
+                  math.sin(floatingAnimation.value * 2 * math.pi + math.pi) *
+                      2),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
                 decoration: BoxDecoration(
@@ -231,7 +242,7 @@ class PremiumLoginHeader extends StatelessWidget {
 
         SizedBox(height: 16.h),
 
-        // Premium welcome text
+        
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
@@ -258,7 +269,7 @@ class PremiumLoginHeader extends StatelessWidget {
 
         SizedBox(height: 4.h),
 
-        // Subtitle with premium styling
+        
         Text(
           'Sign in to continue your learning adventure',
           style: TextStyle(

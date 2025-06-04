@@ -4,8 +4,7 @@ import 'package:flutterwidgets/features/profile/presentation/widgets/user_commun
 class VerticalCommunityList extends StatelessWidget {
   final communities;
 
-  const VerticalCommunityList(
-      {super.key, required this.communities});
+  const VerticalCommunityList({super.key, required this.communities});
 
   @override
   Widget build(BuildContext context) {

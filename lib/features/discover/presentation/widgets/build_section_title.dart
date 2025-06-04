@@ -10,9 +10,9 @@ class BuildSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Padding(
-      padding:   EdgeInsets.only(left: 10.w, top: 16.w, bottom: 8.w),
+      padding: EdgeInsets.only(left: 10.w, top: 16.w, bottom: 8.w),
       child: Text(
         title,
         style: TextStyle(

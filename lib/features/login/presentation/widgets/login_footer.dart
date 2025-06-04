@@ -43,7 +43,7 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Divider with gradient
+        
         AnimatedBuilder(
           animation: widget.floatingAnimation,
           builder: (context, child) {
@@ -54,7 +54,8 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
                 gradient: LinearGradient(
                   colors: [
                     Colors.transparent,
-                    const Color(0xFF3B82F6).withOpacity(0.3 + widget.floatingAnimation.value * 0.2),
+                    const Color(0xFF3B82F6).withOpacity(
+                        0.3 + widget.floatingAnimation.value * 0.2),
                     Colors.transparent,
                   ],
                 ),
@@ -63,7 +64,7 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
           },
         ),
 
-        // Social login section
+        
         Text(
           'Or continue with',
           style: TextStyle(
@@ -76,7 +77,7 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
 
         SizedBox(height: 20.h),
 
-        // Social login buttons
+        
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -86,7 +87,7 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
               colors: [const Color(0xFF4285F4), const Color(0xFF34A853)],
               onTap: () {
                 HapticFeedback.selectionClick();
-                // Handle Google login
+                
               },
             ),
             _buildSocialButton(
@@ -95,7 +96,7 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
               colors: [const Color(0xFF000000), const Color(0xFF333333)],
               onTap: () {
                 HapticFeedback.selectionClick();
-                // Handle Apple login
+                
               },
             ),
             _buildSocialButton(
@@ -104,7 +105,7 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
               colors: [const Color(0xFF1877F2), const Color(0xFF42A5F5)],
               onTap: () {
                 HapticFeedback.selectionClick();
-                // Handle Facebook login
+                
               },
             ),
           ],
@@ -112,12 +113,16 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
 
         SizedBox(height: 32.h),
 
-        // Sign up section
+        
         AnimatedBuilder(
           animation: Listenable.merge([widget.floatingAnimation, _hoverScale]),
           builder: (context, child) {
             return Transform.translate(
-              offset: Offset(0, math.sin(widget.floatingAnimation.value * 2 * math.pi + math.pi / 2) * 2),
+              offset: Offset(
+                  0,
+                  math.sin(widget.floatingAnimation.value * 2 * math.pi +
+                          math.pi / 2) *
+                      2),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                 decoration: BoxDecoration(
@@ -158,18 +163,21 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
                       child: GestureDetector(
                         onTap: () {
                           HapticFeedback.selectionClick();
-                          // Navigate to sign up
+                          
                         },
                         child: Transform.scale(
                           scale: _hoverScale.value,
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12.w, vertical: 4.h),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.r),
                               gradient: LinearGradient(
                                 colors: [
-                                  const Color(0xFF3B82F6).withOpacity(_isHovered ? 0.2 : 0.1),
-                                  const Color(0xFF8B5CF6).withOpacity(_isHovered ? 0.2 : 0.1),
+                                  const Color(0xFF3B82F6)
+                                      .withOpacity(_isHovered ? 0.2 : 0.1),
+                                  const Color(0xFF8B5CF6)
+                                      .withOpacity(_isHovered ? 0.2 : 0.1),
                                 ],
                               ),
                             ),
@@ -195,7 +203,7 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
 
         SizedBox(height: 24.h),
 
-        // Terms and Privacy
+        
         Wrap(
           alignment: WrapAlignment.center,
           children: [
@@ -210,7 +218,7 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
             GestureDetector(
               onTap: () {
                 HapticFeedback.selectionClick();
-                // Show terms
+                
               },
               child: Text(
                 'Terms of Service',
@@ -233,7 +241,7 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
             GestureDetector(
               onTap: () {
                 HapticFeedback.selectionClick();
-                // Show privacy policy
+                
               },
               child: Text(
                 'Privacy Policy',
@@ -263,7 +271,8 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
         animation: widget.floatingAnimation,
         builder: (context, child) {
           return Transform.scale(
-            scale: 1.0 + (math.sin(widget.floatingAnimation.value * 2 * math.pi) * 0.02),
+            scale: 1.0 +
+                (math.sin(widget.floatingAnimation.value * 2 * math.pi) * 0.02),
             child: Container(
               width: 80.w,
               height: 48.h,

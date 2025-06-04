@@ -33,7 +33,7 @@ class Comments {
 
     return List.generate(count, (index) {
       final community = communities[index % communities.length];
-      final user = users[index%users.length];
+      final user = users[index % users.length];
       return Comments(
         author: user.name,
         comment: "You can use Cubit for this one",
@@ -41,7 +41,7 @@ class Comments {
         voteCount: _calculateVoteCount(index),
         upvote: _calculateVoteCount(index),
         downVote: (index + 1) * 3 - 4,
-        avatar:user.avatar ,
+        avatar: user.avatar,
         time: (index + 1) * 2 - 1,
         communityImage: community.image,
         communityName: community.name,

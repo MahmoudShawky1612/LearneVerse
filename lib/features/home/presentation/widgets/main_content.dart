@@ -27,12 +27,12 @@ class _MainContentState extends State<MainContent> {
     _loadData();
   }
 
-   void _loadData() {
+  void _loadData() {
     posts = Post.generateDummyPosts(15);
     communities = Community.generateDummyCommunities();
   }
 
-   void _onPostDelete(String id) {
+  void _onPostDelete(String id) {
     setState(() {
       posts.removeWhere((post) => post.id == id);
     });
@@ -43,7 +43,7 @@ class _MainContentState extends State<MainContent> {
       isRefreshing = true;
     });
 
-     await Future.delayed(const Duration(milliseconds: 600));
+    await Future.delayed(const Duration(milliseconds: 600));
 
     setState(() {
       _loadData();
@@ -58,15 +58,18 @@ class _MainContentState extends State<MainContent> {
     final textTheme = theme.textTheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
-     final currentUser = Provider.of<UserProvider>(context).currentUser;
+    final currentUser = Provider.of<UserProvider>(context).currentUser;
 
-     bool matchesInterests(List<String> tags, List<String> interests) {
-       final lowerTags = tags.map((tag) => tag.toLowerCase()).toList();
-      final lowerInterests = interests.map((interest) => interest.toLowerCase()).toList();
+    bool matchesInterests(List<String> tags, List<String> interests) {
+      final lowerTags = tags.map((tag) => tag.toLowerCase()).toList();
+      final lowerInterests =
+          interests.map((interest) => interest.toLowerCase()).toList();
 
-       for (var interest in lowerInterests) {
+      for (var interest in lowerInterests) {
         for (var tag in lowerTags) {
-          if (tag == interest || tag.contains(interest) || interest.contains(tag)) {
+          if (tag == interest ||
+              tag.contains(interest) ||
+              interest.contains(tag)) {
             return true;
           }
         }
@@ -75,39 +78,44 @@ class _MainContentState extends State<MainContent> {
       return false;
     }
 
-     final List<Community> recommendedCommunities = communities.where((community) {
+    final List<Community> recommendedCommunities =
+        communities.where((community) {
       return matchesInterests(community.tags, currentUser.interests);
     }).toList();
 
-     final communitiesToShow = recommendedCommunities.isNotEmpty
+    final communitiesToShow = recommendedCommunities.isNotEmpty
         ? recommendedCommunities
         : communities.take(4).toList();
 
-     final List<Post> recommendedPosts = posts.where((post) {
-       bool tagMatches = matchesInterests(post.tags, currentUser.interests);
+    final List<Post> recommendedPosts = posts.where((post) {
+      bool tagMatches = matchesInterests(post.tags, currentUser.interests);
 
-       bool communityMatches = false;
+      bool communityMatches = false;
 
-      // Find the community for the post
-      final matchingCommunities = communities.where((c) => c.name == post.communityName);
+      
+      final matchingCommunities =
+          communities.where((c) => c.name == post.communityName);
       if (matchingCommunities.isNotEmpty) {
         Community postCommunity = matchingCommunities.first;
-        communityMatches = matchesInterests(postCommunity.tags, currentUser.interests);
+        communityMatches =
+            matchesInterests(postCommunity.tags, currentUser.interests);
       }
 
       return tagMatches || communityMatches;
     }).toList();
 
-    // If very few matches, show a limited set of posts
+    
     final postsToShow = recommendedPosts.isNotEmpty
         ? recommendedPosts
-        : (recommendedPosts.length < 3 ? posts.take(5).toList() : recommendedPosts);
+        : (recommendedPosts.length < 3
+            ? posts.take(5).toList()
+            : recommendedPosts);
 
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with refresh button
+          
           Container(
             padding: EdgeInsets.only(
               top: 16.h,
@@ -192,7 +200,7 @@ class _MainContentState extends State<MainContent> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             if (isRefreshing)
-                                SizedBox(
+                              SizedBox(
                                 width: 16.w,
                                 height: 16.h,
                                 child: const CircularProgressIndicator(
@@ -201,11 +209,14 @@ class _MainContentState extends State<MainContent> {
                                 ),
                               )
                             else
-                                Icon(Icons.refresh, color: Colors.white, size: 10.w),
+                              Icon(Icons.refresh,
+                                  color: Colors.white, size: 10.w),
                             SizedBox(width: 4.w),
                             Text(
-                              isRefreshing ? 'Refreshing...' : 'Refresh For You',
-                              style:  TextStyle(
+                              isRefreshing
+                                  ? 'Refreshing...'
+                                  : 'Refresh For You',
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
@@ -219,7 +230,8 @@ class _MainContentState extends State<MainContent> {
                 ),
                 SizedBox(height: 16.h),
                 CommunityGrid(communities: communitiesToShow),
-                if (recommendedCommunities.isEmpty && currentUser.interests.isNotEmpty)
+                if (recommendedCommunities.isEmpty &&
+                    currentUser.interests.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.only(top: 12.h),
                     child: Container(
@@ -227,7 +239,8 @@ class _MainContentState extends State<MainContent> {
                       decoration: BoxDecoration(
                         color: colorScheme.surface.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(8.r),
-                        border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
+                        border: Border.all(
+                            color: colorScheme.primary.withOpacity(0.2)),
                       ),
                       child: Row(
                         children: [
@@ -253,7 +266,7 @@ class _MainContentState extends State<MainContent> {
               ],
             ),
           ),
-          // Posts section
+          
           Container(
             margin: EdgeInsets.only(
               bottom: 75.h,
@@ -316,7 +329,8 @@ class _MainContentState extends State<MainContent> {
                   ],
                 ),
                 SizedBox(height: 12.h),
-                if (recommendedPosts.isEmpty && currentUser.interests.isNotEmpty)
+                if (recommendedPosts.isEmpty &&
+                    currentUser.interests.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.h),
                     child: Container(
@@ -324,7 +338,8 @@ class _MainContentState extends State<MainContent> {
                       decoration: BoxDecoration(
                         color: colorScheme.surface.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
+                        border: Border.all(
+                            color: colorScheme.primary.withOpacity(0.2)),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,7 +399,7 @@ class _MainContentState extends State<MainContent> {
                 BuildPosts(
                   scrollPhysics: const NeverScrollableScrollPhysics(),
                   posts: postsToShow,
-                  delete: _onPostDelete, // Pass delete callback
+                  delete: _onPostDelete, 
                 ),
               ],
             ),

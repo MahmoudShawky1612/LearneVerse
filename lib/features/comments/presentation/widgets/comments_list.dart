@@ -9,7 +9,7 @@ class CommentsList extends StatelessWidget {
   final Function? delete;
 
   const CommentsList({
-    super.key, 
+    super.key,
     required this.comments,
     this.delete,
   });
@@ -17,22 +17,19 @@ class CommentsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding:   EdgeInsets.symmetric(
-            horizontal: 16.w,
-            vertical:  12.w
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Comments (${comments.length})',
                 style: GoogleFonts.poppins(
-                  fontSize:  18.sp,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -43,7 +40,7 @@ class CommentsList extends StatelessWidget {
         if (comments.isEmpty)
           Center(
             child: Padding(
-              padding:   EdgeInsets.all(20.0.w),
+              padding: EdgeInsets.all(20.0.w),
               child: Text(
                 'No comments yet',
                 style: Theme.of(context).textTheme.titleMedium,
@@ -51,7 +48,7 @@ class CommentsList extends StatelessWidget {
             ),
           )
         else ...[
-            Divider(height: 1.h),
+          Divider(height: 1.h),
           Expanded(
             child: BuildComments(
               comments: comments,

@@ -27,8 +27,11 @@ class _MainScreenState extends State<MainScreen> {
     final colorScheme = theme.colorScheme;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final horizontalMargin = screenWidth < 360 ? 10.w :
-                            screenWidth < 600 ? 30.w : 50.w;
+    final horizontalMargin = screenWidth < 360
+        ? 10.w
+        : screenWidth < 600
+            ? 30.w
+            : 50.w;
 
     return Scaffold(
       extendBody: true,
@@ -41,10 +44,8 @@ class _MainScreenState extends State<MainScreen> {
             bottom: 0,
             child: Container(
               margin: EdgeInsets.symmetric(
-                vertical: 15.h,
-                horizontal: horizontalMargin
-              ),
-              height: 60.h, // Reduced height for a more compact navbar
+                  vertical: 15.h, horizontal: horizontalMargin),
+              height: 60.h, 
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(20.r),
@@ -118,12 +119,16 @@ class _MainScreenState extends State<MainScreen> {
             Container(
               padding: EdgeInsets.all(6.r),
               decoration: BoxDecoration(
-                color: isSelected ? colorScheme.secondary.withOpacity(0.15) : Colors.transparent,
+                color: isSelected
+                    ? colorScheme.secondary.withOpacity(0.15)
+                    : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
-                color: isSelected ? colorScheme.secondary : colorScheme.onSurface.withOpacity(0.7),
+                color: isSelected
+                    ? colorScheme.secondary
+                    : colorScheme.onSurface.withOpacity(0.7),
                 size: isSelected ? 18.r : 16.r,
               ),
             ),
@@ -150,4 +155,3 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
-

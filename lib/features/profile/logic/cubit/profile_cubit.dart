@@ -4,7 +4,6 @@ import 'package:flutterwidgets/features/profile/logic/cubit/profile_state.dart';
 import '../../../../utils/jwt_helper.dart';
 import '../../services/profile_api_services.dart';
 
-
 class ProfileCubit extends Cubit<ProfileState> {
   final UserProfileApiService apiService;
   final String token;

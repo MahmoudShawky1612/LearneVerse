@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../widgets/contribution_header.dart';
+import '../widgets/contributions.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_tab_button.dart';
 import '../widgets/user_contribution_comments.dart';
@@ -26,7 +25,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final userInfo = widget.userInfo ?? Provider.of<UserProvider>(context).currentUser;
+    final userInfo =
+        widget.userInfo ?? Provider.of<UserProvider>(context).currentUser;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -46,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: theme.cardColor,
                     child: const Padding(
                       padding: EdgeInsets.all(14),
-                      child: ContributionHeader(),
+                      child: ContributionChart(),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -99,7 +99,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               sliver: SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    UserComments(userInfo: userInfo, ),
+                    UserComments(
+                      userInfo: userInfo,
+                    ),
                     UserPostsScreen(userInfo: userInfo),
                   ],
                 ),
@@ -120,4 +122,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-

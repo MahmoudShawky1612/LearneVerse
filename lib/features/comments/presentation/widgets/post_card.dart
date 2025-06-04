@@ -10,7 +10,7 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:   EdgeInsets.all(8.0.w),
+      padding: EdgeInsets.all(8.0.w),
       child: PostItem(post: post),
     );
   }

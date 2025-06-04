@@ -24,13 +24,15 @@ class BuildSearchResults extends StatelessWidget {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Container(
-        margin:   EdgeInsets.only(bottom: 100.h),
+        margin: EdgeInsets.only(bottom: 100.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (foundCommunities.isNotEmpty) ...[
               const BuildSectionTitle(title: "Communities"),
-              VerticalCommunityList(communities: foundCommunities,),
+              VerticalCommunityList(
+                communities: foundCommunities,
+              ),
             ],
             if (foundUsers.isNotEmpty) ...[
               const BuildSectionTitle(title: "People"),

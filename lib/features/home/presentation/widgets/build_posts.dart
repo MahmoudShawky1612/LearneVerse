@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/post_item.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class BuildPosts extends StatelessWidget {
   final shrinkWrap;
   final scrollPhysics;
@@ -16,17 +17,19 @@ class BuildPosts extends StatelessWidget {
     required this.scrollPhysics,
     required this.posts,
     this.userInfo,
-    this.delete, this.isUserPost=false, this.edit,
+    this.delete,
+    this.isUserPost = false,
+    this.edit,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
-    return posts.isEmpty 
+
+    return posts.isEmpty
         ? Center(
             child: Padding(
-              padding:   EdgeInsets.all(20.w),
+              padding: EdgeInsets.all(20.w),
               child: Text(
                 'No posts yet',
                 style: Theme.of(context).textTheme.titleMedium,
@@ -39,16 +42,16 @@ class BuildPosts extends StatelessWidget {
             padding: EdgeInsets.zero,
             itemCount: posts.length,
             separatorBuilder: (context, index) => Divider(
-              height: 1,
-              thickness: 0.5,
-              color: theme.dividerColor.withOpacity(0.5),
-            ),
+                  height: 1,
+                  thickness: 0.5,
+                  color: theme.dividerColor.withOpacity(0.5),
+                ),
             itemBuilder: (BuildContext context, int index) {
               return PostItem(
                 post: posts[index],
                 userInfo: userInfo,
                 delete: delete,
-                isUserPost:isUserPost,
+                isUserPost: isUserPost,
                 edit: edit,
               );
             });

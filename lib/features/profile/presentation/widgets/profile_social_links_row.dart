@@ -11,9 +11,9 @@ class ProfileSocialLinksRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Padding(
-      padding:   EdgeInsets.symmetric(horizontal: 8.w),
+      padding: EdgeInsets.symmetric(horizontal: 8.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -25,7 +25,7 @@ class ProfileSocialLinksRow extends StatelessWidget {
               );
             },
           ),
-            SizedBox(width: 16.w),
+          SizedBox(width: 16.w),
           ProfileSocialButton(
             icon: FontAwesomeIcons.linkedin,
             onPressed: () {
@@ -34,7 +34,7 @@ class ProfileSocialLinksRow extends StatelessWidget {
               );
             },
           ),
-            SizedBox(width: 16.w),
+          SizedBox(width: 16.w),
           ProfileSocialButton(
             icon: FontAwesomeIcons.facebook,
             onPressed: () {
@@ -43,7 +43,7 @@ class ProfileSocialLinksRow extends StatelessWidget {
               );
             },
           ),
-            SizedBox(width: 16.w),
+          SizedBox(width: 16.w),
           ProfileSocialButton(
             icon: FontAwesomeIcons.twitter,
             onPressed: () {

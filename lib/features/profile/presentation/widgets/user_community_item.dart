@@ -22,7 +22,7 @@ class UserCommunityItem extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      margin:   EdgeInsets.only(bottom: 20.h),
+      margin: EdgeInsets.only(bottom: 20.h),
       decoration: _buildShadowDecoration(theme),
       child: Material(
         color: Colors.transparent,
@@ -31,13 +31,13 @@ class UserCommunityItem extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding:   EdgeInsets.all(16.r),
+            padding: EdgeInsets.all(16.r),
             child: Row(
               children: [
                 _buildCommunityImage(theme),
-                  SizedBox(width: 10.w),
+                SizedBox(width: 10.w),
                 _buildCommunityDetails(context),
-                  SizedBox(width: 10.w),
+                SizedBox(width: 10.w),
                 _buildActionButtons(context),
               ],
             ),
@@ -97,7 +97,7 @@ class UserCommunityItem extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-           SizedBox(height: 5.h),
+          SizedBox(height: 5.h),
           Wrap(
             spacing: 5,
             runSpacing: 2,
@@ -152,7 +152,7 @@ class UserCommunityItem extends StatelessWidget {
     double fontSize = 9,
   }) =>
       Container(
-        padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12.r),
@@ -161,7 +161,7 @@ class UserCommunityItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             FaIcon(icon, size: fontSize + 1, color: textColor),
-              SizedBox(width: 3.w),
+            SizedBox(width: 3.w),
             Text(
               label,
               style: TextStyle(
@@ -197,7 +197,7 @@ class UserCommunityItem extends StatelessWidget {
             },
             borderRadius: BorderRadius.circular(10.r),
             child: Padding(
-              padding:   EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
+              padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -209,8 +209,9 @@ class UserCommunityItem extends StatelessWidget {
                       color: colorScheme.onPrimary,
                     ),
                   ),
-                    SizedBox(width: 4.w),
-                  Icon(Icons.arrow_forward, size: 14.w, color: colorScheme.onPrimary),
+                  SizedBox(width: 4.w),
+                  Icon(Icons.arrow_forward,
+                      size: 14.w, color: colorScheme.onPrimary),
                 ],
               ),
             ),

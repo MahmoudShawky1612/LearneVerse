@@ -20,16 +20,20 @@ class _HomeHeaderState extends State<HomeHeader> {
   Widget build(BuildContext context) {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final screenWidth = MediaQuery.of(context).size.width;
-    final baseFontSize = screenWidth < 360 ? 20.sp : screenWidth < 600 ? 24.sp : 28.sp;
+    final baseFontSize = screenWidth < 360
+        ? 20.sp
+        : screenWidth < 600
+            ? 24.sp
+            : 28.sp;
     final userProvider = Provider.of<UserProvider>(context);
     final currentUser = userProvider.currentUser;
-    
+
     return Container(
       height: 115.h,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         gradient: themeExtension?.backgroundGradient,
-        borderRadius:   BorderRadius.only(
+        borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(25.r),
           bottomRight: Radius.circular(25.r),
         ),
@@ -64,7 +68,7 @@ class _HomeHeaderState extends State<HomeHeader> {
               },
               child: isClicked == false
                   ? CircleAvatar(
-                      radius:  17.r,
+                      radius: 17.r,
                       backgroundImage: AssetImage(currentUser.avatar),
                     )
                   : const CircularProgressIndicator(),

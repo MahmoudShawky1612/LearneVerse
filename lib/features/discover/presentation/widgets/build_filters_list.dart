@@ -37,7 +37,7 @@ class BuildFiltersList extends StatelessWidget {
         itemCount: filters.length,
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        padding:   EdgeInsets.symmetric(horizontal: 2.w),
+        padding: EdgeInsets.symmetric(horizontal: 2.w),
         itemBuilder: (context, index) {
           return BuildFilterChip(
             index: index,

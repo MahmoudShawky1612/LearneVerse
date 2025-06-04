@@ -22,7 +22,7 @@ class CommentInputField extends StatelessWidget {
     final themeExtension = theme.extension<AppThemeExtension>();
 
     return Container(
-      padding:   EdgeInsets.symmetric(
+      padding: EdgeInsets.symmetric(
         horizontal: 8.0.w,
         vertical: 8.0.w,
       ),
@@ -43,7 +43,7 @@ class CommentInputField extends StatelessWidget {
             backgroundImage: AssetImage(currentUser.avatar),
             radius: 18.r,
           ),
-            SizedBox(width: 8.0.w),
+          SizedBox(width: 8.0.w),
           Expanded(
             child: TextField(
               controller: commentController,
@@ -56,7 +56,7 @@ class CommentInputField extends StatelessWidget {
                 ),
                 filled: true,
                 fillColor: theme.cardColor,
-                contentPadding:   EdgeInsets.symmetric(
+                contentPadding: EdgeInsets.symmetric(
                   horizontal: 16.0.w,
                   vertical: 8.0.w,
                 ),
@@ -67,7 +67,7 @@ class CommentInputField extends StatelessWidget {
               ),
             ),
           ),
-            SizedBox(width: 8.0.w),
+          SizedBox(width: 8.0.w),
           GestureDetector(
             onTap: () {
               onCommentSubmitted(commentController.text);
@@ -79,7 +79,7 @@ class CommentInputField extends StatelessWidget {
                 gradient: themeExtension?.buttonGradient,
                 borderRadius: BorderRadius.circular(20.r),
               ),
-              child:  Icon(
+              child: Icon(
                 Icons.send_rounded,
                 color: Colors.white,
                 size: 20.w,

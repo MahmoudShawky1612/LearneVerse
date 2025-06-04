@@ -47,8 +47,10 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
       upVote: Color.lerp(upVote, other.upVote, t)!,
       downVote: Color.lerp(downVote, other.downVote, t)!,
       buttonGradient: Gradient.lerp(buttonGradient, other.buttonGradient, t)!,
-      backgroundGradient: Gradient.lerp(backgroundGradient, other.backgroundGradient, t)!,
-      containerGradient: Gradient.lerp(containerGradient, other.containerGradient, t)!,
+      backgroundGradient:
+          Gradient.lerp(backgroundGradient, other.backgroundGradient, t)!,
+      containerGradient:
+          Gradient.lerp(containerGradient, other.containerGradient, t)!,
       circleGradient: Gradient.lerp(circleGradient, other.circleGradient, t)!,
     );
   }
@@ -129,45 +131,46 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
 }
 
 class AppColors {
-  // Primary Colors
-  static const Color primary = Color(0xFF1565C0); // Deep Blue
-  static const Color primaryDark = Color(0xFF0D47A1); // Darker Blue
-
-  // Secondary Colors
-  static const Color secondary = Color(0xFFD81B60); // Vibrant Pink
-  static const Color secondaryDark = Color(0xFFAD1457); // Deep Pink
-
-  // Accent Colors
-  static const Color accent = Color(0xFF8E24AA); // Bright Purple
-  static const Color accentDark = Color(0xFF6A1B9A); // Dark Purple
-
-  // Background Colors
-  static const Color backgroundLight = Color(0xFFFFFFFF); // Pure White
-  static const Color backgroundDark = Color(0xFF121212); // Deep Black
-
-  // Surface Colors (for cards, UI sections)
-  static const Color surfaceLight = Color(0xFFF5F5F5); // Soft Grey
-  static const Color surfaceDark = Color(0xFF1E1E1E); // Dark Grey
   
-  // Status Colors
+  static const Color primary = Color(0xFF1565C0); 
+  static const Color primaryDark = Color(0xFF0D47A1); 
+
+  
+  static const Color secondary = Color(0xFFD81B60); 
+  static const Color secondaryDark = Color(0xFFAD1457); 
+
+  
+  static const Color accent = Color(0xFF8E24AA); 
+  static const Color accentDark = Color(0xFF6A1B9A); 
+
+  
+  static const Color backgroundLight = Color(0xFFFFFFFF); 
+  static const Color backgroundDark = Color(0xFF121212); 
+
+  
+  static const Color surfaceLight = Color(0xFFF5F5F5); 
+  static const Color surfaceDark = Color(0xFF1E1E1E); 
+
+  
   static Color lightGrey = Colors.grey.shade100;
   static Color darkGrey = Colors.grey.shade800;
   static Color downVote = Colors.red.shade700;
   static Color upVote = Colors.green.shade700;
 
-  // Text Colors
-  static const Color textPrimary = Color(0xFF212121); // Blackish for Light Mode
-  static const Color textPrimaryDark = Color(0xFFE0E0E0); // Light Grey for Dark Mode
+  
+  static const Color textPrimary = Color(0xFF212121); 
+  static const Color textPrimaryDark =
+      Color(0xFFE0E0E0); 
 
-  static const Color textSecondary = Color(0xFF757575); // Muted Grey
-  static const Color textSecondaryDark = Color(0xFFBDBDBD); // Dim Grey
+  static const Color textSecondary = Color(0xFF757575); 
+  static const Color textSecondaryDark = Color(0xFFBDBDBD); 
 
-  // Theme helpers for backwards compatibility
+  
   static bool isDarkMode(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark;
   }
+
   
-  // Extension getter for easy access
   static AppThemeExtension themeOf(BuildContext context) {
     return Theme.of(context).extension<AppThemeExtension>()!;
   }

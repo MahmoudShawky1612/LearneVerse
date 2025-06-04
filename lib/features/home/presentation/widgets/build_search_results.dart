@@ -11,9 +11,9 @@ class BuildSearchResults extends StatelessWidget {
   final VoidCallback? onClose;
 
   const BuildSearchResults({
-    super.key, 
-    required this.communities, 
-    required this.users, 
+    super.key,
+    required this.communities,
+    required this.users,
     required this.owners,
     this.onClose,
   });
@@ -22,7 +22,7 @@ class BuildSearchResults extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Positioned(
         left: 0,
         right: 0,
@@ -32,7 +32,7 @@ class BuildSearchResults extends StatelessWidget {
             width: 380,
             height: 500,
             decoration: BoxDecoration(
-                borderRadius:  BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   topRight: Radius.circular(22.r),
                   topLeft: Radius.circular(22.r),
                 ),
@@ -48,10 +48,11 @@ class BuildSearchResults extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding:  EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
                   decoration: BoxDecoration(
                     color: colorScheme.surface,
-                    borderRadius:  BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                       topRight: Radius.circular(22.r),
                       topLeft: Radius.circular(22.r),
                     ),
@@ -75,7 +76,7 @@ class BuildSearchResults extends StatelessWidget {
                         ),
                         onPressed: onClose,
                         padding: EdgeInsets.zero,
-                        constraints:  BoxConstraints(
+                        constraints: BoxConstraints(
                           minWidth: 30.w,
                           minHeight: 30.h,
                         ),
@@ -86,7 +87,7 @@ class BuildSearchResults extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding:  EdgeInsets.only(bottom: 80.h),
+                      padding: EdgeInsets.only(bottom: 80.h),
                       child: Column(
                         children: [
                           VerticalCommunityList(

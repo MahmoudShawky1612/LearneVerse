@@ -27,7 +27,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
     super.initState();
     comments = Comments.generateDummyComments(widget.post.commentCount);
     _commentController = TextEditingController();
-    currentUser = Author.users[0]; // Using the first user as the current user
+    currentUser = Author.users[0]; 
   }
 
   @override
@@ -41,20 +41,20 @@ class _CommentsScreenState extends State<CommentsScreen> {
       final newComment = Comments(
         author: currentUser.name,
         comment: commentText,
-        repliedTo: "", // No reply in this case
+        repliedTo: "", 
         voteCount: 0,
         upvote: 0,
         downVote: 0,
         avatar: currentUser.avatar,
-        time: 0, // Just now
+        time: 0, 
         communityName: widget.post.communityName,
         communityImage: widget.post.communityImage,
       );
-      
+
       setState(() {
         comments.insert(0, newComment);
       });
-      
+
       _commentController.clear();
     }
   }
@@ -63,7 +63,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: _buildAppBar(context),
@@ -75,14 +75,17 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding:   EdgeInsets.all(8.0.w),
-                    child: PostItem(post: widget.post, isUserPost: false,),
+                    padding: EdgeInsets.all(8.0.w),
+                    child: PostItem(
+                      post: widget.post,
+                      isUserPost: false,
+                    ),
                   ),
                   Padding(
                     padding:
-                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.w),
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.w),
                     child: Padding(
-                      padding:  EdgeInsets.all(8.0.w),
+                      padding: EdgeInsets.all(8.0.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -95,7 +98,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             ),
                           ),
                           Container(
-                            padding:   EdgeInsets.symmetric(
+                            padding: EdgeInsets.symmetric(
                                 horizontal: 12.w, vertical: 6.w),
                             decoration: BoxDecoration(
                               color: colorScheme.surfaceContainerHighest,
@@ -113,7 +116,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                 children: [
                                   Icon(Icons.sort,
                                       size: 16.w, color: colorScheme.onSurface),
-                                   SizedBox(width: 4.w),
+                                  SizedBox(width: 4.w),
                                   Text(
                                     'Recent',
                                     style: GoogleFonts.poppins(
@@ -152,7 +155,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
 AppBar _buildAppBar(BuildContext context) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;
-  
+
   return AppBar(
     elevation: 0,
     backgroundColor: theme.scaffoldBackgroundColor,

@@ -35,7 +35,7 @@ class _PremiumBackgroundState extends State<PremiumBackground>
     return Positioned.fill(
       child: Stack(
         children: [
-          // Animated gradient background
+          
           AnimatedBuilder(
             animation: _animation,
             builder: (context, child) {
@@ -62,7 +62,7 @@ class _PremiumBackgroundState extends State<PremiumBackground>
             },
           ),
 
-          // Floating orbs
+          
           AnimatedBuilder(
             animation: _animation,
             builder: (context, child) {
@@ -73,7 +73,7 @@ class _PremiumBackgroundState extends State<PremiumBackground>
             },
           ),
 
-          // Subtle overlay
+          
           Container(
             decoration: BoxDecoration(
               gradient: RadialGradient(
@@ -111,7 +111,7 @@ class OrbPainter extends CustomPainter {
         ..color = orb.color.withOpacity(0.08)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20);
 
-      // Calculate floating position
+      
       final offsetX = math.sin(animationValue * orb.speed) * 15;
       final offsetY = math.cos(animationValue * orb.speed * 0.7) * 10;
 
@@ -120,8 +120,9 @@ class OrbPainter extends CustomPainter {
         orb.y * size.height + offsetY,
       );
 
-      // Pulsing effect
-      final pulseSize = orb.size * (0.9 + 0.1 * math.sin(animationValue * orb.speed * 2));
+      
+      final pulseSize =
+          orb.size * (0.9 + 0.1 * math.sin(animationValue * orb.speed * 2));
 
       canvas.drawCircle(center, pulseSize, paint);
     }

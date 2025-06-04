@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutterwidgets/features/comments/presentation/views/comments_screen.dart';
 import 'package:flutterwidgets/features/community/presentation/views/community_screen.dart';
 import 'package:flutterwidgets/features/discover/presentation/views/discover_screen.dart';
@@ -6,16 +5,13 @@ import 'package:flutterwidgets/features/home/presentation/views/home_screen.dart
 import 'package:flutterwidgets/features/home/presentation/views/main_screen.dart';
 import 'package:flutterwidgets/features/login/presentation/views/login_screen.dart';
 import 'package:flutterwidgets/features/calendar/presentation/views/calendar_screen.dart';
-import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:go_router/go_router.dart';
 import '../features/profile/presentation/views/profile_screen.dart';
 import '../features/splash screen/splash_screen.dart';
 
 final GoRouter route = GoRouter(
   initialLocation: '/splash',
-
   routes: [
-
     GoRoute(
       path: '/',
       builder: (context, state) => const MainScreen(),

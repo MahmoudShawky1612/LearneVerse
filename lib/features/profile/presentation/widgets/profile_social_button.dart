@@ -7,7 +7,8 @@ class ProfileSocialButton extends StatelessWidget {
   final Color? color;
   final VoidCallback onPressed;
 
-  const ProfileSocialButton({super.key, 
+  const ProfileSocialButton({
+    super.key,
     required this.icon,
     this.color,
     required this.onPressed,
@@ -18,12 +19,12 @@ class ProfileSocialButton extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final buttonColor = color ?? colorScheme.onPrimary;
-    
+
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(24.r),
       child: Container(
-        padding:   EdgeInsets.all(8.w),
+        padding: EdgeInsets.all(8.w),
         decoration: BoxDecoration(
           color: colorScheme.onPrimary.withOpacity(0.15),
           borderRadius: BorderRadius.circular(24.r),

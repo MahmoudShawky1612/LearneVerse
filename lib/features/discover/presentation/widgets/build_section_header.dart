@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class BuildSectionHeader extends StatelessWidget {
   final String title;
   final bool isExpanded;
@@ -17,10 +16,10 @@ class BuildSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Container(
-      padding:   EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
-      margin:   EdgeInsets.only(bottom: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+      margin: EdgeInsets.only(bottom: 16.w),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12.r),

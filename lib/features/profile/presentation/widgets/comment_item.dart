@@ -106,7 +106,8 @@ class _CommentItemState extends State<CommentItem> {
                                   FaIcon(
                                     FontAwesomeIcons.solidCircle,
                                     size: 6.r,
-                                    color: colorScheme.onSurface.withOpacity(0.7),
+                                    color:
+                                        colorScheme.onSurface.withOpacity(0.7),
                                   ),
                                   SizedBox(width: 4.w),
                                   Flexible(
@@ -183,8 +184,8 @@ class _CommentItemState extends State<CommentItem> {
                           },
                           padding: EdgeInsets.zero,
                           constraints: BoxConstraints(
-                            minWidth: 30.w,
-                            minHeight: 30.w,
+                            minWidth: 20.w,
+                            minHeight: 20.w,
                           ),
                         )
                       : Container(),
@@ -194,8 +195,8 @@ class _CommentItemState extends State<CommentItem> {
                       top: 30.h,
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 6.h,
+                          horizontal: 3.w,
+                          vertical: 3.h,
                         ),
                         decoration: BoxDecoration(
                           color: theme.cardColor,

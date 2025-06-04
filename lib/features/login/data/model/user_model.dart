@@ -15,7 +15,8 @@ class User {
     required this.refreshToken,
   });
 
-  factory User.fromJwtPayload(Map<String, dynamic> payload, String accessToken, String refreshToken) {
+  factory User.fromJwtPayload(
+      Map<String, dynamic> payload, String accessToken, String refreshToken) {
     return User(
       id: payload['id'],
       fullname: payload['fullname'],

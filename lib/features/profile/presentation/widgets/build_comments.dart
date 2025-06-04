@@ -17,15 +17,16 @@ class BuildComments extends StatelessWidget {
     this.shrinkWrap = true,
     required this.scrollPhysics,
     required this.comments,
-    this.flag = true, 
-    this.userInfo, 
-    this.delete, this.edit,
+    this.flag = true,
+    this.userInfo,
+    this.delete,
+    this.edit,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return ListView.separated(
       shrinkWrap: shrinkWrap,
       physics: scrollPhysics,
@@ -48,4 +49,3 @@ class BuildComments extends StatelessWidget {
     );
   }
 }
- 

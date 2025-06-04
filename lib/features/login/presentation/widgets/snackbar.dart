@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui' as ui;
-import 'dart:math' as math;
 
 class PremiumSnackbarContent extends StatefulWidget {
   final String message;
@@ -125,13 +124,13 @@ class _PremiumSnackbarContentState extends State<PremiumSnackbarContent>
                     end: Alignment.bottomRight,
                     colors: widget.isSuccess
                         ? [
-                      Colors.green.withOpacity(0.15),
-                      Colors.green.withOpacity(0.05),
-                    ]
+                            Colors.green.withOpacity(0.15),
+                            Colors.green.withOpacity(0.05),
+                          ]
                         : [
-                      Colors.red.withOpacity(0.15),
-                      Colors.red.withOpacity(0.05),
-                    ],
+                            Colors.red.withOpacity(0.15),
+                            Colors.red.withOpacity(0.05),
+                          ],
                   ),
                   border: Border.all(
                     color: widget.isSuccess
@@ -143,15 +142,17 @@ class _PremiumSnackbarContentState extends State<PremiumSnackbarContent>
                 ),
                 child: Stack(
                   children: [
-                    // Shimmer effect
+                    
                     AnimatedBuilder(
                       animation: _shimmerAnimation,
                       builder: (context, child) {
                         return Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              begin: Alignment(-1.0 + _shimmerAnimation.value, 0.0),
-                              end: Alignment(1.0 + _shimmerAnimation.value, 0.0),
+                              begin: Alignment(
+                                  -1.0 + _shimmerAnimation.value, 0.0),
+                              end:
+                                  Alignment(1.0 + _shimmerAnimation.value, 0.0),
                               colors: [
                                 Colors.transparent,
                                 Colors.white.withOpacity(0.1),
@@ -164,10 +165,10 @@ class _PremiumSnackbarContentState extends State<PremiumSnackbarContent>
                         );
                       },
                     ),
-                    // Content
+                    
                     Row(
                       children: [
-                        // Icon
+                        
                         Container(
                           width: 40.w,
                           height: 40.h,
@@ -194,7 +195,7 @@ class _PremiumSnackbarContentState extends State<PremiumSnackbarContent>
                           ),
                         ),
                         SizedBox(width: 16.w),
-                        // Message
+                        
                         Expanded(
                           child: Text(
                             widget.message,
@@ -207,7 +208,7 @@ class _PremiumSnackbarContentState extends State<PremiumSnackbarContent>
                           ),
                         ),
                         SizedBox(width: 12.w),
-                        // Close button
+                        
                         GestureDetector(
                           onTap: () {
                             ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -243,13 +244,12 @@ class _PremiumSnackbarContentState extends State<PremiumSnackbarContent>
   }
 }
 
-// Helper function to show the premium snackbar
 void showPremiumSnackbar(
-    BuildContext context, {
-      required String message,
-      bool isSuccess = true,
-      Duration duration = const Duration(seconds: 4),
-    }) {
+  BuildContext context, {
+  required String message,
+  bool isSuccess = true,
+  Duration duration = const Duration(seconds: 4),
+}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: PremiumSnackbarContent(
@@ -264,16 +264,3 @@ void showPremiumSnackbar(
     ),
   );
 }
-
-// Usage example:
-// showPremiumSnackbar(
-//   context,
-//   message: "Operation completed successfully!",
-//   isSuccess: true,
-// );
-//
-// showPremiumSnackbar(
-//   context,
-//   message: "Something went wrong. Please try again.",
-//   isSuccess: false,
-// );

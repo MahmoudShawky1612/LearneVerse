@@ -104,12 +104,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
           _buildSliverAppBar(),
           SliverToBoxAdapter(
             child: Padding(
-              padding:   EdgeInsets.all(16.0.w),
+              padding: EdgeInsets.all(16.0.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _buildCommunityHeader(),
-                    SizedBox(height: 24.h),
+                  SizedBox(height: 24.h),
                   if (widget.community.communityPrivacy == "Public" ||
                       _userHasJoined)
                     _buildTabSelector(),
@@ -118,7 +118,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ),
           SliverPadding(
-            padding:   EdgeInsets.symmetric(horizontal: 16.0.w),
+            padding: EdgeInsets.symmetric(horizontal: 16.0.w),
             sliver: SliverToBoxAdapter(
               child: _buildSelectedScreen(),
             ),
@@ -186,19 +186,19 @@ class _CommunityScreenState extends State<CommunityScreen> {
           radius: 40.r,
           backgroundImage: AssetImage(widget.community.image),
         ),
-          SizedBox(width: 16.w),
+        SizedBox(width: 16.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 widget.community.name,
-                style:   TextStyle(
+                style: TextStyle(
                   fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-                SizedBox(height: 4.h),
+              SizedBox(height: 4.h),
               Row(
                 children: <Widget>[
                   Icon(
@@ -206,14 +206,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     size: 16.w,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
-                    SizedBox(width: 4.w),
+                  SizedBox(width: 4.w),
                   Text(
                     '${widget.community.memberCount} members',
                     style: TextStyle(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                    SizedBox(width: 12.w),
+                  SizedBox(width: 12.w),
                   Icon(
                     widget.community.communityPrivacy == "Public"
                         ? Icons.lock_open
@@ -223,7 +223,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                         ? themeExtension?.upVote
                         : themeExtension?.downVote,
                   ),
-                    SizedBox(width: 4.w),
+                  SizedBox(width: 4.w),
                   Text(
                     widget.community.communityPrivacy,
                     style: TextStyle(
@@ -234,11 +234,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ),
                 ],
               ),
-                SizedBox(height: 8.h),
+              SizedBox(height: 8.h),
               Row(
                 children: <Widget>[
                   _buildRatingStars(),
-                    SizedBox(width: 8.w),
+                  SizedBox(width: 8.w),
                   Text(
                     '(${widget.community.reviews} reviews)',
                     style: TextStyle(
@@ -303,8 +303,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return GestureDetector(
       onTap: () => setState(() => _currentIndex = index),
       child: Container(
-        margin:   EdgeInsets.only(right: 16.w),
-        padding:   EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+        margin: EdgeInsets.only(right: 16.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
         decoration: BoxDecoration(
           gradient: isSelected ? themeExtension?.buttonGradient : null,
           color: isSelected ? null : theme.colorScheme.surfaceContainerHighest,
@@ -350,15 +350,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-          SizedBox(height: 24.h),
-          Text(
+        SizedBox(height: 24.h),
+        Text(
           'About this Community',
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-          SizedBox(height: 12.h),
+        SizedBox(height: 12.h),
         Text(
           'This is a community where members can learn, share, and grow together. Join us to access exclusive content, participate in discussions, and connect with like-minded individuals.',
           style: TextStyle(
@@ -366,15 +366,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
             height: 1.5.h,
           ),
         ),
-          SizedBox(height: 24.h),
-          Text(
+        SizedBox(height: 24.h),
+        Text(
           'Tags',
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-          SizedBox(height: 12.h),
+        SizedBox(height: 12.h),
         Wrap(
           spacing: 8.w,
           runSpacing: 8.w,
@@ -382,16 +382,16 @@ class _CommunityScreenState extends State<CommunityScreen> {
             return Chip(
               label: Text(tag),
               backgroundColor: theme.colorScheme.surface,
-              padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 0),
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 0),
             );
           })),
         ),
-          SizedBox(height: 24.h),
+        SizedBox(height: 24.h),
         Text(
           "Intro video to ${widget.community.name}",
-          style:   TextStyle(fontWeight: FontWeight.bold, fontSize: 24.w),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.w),
         ),
-          SizedBox(height: 10.h),
+        SizedBox(height: 10.h),
         if (_controller.value.isInitialized)
           Column(
             children: [
@@ -409,7 +409,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     });
                   }),
               Padding(
-                padding:   EdgeInsets.symmetric(horizontal: 16.0.h),
+                padding: EdgeInsets.symmetric(horizontal: 16.0.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -422,7 +422,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
           )
         else
           const CircularProgressIndicator(),
-          SizedBox(height: 24.h),
+        SizedBox(height: 24.h),
         Center(
           child: FloatingActionButton(
             onPressed: () {
@@ -437,15 +437,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ),
         ),
-          SizedBox(height: 24.h),
-          Text(
+        SizedBox(height: 24.h),
+        Text(
           'Community Guidelines',
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-          SizedBox(height: 12.h),
+        SizedBox(height: 12.h),
         _buildGuideline(
           icon: Icons.check_circle_outline,
           title: 'Be Respectful',
@@ -461,13 +461,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
           title: 'Stay On Topic',
           description: 'Keep discussions relevant to the community focus.',
         ),
-          SizedBox(height: 24.h),
+        SizedBox(height: 24.h),
         if (!_userHasJoined)
           SizedBox(
             width: double.infinity,
             child: _buildJoinButton(),
           ),
-          SizedBox(height: 36.h),
+        SizedBox(height: 36.h),
       ],
     );
   }
@@ -481,7 +481,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final theme = Theme.of(context);
 
     return Padding(
-      padding:   EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.only(bottom: 16.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -490,19 +490,19 @@ class _CommunityScreenState extends State<CommunityScreen> {
             color: colorScheme.primary,
             size: 20.w,
           ),
-            SizedBox(width: 12.w),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   title,
-                  style:   TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16.sp,
                   ),
                 ),
-                  SizedBox(height: 4.h),
+                SizedBox(height: 4.h),
                 Text(
                   description,
                   style: TextStyle(
@@ -530,7 +530,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
       },
       child: Container(
         width: double.infinity,
-        padding:   EdgeInsets.symmetric(vertical: 14.w),
+        padding: EdgeInsets.symmetric(vertical: 14.w),
         decoration: BoxDecoration(
           gradient: themeExtension?.buttonGradient,
           borderRadius: BorderRadius.circular(12.r),
@@ -580,8 +580,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-          SizedBox(height: 24.h),
-          Row(
+        SizedBox(height: 24.h),
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
@@ -593,10 +593,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ],
         ),
-          SizedBox(height: 16.h),
+        SizedBox(height: 16.h),
         ...sections.map((section) => _buildSectionCard(section)),
-          SizedBox(height: 24.h),
-          SizedBox(height: 36.h),
+        SizedBox(height: 24.h),
+        SizedBox(height: 36.h),
       ],
     );
   }
@@ -606,7 +606,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      margin:   EdgeInsets.only(bottom: 16.h),
+      margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(16.r),
@@ -624,7 +624,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
           borderRadius: BorderRadius.circular(16.r),
           onTap: () {},
           child: Padding(
-            padding:   EdgeInsets.all(16.w),
+            padding: EdgeInsets.all(16.w),
             child: Row(
               children: <Widget>[
                 ClipRRect(
@@ -636,41 +636,42 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                  SizedBox(width: 16.w),
+                SizedBox(width: 16.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         section['title'] as String,
-                        style:   TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16.sp,
                         ),
                       ),
-                        SizedBox(height: 8.h),
+                      SizedBox(height: 8.h),
                       Row(
                         children: <Widget>[
                           _buildInfoChip(
                             Icons.book,
                             '${section['lessons']} lessons',
                           ),
-                            SizedBox(width: 8.w),
+                          SizedBox(width: 8.w),
                           _buildInfoChip(
                             Icons.access_time,
                             section['duration'] as String,
                           ),
                         ],
                       ),
-                        SizedBox(height: 8.h),
+                      SizedBox(height: 8.h),
                       LinearProgressIndicator(
                         value: (section['completed'] as int) /
                             (section['lessons'] as int),
-                        backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                        backgroundColor:
+                            theme.colorScheme.surfaceContainerHighest,
                         color: colorScheme.primary,
                         borderRadius: BorderRadius.circular(2.r),
                       ),
-                        SizedBox(height: 4.h),
+                      SizedBox(height: 4.h),
                       Text(
                         '${section['completed']}/${section['lessons']} completed',
                         style: TextStyle(
@@ -681,7 +682,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     ],
                   ),
                 ),
-                  Icon(Icons.arrow_forward_ios, size: 16.w),
+                Icon(Icons.arrow_forward_ios, size: 16.w),
               ],
             ),
           ),
@@ -694,7 +695,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final theme = Theme.of(context);
 
     return Container(
-      padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12.r),
@@ -707,7 +708,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             size: 14.w,
             color: theme.colorScheme.onSurfaceVariant,
           ),
-            SizedBox(width: 4.w),
+          SizedBox(width: 4.w),
           Text(
             label,
             style: TextStyle(
@@ -727,7 +728,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-          SizedBox(height: 24.h),
+        SizedBox(height: 24.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -748,8 +749,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: colorScheme.primary,
                 foregroundColor: colorScheme.onPrimary,
-                padding:
-                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -757,7 +757,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ],
         ),
-          SizedBox(height: 16.h),
+        SizedBox(height: 16.h),
         Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
@@ -782,7 +782,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   void _showCreatePostDialog() {
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
-    final currentUser = Author.users[0]; // Use the first user as current user
+    final currentUser = Author.users[0]; 
     final currentCommunity = widget.community;
 
     showDialog(
@@ -800,7 +800,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 backgroundImage: AssetImage(currentUser.avatar),
                 radius: 16.r,
               ),
-                SizedBox(width: 10.w),
+              SizedBox(width: 10.w),
               Text(
                 'Create Post',
                 style: TextStyle(
@@ -830,7 +830,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     ),
                   ),
                 ),
-                  SizedBox(height: 16.h),
+                SizedBox(height: 16.h),
                 TextField(
                   controller: descriptionController,
                   style: TextStyle(color: colorScheme.onSurface),
@@ -910,7 +910,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
 
     setState(() {
-      _posts.insert(0, newPost); // Add to the beginning to show newest first
+      _posts.insert(0, newPost); 
     });
   }
 
@@ -922,22 +922,22 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-          SizedBox(height: 24.h),
-          Text(
+        SizedBox(height: 24.h),
+        Text(
           'Top Contributors',
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-          SizedBox(height: 24.h),
+        SizedBox(height: 24.h),
 
-        // Podium for top 3 users
+        
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            // 2nd place
+            
             _buildPodiumItem(
               _members[1],
               2,
@@ -946,9 +946,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
               colorScheme: colorScheme,
               themeExtension: themeExtension,
             ),
-              SizedBox(width: 12.w),
+            SizedBox(width: 12.w),
 
-            // 1st place
+            
             _buildPodiumItem(
               _members[0],
               1,
@@ -958,9 +958,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
               themeExtension: themeExtension,
               isFirst: true,
             ),
-              SizedBox(width: 12.w),
+            SizedBox(width: 12.w),
 
-            // 3rd place
+            
             _buildPodiumItem(
               _members[2],
               3,
@@ -972,9 +972,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
           ],
         ),
 
-          SizedBox(height: 32.h),
+        SizedBox(height: 32.h),
 
-        // List for users 4-10
+        
         Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
@@ -989,9 +989,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
           ),
           child: Column(
             children: <Widget>[
-                Padding(
+              Padding(
                 padding: EdgeInsets.all(16.w),
-                child:   Row(
+                child: Row(
                   children: <Widget>[
                     const Text(
                       'Rank',
@@ -1017,7 +1017,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ],
                 ),
               ),
-                Divider(height: 1.h),
+              Divider(height: 1.h),
               ...List.generate(
                 7,
                 (index) => _buildTopMemberItem(
@@ -1047,13 +1047,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
     Color medalColor;
     switch (rank) {
       case 1:
-        medalColor = const Color(0xFFFFD700); // Gold
+        medalColor = const Color(0xFFFFD700); 
         break;
       case 2:
-        medalColor = const Color(0xFFC0C0C0); // Silver
+        medalColor = const Color(0xFFC0C0C0); 
         break;
       case 3:
-        medalColor = const Color(0xFFCD7F32); // Bronze
+        medalColor = const Color(0xFFCD7F32); 
         break;
       default:
         medalColor = colorScheme.primary;
@@ -1062,7 +1062,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Avatar
+        
         Container(
           width: 60.w,
           height: 60.h,
@@ -1086,8 +1086,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ),
         ),
-          SizedBox(height: 8.h),
-        // Name
+        SizedBox(height: 8.h),
+        
         Text(
           user.name,
           style: TextStyle(
@@ -1096,10 +1096,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
           ),
           textAlign: TextAlign.center,
         ),
-          SizedBox(height: 4.h),
-        // Points badge
+        SizedBox(height: 4.h),
+        
         Container(
-          padding:   EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.w),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.w),
           decoration: BoxDecoration(
             color: medalColor.withOpacity(0.2),
             borderRadius: BorderRadius.circular(12.r),
@@ -1119,12 +1119,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ),
         ),
-          SizedBox(height: 12.h),
-        // Podium stand
+        SizedBox(height: 12.h),
+        
         Stack(
           alignment: Alignment.center,
           children: [
-            // Modern podium design
+            
             Container(
               width: 80,
               height: height,
@@ -1137,7 +1137,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     medalColor.withOpacity(0.4),
                   ],
                 ),
-                borderRadius:   BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(12.r),
                   topRight: Radius.circular(12.r),
                 ),
@@ -1150,7 +1150,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 ],
               ),
             ),
-            // Rank number
+            
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -1191,7 +1191,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
     return Container(
-      padding:   EdgeInsets.symmetric(vertical: 12.w, horizontal: 16.w),
+      padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 16.w),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -1209,7 +1209,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
               color: rank <= 3 ? colorScheme.primary : null,
             ),
           ),
-            SizedBox(width: 24.w),
+          SizedBox(width: 24.w),
           Container(
             width: 36.w,
             height: 36.h,
@@ -1226,7 +1226,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
             ),
           ),
-            SizedBox(width: 12.w),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1248,7 +1248,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ),
           Container(
-            padding:   EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
             decoration: BoxDecoration(
               color: colorScheme.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20.r),
@@ -1273,11 +1273,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-          SizedBox(height: 24.h),
+        SizedBox(height: 24.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-              Text(
+            Text(
               'All Members',
               style: TextStyle(
                 fontSize: 20.sp,
@@ -1285,7 +1285,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
             ),
             Container(
-              padding:   EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(20.r),
@@ -1302,7 +1302,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ),
         const SizedBox(height: 16),
         Container(
-          padding:   EdgeInsets.all(16.r),
+          padding: EdgeInsets.all(16.r),
           decoration: BoxDecoration(
             color: theme.cardColor,
             borderRadius: BorderRadius.circular(16.r),
@@ -1326,21 +1326,21 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
               filled: true,
               fillColor: theme.colorScheme.surfaceContainerHighest,
-              contentPadding:   EdgeInsets.symmetric(
+              contentPadding: EdgeInsets.symmetric(
                 horizontal: 16.w,
                 vertical: 12.h,
               ),
             ),
           ),
         ),
-          SizedBox(height: 16.h),
+        SizedBox(height: 16.h),
         Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
             borderRadius: BorderRadius.circular(12.r),
           ),
         ),
-          SizedBox(height: 16.h),
+        SizedBox(height: 16.h),
         Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
@@ -1357,9 +1357,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ? VerticalUserList(users: _members)
               : VerticalUserList(users: foundUsers),
         ),
-         SizedBox(height: 24.h),
+        SizedBox(height: 24.h),
       ],
     );
   }
-
 }

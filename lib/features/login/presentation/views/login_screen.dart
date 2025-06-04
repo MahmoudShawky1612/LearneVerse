@@ -22,13 +22,13 @@ class PremiumLoginScreen extends StatefulWidget {
 
 class _PremiumLoginScreenState extends State<PremiumLoginScreen>
     with TickerProviderStateMixin {
-  // Animation Controllers
+  
   late AnimationController _mainController;
   late AnimationController _floatingController;
   late AnimationController _particleController;
   late AnimationController _breathingController;
 
-  // Animations
+  
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
@@ -36,12 +36,12 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
   late Animation<double> _breathingAnimation;
   late Animation<double> _rotationAnimation;
 
-  // Form Controllers
+  
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  // State Variables
+  
   bool _isPasswordVisible = false;
   bool _isLoading = false;
   bool _isInitialAnimationComplete = false;
@@ -54,31 +54,31 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
   }
 
   void _initializeAnimations() {
-    // Main entrance animation
+    
     _mainController = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
 
-    // Floating elements animation
+    
     _floatingController = AnimationController(
       duration: const Duration(milliseconds: 4000),
       vsync: this,
     );
 
-    // Particle system animation
+    
     _particleController = AnimationController(
       duration: const Duration(milliseconds: 8000),
       vsync: this,
     );
 
-    // Breathing animation for interactive elements
+    
     _breathingController = AnimationController(
       duration: const Duration(milliseconds: 3000),
       vsync: this,
     );
 
-    // Fade animation with sophisticated curve
+    
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _mainController,
@@ -86,7 +86,7 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
       ),
     );
 
-    // Slide animation with premium feel
+    
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
@@ -97,7 +97,7 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
       ),
     );
 
-    // Scale animation for premium entrance
+    
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(
         parent: _mainController,
@@ -105,7 +105,7 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
       ),
     );
 
-    // Floating animation for background elements
+    
     _floatingAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _floatingController,
@@ -113,7 +113,7 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
       ),
     );
 
-    // Breathing animation for subtle life
+    
     _breathingAnimation = Tween<double>(begin: 0.98, end: 1.02).animate(
       CurvedAnimation(
         parent: _breathingController,
@@ -121,7 +121,7 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
       ),
     );
 
-    // Rotation animation for floating elements
+    
     _rotationAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _particleController,
@@ -131,10 +131,10 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
   }
 
   void _startAnimationSequence() async {
-    // Start the main entrance animation
+    
     _mainController.forward();
 
-    // Wait for main animation to complete, then start continuous animations
+    
     await Future.delayed(const Duration(milliseconds: 1000));
 
     _floatingController.repeat(reverse: true);
@@ -157,14 +157,14 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
 
   Future<void> _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      // Haptic feedback for premium feel
+      
       HapticFeedback.lightImpact();
 
       final email = _emailController.text.trim();
       final password = _passwordController.text.trim();
       context.read<AuthCubit>().login(email, password);
     } else {
-      // Subtle vibration for validation errors
+      
       HapticFeedback.selectionClick();
     }
   }
@@ -197,11 +197,12 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
 
         if (state is AuthSuccess) {
           HapticFeedback.heavyImpact();
-          _showPremiumSnackbar('Welcome back! Login successful', isSuccess: true);
+          _showPremiumSnackbar('Welcome back! Login successful',
+              isSuccess: true);
 
-          // Delay navigation for premium feel
+          
           Future.delayed(const Duration(milliseconds: 1500), () {
-            context.pushReplacement('/home');
+            context.pushReplacement('/');
           });
         }
 
@@ -213,10 +214,10 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
       child: Scaffold(
         body: Stack(
           children: [
-            // Premium animated background
+            
             const PremiumBackground(),
 
-            // Main content
+            
             SafeArea(
               child: AnimatedBuilder(
                 animation: Listenable.merge([
@@ -248,7 +249,8 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
                                       spreadRadius: -10.r,
                                     ),
                                     BoxShadow(
-                                      color: const Color(0xFF3B82F6).withOpacity(0.1),
+                                      color: const Color(0xFF3B82F6)
+                                          .withOpacity(0.1),
                                       blurRadius: 40.r,
                                       offset: Offset(0, 10.h),
                                       spreadRadius: -5.r,
@@ -258,7 +260,8 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(32.r),
                                   child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 20, sigmaY: 20),
                                     child: Container(
                                       padding: EdgeInsets.all(32.w),
                                       decoration: BoxDecoration(
@@ -274,32 +277,41 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
                                           color: Colors.white.withOpacity(0.3),
                                           width: 1.5,
                                         ),
-                                        borderRadius: BorderRadius.circular(32.r),
+                                        borderRadius:
+                                            BorderRadius.circular(32.r),
                                       ),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           PremiumLoginHeader(
-                                            floatingAnimation: _floatingAnimation,
-                                            rotationAnimation: _rotationAnimation,
+                                            floatingAnimation:
+                                                _floatingAnimation,
+                                            rotationAnimation:
+                                                _rotationAnimation,
                                           ),
                                           SizedBox(height: 48.h),
                                           PremiumLoginForm(
                                             formKey: _formKey,
                                             emailController: _emailController,
-                                            passwordController: _passwordController,
-                                            isPasswordVisible: _isPasswordVisible,
+                                            passwordController:
+                                                _passwordController,
+                                            isPasswordVisible:
+                                                _isPasswordVisible,
                                             isLoading: _isLoading,
                                             onPasswordVisibilityToggle: () {
                                               HapticFeedback.selectionClick();
-                                              setState(() => _isPasswordVisible = !_isPasswordVisible);
+                                              setState(() =>
+                                                  _isPasswordVisible =
+                                                      !_isPasswordVisible);
                                             },
                                             onLoginPressed: _handleLogin,
-                                            breathingAnimation: _breathingAnimation,
+                                            breathingAnimation:
+                                                _breathingAnimation,
                                           ),
                                           SizedBox(height: 32.h),
                                           PremiumLoginFooter(
-                                            floatingAnimation: _floatingAnimation,
+                                            floatingAnimation:
+                                                _floatingAnimation,
                                           ),
                                         ],
                                       ),

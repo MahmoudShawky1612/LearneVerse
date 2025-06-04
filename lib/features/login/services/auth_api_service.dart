@@ -5,16 +5,18 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import '../data/model/user_model.dart';
 
 class AuthApiService {
-  static const String _baseUrl = 'https://5cb0-217-55-221-35.ngrok-free.app/api/v1';
+  static const String baseUrl = 'https://5cb0-217-55-221-35.ngrok-free.app/api/v1';
+
 
   Future<User> login({required String email, required String password}) async {
-    final url = Uri.parse('$_baseUrl/auth/login');
+    final url = Uri.parse('$baseUrl/auth/login');
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': email, 'password': password}),
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
@@ -25,7 +27,7 @@ class AuthApiService {
       final payload = JwtDecoder.decode(accessToken);
       return User.fromJwtPayload(payload, accessToken, refreshToken);
     } else {
-      throw Exception('Login failed: ${response.body}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 }

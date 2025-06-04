@@ -8,17 +8,19 @@ class CustomSearchBar extends StatefulWidget {
   final void Function(String) searchFunction;
   final String hintText;
 
-  const CustomSearchBar({super.key, 
-     required this.searchController,
-     required this.searchFunction,
+  const CustomSearchBar({
+    super.key,
+    required this.searchController,
+    required this.searchFunction,
     this.hintText = 'Search...',
-  }) ;
+  });
 
   @override
   State<CustomSearchBar> createState() => _CustomSearchBarState();
 }
 
-class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProviderStateMixin {
+class _CustomSearchBarState extends State<CustomSearchBar>
+    with SingleTickerProviderStateMixin {
   final SpeechToText _speechToText = SpeechToText();
   bool _isSpeechAvailable = false;
   late AnimationController _micAnimationController;
@@ -44,14 +46,16 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
     try {
       _isSpeechAvailable = await _speechToText.initialize(
         onError: (error) => ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Speech recognition error: ${error.errorMsg}')),
+          SnackBar(
+              content: Text('Speech recognition error: ${error.errorMsg}')),
         ),
       );
       if (mounted) setState(() {});
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to initialize speech recognition')),
+          const SnackBar(
+              content: Text('Failed to initialize speech recognition')),
         );
       }
     }
@@ -59,7 +63,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
 
   void _updateClearButtonVisibility() {
     setState(() {
-      // Using the original logic for showing clear button
+      
     });
   }
 
@@ -122,7 +126,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
           color: theme.cardColor,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: _focusNode.hasFocus ? colorScheme.primary : Colors.transparent,
+            color:
+                _focusNode.hasFocus ? colorScheme.primary : Colors.transparent,
             width: 1.5.w,
           ),
           boxShadow: [
@@ -136,7 +141,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
         child: Row(
           children: [
             Padding(
-              padding:   EdgeInsets.symmetric(horizontal: 16.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Icon(
                 Icons.search,
                 color: colorScheme.onSurface.withOpacity(0.6),
@@ -154,19 +159,19 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
                     color: colorScheme.onSurface.withOpacity(0.4),
                   ),
                   border: InputBorder.none,
-                  contentPadding:   EdgeInsets.symmetric(vertical: 10.h),
+                  contentPadding: EdgeInsets.symmetric(vertical: 10.h),
                   suffixIcon: widget.searchController.text.isNotEmpty
                       ? GestureDetector(
-                    onTap: () {
-                      widget.searchController.clear();
-                      widget.searchFunction('');
-                    },
-                    child: Icon(
-                      Icons.close,
-                      color: colorScheme.onSurface.withOpacity(0.6),
-                      size: 20.h,
-                    ),
-                  )
+                          onTap: () {
+                            widget.searchController.clear();
+                            widget.searchFunction('');
+                          },
+                          child: Icon(
+                            Icons.close,
+                            color: colorScheme.onSurface.withOpacity(0.6),
+                            size: 20.h,
+                          ),
+                        )
                       : null,
                 ),
                 style: TextStyle(
@@ -183,7 +188,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
                     : _stopListening();
               },
               child: Padding(
-                padding:   EdgeInsets.only(right: 16.w),
+                padding: EdgeInsets.only(right: 16.w),
                 child: ScaleTransition(
                   scale: _micScaleAnimation,
                   child: Container(

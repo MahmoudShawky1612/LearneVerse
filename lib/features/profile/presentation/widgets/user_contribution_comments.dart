@@ -15,12 +15,14 @@ class UserComments extends StatefulWidget {
 class _UserCommentsState extends State<UserComments> {
   List<UserComment> userComment = UserComment.generateDummyUserComments(15);
 
-  void _onCommentEdit(String id, String commentDescription){
-   UserComment commentToBeEdited = userComment.firstWhere(((uc)=> uc.id == id ));
-   setState(() {
-     commentToBeEdited.comment = commentDescription;
-   });
+  void _onCommentEdit(String id, String commentDescription) {
+    UserComment commentToBeEdited =
+        userComment.firstWhere(((uc) => uc.id == id));
+    setState(() {
+      commentToBeEdited.comment = commentDescription;
+    });
   }
+
   void _onCommentDelete(String id) {
     setState(() {
       userComment.removeWhere((uc) => uc.id == id);
@@ -29,10 +31,10 @@ class _UserCommentsState extends State<UserComments> {
 
   @override
   Widget build(BuildContext context) {
-    return userComment.isEmpty 
+    return userComment.isEmpty
         ? Center(
             child: Padding(
-              padding:   EdgeInsets.all(20.0.w),
+              padding: EdgeInsets.all(20.0.w),
               child: Text(
                 'No comments yet',
                 style: Theme.of(context).textTheme.titleMedium,
@@ -40,17 +42,17 @@ class _UserCommentsState extends State<UserComments> {
             ),
           )
         : Column(
-          children: [
-            BuildComments(
+            children: [
+              BuildComments(
                 shrinkWrap: true,
                 scrollPhysics: const BouncingScrollPhysics(),
                 comments: userComment,
                 userInfo: widget.userInfo,
                 delete: _onCommentDelete,
-              edit : _onCommentEdit,
+                edit: _onCommentEdit,
               ),
-            const Divider(),
-          ],
-        );
+              const Divider(),
+            ],
+          );
   }
 }

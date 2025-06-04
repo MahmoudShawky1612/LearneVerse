@@ -29,7 +29,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     super.initState();
     _foundCommunities = [];
     _foundUsers = [];
-    _foundOwners=[];
+    _foundOwners = [];
   }
 
   @override
@@ -41,7 +41,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   void _search(String query) {
     setState(() {
       if (_selectedFilters.isNotEmpty) {
-        _foundCommunities = Community.searchWithFilters(_selectedFilters, query);
+        _foundCommunities =
+            Community.searchWithFilters(_selectedFilters, query);
       } else {
         _foundCommunities = Community.searchCommunities(query);
       }
@@ -49,7 +50,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       _foundOwners = Owner.searchOwners(query);
     });
   }
-
 
   void _toggleFilter(String filter) {
     setState(() {
@@ -63,36 +63,37 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         extendBody: true,
         body: Padding(
-          padding:   EdgeInsets.fromLTRB(20.w, 40.w, 20.w, 80.w),
+          padding: EdgeInsets.fromLTRB(20.w, 40.w, 20.w, 80.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const BuildHeader(),
-                SizedBox(height: 24.h),
-              CustomSearchBar(searchController: _searchController, searchFunction: _search),
-                SizedBox(height: 24.h),
+              SizedBox(height: 24.h),
+              CustomSearchBar(
+                  searchController: _searchController, searchFunction: _search),
+              SizedBox(height: 24.h),
               BuildFiltersList(
                 selectedFilters: _selectedFilters,
                 onFilterToggle: _toggleFilter,
               ),
-                SizedBox(height: 24.h),
+              SizedBox(height: 24.h),
               _isSearchActive()
                   ? Expanded(
-                child: BuildSearchResults(
-                  foundCommunities: _foundCommunities,
-                  foundUsers: _foundUsers,
-                  foundOwners: _foundOwners
-                ),
-              )
+                      child: BuildSearchResults(
+                          foundCommunities: _foundCommunities,
+                          foundUsers: _foundUsers,
+                          foundOwners: _foundOwners),
+                    )
                   : const BuildDefaultContent(),
             ],
           ),
@@ -102,6 +103,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }
 
   bool _isSearchActive() {
-    return _foundCommunities.isNotEmpty || _foundUsers.isNotEmpty || _foundOwners.isNotEmpty;
+    return _foundCommunities.isNotEmpty ||
+        _foundUsers.isNotEmpty ||
+        _foundOwners.isNotEmpty;
   }
 }

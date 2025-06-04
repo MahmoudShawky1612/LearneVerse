@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:math' as math;
 
 class PremiumLoginForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -63,14 +62,14 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
       CurvedAnimation(parent: _fieldController, curve: Curves.easeOut),
     );
 
-    // Listen to text changes for validation
+    
     widget.emailController.addListener(_validateEmail);
     widget.passwordController.addListener(_validatePassword);
   }
 
   @override
   void dispose() {
-    // Remove listeners before disposing controllers
+    
     widget.emailController.removeListener(_validateEmail);
     widget.passwordController.removeListener(_validatePassword);
     _buttonController.dispose();
@@ -102,7 +101,7 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
       key: widget.formKey,
       child: Column(
         children: [
-          // Email Field
+          
           _buildPremiumInputField(
             label: 'Email Address',
             controller: widget.emailController,
@@ -123,7 +122,8 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
               if (value == null || value.isEmpty) {
                 return 'Please enter your email address';
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                  .hasMatch(value)) {
                 return 'Please enter a valid email address';
               }
               return null;
@@ -132,7 +132,7 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
 
           SizedBox(height: 20.h),
 
-          // Password Field
+          
           _buildPremiumInputField(
             label: 'Password',
             controller: widget.passwordController,
@@ -178,13 +178,13 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
 
           SizedBox(height: 16.h),
 
-          // Forgot Password with premium styling
+          
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
               onTap: () {
                 HapticFeedback.selectionClick();
-                // Handle forgot password
+                
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
@@ -212,9 +212,10 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
 
           SizedBox(height: 24.h),
 
-          // Premium Sign In Button
+          
           AnimatedBuilder(
-            animation: Listenable.merge([_buttonScale, widget.breathingAnimation]),
+            animation:
+                Listenable.merge([_buttonScale, widget.breathingAnimation]),
             builder: (context, child) {
               return Transform.scale(
                 scale: _buttonScale.value * widget.breathingAnimation.value,
@@ -233,21 +234,21 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
                       borderRadius: BorderRadius.circular(16.r),
                       gradient: widget.isLoading
                           ? const LinearGradient(
-                        colors: [
-                          Color(0xFF9CA3AF),
-                          Color(0xFF6B7280),
-                        ],
-                      )
+                              colors: [
+                                Color(0xFF9CA3AF),
+                                Color(0xFF6B7280),
+                              ],
+                            )
                           : const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF3B82F6),
-                          Color(0xFF8B5CF6),
-                          Color(0xFF06B6D4),
-                        ],
-                        stops: [0.0, 0.5, 1.0],
-                      ),
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFF3B82F6),
+                                Color(0xFF8B5CF6),
+                                Color(0xFF06B6D4),
+                              ],
+                              stops: [0.0, 0.5, 1.0],
+                            ),
                       boxShadow: [
                         BoxShadow(
                           color: const Color(0xFF3B82F6).withOpacity(0.4),
@@ -266,7 +267,7 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        // Shine effect
+                        
                         if (!widget.isLoading)
                           Positioned.fill(
                             child: ClipRRect(
@@ -276,7 +277,8 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
                                 builder: (context, child) {
                                   return Transform.translate(
                                     offset: Offset(
-                                      (widget.breathingAnimation.value - 0.5) * 200.w,
+                                      (widget.breathingAnimation.value - 0.5) *
+                                          200.w,
                                       0,
                                     ),
                                     child: Container(
@@ -297,51 +299,52 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
                             ),
                           ),
 
-                        // Button content
+                        
                         widget.isLoading
                             ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 20.w,
-                              height: 20.w,
-                              child: const CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                valueColor: AlwaysStoppedAnimation(Colors.white),
-                              ),
-                            ),
-                            SizedBox(width: 12.w),
-                            Text(
-                              'Signing In...',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ],
-                        )
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 20.w,
+                                    height: 20.w,
+                                    child: const CircularProgressIndicator(
+                                      strokeWidth: 2.5,
+                                      valueColor:
+                                          AlwaysStoppedAnimation(Colors.white),
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  Text(
+                                    'Signing In...',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              )
                             : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.login_rounded,
-                              color: Colors.white,
-                              size: 20.r,
-                            ),
-                            SizedBox(width: 8.w),
-                            Text(
-                              'Sign In',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                                letterSpacing: 0.5,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.login_rounded,
+                                    color: Colors.white,
+                                    size: 20.r,
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  Text(
+                                    'Sign In',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -368,7 +371,7 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Label with premium styling
+        
         Padding(
           padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
           child: Text(
@@ -376,15 +379,14 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
-              color: isFocused
-                  ? const Color(0xFF3B82F6)
-                  : const Color(0xFF374151),
+              color:
+                  isFocused ? const Color(0xFF3B82F6) : const Color(0xFF374151),
               letterSpacing: 0.3,
             ),
           ),
         ),
 
-        // Input field container
+        
         Focus(
           onFocusChange: onFocusChange,
           child: AnimatedContainer(
@@ -396,20 +398,20 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
                 end: Alignment.bottomRight,
                 colors: isFocused
                     ? [
-                  Colors.white.withOpacity(0.9),
-                  Colors.white.withOpacity(0.7),
-                ]
+                        Colors.white.withOpacity(0.9),
+                        Colors.white.withOpacity(0.7),
+                      ]
                     : [
-                  Colors.white.withOpacity(0.7),
-                  Colors.white.withOpacity(0.5),
-                ],
+                        Colors.white.withOpacity(0.7),
+                        Colors.white.withOpacity(0.5),
+                      ],
               ),
               border: Border.all(
                 color: isFocused
                     ? const Color(0xFF3B82F6)
                     : isValid
-                    ? const Color(0xFF10B981)
-                    : Colors.white.withOpacity(0.3),
+                        ? const Color(0xFF10B981)
+                        : Colors.white.withOpacity(0.3),
                 width: isFocused ? 2.0 : 1.5,
               ),
               boxShadow: [
@@ -452,27 +454,27 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
                       color: isFocused
                           ? const Color(0xFF3B82F6)
                           : isValid
-                          ? const Color(0xFF10B981)
-                          : const Color(0xFF9CA3AF),
+                              ? const Color(0xFF10B981)
+                              : const Color(0xFF9CA3AF),
                       size: 20.r,
                     ),
                   ),
                 ),
                 suffixIcon: suffixIcon != null
                     ? Padding(
-                  padding: EdgeInsets.only(right: 8.w),
-                  child: suffixIcon,
-                )
+                        padding: EdgeInsets.only(right: 8.w),
+                        child: suffixIcon,
+                      )
                     : isValid
-                    ? Padding(
-                  padding: EdgeInsets.all(12.r),
-                  child: Icon(
-                    Icons.check_circle_rounded,
-                    color: const Color(0xFF10B981),
-                    size: 20.r,
-                  ),
-                )
-                    : null,
+                        ? Padding(
+                            padding: EdgeInsets.all(12.r),
+                            child: Icon(
+                              Icons.check_circle_rounded,
+                              color: const Color(0xFF10B981),
+                              size: 20.r,
+                            ),
+                          )
+                        : null,
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 16.w,
@@ -481,7 +483,7 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
               ),
               validator: validator,
               onChanged: (value) {
-                // Trigger validation on each change
+                
                 if (label.contains('Email')) {
                   _validateEmail();
                 } else {

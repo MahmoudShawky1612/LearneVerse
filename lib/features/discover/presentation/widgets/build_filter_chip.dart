@@ -23,7 +23,7 @@ class BuildFilterChip extends StatelessWidget {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
     return Container(
-      margin:   EdgeInsets.only(right: 10.h),
+      margin: EdgeInsets.only(right: 10.h),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -35,7 +35,7 @@ class BuildFilterChip extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             width: 70.w,
-            padding:   EdgeInsets.symmetric(vertical: 6.w, horizontal: 10.h),
+            padding: EdgeInsets.symmetric(vertical: 6.w, horizontal: 10.h),
             decoration: BoxDecoration(
               gradient: isSelected ? null : themeExtension?.buttonGradient,
               color: isSelected ? theme.cardColor : null,
@@ -49,7 +49,7 @@ class BuildFilterChip extends StatelessWidget {
                   color: isSelected
                       ? theme.shadowColor.withOpacity(0.08)
                       : colorScheme.primary.withOpacity(0.25),
-                  blurRadius: 6.r, // Reduced from 8
+                  blurRadius: 6.r, 
                   spreadRadius: 0,
                   offset: const Offset(0, 2),
                 ),
@@ -62,7 +62,7 @@ class BuildFilterChip extends StatelessWidget {
                   color:
                       isSelected ? colorScheme.primary : colorScheme.onPrimary,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  fontSize: 12.sp, // Reduced from 14
+                  fontSize: 12.sp, 
                   letterSpacing: 0.2,
                 ),
                 maxLines: 1,

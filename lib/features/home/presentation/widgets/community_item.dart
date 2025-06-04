@@ -19,13 +19,13 @@ class CommunityItem extends StatelessWidget {
     final textTheme = theme.textTheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
 
-    // Responsive width based on screen size
-    final itemWidth =  140.0.w;
+    
+    final itemWidth = 140.0.w;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       width: itemWidth,
-      margin:   EdgeInsets.symmetric(horizontal: 8.w),
+      margin: EdgeInsets.symmetric(horizontal: 8.w),
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(16.r),
@@ -41,15 +41,15 @@ class CommunityItem extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Top content section
+          
           Padding(
-            padding:   EdgeInsets.only(top: 12.w, bottom: 6.w),
+            padding: EdgeInsets.only(top: 12.w, bottom: 6.w),
             child: _buildCommunityIcon(colorScheme),
           ),
 
-          // Community name
+          
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
             child: Text(
               community.name,
               style: textTheme.titleMedium?.copyWith(
@@ -63,12 +63,12 @@ class CommunityItem extends StatelessWidget {
             ),
           ),
 
-          // Member count
+          
           _buildMemberCount(colorScheme, textTheme),
 
-            SizedBox(height: 8.w),
+          SizedBox(height: 8.w),
 
-          // View button
+          
           _buildViewButton(context, colorScheme, themeExtension),
         ],
       ),
@@ -77,7 +77,7 @@ class CommunityItem extends StatelessWidget {
 
   Widget _buildCommunityIcon(ColorScheme colorScheme) {
     return Container(
-      padding:   EdgeInsets.all(6.w),
+      padding: EdgeInsets.all(6.w),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
@@ -101,7 +101,7 @@ class CommunityItem extends StatelessWidget {
 
   Widget _buildMemberCount(ColorScheme colorScheme, TextTheme textTheme) {
     return Container(
-      padding:   EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12.r),
@@ -114,7 +114,7 @@ class CommunityItem extends StatelessWidget {
             size: 9,
             color: colorScheme.onSurface.withOpacity(0.6),
           ),
-           SizedBox(width: 4.w),
+          SizedBox(width: 4.w),
           Text(
             '${community.memberCount}',
             style: textTheme.bodySmall?.copyWith(
@@ -127,15 +127,12 @@ class CommunityItem extends StatelessWidget {
     );
   }
 
-  Widget _buildViewButton(
-      BuildContext context,
-      ColorScheme colorScheme,
-      AppThemeExtension? themeExtension
-      ) {
+  Widget _buildViewButton(BuildContext context, ColorScheme colorScheme,
+      AppThemeExtension? themeExtension) {
     return Container(
       width: double.infinity,
       height: 32.h,
-      margin:   EdgeInsets.fromLTRB(6.w, 0, 6.w, 6.w),
+      margin: EdgeInsets.fromLTRB(6.w, 0, 6.w, 6.w),
       decoration: BoxDecoration(
         gradient: themeExtension?.buttonGradient,
         borderRadius: BorderRadius.circular(12.r),
@@ -158,7 +155,7 @@ class CommunityItem extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                  SizedBox(width: 2.w),
+                SizedBox(width: 2.w),
                 Icon(
                   Icons.arrow_forward_rounded,
                   color: colorScheme.onPrimary,

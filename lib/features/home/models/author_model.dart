@@ -49,30 +49,50 @@ class Author {
   static final Random _random = Random();
 
   static final List<String> allInterests = [
-    'Programming', 'Web Development', 'Mobile Apps', 'Machine Learning', 
-    'Data Science', 'UI/UX', 'DevOps', 'Cybersecurity', 'Blockchain',
-    'Cloud Computing', 'Game Development', 'IoT', 'AR/VR', 'Python',
-    'JavaScript', 'Java', 'React', 'Flutter', 'Node.js', 'Angular',
-    'AWS', 'Docker', 'Kubernetes', 'Algorithms', 'System Design'
+    'Programming',
+    'Web Development',
+    'Mobile Apps',
+    'Machine Learning',
+    'Data Science',
+    'UI/UX',
+    'DevOps',
+    'Cybersecurity',
+    'Blockchain',
+    'Cloud Computing',
+    'Game Development',
+    'IoT',
+    'AR/VR',
+    'Python',
+    'JavaScript',
+    'Java',
+    'React',
+    'Flutter',
+    'Node.js',
+    'Angular',
+    'AWS',
+    'Docker',
+    'Kubernetes',
+    'Algorithms',
+    'System Design'
   ];
 
   static List<String> getRandomInterests() {
-    final numberOfInterests = _random.nextInt(4) + 2; // 2-5 interests
+    final numberOfInterests = _random.nextInt(4) + 2; 
     List<String> interests = [];
     List<String> availableInterests = List.from(allInterests);
-    
+
     for (int i = 0; i < numberOfInterests; i++) {
       if (availableInterests.isEmpty) break;
       final index = _random.nextInt(availableInterests.length);
       interests.add(availableInterests[index]);
       availableInterests.removeAt(index);
     }
-    
+
     return interests;
   }
 
   static List<Community> userJoinedCommunities = [
-    // Web development focused communities
+    
     Community(
         id: 1,
         image: 'assets/images/angular.jpg',
@@ -103,7 +123,7 @@ class Author {
         communityBackgroundImage: 'assets/images/react1.jpg',
         rating: 3.1,
         reviews: 300),
-    // Mobile development focused communities
+    
     Community(
         id: 10,
         image: 'assets/images/flutter.jpg',
@@ -114,24 +134,36 @@ class Author {
         communityBackgroundImage: 'assets/images/flutter1.jpg',
         rating: 4.7,
         reviews: 320),
-    // Data science focused communities
+    
     Community(
         id: 9,
         image: 'assets/images/python.jpg',
         name: "Python",
         memberCount: 1500,
-        tags: ['Python', 'Programming', 'Machine Learning', 'Data Science', 'Algorithms'],
+        tags: [
+          'Python',
+          'Programming',
+          'Machine Learning',
+          'Data Science',
+          'Algorithms'
+        ],
         communityPrivacy: 'Public',
         communityBackgroundImage: 'assets/images/python1.jpg',
         rating: 4.9,
         reviews: 450),
-    // System programming focused communities
+    
     Community(
         id: 2,
         image: 'assets/images/c.jpg',
         name: "C",
         memberCount: 245,
-        tags: ['C', 'Programming', 'Algorithms', 'System Design', 'Performance'],
+        tags: [
+          'C',
+          'Programming',
+          'Algorithms',
+          'System Design',
+          'Performance'
+        ],
         communityPrivacy: 'Public',
         communityBackgroundImage: 'assets/images/c1.jpg',
         rating: 2.2,
@@ -177,7 +209,13 @@ class Author {
       totalJoinedCommunities: jCL,
       totalPostUpvotes: _random.nextInt(2533),
       totalCommentUpvotes: _random.nextInt(2533),
-      interests: ['Data Science', 'Machine Learning', 'Python', 'Algorithms', 'Statistical Analysis'],
+      interests: [
+        'Data Science',
+        'Machine Learning',
+        'Python',
+        'Algorithms',
+        'Statistical Analysis'
+      ],
     ),
     Author(
       id: 4,
@@ -203,7 +241,13 @@ class Author {
       totalJoinedCommunities: jCL,
       totalPostUpvotes: _random.nextInt(2533),
       totalCommentUpvotes: _random.nextInt(2533),
-      interests: ['Backend', 'Java', 'Spring', 'Microservices', 'System Design'],
+      interests: [
+        'Backend',
+        'Java',
+        'Spring',
+        'Microservices',
+        'System Design'
+      ],
     ),
     Author(
       id: 6,
@@ -216,7 +260,13 @@ class Author {
       totalJoinedCommunities: jCL,
       totalPostUpvotes: _random.nextInt(2533),
       totalCommentUpvotes: _random.nextInt(2533),
-      interests: ['Cybersecurity', 'Blockchain', 'Cryptography', 'Ethical Hacking', 'Network Security'],
+      interests: [
+        'Cybersecurity',
+        'Blockchain',
+        'Cryptography',
+        'Ethical Hacking',
+        'Network Security'
+      ],
     ),
   ];
 
@@ -255,8 +305,8 @@ class Author {
 
   static List<Author> searchUsers(String userName) {
     return users
-        .where((user) =>
-        user.name.toLowerCase().contains(userName.toLowerCase()))
+        .where(
+            (user) => user.name.toLowerCase().contains(userName.toLowerCase()))
         .toList();
   }
 }
