@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../utils/token_storage.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -16,8 +18,18 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   late Animation<double> _opacityAnimation;
   late Animation<double> _slideAnimation;
 
+
+
   @override
   void initState() {
+    Future<void> _checkAuth(BuildContext context) async {
+      final token = await TokenStorage.getToken();
+      if (token != null) {
+        context.pushReplacement('/');
+      } else {
+        context.pushReplacement('/login');
+      }
+    }
     super.initState();
     _initializeAnimations();
     _controller.forward();
@@ -25,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     // Navigate to login after 3 seconds
     Timer(const Duration(seconds: 3), () {
       if (mounted) {
-        context.pushReplacement('/login');
+        _checkAuth(context);
       }
     });
   }

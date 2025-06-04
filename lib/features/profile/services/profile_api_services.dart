@@ -4,7 +4,7 @@ import '../data/models/user_profile_model.dart';
 
 class UserProfileApiService {
 
-  static const String baseUrl = 'https://9bac-217-55-193-111.ngrok-free.app/api/v1';
+  static const String baseUrl = 'https://5cb0-217-55-221-35.ngrok-free.app/api/v1';
 
   Future<UserProfile> fetchUserProfile(int userId, String token) async {
     final url = Uri.parse('$baseUrl/profile/$userId');
