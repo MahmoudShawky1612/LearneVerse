@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/utils/token_storage.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../login/presentation/widgets/snackbar.dart';
 import 'profile_avatar_and_name.dart';
 import 'profile_bio_quote.dart';
 import 'profile_social_links_row.dart';
@@ -32,13 +35,54 @@ class ProfileHeader extends StatelessWidget {
       actions: [
         Padding(
           padding: EdgeInsets.only(right: 12.w),
-          child: IconButton(
-            icon: Icon(Icons.edit, color: colorScheme.onPrimary),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Edit Profile')),
-              );
-            },
+          child: Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.logout, color: colorScheme.onPrimary),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: const Color(0xFF1E1E1E), // Dark background
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      title: Text(
+                        'Confirm Logout',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      content: Text(
+                        'Are you sure you want to log out?',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context), // Cancel
+                          child: Text('Cancel', style: TextStyle(color: Colors.grey[400])),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context); // Close dialog
+                            TokenStorage.deleteToken();
+                            context.go('/login');
+                            showPremiumSnackbar(
+                              context,
+                              message: "Logged out successfully",
+                              isSuccess: true,
+                            );
+                          },
+                          child: Text('Logout', style: TextStyle(color: Colors.white)),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ],

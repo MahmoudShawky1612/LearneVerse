@@ -120,7 +120,7 @@ class PremiumLoginHeader extends StatelessWidget {
                     Transform.scale(
                       scale: 1.0 + (floatingAnimation.value * 0.03),
                       child: Icon(
-                        Icons.auto_awesome,
+                        Icons.school_rounded,
                         size: 45.r,
                         color: Colors.white,
                       ),
