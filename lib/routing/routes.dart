@@ -50,7 +50,7 @@ final GoRouter route = GoRouter(
     ),
     GoRoute(
       path: '/login',
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) => const PremiumLoginScreen(),
     ),
   ],
 );
