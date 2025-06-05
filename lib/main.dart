@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:flutterwidgets/core/providers/theme_provider.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
+import 'features/home/service/community_service.dart';
 import 'features/login/logic/cubit/auth_cubit.dart';
 import 'features/login/services/auth_api_service.dart';
 import 'features/profile/logic/cubit/profile_cubit.dart';
@@ -28,6 +30,7 @@ void main() async {
         BlocProvider<ProfileCubit>(
           create: (_) => ProfileCubit(UserProfileApiService(), token ?? ''),
         ),
+        BlocProvider<CommunityCubit>(create: (_) => CommunityCubit(CommunityApiService())),
       ],
       child: const MyApp(),
     ),

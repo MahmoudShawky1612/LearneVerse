@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class CommunityItem extends StatelessWidget {
-  final dynamic community;
+  final Community community;
 
   const CommunityItem({
     super.key,
@@ -63,9 +64,6 @@ class CommunityItem extends StatelessWidget {
             ),
           ),
 
-          
-          _buildMemberCount(colorScheme, textTheme),
-
           SizedBox(height: 8.w),
 
           
@@ -91,7 +89,7 @@ class CommunityItem extends StatelessWidget {
         ],
       ),
       child: Image(
-        image: AssetImage(community.image),
+        image: NetworkImage(community.logoImgURL),
         width: 40.h,
         height: 40.h,
         fit: BoxFit.contain,
@@ -99,33 +97,6 @@ class CommunityItem extends StatelessWidget {
     );
   }
 
-  Widget _buildMemberCount(ColorScheme colorScheme, TextTheme textTheme) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FaIcon(
-            FontAwesomeIcons.userFriends,
-            size: 9,
-            color: colorScheme.onSurface.withOpacity(0.6),
-          ),
-          SizedBox(width: 4.w),
-          Text(
-            '${community.memberCount}',
-            style: textTheme.bodySmall?.copyWith(
-              fontSize: 10.sp,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildViewButton(BuildContext context, ColorScheme colorScheme,
       AppThemeExtension? themeExtension) {
