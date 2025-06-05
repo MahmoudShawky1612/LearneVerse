@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/utils/jwt_helper.dart';
+import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
@@ -16,6 +18,30 @@ class HomeHeader extends StatefulWidget {
 bool isClicked = false;
 
 class _HomeHeaderState extends State<HomeHeader> {
+  late String userName;
+
+  // Fetch the username asynchronously and set it in the state
+  Future<void> _getUsername() async {
+    final token = await TokenStorage.getToken() ?? '';
+    if (token.isEmpty) {
+      setState(() {
+        userName = 'Guest';
+      });
+    } else {
+      final username = await getUsernameFromToken(token);
+      setState(() {
+        userName = username;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    userName = 'Loading...'; // Initial value while the username is being fetched
+    _getUsername(); // Fetch the username
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
@@ -23,8 +49,8 @@ class _HomeHeaderState extends State<HomeHeader> {
     final baseFontSize = screenWidth < 360
         ? 20.sp
         : screenWidth < 600
-            ? 24.sp
-            : 28.sp;
+        ? 24.sp
+        : 28.sp;
     final userProvider = Provider.of<UserProvider>(context);
     final currentUser = userProvider.currentUser;
 
@@ -68,9 +94,9 @@ class _HomeHeaderState extends State<HomeHeader> {
               },
               child: isClicked == false
                   ? CircleAvatar(
-                      radius: 17.r,
-                      backgroundImage: AssetImage(currentUser.avatar),
-                    )
+                radius: 17.r,
+                backgroundImage: AssetImage(currentUser.avatar),
+              )
                   : const CircularProgressIndicator(),
             ),
           ),
@@ -88,7 +114,7 @@ class _HomeHeaderState extends State<HomeHeader> {
           SizedBox(width: screenWidth < 360 ? 4.w : 5.w),
           Flexible(
             child: Text(
-              currentUser.name.toUpperCase(),
+              userName.toUpperCase(), // Display the username (or 'Loading...')
               style: TextStyle(
                 color: Colors.white,
                 fontSize: baseFontSize - 4.sp,
