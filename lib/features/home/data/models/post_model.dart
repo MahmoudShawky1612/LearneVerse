@@ -9,6 +9,7 @@ class Post {
   int voteCounter;
   final int commentCount;
   final Author author;
+  String voteType;
 
   Post({
     required this.id,
@@ -21,6 +22,7 @@ class Post {
     required this.voteCounter,
     required this.commentCount,
     required this.author,
+    this.voteType = "NONE",
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -35,9 +37,27 @@ class Post {
       voteCounter: json['voteCounter'],
       commentCount: json['commentCount'],
       author: Author.fromJson(json['author']),
+      voteType: json['voteType'] ?? "NONE",
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'content': content,
+      'attachments': attachments,
+      'forumId': forumId,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'voteCounter': voteCounter,
+      'commentCount': commentCount,
+      'author': author.toJson(),
+      'voteType': voteType,
+    };
+  }
+
 }
+
 
 class Author {
   final int id;
@@ -59,5 +79,13 @@ class Author {
       fullname: json['fullname'],
       avatarUrl: json['avatarUrl'],
     );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'username': username,
+      'fullname': fullname,
+      'avatarUrl': avatarUrl,
+    };
   }
 }

@@ -26,9 +26,9 @@ class FeedPostsApiService {
     }
   }
 
-  Future<Map<String, dynamic>> upVotePost(int id) async {
+  Future<void> upVotePost(Post post) async {
     final token = await TokenStorage.getToken();
-    final url = Uri.parse('$baseUrl/posts/upvote/$id');
+    final url = Uri.parse('$baseUrl/posts/upvote/${post.id}');
     final response = await http.put(
       url,
       headers: {
@@ -40,18 +40,16 @@ class FeedPostsApiService {
     final jsonData = jsonDecode(response.body);
     if (response.statusCode == 200) {
       final data = jsonData['data'];
-      return {
-        'voteCount': data['voteCount'],
-        'type': data['vote']['type'],
-      };
+      post.voteCounter = data['voteCount'];
+      post.voteType = data['vote']['type'] ?? "NONE";
     } else {
       throw Exception('Failed to upvote post ${jsonData['message']}');
     }
   }
 
-  Future<Map<String, dynamic>> downVotePost(int id) async {
+  Future<void> downVotePost(Post post) async {
     final token = await TokenStorage.getToken();
-    final url = Uri.parse('$baseUrl/posts/downvote/$id');
+    final url = Uri.parse('$baseUrl/posts/downvote/${post.id}');
     final response = await http.put(
       url,
       headers: {
@@ -63,10 +61,9 @@ class FeedPostsApiService {
     final jsonData = jsonDecode(response.body);
     if (response.statusCode == 200) {
       final data = jsonData['data'];
-      return {
-        'voteCount': data['voteCount'],
-        'type': data['vote']['type'],
-      };
+      post.voteCounter = data['voteCount'];
+      post.voteType = data['vote']['type'] ?? "NONE";
+
     } else {
       throw Exception('Failed to downvote post ${jsonData['message']}');
     }

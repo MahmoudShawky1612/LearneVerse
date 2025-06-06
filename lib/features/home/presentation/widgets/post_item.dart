@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/home/data/models/post_model.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/upvote_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/downvote_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/upvote_states.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/downvote_states.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,56 +35,26 @@ class PostItem extends StatefulWidget {
 
 class _PostItemState extends State<PostItem> {
   bool isExpanded = false;
-
   bool showOptions = false;
-
-
-
   Color upVoteColor = Colors.grey;
   Color downVoteColor = Colors.grey;
-  final FeedPostsApiService _apiService = FeedPostsApiService();
 
-  void upVote(int id)async{
-    final count = await _apiService.upVotePost(id);
-    if(count['type'] == 'UPVOTE') {
-      setState(() {
-        upVoteColor = Colors.green;
-        downVoteColor = Colors.grey;
-        widget.post.voteCounter = count['voteCount'];
-      });
-    } else if (count['type'] == 'NONE') {
-      setState(() {
-        upVoteColor = Colors.grey;
-        widget.post.voteCounter = count['voteCount'];
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    context.read<UpvoteCubit>().upVote(widget.post);
+    context.read<DownvoteCubit>().downVote(widget.post);
   }
 
-void downVote(int id)async{
-  final count = await _apiService.downVotePost(id);
-  if(count['type'] == 'DOWNVOTE') {
-    setState(() {
-      downVoteColor = Colors.red;
-      upVoteColor = Colors.grey;
-      widget.post.voteCounter = count['voteCount'];
-    });
-  } else if (count['type'] == 'NONE') {
-    setState(() {
-      downVoteColor = Colors.grey;
-      widget.post.voteCounter = count['voteCount'];
-    });
-  }
-}
 
   @override
   Widget build(BuildContext context) {
-
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
-    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final post = widget.post;
-    final hoursAgo  = DateTime.now().difference(post.createdAt).inHours;
+    final hoursAgo = DateTime.now().difference(post.createdAt).inHours;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -88,13 +63,11 @@ void downVote(int id)async{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                    },
+                    onTap: () {},
                     child: CircleAvatar(
                       radius: 16.r,
                       backgroundImage: NetworkImage(post.author.avatarUrl),
@@ -120,7 +93,7 @@ void downVote(int id)async{
                           ],
                         ),
                         SizedBox(height: 2.h),
-            Text('$hoursAgo h ago',
+                        Text('$hoursAgo h ago',
                             style: TextStyle(
                                 color: colorScheme.onSurface.withOpacity(0.7),
                                 fontSize: 11.sp)),
@@ -129,20 +102,20 @@ void downVote(int id)async{
                   ),
                   widget.isUserPost
                       ? IconButton(
-                          icon: Icon(Icons.more_horiz,
-                              color: colorScheme.onSurface.withOpacity(0.8),
-                              size: 18.r),
-                          onPressed: () {
-                            setState(() {
-                              showOptions = !showOptions;
-                            });
-                          },
-                          padding: EdgeInsets.zero,
-                          constraints: BoxConstraints(
-                            minWidth: 32.w,
-                            minHeight: 32.w,
-                          ),
-                        )
+                    icon: Icon(Icons.more_horiz,
+                        color: colorScheme.onSurface.withOpacity(0.8),
+                        size: 18.r),
+                    onPressed: () {
+                      setState(() {
+                        showOptions = !showOptions;
+                      });
+                    },
+                    padding: EdgeInsets.zero,
+                    constraints: BoxConstraints(
+                      minWidth: 32.w,
+                      minHeight: 32.w,
+                    ),
+                  )
                       : Container(),
                 ],
               ),
@@ -186,7 +159,7 @@ void downVote(int id)async{
                         ? Column(
                       children: post.attachments.map((attachmentUrl) {
                         return Container(
-                          margin: EdgeInsets.only(bottom: 8), // spacing between images
+                          margin: EdgeInsets.only(bottom: 8),
                           child: Image.network(
                             attachmentUrl,
                             fit: BoxFit.cover,
@@ -195,14 +168,38 @@ void downVote(int id)async{
                       }).toList(),
                     )
                         : Container(),
-
                     SizedBox(height: 12.h),
                     Row(
                       children: [
-                        _buildVoteButton(
-                          icon: FontAwesomeIcons.arrowUp,
-                          color: upVoteColor,
-                          onTap: () => upVote(post.id),
+                        BlocConsumer<UpvoteCubit, UpVoteStates>(
+                          listener: (context, state) {
+                            if (state is UpVoteSuccess) {
+                              setState(() {
+                                if(post.voteType == "UPVOTE"){
+                                  upVoteColor = Colors.green;
+                                  downVoteColor = Colors.grey;
+
+                                }
+                                else if(post.voteType == "NONE") {
+                                  upVoteColor = Colors.grey;
+                                }
+                              });
+                            } else if (state is UpVoteFailure) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Failed to upvote: ${state.message}')),
+                              );
+                            }
+                          },
+                          builder: (context, upvoteState) {
+                            return _buildVoteButton(
+                              icon: FontAwesomeIcons.arrowUp,
+                              color: upVoteColor,
+                              isLoading: upvoteState is UpVoteLoading,
+                              onTap: () {
+                                context.read<UpvoteCubit>().upVote(post);
+                              },
+                            );
+                          },
                         ),
                         SizedBox(width: 4.w),
                         Text(
@@ -213,10 +210,34 @@ void downVote(int id)async{
                           ),
                         ),
                         SizedBox(width: 10.w),
-                        _buildVoteButton(
-                          icon: FontAwesomeIcons.arrowDown,
-                          color: downVoteColor,
-                          onTap: () => downVote(post.id),
+                        BlocConsumer<DownvoteCubit, DownVoteStates>(
+                          listener: (context, state) {
+                            if (state is DownVoteSuccess) {
+                              setState(() {
+                                if(post.voteType == "DOWNVOTE"){
+                                  downVoteColor = Colors.red;
+                                  upVoteColor = Colors.grey;
+                                }
+                                else if(post.voteType == "NONE") {
+                                  downVoteColor = Colors.grey;
+                                }
+                              });
+                            } else if (state is DownVoteFailure) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Failed to downvote: ${state.message}')),
+                              );
+                            }
+                          },
+                          builder: (context, downvoteState) {
+                            return _buildVoteButton(
+                              icon: FontAwesomeIcons.arrowDown,
+                              color: downVoteColor,
+                              isLoading: downvoteState is DownVoteLoading,
+                              onTap: () {
+                                context.read<DownvoteCubit>().downVote(post);
+                              },
+                            );
+                          },
                         ),
                         SizedBox(width: 20.w),
                         _buildActionButton(
@@ -265,9 +286,9 @@ void downVote(int id)async{
                         'Edit',
                         Icons.edit_outlined,
                         colorScheme.primary,
-                        () {
+                            () {
                           _showEditPostDialog(
-                              post.id, post.title, post.content ?? " " );
+                              post.id, post.title, post.content ?? " ");
                         },
                       ),
                       Divider(
@@ -277,7 +298,7 @@ void downVote(int id)async{
                         'Delete',
                         Icons.delete_outline,
                         colorScheme.error,
-                        () {
+                            () {
                           setState(() {
                             showOptions = false;
                           });
@@ -301,13 +322,23 @@ void downVote(int id)async{
     required IconData icon,
     required Color color,
     required VoidCallback onTap,
+    bool isLoading = false,
   }) {
     return GestureDetector(
-      onTap: onTap,
-      child: FaIcon(
+      onTap: isLoading ? null : onTap,
+      child: isLoading
+          ? SizedBox(
+        width: 16.r,
+        height: 16.r,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: AlwaysStoppedAnimation<Color>(color),
+        ),
+      )
+          : FaIcon(
         icon,
         size: 16.r,
-        color: color
+        color: color,
       ),
     );
   }
@@ -345,11 +376,11 @@ void downVote(int id)async{
   }
 
   Widget _buildOptionsItem(
-    String text,
-    IconData icon,
-    Color color,
-    VoidCallback onTap,
-  ) {
+      String text,
+      IconData icon,
+      Color color,
+      VoidCallback onTap,
+      ) {
     return InkWell(
       onTap: onTap,
       child: Padding(

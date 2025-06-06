@@ -8,8 +8,7 @@ class DownVoteInitial extends DownVoteStates {}
 class DownVoteLoading extends DownVoteStates {}
 
 class DownVoteSuccess extends DownVoteStates {
-  final Map<String, dynamic> voteData;
-  DownVoteSuccess(this.voteData);
+
 }
 
 class DownVoteFailure extends DownVoteStates {

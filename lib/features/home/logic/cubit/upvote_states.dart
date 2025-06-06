@@ -8,8 +8,7 @@ class UpVoteInitial extends UpVoteStates {}
 class UpVoteLoading extends UpVoteStates {}
 
 class UpVoteSuccess extends UpVoteStates {
-  final Map<String, dynamic> voteData;
-  UpVoteSuccess(this.voteData);
+
 }
 
 class UpVoteFailure extends UpVoteStates {

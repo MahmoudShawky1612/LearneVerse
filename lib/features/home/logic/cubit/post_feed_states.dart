@@ -19,3 +19,4 @@ class PostFeedError extends PostFeedState {
   PostFeedError(this.message);
 }
 
+
