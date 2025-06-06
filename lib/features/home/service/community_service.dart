@@ -7,7 +7,7 @@ class CommunityApiService {
 
   CommunityApiService();
 
-  final String baseUrl = 'https://552d-217-55-218-22.ngrok-free.app/api/v1';
+  final String baseUrl = 'https://676c-154-236-5-88.ngrok-free.app/api/v1';
 
   Future<List<Community>> getCommunities() async {
     try {
@@ -39,12 +39,13 @@ class CommunityApiService {
   Future<int> communityMembersCount(int communityId) async {
     final response = await http.get(
         Uri.parse('$baseUrl/communities/$communityId/user-count'));
+    final data = json.decode(response.body);
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return data['memberCount'];
     } else {
-      throw Exception('Failed to load member count');
+      return Future.error('${data['message'] ?? 'Unknown error'}');
     }
   }
 }

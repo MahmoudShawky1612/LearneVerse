@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
+import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +33,7 @@ void main() async {
           create: (_) => ProfileCubit(UserProfileApiService(), token ?? ''),
         ),
         BlocProvider<CommunityCubit>(create: (_) => CommunityCubit(CommunityApiService())),
+        BlocProvider<PostFeedCubit>(create: (_) => PostFeedCubit(FeedPostsApiService())),
       ],
       child: const MyApp(),
     ),

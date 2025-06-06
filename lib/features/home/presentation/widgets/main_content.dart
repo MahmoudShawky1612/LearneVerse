@@ -92,7 +92,7 @@ class _MainContentState extends State<MainContent> {
 
       bool communityMatches = false;
 
-      
+
       final matchingCommunities =
           communities.where((c) => c.name == post.communityName);
       if (matchingCommunities.isNotEmpty) {
@@ -104,7 +104,7 @@ class _MainContentState extends State<MainContent> {
       return tagMatches || communityMatches;
     }).toList();
 
-    
+
     final postsToShow = recommendedPosts.isNotEmpty
         ? recommendedPosts
         : (recommendedPosts.length < 3
@@ -115,7 +115,7 @@ class _MainContentState extends State<MainContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
+
           Container(
             padding: EdgeInsets.only(
               top: 16.h,
@@ -164,71 +164,9 @@ class _MainContentState extends State<MainContent> {
                         ),
                       ),
                     ),
-                    if (recommendedCommunities.isNotEmpty)
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 4.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Text(
-                          'Personalized',
-                          style: TextStyle(
-                            color: colorScheme.primary,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 11.sp,
-                          ),
-                        ),
-                      ),
-                    GestureDetector(
-                      onTap: isRefreshing ? null : _refreshContent,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 5.w,
-                          vertical: 5.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isRefreshing
-                              ? colorScheme.primary.withOpacity(0.3)
-                              : colorScheme.primary,
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (isRefreshing)
-                              SizedBox(
-                                width: 16.w,
-                                height: 16.h,
-                                child: const CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                            else
-                              Icon(Icons.refresh,
-                                  color: Colors.white, size: 10.w),
-                            SizedBox(width: 4.w),
-                            Text(
-                              isRefreshing
-                                  ? 'Refreshing...'
-                                  : 'Refresh For You',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+
                   ],
                 ),
-                SizedBox(height: 16.h),
                 CommunityGrid(communities: communitiesToShow),
                 if (recommendedCommunities.isEmpty &&
                     currentUser.interests.isNotEmpty)
@@ -266,7 +204,7 @@ class _MainContentState extends State<MainContent> {
               ],
             ),
           ),
-          
+
           Container(
             margin: EdgeInsets.only(
               bottom: 75.h,
@@ -399,7 +337,7 @@ class _MainContentState extends State<MainContent> {
                 BuildPosts(
                   scrollPhysics: const NeverScrollableScrollPhysics(),
                   posts: postsToShow,
-                  delete: _onPostDelete, 
+                  delete: _onPostDelete,
                 ),
               ],
             ),

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
-import 'package:flutterwidgets/features/home/models/author_model.dart';
-import 'package:flutterwidgets/features/home/models/community_model.dart';
+import 'package:flutterwidgets/features/home/data/models/post_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import '.././../data/models/post_model.dart';
 import '../../../profile/presentation/views/profile_screen.dart';
 
 class PostItem extends StatefulWidget {
-  final post;
+  final Post post;
   final userInfo; 
   final Function? delete; 
   final Function? edit;
   final isUserPost;
+  final int? index;
 
   const PostItem({
     super.key,
@@ -22,6 +22,7 @@ class PostItem extends StatefulWidget {
     this.delete,
     this.isUserPost,
     this.edit,
+    this.index,
   });
 
   @override
@@ -35,44 +36,17 @@ class _PostItemState extends State<PostItem> {
   bool showOptions = false;
 
   
-  void toggleVote(bool isUpVote) {
-    setState(() {
-      if (isUpVote) {
-        if (isUpVoted) {
-          widget.post.voteCount--;
-          isUpVoted = false;
-        } else {
-          widget.post.voteCount++;
-          isUpVoted = true;
-          isDownVoted = false;
-        }
-      } else {
-        if (isDownVoted) {
-          widget.post.voteCount++;
-          isDownVoted = false;
-        } else {
-          widget.post.voteCount--;
-          isDownVoted = true;
-          isUpVoted = false;
-        }
-      }
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
-    Community community = Community.communities
-        .firstWhere((comm) => comm.image == widget.post.communityImage);
-    final post = widget.post;
-    final userInfo = widget.userInfo;
+
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
-
-    final avatar = userInfo != null ? userInfo.avatar : post.avatar;
-    final author = userInfo != null ? userInfo.name : post.author;
-
+    final post = widget.post;
+    final hoursAgo  = DateTime.now().difference(post.createdAt).inHours;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -87,21 +61,10 @@ class _PostItemState extends State<PostItem> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      List<Author> users = Author.users;
-                      final user = users.firstWhere(
-                        (user) => user.avatar == post.avatar,
-                        orElse: () => users.first,
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ProfileScreen(userInfo: user)),
-                      );
                     },
                     child: CircleAvatar(
                       radius: 16.r,
-                      backgroundImage: AssetImage(avatar),
+                      backgroundImage: NetworkImage(post.author.avatarUrl),
                       backgroundColor: Colors.transparent,
                     ),
                   ),
@@ -114,7 +77,7 @@ class _PostItemState extends State<PostItem> {
                           children: [
                             Flexible(
                               child: Text(
-                                author,
+                                post.author.username,
                                 style: textTheme.bodyLarge?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14.sp),
@@ -124,41 +87,11 @@ class _PostItemState extends State<PostItem> {
                           ],
                         ),
                         SizedBox(height: 2.h),
-                        Text('${post.time}h ago',
+            Text('$hoursAgo h ago',
                             style: TextStyle(
                                 color: colorScheme.onSurface.withOpacity(0.7),
                                 fontSize: 11.sp)),
                       ],
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => context.push('/community', extra: community),
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                      decoration: BoxDecoration(
-                        color: colorScheme.surface.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CircleAvatar(
-                            radius: 7.r,
-                            backgroundImage: AssetImage(post.communityImage),
-                            backgroundColor: Colors.transparent,
-                          ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            'c/${post.communityName}',
-                            style: TextStyle(
-                                color: colorScheme.onSurface.withOpacity(0.8),
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w500),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                   widget.isUserPost
@@ -191,7 +124,7 @@ class _PostItemState extends State<PostItem> {
                             fontSize: 16.sp, fontWeight: FontWeight.w700)),
                     SizedBox(height: 8.h),
                     Text(
-                      post.description,
+                      post.content ?? ' ',
                       maxLines: isExpanded ? null : 3,
                       overflow: isExpanded
                           ? TextOverflow.visible
@@ -201,7 +134,7 @@ class _PostItemState extends State<PostItem> {
                           height: 1.4,
                           color: colorScheme.onSurface.withOpacity(0.9)),
                     ),
-                    if (post.description.length > 200)
+                    if (post.content!.length > 200)
                       GestureDetector(
                         onTap: () => setState(() => isExpanded = !isExpanded),
                         child: Padding(
@@ -216,37 +149,20 @@ class _PostItemState extends State<PostItem> {
                         ),
                       ),
                     SizedBox(height: 5.h),
-                    post.image != null
-                        ? Container(
-                            child: Image.file(post.image),
-                          )
+                    post.attachments.isNotEmpty
+                        ? Column(
+                      children: post.attachments.map((attachmentUrl) {
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 8), // spacing between images
+                          child: Image.network(
+                            attachmentUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      }).toList(),
+                    )
                         : Container(),
-                    if (post.tags != null && post.tags.isNotEmpty)
-                      Padding(
-                        padding: EdgeInsets.only(top: 12.h),
-                        child: Wrap(
-                          spacing: 6,
-                          runSpacing: 6,
-                          children: post.tags.map<Widget>((tag) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8.w, vertical: 4.h),
-                              decoration: BoxDecoration(
-                                color: colorScheme.primary.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                '#$tag',
-                                style: TextStyle(
-                                  color: colorScheme.primary,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12.sp,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
+
                     SizedBox(height: 12.h),
                     Row(
                       children: [
@@ -254,11 +170,11 @@ class _PostItemState extends State<PostItem> {
                           icon: FontAwesomeIcons.arrowUp,
                           isActive: isUpVoted,
                           color: themeExtension?.upVote ?? Colors.green,
-                          onTap: () => toggleVote(true),
+                          onTap: () {},
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          '${post.voteCount}',
+                          '${post.voteCounter}',
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w500,
@@ -275,7 +191,7 @@ class _PostItemState extends State<PostItem> {
                           icon: FontAwesomeIcons.arrowDown,
                           isActive: isDownVoted,
                           color: themeExtension?.downVote ?? Colors.red,
-                          onTap: () => toggleVote(false),
+                          onTap: (){},
                         ),
                         SizedBox(width: 20.w),
                         _buildActionButton(
@@ -326,7 +242,7 @@ class _PostItemState extends State<PostItem> {
                         colorScheme.primary,
                         () {
                           _showEditPostDialog(
-                              post.id, post.title, post.description);
+                              post.id, post.title, post.content ?? " " );
                         },
                       ),
                       Divider(
@@ -442,10 +358,10 @@ class _PostItemState extends State<PostItem> {
     );
   }
 
-  void _showEditPostDialog(String id, String title, String description) {
+  void _showEditPostDialog(int id, String title, String content) {
     final titleController = TextEditingController(text: title);
-    final descriptionController = TextEditingController(text: description);
-    final currentUser = Author.users[0]; 
+    final descriptionController = TextEditingController(text: content);
+    final currentUser = widget.post.author;
 
     showDialog(
       context: context,
@@ -459,7 +375,7 @@ class _PostItemState extends State<PostItem> {
           title: Row(
             children: [
               CircleAvatar(
-                backgroundImage: AssetImage(currentUser.avatar),
+                backgroundImage: AssetImage(currentUser.avatarUrl),
                 radius: 16.r,
               ),
               const SizedBox(width: 10),
