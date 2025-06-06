@@ -42,8 +42,6 @@ class FeedPostsApiService {
       final data = jsonData['data'];
       post.voteCounter = data['voteCount'];
       post.voteType = data['vote']['type'];
-      print(post.voteCounter);
-      print(post.voteType);
     } else {
       throw Exception('Failed to upvote post ${jsonData['message']}');
     }
@@ -65,8 +63,6 @@ class FeedPostsApiService {
       final data = jsonData['data'];
       post.voteCounter = data['voteCount'];
       post.voteType = data['vote']['type'];
-      print(post.voteCounter);
-      print(post.voteType);
     } else {
       throw Exception('Failed to downvote post ${jsonData['message']}');
     }

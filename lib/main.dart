@@ -36,8 +36,6 @@ void main() async {
         ),
         BlocProvider<CommunityCubit>(create: (_) => CommunityCubit(CommunityApiService())),
         BlocProvider<PostFeedCubit>(create: (_) => PostFeedCubit(FeedPostsApiService())),
-        BlocProvider<UpvoteCubit>(create: (_) => UpvoteCubit(FeedPostsApiService())),
-        BlocProvider<DownvoteCubit>(create: (_) => DownvoteCubit(FeedPostsApiService())),
       ],
       child: const MyApp(),
     ),

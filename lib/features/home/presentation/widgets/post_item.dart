@@ -18,7 +18,7 @@ class PostItem extends StatefulWidget {
   final userInfo;
   final Function? delete;
   final Function? edit;
-  final isUserPost;
+  final  isUserPost;
 
   const PostItem({
     super.key,
@@ -39,289 +39,302 @@ class _PostItemState extends State<PostItem> {
   late Color upVoteColor;
   late Color downVoteColor;
   late int voteCounter;
+
   @override
   void initState() {
     super.initState();
     voteCounter = widget.post.voteCounter;
     upVoteColor = widget.post.voteType == "UPVOTE" ? Colors.green : Colors.grey;
     downVoteColor = widget.post.voteType == "DOWNVOTE" ? Colors.red : Colors.grey;
-    print(voteCounter);
-    print(widget.post.voteType);
   }
-
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
-    final post = widget.post;
-    final hoursAgo = DateTime.now().difference(post.createdAt).inHours;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
-          child: Column(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<UpvoteCubit>(
+          create: (context) => UpvoteCubit(FeedPostsApiService()), // Create a new instance for each PostItem
+        ),
+        BlocProvider<DownvoteCubit>(
+          create: (context) => DownvoteCubit(FeedPostsApiService()), // Create a new instance for each PostItem
+        ),
+      ],
+      child: Builder(
+        builder: (context) {
+          final theme = Theme.of(context);
+          final colorScheme = theme.colorScheme;
+          final textTheme = theme.textTheme;
+          final post = widget.post;
+          final hoursAgo = DateTime.now().difference(post.createdAt).inHours;
+
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: CircleAvatar(
-                      radius: 16.r,
-                      backgroundImage: NetworkImage(post.author.avatarUrl),
-                      backgroundColor: Colors.transparent,
-                    ),
-                  ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                post.author.username,
-                                style: textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14.sp),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 2.h),
-                        Text('$hoursAgo h ago',
-                            style: TextStyle(
-                                color: colorScheme.onSurface.withOpacity(0.7),
-                                fontSize: 11.sp)),
-                      ],
-                    ),
-                  ),
-                  widget.isUserPost
-                      ? IconButton(
-                    icon: Icon(Icons.more_horiz,
-                        color: colorScheme.onSurface.withOpacity(0.8),
-                        size: 18.r),
-                    onPressed: () {
-                      setState(() {
-                        showOptions = !showOptions;
-                      });
-                    },
-                    padding: EdgeInsets.zero,
-                    constraints: BoxConstraints(
-                      minWidth: 32.w,
-                      minHeight: 32.w,
-                    ),
-                  )
-                      : Container(),
-                ],
-              ),
-              SizedBox(height: 12.h),
               Padding(
-                padding: EdgeInsets.only(left: 40.w),
+                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(post.title,
-                        style: textTheme.titleMedium?.copyWith(
-                            fontSize: 16.sp, fontWeight: FontWeight.w700)),
-                    SizedBox(height: 8.h),
-                    Text(
-                      post.content ?? ' ',
-                      maxLines: isExpanded ? null : 3,
-                      overflow: isExpanded
-                          ? TextOverflow.visible
-                          : TextOverflow.ellipsis,
-                      style: textTheme.bodyMedium?.copyWith(
-                          fontSize: 14.sp,
-                          height: 1.4,
-                          color: colorScheme.onSurface.withOpacity(0.9)),
-                    ),
-                    if (post.content!.length > 200)
-                      GestureDetector(
-                        onTap: () => setState(() => isExpanded = !isExpanded),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 6.h),
-                          child: Text(
-                            isExpanded ? 'Show less' : 'Read more',
-                            style: TextStyle(
-                                color: colorScheme.primary,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12.sp),
-                          ),
-                        ),
-                      ),
-                    SizedBox(height: 5.h),
-                    post.attachments.isNotEmpty
-                        ? Column(
-                      children: post.attachments.map((attachmentUrl) {
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 8),
-                          child: Image.network(
-                            attachmentUrl,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      }).toList(),
-                    )
-                        : Container(),
-                    SizedBox(height: 12.h),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        BlocConsumer<UpvoteCubit, UpVoteStates>(
-                          listener: (context, state) {
-                            if (state is UpVoteSuccess) {
-                              setState(() {
-                                if(post.voteType == "UPVOTE"){
-                                  upVoteColor = Colors.green;
-                                  downVoteColor = Colors.grey;
-                                  voteCounter = post.voteCounter;
-                                }
-                                else if(post.voteType == "NONE") {
-                                  upVoteColor = Colors.grey;
-                                  voteCounter = post.voteCounter;
-                                }
-                              });
-                            } else if (state is UpVoteFailure) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Failed to upvote: ${state.message}')),
-                              );
-                            }
-                          },
-                          builder: (context, upvoteState) {
-                            return _buildVoteButton(
-                              icon: FontAwesomeIcons.arrowUp,
-                              color: upVoteColor,
-                              isLoading: upvoteState is UpVoteLoading,
-                              onTap: () {
-                                context.read<UpvoteCubit>().upVote(post);
-                              },
-                            );
-                          },
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          '$voteCounter',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w500,
+                        GestureDetector(
+                          onTap: () {},
+                          child: CircleAvatar(
+                            radius: 16.r,
+                            backgroundImage: NetworkImage(post.author.avatarUrl),
+                            backgroundColor: Colors.transparent,
                           ),
                         ),
                         SizedBox(width: 10.w),
-                        BlocConsumer<DownvoteCubit, DownVoteStates>(
-                          listener: (context, state) {
-                            if (state is DownVoteSuccess) {
-                              setState(() {
-                                if(post.voteType == "DOWNVOTE"){
-                                  downVoteColor = Colors.red;
-                                  upVoteColor = Colors.grey;
-                                  voteCounter = post.voteCounter;
-                                }
-                                else if(post.voteType == "NONE") {
-                                  downVoteColor = Colors.grey;
-                                  voteCounter = post.voteCounter;
-                                }
-                              });
-                            } else if (state is DownVoteFailure) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Failed to downvote: ${state.message}')),
-                              );
-                            }
-                          },
-                          builder: (context, downvoteState) {
-                            return _buildVoteButton(
-                              icon: FontAwesomeIcons.arrowDown,
-                              color: downVoteColor,
-                              isLoading: downvoteState is DownVoteLoading,
-                              onTap: () {
-                                context.read<DownvoteCubit>().downVote(post);
-                              },
-                            );
-                          },
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      post.author.username,
+                                      style: textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14.sp),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 2.h),
+                              Text('$hoursAgo h ago',
+                                  style: TextStyle(
+                                      color: colorScheme.onSurface.withOpacity(0.7),
+                                      fontSize: 11.sp)),
+                            ],
+                          ),
                         ),
-                        SizedBox(width: 20.w),
-                        _buildActionButton(
-                          icon: FontAwesomeIcons.comment,
-                          text: '${post.commentCount}',
-                          onTap: () {
-                            context.push('/comments', extra: post);
+                        widget.isUserPost
+                            ? IconButton(
+                          icon: Icon(Icons.more_horiz,
+                              color: colorScheme.onSurface.withOpacity(0.8),
+                              size: 18.r),
+                          onPressed: () {
+                            setState(() {
+                              showOptions = !showOptions;
+                            });
                           },
-                        ),
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(
+                            minWidth: 32.w,
+                            minHeight: 32.w,
+                          ),
+                        )
+                            : Container(),
                       ],
+                    ),
+                    SizedBox(height: 12.h),
+                    Padding(
+                      padding: EdgeInsets.only(left: 40.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(post.title,
+                              style: textTheme.titleMedium?.copyWith(
+                                  fontSize: 16.sp, fontWeight: FontWeight.w700)),
+                          SizedBox(height: 8.h),
+                          Text(
+                            post.content ?? ' ',
+                            maxLines: isExpanded ? null : 3,
+                            overflow: isExpanded
+                                ? TextOverflow.visible
+                                : TextOverflow.ellipsis,
+                            style: textTheme.bodyMedium?.copyWith(
+                                fontSize: 14.sp,
+                                height: 1.4,
+                                color: colorScheme.onSurface.withOpacity(0.9)),
+                          ),
+                          if (post.content!.length > 200)
+                            GestureDetector(
+                              onTap: () => setState(() => isExpanded = !isExpanded),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 6.h),
+                                child: Text(
+                                  isExpanded ? 'Show less' : 'Read more',
+                                  style: TextStyle(
+                                      color: colorScheme.primary,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12.sp),
+                                ),
+                              ),
+                            ),
+                          SizedBox(height: 5.h),
+                          post.attachments.isNotEmpty
+                              ? Column(
+                            children: post.attachments.map((attachmentUrl) {
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 8),
+                                child: Image.network(
+                                  attachmentUrl,
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            }).toList(),
+                          )
+                              : Container(),
+                          SizedBox(height: 12.h),
+                          Row(
+                            children: [
+                              BlocConsumer<UpvoteCubit, UpVoteStates>(
+                                listener: (context, state) {
+                                  if (state is UpVoteSuccess) {
+                                    setState(() {
+                                      if (post.voteType == "UPVOTE") {
+                                        upVoteColor = Colors.green;
+                                        downVoteColor = Colors.grey;
+                                        voteCounter = post.voteCounter;
+                                      } else if (post.voteType == "NONE") {
+                                        upVoteColor = Colors.grey;
+                                        voteCounter = post.voteCounter;
+                                      }
+                                    });
+                                  } else if (state is UpVoteFailure) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Failed to upvote: ${state.message}')),
+                                    );
+                                  }
+                                },
+                                builder: (context, upvoteState) {
+                                  return _buildVoteButton(
+                                    icon: FontAwesomeIcons.arrowUp,
+                                    color: upVoteColor,
+                                    isLoading: upvoteState is UpVoteLoading,
+                                    onTap: () {
+                                      context.read<UpvoteCubit>().upVote(post);
+                                    },
+                                  );
+                                },
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                '$voteCounter',
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(width: 10.w),
+                              BlocConsumer<DownvoteCubit, DownVoteStates>(
+                                listener: (context, state) {
+                                  if (state is DownVoteSuccess) {
+                                    setState(() {
+                                      if (post.voteType == "DOWNVOTE") {
+                                        downVoteColor = Colors.red;
+                                        upVoteColor = Colors.grey;
+                                        voteCounter = post.voteCounter;
+                                      } else if (post.voteType == "NONE") {
+                                        downVoteColor = Colors.grey;
+                                        voteCounter = post.voteCounter;
+                                      }
+                                    });
+                                  } else if (state is DownVoteFailure) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Failed to downvote: ${state.message}')),
+                                    );
+                                  }
+                                },
+                                builder: (context, downvoteState) {
+                                  return _buildVoteButton(
+                                    icon: FontAwesomeIcons.arrowDown,
+                                    color: downVoteColor,
+                                    isLoading: downvoteState is DownVoteLoading,
+                                    onTap: () {
+                                      context.read<DownvoteCubit>().downVote(post);
+                                    },
+                                  );
+                                },
+                              ),
+                              SizedBox(width: 20.w),
+                              _buildActionButton(
+                                icon: FontAwesomeIcons.comment,
+                                text: '${post.commentCount}',
+                                onTap: () {
+                                  context.push('/comments', extra: post);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-        if (showOptions)
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: EdgeInsets.only(right: 12.w),
-              child: Transform.translate(
-                offset: const Offset(0, -10),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 8.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: theme.cardColor,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colorScheme.onSurface.withOpacity(0.2),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
+              if (showOptions)
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 12.w),
+                    child: Transform.translate(
+                      offset: const Offset(0, -10),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 8.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.cardColor,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: colorScheme.onSurface.withOpacity(0.2),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildOptionsItem(
+                              'Edit',
+                              Icons.edit_outlined,
+                              colorScheme.primary,
+                                  () {
+                                _showEditPostDialog(
+                                    post.id, post.title, post.content ?? " ");
+                              },
+                            ),
+                            Divider(
+                                height: 8,
+                                color: colorScheme.onSurface.withOpacity(0.1)),
+                            _buildOptionsItem(
+                              'Delete',
+                              Icons.delete_outline,
+                              colorScheme.error,
+                                  () {
+                                setState(() {
+                                  showOptions = false;
+                                });
+                                if (widget.delete != null) {
+                                  widget.delete!(post.id);
+                                  setState(() {});
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildOptionsItem(
-                        'Edit',
-                        Icons.edit_outlined,
-                        colorScheme.primary,
-                            () {
-                          _showEditPostDialog(
-                              post.id, post.title, post.content ?? " ");
-                        },
-                      ),
-                      Divider(
-                          height: 8,
-                          color: colorScheme.onSurface.withOpacity(0.1)),
-                      _buildOptionsItem(
-                        'Delete',
-                        Icons.delete_outline,
-                        colorScheme.error,
-                            () {
-                          setState(() {
-                            showOptions = false;
-                          });
-                          if (widget.delete != null) {
-                            widget.delete!(post.id);
-                            setState(() {});
-                          }
-                        },
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
-      ],
+            ],
+          );
+        },
+      ),
     );
   }
+
+// ... (rest of the methods like _buildVoteButton, _buildActionButton, _buildOptionsItem, _showEditPostDialog remain unchanged)
 
   Widget _buildVoteButton({
     required IconData icon,
