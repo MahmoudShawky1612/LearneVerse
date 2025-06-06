@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/home/data/models/post_model.dart';
+import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,11 +10,10 @@ import '../../../profile/presentation/views/profile_screen.dart';
 
 class PostItem extends StatefulWidget {
   final Post post;
-  final userInfo; 
-  final Function? delete; 
+  final userInfo;
+  final Function? delete;
   final Function? edit;
   final isUserPost;
-  final int? index;
 
   const PostItem({
     super.key,
@@ -22,7 +22,6 @@ class PostItem extends StatefulWidget {
     this.delete,
     this.isUserPost,
     this.edit,
-    this.index,
   });
 
   @override
@@ -31,12 +30,46 @@ class PostItem extends StatefulWidget {
 
 class _PostItemState extends State<PostItem> {
   bool isExpanded = false;
-  bool isUpVoted = false;
-  bool isDownVoted = false;
+
   bool showOptions = false;
 
-  
 
+
+  Color upVoteColor = Colors.grey;
+  Color downVoteColor = Colors.grey;
+  final FeedPostsApiService _apiService = FeedPostsApiService();
+
+  void upVote(int id)async{
+    final count = await _apiService.upVotePost(id);
+    if(count['type'] == 'UPVOTE') {
+      setState(() {
+        upVoteColor = Colors.green;
+        downVoteColor = Colors.grey;
+        widget.post.voteCounter = count['voteCount'];
+      });
+    } else if (count['type'] == 'NONE') {
+      setState(() {
+        upVoteColor = Colors.grey;
+        widget.post.voteCounter = count['voteCount'];
+      });
+    }
+  }
+
+void downVote(int id)async{
+  final count = await _apiService.downVotePost(id);
+  if(count['type'] == 'DOWNVOTE') {
+    setState(() {
+      downVoteColor = Colors.red;
+      upVoteColor = Colors.grey;
+      widget.post.voteCounter = count['voteCount'];
+    });
+  } else if (count['type'] == 'NONE') {
+    setState(() {
+      downVoteColor = Colors.grey;
+      widget.post.voteCounter = count['voteCount'];
+    });
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +88,7 @@ class _PostItemState extends State<PostItem> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
+
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -168,9 +201,8 @@ class _PostItemState extends State<PostItem> {
                       children: [
                         _buildVoteButton(
                           icon: FontAwesomeIcons.arrowUp,
-                          isActive: isUpVoted,
-                          color: themeExtension?.upVote ?? Colors.green,
-                          onTap: () {},
+                          color: upVoteColor,
+                          onTap: () => upVote(post.id),
                         ),
                         SizedBox(width: 4.w),
                         Text(
@@ -178,20 +210,13 @@ class _PostItemState extends State<PostItem> {
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w500,
-                            color: isUpVoted
-                                ? themeExtension?.upVote
-                                : isDownVoted
-                                    ? themeExtension?.downVote
-                                    : theme.colorScheme.onSurface
-                                        .withOpacity(0.8),
                           ),
                         ),
                         SizedBox(width: 10.w),
                         _buildVoteButton(
                           icon: FontAwesomeIcons.arrowDown,
-                          isActive: isDownVoted,
-                          color: themeExtension?.downVote ?? Colors.red,
-                          onTap: (){},
+                          color: downVoteColor,
+                          onTap: () => downVote(post.id),
                         ),
                         SizedBox(width: 20.w),
                         _buildActionButton(
@@ -274,7 +299,6 @@ class _PostItemState extends State<PostItem> {
 
   Widget _buildVoteButton({
     required IconData icon,
-    required bool isActive,
     required Color color,
     required VoidCallback onTap,
   }) {
@@ -283,9 +307,7 @@ class _PostItemState extends State<PostItem> {
       child: FaIcon(
         icon,
         size: 16.r,
-        color: isActive
-            ? color
-            : Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+        color: color
       ),
     );
   }

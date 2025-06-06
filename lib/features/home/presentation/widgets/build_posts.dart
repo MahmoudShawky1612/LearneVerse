@@ -39,7 +39,6 @@ class BuildPosts extends StatelessWidget {
       itemBuilder: (context, index) {
         return PostItem(
           post: posts[index],
-          userInfo: userInfo,
           delete: delete,
           isUserPost: isUserPost,
           edit: edit,

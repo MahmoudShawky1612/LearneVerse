@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/downvote_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/upvote_cubit.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
@@ -34,6 +36,8 @@ void main() async {
         ),
         BlocProvider<CommunityCubit>(create: (_) => CommunityCubit(CommunityApiService())),
         BlocProvider<PostFeedCubit>(create: (_) => PostFeedCubit(FeedPostsApiService())),
+        BlocProvider<UpvoteCubit>(create: (_) => UpvoteCubit(FeedPostsApiService())),
+        BlocProvider<DownvoteCubit>(create: (_) => DownvoteCubit(FeedPostsApiService())),
       ],
       child: const MyApp(),
     ),

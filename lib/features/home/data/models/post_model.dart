@@ -6,7 +6,7 @@ class Post {
   final int forumId;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final int voteCounter;
+  int voteCounter;
   final int commentCount;
   final Author author;
 
