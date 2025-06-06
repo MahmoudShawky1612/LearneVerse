@@ -36,14 +36,17 @@ class PostItem extends StatefulWidget {
 class _PostItemState extends State<PostItem> {
   bool isExpanded = false;
   bool showOptions = false;
-  Color upVoteColor = Colors.grey;
-  Color downVoteColor = Colors.grey;
-
+  late Color upVoteColor;
+  late Color downVoteColor;
+  late int voteCounter;
   @override
   void initState() {
     super.initState();
-    context.read<UpvoteCubit>().upVote(widget.post);
-    context.read<DownvoteCubit>().downVote(widget.post);
+    voteCounter = widget.post.voteCounter;
+    upVoteColor = widget.post.voteType == "UPVOTE" ? Colors.green : Colors.grey;
+    downVoteColor = widget.post.voteType == "DOWNVOTE" ? Colors.red : Colors.grey;
+    print(voteCounter);
+    print(widget.post.voteType);
   }
 
 
@@ -54,7 +57,6 @@ class _PostItemState extends State<PostItem> {
     final textTheme = theme.textTheme;
     final post = widget.post;
     final hoursAgo = DateTime.now().difference(post.createdAt).inHours;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -178,10 +180,11 @@ class _PostItemState extends State<PostItem> {
                                 if(post.voteType == "UPVOTE"){
                                   upVoteColor = Colors.green;
                                   downVoteColor = Colors.grey;
-
+                                  voteCounter = post.voteCounter;
                                 }
                                 else if(post.voteType == "NONE") {
                                   upVoteColor = Colors.grey;
+                                  voteCounter = post.voteCounter;
                                 }
                               });
                             } else if (state is UpVoteFailure) {
@@ -203,7 +206,7 @@ class _PostItemState extends State<PostItem> {
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          '${post.voteCounter}',
+                          '$voteCounter',
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w500,
@@ -217,9 +220,11 @@ class _PostItemState extends State<PostItem> {
                                 if(post.voteType == "DOWNVOTE"){
                                   downVoteColor = Colors.red;
                                   upVoteColor = Colors.grey;
+                                  voteCounter = post.voteCounter;
                                 }
                                 else if(post.voteType == "NONE") {
                                   downVoteColor = Colors.grey;
+                                  voteCounter = post.voteCounter;
                                 }
                               });
                             } else if (state is DownVoteFailure) {

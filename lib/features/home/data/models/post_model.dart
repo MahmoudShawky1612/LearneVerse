@@ -22,7 +22,7 @@ class Post {
     required this.voteCounter,
     required this.commentCount,
     required this.author,
-    this.voteType = "NONE",
+    required this.voteType,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -37,7 +37,7 @@ class Post {
       voteCounter: json['voteCounter'],
       commentCount: json['commentCount'],
       author: Author.fromJson(json['author']),
-      voteType: json['voteType'] ?? "NONE",
+      voteType: json['voteType'] ,
     );
   }
   Map<String, dynamic> toJson() {
