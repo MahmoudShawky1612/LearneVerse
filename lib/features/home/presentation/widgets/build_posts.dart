@@ -1,19 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/post_feed_states.dart';
-import 'package:flutterwidgets/features/home/presentation/widgets/post_item.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/features/home/presentation/widgets/post_item.dart';
 
-class BuildPosts extends StatefulWidget {
-  final shrinkWrap;
-  final scrollPhysics;
-  final posts;
-  final userInfo;
+class BuildPosts extends StatelessWidget {
+  final bool shrinkWrap;
+  final ScrollPhysics scrollPhysics;
+  final List posts;
+  final dynamic userInfo;
   final Function? delete;
   final Function? edit;
-  final isUserPost;
+  final bool isUserPost;
 
   const BuildPosts({
     super.key,
@@ -27,54 +23,27 @@ class BuildPosts extends StatefulWidget {
   });
 
   @override
-  State<BuildPosts> createState() => _BuildPostsState();
-}
-
-class _BuildPostsState extends State<BuildPosts> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<PostFeedCubit>().fetchFeedPosts();
-  }
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return  BlocBuilder<PostFeedCubit, PostFeedState>(
-      builder: (BuildContext context, PostFeedState state) {
-        if (state is PostFeedLoading) {
-          return const Center(child: CupertinoActivityIndicator());
-
-        } else if (state is PostFeedError) {
-          return Center(child: Text(state.message));
-        } else if (state is PostFeedLoaded) {
-          return ListView.separated(
-              shrinkWrap: widget.shrinkWrap,
-              physics: widget.scrollPhysics,
-              padding: EdgeInsets.zero,
-              itemCount: state.posts.length,
-              separatorBuilder: (context, index) => Divider(
-                height: 1,
-                thickness: 0.5,
-                color: theme.dividerColor.withOpacity(0.5),
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return PostItem(
-                  post: state.posts[index],
-                  index: index,
-                  userInfo: widget.userInfo,
-                  delete: widget.delete,
-                  isUserPost: widget.isUserPost,
-                  edit: widget.edit,
-                );
-              });
-        }
-        return const Center(
-          child: Text(
-            'Unknown state',
-            ),
+    return ListView.separated(
+      shrinkWrap: shrinkWrap,
+      physics: scrollPhysics,
+      padding: EdgeInsets.zero,
+      itemCount: posts.length,
+      separatorBuilder: (_, __) => Divider(
+        height: 1,
+        thickness: 0.5,
+        color: theme.dividerColor.withOpacity(0.5),
+      ),
+      itemBuilder: (context, index) {
+        return PostItem(
+          post: posts[index],
+          userInfo: userInfo,
+          delete: delete,
+          isUserPost: isUserPost,
+          edit: edit,
         );
-
       },
     );
   }
