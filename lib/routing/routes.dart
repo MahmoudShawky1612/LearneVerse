@@ -1,6 +1,7 @@
 import 'package:flutterwidgets/features/comments/presentation/views/comments_screen.dart';
 import 'package:flutterwidgets/features/community/presentation/views/community_screen.dart';
 import 'package:flutterwidgets/features/discover/presentation/views/discover_screen.dart';
+import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:flutterwidgets/features/home/presentation/views/home_screen.dart';
 import 'package:flutterwidgets/features/home/presentation/views/main_screen.dart';
 import 'package:flutterwidgets/features/login/presentation/views/login_screen.dart';
@@ -38,7 +39,7 @@ final GoRouter route = GoRouter(
     ),
     GoRoute(
       path: '/community',
-      builder: (context, state) => CommunityScreen(community: state.extra),
+      builder: (context, state) => CommunityScreen(community: state.extra as Community),
     ),
     GoRoute(
       path: '/splash',

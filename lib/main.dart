@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/comment_cubit.dart';
 import 'package:flutterwidgets/features/comments/services/comment_service.dart';
+import 'package:flutterwidgets/features/community/logic/cubit/single_community_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/downvote_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
@@ -15,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:flutterwidgets/core/providers/theme_provider.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
+import 'features/community/services/single_community_service.dart';
 import 'features/home/service/community_service.dart';
 import 'features/login/logic/cubit/auth_cubit.dart';
 import 'features/login/services/auth_api_service.dart';
@@ -41,7 +43,7 @@ void main() async {
         BlocProvider<CommentCubit>(
           create: (_) => CommentCubit(CommentService()),
         ),
-
+        BlocProvider<SingleCommunityCubit>(create: (_) => SingleCommunityCubit(SingleCommunityApiService())),
       ],
       child: const MyApp(),
     ),
