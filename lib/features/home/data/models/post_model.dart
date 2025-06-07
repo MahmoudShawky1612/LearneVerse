@@ -19,10 +19,10 @@ class Post {
     required this.forumId,
     required this.createdAt,
     required this.updatedAt,
-    required this.voteCounter,
-    required this.commentCount,
+     this.voteCounter = 0,
+     this.commentCount = 0,
     required this.author,
-    required this.voteType,
+     this.voteType = 'NONE',
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -34,10 +34,10 @@ class Post {
       forumId: json['forumId'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      voteCounter: json['voteCounter'],
-      commentCount: json['commentCount'],
+      voteCounter: json['voteCounter'] ?? 0,
+      commentCount: json['commentCount'] ?? 0,
       author: Author.fromJson(json['author']),
-      voteType: json['voteType'] ,
+      voteType: json['voteType'] ?? 'NONE',
     );
   }
   Map<String, dynamic> toJson() {

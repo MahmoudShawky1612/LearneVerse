@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
+import '../../../utils/api_helper.dart';
 import '../data/model/user_model.dart';
 
 class AuthApiService {
-  static const String baseUrl = 'https://676c-154-236-5-88.ngrok-free.app/api/v1';
+  static const String baseUrl = ApiHelper.baseUrl;
 
 
   Future<User> login({required String email, required String password}) async {

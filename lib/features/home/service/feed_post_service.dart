@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:flutterwidgets/utils/api_helper.dart';
 import 'package:http/http.dart' as http;
 import '../../../utils/token_storage.dart';
 import '../data/models/post_model.dart';
 
 class FeedPostsApiService {
-  static const String baseUrl = 'https://676c-154-236-5-88.ngrok-free.app/api/v1';
+  static const String baseUrl = ApiHelper.baseUrl;
 
   Future<List<Post>> fetchMyFeedPosts() async {
     final token = await TokenStorage.getToken();

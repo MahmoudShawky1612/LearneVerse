@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:http/http.dart' as http;
+import '../../../utils/api_helper.dart';
 import '../data/models/community_model.dart';
 
 class CommunityApiService {
 
   CommunityApiService();
 
-  final String baseUrl = 'https://676c-154-236-5-88.ngrok-free.app/api/v1';
+  static const String baseUrl = ApiHelper.baseUrl;
 
   Future<List<Community>> getCommunities() async {
     try {
