@@ -15,6 +15,7 @@ class CommentsFetched extends CommentStates {
   final List<Comment> comments;
   CommentsFetched(this.comments);
 }
+
 class CommentError extends CommentStates {
   final String message;
   CommentError(this.message);

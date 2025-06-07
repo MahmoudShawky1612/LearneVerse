@@ -8,10 +8,10 @@ class CommentCubit extends Cubit<CommentStates> {
 
   CommentCubit(this.commentService) : super(CommentInitial());
 
-  Future<void> createComment(String content, int postId) async {
+  Future<void> createComment(String content, int postId, int? parentId) async {
     emit(CommentLoading());
     try {
-      final comment = await commentService.createComment(content: content, postId: postId);
+      final comment = await commentService.createComment(content: content, postId: postId, parentId: parentId);
       emit(CommentCreated(comment));
     } catch (e) {
       emit(CommentError(e.toString()));

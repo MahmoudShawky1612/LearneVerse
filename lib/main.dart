@@ -41,6 +41,7 @@ void main() async {
         BlocProvider<CommentCubit>(
           create: (_) => CommentCubit(CommentService()),
         ),
+
       ],
       child: const MyApp(),
     ),

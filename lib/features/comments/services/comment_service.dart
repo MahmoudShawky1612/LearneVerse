@@ -101,4 +101,5 @@ class CommentService {
       throw Exception('Failed to downvote comment: ${response.body}');
     }
   }
+
 }
