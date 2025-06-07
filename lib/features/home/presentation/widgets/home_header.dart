@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/utils/jwt_helper.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:provider/provider.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
 
@@ -15,22 +17,36 @@ class HomeHeader extends StatefulWidget {
   State<HomeHeader> createState() => _HomeHeaderState();
 }
 
-bool isClicked = false;
-
 class _HomeHeaderState extends State<HomeHeader> {
-  late String userName;
+  String? userName;
+  String? pP;
+  bool isClicked = false;
+  bool isLoading = true;
 
-  // Fetch the username asynchronously and set it in the state
-  Future<void> _getUsername() async {
-    final token = await TokenStorage.getToken() ?? '';
-    if (token.isEmpty) {
-      setState(() {
-        userName = 'Guest';
-      });
-    } else {
+  Future<void> _getUserData() async {
+    try {
+      final token = await TokenStorage.getToken() ?? '';
+      if (token.isEmpty) {
+        setState(() {
+          userName = 'Guest';
+          pP = null;
+          isLoading = false;
+        });
+        return;
+      }
+
       final username = await getUsernameFromToken(token);
+      final pp = await getUserProfilePictureURLFromToken(token);
       setState(() {
         userName = username;
+        pP = pp;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        userName = 'Guest';
+        pP = null;
+        isLoading = false;
       });
     }
   }
@@ -38,12 +54,14 @@ class _HomeHeaderState extends State<HomeHeader> {
   @override
   void initState() {
     super.initState();
-    userName = 'Loading...'; // Initial value while the username is being fetched
-    _getUsername(); // Fetch the username
+    userName = 'Loading...';
+    pP = null;
+    _getUserData();
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final screenWidth = MediaQuery.of(context).size.width;
     final baseFontSize = screenWidth < 360
@@ -51,8 +69,6 @@ class _HomeHeaderState extends State<HomeHeader> {
         : screenWidth < 600
         ? 24.sp
         : 28.sp;
-    final userProvider = Provider.of<UserProvider>(context);
-    final currentUser = userProvider.currentUser;
 
     return Container(
       height: 115.h,
@@ -73,6 +89,7 @@ class _HomeHeaderState extends State<HomeHeader> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             decoration: BoxDecoration(
@@ -84,7 +101,6 @@ class _HomeHeaderState extends State<HomeHeader> {
                 setState(() {
                   isClicked = true;
                 });
-
                 Future.delayed(const Duration(seconds: 2), () {
                   context.push('/profile');
                   setState(() {
@@ -92,12 +108,26 @@ class _HomeHeaderState extends State<HomeHeader> {
                   });
                 });
               },
-              child: isClicked == false
-                  ? CircleAvatar(
-                radius: 17.r,
-                backgroundImage: AssetImage(currentUser.avatar),
-              )
-                  : const CircularProgressIndicator(),
+              child: SizedBox(
+                width: 34.r,
+                height: 34.r,
+                child: isClicked || isLoading
+                    ? const Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CupertinoActivityIndicator(color: Colors.white),
+                  ),
+                )
+                    : CircleAvatar(
+                  radius: 17.r,
+                  backgroundImage: pP != null ? NetworkImage(pP!) : null,
+                  backgroundColor: Colors.grey[200],
+                  child: pP == null
+                      ? Icon(Icons.person, color: Colors.grey[600])
+                      : null,
+                ),
+              ),
             ),
           ),
           SizedBox(width: screenWidth < 360 ? 4.w : 5.w),
@@ -114,7 +144,7 @@ class _HomeHeaderState extends State<HomeHeader> {
           SizedBox(width: screenWidth < 360 ? 4.w : 5.w),
           Flexible(
             child: Text(
-              userName.toUpperCase(), // Display the username (or 'Loading...')
+              userName?.toUpperCase() ?? 'Guest',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: baseFontSize - 4.sp,

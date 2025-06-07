@@ -37,6 +37,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
   late Color upVoteColor;
   late Color downVoteColor;
   late int voteCounter;
+  late int commentCounter;
 
   late AnimationController _upvoteController;
   late AnimationController _downvoteController;
@@ -51,6 +52,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     voteCounter = widget.post.voteCounter;
     upVoteColor = widget.post.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
     downVoteColor = widget.post.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
+    commentCounter = widget.post.commentCount;
 
     _upvoteController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
     _downvoteController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
@@ -84,6 +86,17 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
       ),
     );
   }
+  String _getTimeAgo(DateTime createdAt) {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+    if (difference.inDays > 0) {
+      return '${difference.inDays}d';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}h';
+    } else {
+      return '${difference.inMinutes}m';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +104,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final post = widget.post;
-    final hoursAgo = DateTime.now().difference(post.createdAt).inHours;
 
     return MultiBlocProvider(
       providers: [
@@ -124,7 +136,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                           style: textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w600, fontSize: 14.sp)),
                       SizedBox(height: 2.h),
-                      Text('$hoursAgo h ago',
+                      Text('${_getTimeAgo(post.createdAt)} ago',
                           style: TextStyle(
                               color: colorScheme.onSurface.withOpacity(0.7),
                               fontSize: 11.sp)),
@@ -176,7 +188,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
 
                   SizedBox(height: 12.h),
 
-                  // Actions: Upvote / Downvote / Comment
                   Row(
                     children: [
                       // Upvote
@@ -204,7 +215,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                       Text('$voteCounter', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp)),
                       SizedBox(width: 10.w),
 
-                      // Downvote
                       BlocConsumer<DownvoteCubit, DownVoteStates>(
                         listener: (context, state) {
                           if (state is DownVoteSuccess) {
@@ -230,7 +240,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                       // Comments
                       _buildActionButton(
                         icon: FontAwesomeIcons.comment,
-                        text: '${post.commentCount}',
+                        text: '$commentCounter',
                         onTap: () => context.push('/comments', extra: post),
                       ),
                     ],

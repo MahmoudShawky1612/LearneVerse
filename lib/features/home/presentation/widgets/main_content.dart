@@ -9,6 +9,8 @@ import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_states.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/build_posts.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/community_grid.dart';
+import 'package:flutterwidgets/utils/token_storage.dart';
+import '../../../../utils/jwt_helper.dart';
 import '../../logic/cubit/community_states.dart';
 
 class MainContent extends StatefulWidget {
