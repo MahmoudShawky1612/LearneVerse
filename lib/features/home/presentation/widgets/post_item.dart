@@ -39,12 +39,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
   late int voteCounter;
   late int commentCounter;
 
-  late AnimationController _upvoteController;
-  late AnimationController _downvoteController;
-  late AnimationController _upvotePulseController;
-  late AnimationController _downvotePulseController;
-  late AnimationController _upvoteFloatController;
-  late AnimationController _downvoteFloatController;
 
   @override
   void initState() {
@@ -53,23 +47,10 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     upVoteColor = widget.post.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
     downVoteColor = widget.post.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
     commentCounter = widget.post.commentCount;
-
-    _upvoteController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
-    _downvoteController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
-    _upvotePulseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    _downvotePulseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    _upvoteFloatController = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
-    _downvoteFloatController = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
   }
 
   @override
   void dispose() {
-    _upvoteController.dispose();
-    _downvoteController.dispose();
-    _upvotePulseController.dispose();
-    _downvotePulseController.dispose();
-    _upvoteFloatController.dispose();
-    _downvoteFloatController.dispose();
     super.dispose();
   }
 

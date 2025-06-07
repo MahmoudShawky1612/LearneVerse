@@ -36,6 +36,8 @@ class Comment {
   final DateTime createdAt;
   final DateTime updatedAt;
   final Author author;
+  int voteCounter;
+  String voteType;
 
   Comment({
     required this.id,
@@ -46,6 +48,8 @@ class Comment {
     required this.createdAt,
     required this.updatedAt,
     required this.author,
+    required this.voteCounter,
+    required this.voteType,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
@@ -58,6 +62,8 @@ class Comment {
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       author: Author.fromJson(json['Author']),
+      voteCounter: json['voteCount'],
+      voteType: json['voteType'],
     );
   }
 }
