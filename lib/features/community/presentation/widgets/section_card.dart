@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'info_chip.dart';
+import 'package:flutterwidgets/features/community/data/models/classroom_model.dart';
 
-class SectionCard extends StatelessWidget {
-  final Map<String, dynamic> section;
+class ClassroomCard extends StatefulWidget {
+  final Classroom classroom;
 
-  const SectionCard({super.key, required this.section});
+  const ClassroomCard({super.key, required this.classroom});
 
+  @override
+  State<ClassroomCard> createState() => _ClassroomCardState();
+}
+
+class _ClassroomCardState extends State<ClassroomCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final classroom = widget.classroom;
+    final double progressValue = ((classroom.progress ?? 0).toDouble()) / 100;
 
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
@@ -29,18 +36,24 @@ class SectionCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16.r),
-          onTap: () {},
+          onTap: () {
+            // TODO: Navigate to classroom details
+          },
           child: Padding(
             padding: EdgeInsets.all(16.w),
             child: Row(
               children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: Image.asset(
-                    section['image'] as String,
-                    width: 80.w,
-                    height: 80.h,
-                    fit: BoxFit.cover,
+                Container(
+                  width: 80.w,
+                  height: 80.h,
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    Icons.menu_book_rounded,
+                    size: 40.w,
+                    color: colorScheme.primary,
                   ),
                 ),
                 SizedBox(width: 16.w),
@@ -49,42 +62,27 @@ class SectionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        section['title'] as String,
+                        classroom.name,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16.sp,
                         ),
                       ),
                       SizedBox(height: 8.h),
-                      Row(
-                        children: <Widget>[
-                          InfoChip(
-                            icon: Icons.book,
-                            label: '${section['lessons']} lessons',
-                          ),
-                          SizedBox(width: 8.w),
-                          InfoChip(
-                            icon: Icons.access_time,
-                            label: section['duration'] as String,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8.h),
-                      LinearProgressIndicator(
-                        value: (section['completed'] as int) /
-                            (section['lessons'] as int),
-                        backgroundColor:
-                        theme.colorScheme.surfaceContainerHighest,
-                        color: colorScheme.primary,
-                        borderRadius: BorderRadius.circular(2.r),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4.r),
+                        child: LinearProgressIndicator(
+                          value: progressValue,
+                          minHeight: 6.h,
+                          backgroundColor:
+                          colorScheme.surfaceContainerHighest,
+                          color: colorScheme.primary,
+                        ),
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        '${section['completed']}/${section['lessons']} completed',
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurfaceVariant,
-                          fontSize: 12.sp,
-                        ),
+                        '${(progressValue * 100).toStringAsFixed(0)}% completed',
+                        style: theme.textTheme.bodySmall,
                       ),
                     ],
                   ),

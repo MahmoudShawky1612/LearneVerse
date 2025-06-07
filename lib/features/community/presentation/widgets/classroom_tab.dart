@@ -1,39 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/features/home/data/models/community_model.dart';
+import '../../logic/cubit/classroom_cubit.dart';
+import '../../logic/cubit/classroom_states.dart';
 import 'section_card.dart';
 
-class ClassroomTab extends StatelessWidget {
-  final dynamic community;
+class ClassroomTab extends StatefulWidget {
+  final Community community;
 
   const ClassroomTab({super.key, required this.community});
 
   @override
+  State<ClassroomTab> createState() => _ClassroomTabState();
+}
+
+class _ClassroomTabState extends State<ClassroomTab> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ClassroomCubit>().fetchClassrooms(widget.community.id);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final List<Map<String, dynamic>> sections = [
-      {
-        'title': 'Introduction to the Community',
-        'lessons': 3,
-        'completed': 2,
-        'duration': '45 minutes',
-        'image': community.communityBackgroundImage,
-      },
-      {
-        'title': 'Getting Started with Projects',
-        'lessons': 5,
-        'completed': 0,
-        'duration': '1.5 hours',
-        'image': community.communityBackgroundImage,
-      },
-      {
-        'title': 'Advanced Techniques',
-        'lessons': 8,
-        'completed': 0,
-        'duration': '3 hours',
-        'image': community.communityBackgroundImage,
-      },
-    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +34,7 @@ class ClassroomTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              'Learning Sections',
+              'Available Classes',
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
@@ -52,7 +43,32 @@ class ClassroomTab extends StatelessWidget {
           ],
         ),
         SizedBox(height: 16.h),
-        ...sections.map((section) => SectionCard(section: section)),
+
+        /// 🔽 BlocBuilder replaces static section rendering
+        BlocBuilder<ClassroomCubit, ClassroomStates>(
+          builder: (context, state) {
+            if (state is ClassroomLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is ClassroomLoaded) {
+              final classrooms = state.classrooms;
+
+              if (classrooms.isEmpty) {
+                return const Text("No classrooms available.");
+              }
+
+              return Column(
+                children: classrooms
+                    .map((classroom) => ClassroomCard(classroom: classroom,))
+                    .toList(),
+              );
+            } else if (state is ClassroomError) {
+              return Text(state.message, style: const TextStyle(color: Colors.red));
+            }
+
+            return const SizedBox.shrink();
+          },
+        ),
+
         SizedBox(height: 24.h),
         SizedBox(height: 36.h),
       ],

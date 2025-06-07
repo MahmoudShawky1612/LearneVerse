@@ -16,6 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:flutterwidgets/core/providers/theme_provider.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
+import 'features/community/logic/cubit/classroom_cubit.dart';
+import 'features/community/services/classroom_service.dart';
 import 'features/community/services/single_community_service.dart';
 import 'features/home/service/community_service.dart';
 import 'features/login/logic/cubit/auth_cubit.dart';
@@ -44,6 +46,7 @@ void main() async {
           create: (_) => CommentCubit(CommentService()),
         ),
         BlocProvider<SingleCommunityCubit>(create: (_) => SingleCommunityCubit(SingleCommunityApiService())),
+        BlocProvider<ClassroomCubit>(create: (_) => ClassroomCubit(ClassroomService())),
       ],
       child: const MyApp(),
     ),
