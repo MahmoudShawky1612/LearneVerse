@@ -19,7 +19,9 @@ import 'package:flutterwidgets/core/providers/theme_provider.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 import 'features/community/logic/cubit/classroom_cubit.dart';
+import 'features/community/logic/cubit/community_members_cubit.dart';
 import 'features/community/services/classroom_service.dart';
+import 'features/community/services/community_members_api_service.dart';
 import 'features/community/services/single_community_service.dart';
 import 'features/home/service/community_service.dart';
 import 'features/login/logic/cubit/auth_cubit.dart';
@@ -50,6 +52,7 @@ void main() async {
         BlocProvider<SingleCommunityCubit>(create: (_) => SingleCommunityCubit(SingleCommunityApiService())),
         BlocProvider<ClassroomCubit>(create: (_) => ClassroomCubit(ClassroomService())),
         BlocProvider<ForumCubit>(create: (_) => ForumCubit(ForumApiService())),
+        BlocProvider<CommunityMembersCubit>(create: (_) => CommunityMembersCubit(CommunityMembersApiService())),
       ],
       child: const MyApp(),
     ),

@@ -148,8 +148,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
       case 4:
         return MembersTab(
           community: community,
-          members: _members,
-          foundUsers: foundUsers,
           searchController: searchController,
           onSearch: searchUsers,
         );

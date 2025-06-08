@@ -18,7 +18,7 @@ class HomeHeader extends StatefulWidget {
 }
 
 class _HomeHeaderState extends State<HomeHeader> {
-  String? userName;
+  String? fullName;
   String? pP;
   bool isClicked = false;
   bool isLoading = true;
@@ -28,23 +28,23 @@ class _HomeHeaderState extends State<HomeHeader> {
       final token = await TokenStorage.getToken() ?? '';
       if (token.isEmpty) {
         setState(() {
-          userName = 'Guest';
+          fullName = 'Guest';
           pP = null;
           isLoading = false;
         });
         return;
       }
 
-      final username = await getUsernameFromToken(token);
+      final fullname = await getFullNameFromToken(token);
       final pp = await getUserProfilePictureURLFromToken(token);
       setState(() {
-        userName = username;
+        fullName = fullname;
         pP = pp;
         isLoading = false;
       });
     } catch (e) {
       setState(() {
-        userName = 'Guest';
+        fullName = 'Guest';
         pP = null;
         isLoading = false;
       });
@@ -54,7 +54,7 @@ class _HomeHeaderState extends State<HomeHeader> {
   @override
   void initState() {
     super.initState();
-    userName = 'Loading...';
+    fullName = 'Loading...';
     pP = null;
     _getUserData();
   }
@@ -144,7 +144,7 @@ class _HomeHeaderState extends State<HomeHeader> {
           SizedBox(width: screenWidth < 360 ? 4.w : 5.w),
           Flexible(
             child: Text(
-              userName?.toUpperCase() ?? 'Guest',
+              fullName?.toUpperCase() ?? 'Guest',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: baseFontSize - 4.sp,

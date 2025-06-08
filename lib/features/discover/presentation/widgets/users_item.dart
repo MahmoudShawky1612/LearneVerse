@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../profile/presentation/views/profile_screen.dart';
 
 class UserItem extends StatelessWidget {
-  final user;
+  final  user;
 
   const UserItem({super.key, required this.user});
 
@@ -17,7 +17,6 @@ class UserItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final themeExtension = theme.extension<AppThemeExtension>();
-    final screenWidth = MediaQuery.of(context).size.width;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 600.w),
@@ -50,21 +49,23 @@ class UserItem extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(14.r),
-                    child: Image.asset(
-                      user.avatar,
+                    child: Image.network(
+                      user.profilePictureURL,
                       width: 30.w,
                       height: 30.w,
                       fit: BoxFit.cover,
                     ),
                   ),
                   SizedBox(width: 8.w),
-                  Expanded(
+
+                  /// 🛠 Wrap column with Flexible to prevent overflow
+                  Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          user.name,
+                          user.fullname,
                           style: textTheme.bodyLarge?.copyWith(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w700,
@@ -77,7 +78,7 @@ class UserItem extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                "@${user.userName}",
+                                "@${user.username}",
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   color: colorScheme.onSurface.withOpacity(0.7),
@@ -96,7 +97,7 @@ class UserItem extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Text(
-                                role,
+                                user.role,
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w600,
@@ -111,36 +112,36 @@ class UserItem extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Spacer(),
-                  Flexible(
-                      child: Container(
-                        constraints: BoxConstraints(maxWidth: 100.w),
-                        decoration: BoxDecoration(
-                          gradient: themeExtension?.buttonGradient,
-                          borderRadius: BorderRadius.circular(10.r),
+
+                  SizedBox(width: 8.w),
+
+                  Container(
+                    constraints: BoxConstraints(maxWidth: 100.w),
+                    decoration: BoxDecoration(
+                      gradient: themeExtension?.buttonGradient,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: InkWell(
+                      onTap: () => navigateToProfile(context),
+                      borderRadius: BorderRadius.circular(10.r),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 6.h,
                         ),
-                        child: InkWell(
-                          onTap: () => navigateToProfile(context),
-                          borderRadius: BorderRadius.circular(10.r),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                              vertical: 6.h,
-                            ),
-                            child: Text(
-                              "Profile",
-                              style: TextStyle(
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.w600,
-                                color: colorScheme.onPrimary,
-                              ),
-                            ),
+                        child: Text(
+                          "Profile",
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.onPrimary,
                           ),
                         ),
                       ),
                     ),
-                  ],
-              ),
+                  ),
+                ],
+              )
             ),
           ),
         ),

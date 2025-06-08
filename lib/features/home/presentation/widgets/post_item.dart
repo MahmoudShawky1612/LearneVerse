@@ -113,7 +113,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(post.author.username,
+                      Text(post.author.fullname,
                           style: textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w600, fontSize: 14.sp)),
                       SizedBox(height: 2.h),

@@ -10,6 +10,11 @@ String getUsernameFromToken(String token) {
   return payload['username'] as String;
 }
 
+String getFullNameFromToken(String token) {
+  final payload = JwtDecoder.decode(token);
+  return payload['fullname'] as String;
+}
+
 String getUserProfilePictureURLFromToken(String token) {
   final payload = JwtDecoder.decode(token);
   return payload['profilePictureURL']  ?? '';
