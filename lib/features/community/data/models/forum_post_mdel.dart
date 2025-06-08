@@ -1,4 +1,4 @@
-class Post {
+class ForumPost {
   final int id;
   final String title;
   final String? content;
@@ -11,7 +11,7 @@ class Post {
   final Author author;
   String voteType;
 
-  Post({
+  ForumPost({
     required this.id,
     required this.title,
     this.content,
@@ -25,8 +25,8 @@ class Post {
      this.voteType = 'NONE',
   });
 
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
+  factory ForumPost.fromJson(Map<String, dynamic> json) {
+    return ForumPost(
       id: json['id'],
       title: json['title'],
       content: json['content'],
@@ -34,7 +34,7 @@ class Post {
       forumId: json['forumId'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      voteCounter: json['voteCounter'] ?? 0,
+      voteCounter: json['voteScore'] ?? 0,
       commentCount: json['commentCount'] ?? 0,
       author: Author.fromJson(json['author']),
       voteType: json['voteType'] ?? 'NONE',
@@ -63,13 +63,13 @@ class Author {
   final int id;
   final String username;
   final String fullname;
-  final String profilePictureURL;
+  final String avatarUrl;
 
   Author({
     required this.id,
     required this.username,
     required this.fullname,
-    required this.profilePictureURL,
+    required this.avatarUrl,
   });
 
   factory Author.fromJson(Map<String, dynamic> json) {
@@ -77,7 +77,7 @@ class Author {
       id: json['id'],
       username: json['username'],
       fullname: json['fullname'],
-      profilePictureURL: json['profilePictureURL'],
+      avatarUrl: json['avatarUrl'],
     );
   }
   Map<String, dynamic> toJson() {
@@ -85,7 +85,7 @@ class Author {
       'id': id,
       'username': username,
       'fullname': fullname,
-      'profilePictureURL': profilePictureURL,
+      'avatarUrl': avatarUrl,
     };
   }
 }

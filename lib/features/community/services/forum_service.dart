@@ -6,14 +6,14 @@ import 'package:http/http.dart' as http;
 import '../../../utils/api_helper.dart';
 import '../../comments/data/models/comment_model.dart';
 
-class SingleCommunityApiService {
-
+class ForumApiService {
+  ForumApiService();
   static const String baseUrl = ApiHelper.baseUrl;
 
-  Future<Community> fetchSingleCommunity(int communityId) async {
+  Future<List<Post>> fetchPostsForCommunity(int forumId) async {
     final token = await TokenStorage.getToken();
     final response = await http.get(
-      Uri.parse('$baseUrl/communities/$communityId'),
+      Uri.parse('$baseUrl/posts/forums/$forumId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -21,13 +21,10 @@ class SingleCommunityApiService {
     );
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> json = jsonDecode(response.body);
-
-      final communityJson = json['data'] ?? json;
-
-      return Community.fromJson(communityJson);
+      final List<dynamic> json = jsonDecode(response.body)['data'];
+      return json.map((post) => Post.fromJson(post)).toList();
     } else {
-      throw Exception('Failed to load community'
+      throw Exception('Failed to load posts'
           ' - ${response.statusCode}: ${response.reasonPhrase}');
     }
   }

@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/providers/user_provider.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/comment_cubit.dart';
 import 'package:flutterwidgets/features/comments/services/comment_service.dart';
+import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/single_community_cubit.dart';
+import 'package:flutterwidgets/features/community/services/forum_service.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/downvote_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
@@ -47,6 +49,7 @@ void main() async {
         ),
         BlocProvider<SingleCommunityCubit>(create: (_) => SingleCommunityCubit(SingleCommunityApiService())),
         BlocProvider<ClassroomCubit>(create: (_) => ClassroomCubit(ClassroomService())),
+        BlocProvider<ForumCubit>(create: (_) => ForumCubit(ForumApiService())),
       ],
       child: const MyApp(),
     ),

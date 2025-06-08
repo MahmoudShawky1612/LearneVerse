@@ -105,7 +105,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
               children: [
                 CircleAvatar(
                   radius: 16.r,
-                  backgroundImage: NetworkImage(post.author.avatarUrl),
+                  backgroundImage: NetworkImage(post.author.profilePictureURL),
                   backgroundColor: Colors.transparent,
                 ),
                 SizedBox(width: 10.w),

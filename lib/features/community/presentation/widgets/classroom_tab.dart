@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,16 +45,15 @@ class _ClassroomTabState extends State<ClassroomTab> {
         ),
         SizedBox(height: 16.h),
 
-        /// 🔽 BlocBuilder replaces static section rendering
         BlocBuilder<ClassroomCubit, ClassroomStates>(
           builder: (context, state) {
             if (state is ClassroomLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CupertinoActivityIndicator());
             } else if (state is ClassroomLoaded) {
               final classrooms = state.classrooms;
 
               if (classrooms.isEmpty) {
-                return const Text("No classrooms available.");
+                return const Text("No classrooms available yet.");
               }
 
               return Column(

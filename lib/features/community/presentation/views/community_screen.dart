@@ -34,32 +34,25 @@ class _CommunityScreenState extends State<CommunityScreen> {
   int _currentIndex = 0;
   late final List<Post> _posts;
   late final List<Author> _members;
-  late bool _userHasJoined;
+  late bool _userHasJoined = true;
   late Author _currentUser;
-  late Author first;
-  late Author second;
-  late Author third;
   late List<Author> foundUsers;
   TextEditingController searchController = TextEditingController();
   File? _image;
-  late VideoPlayerController _controller;
+  VideoPlayerController? _controller;
 
   @override
   void initState() {
     super.initState();
     context.read<SingleCommunityCubit>().fetchSingleCommunity(widget.community.id);
 
-    _posts = Post.generateDummyPosts(15);
-    _members = Author.generateMoreDummyAuthors();
-    _currentUser = Author.users[0];
-    foundUsers = [];
     searchController.clear();
   }
 
   @override
   void dispose() {
     searchController.dispose();
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -88,27 +81,28 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SingleCommunityCubit, SingleCommunityStates>(
-      builder: (context, state) {
-        if (state is SingleCommunityLoading) {
-          return const Center(child: CupertinoActivityIndicator());
-        } else if (state is SingleCommunityFailure) {
-          return Center(child: Text("Error: ${state.message}"));
-        } else if (state is SingleCommunitySuccess) {
-          _userHasJoined = _currentUser.joinedCommunities.any((c) => c.id == state.community.id);
-          return Scaffold(
-            body: CustomScrollView(
+
+    return Scaffold(
+      body: BlocBuilder<SingleCommunityCubit, SingleCommunityStates>(
+        builder: (context, state) {
+          if (state is SingleCommunityLoading) {
+            return const Center(child: CupertinoActivityIndicator());
+          } else if (state is SingleCommunityFailure) {
+            return Center(child: Text("Error: ${state.message}"));
+          } else if (state is SingleCommunitySuccess) {
+            final community = state.community;
+            return CustomScrollView(
               slivers: <Widget>[
-                CommunitySliverAppBar(community: state.community),
+                CommunitySliverAppBar(community: community),
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.all(16.0.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        CommunityHeader(community: state.community),
+                        CommunityHeader(community: community),
                         SizedBox(height: 24.h),
-                        if (state.community.isPublic || _userHasJoined)
+                        if (community.isPublic || _userHasJoined)
                           TabSelector(
                             currentIndex: _currentIndex,
                             onTabSelected: (index) => setState(() => _currentIndex = index),
@@ -120,16 +114,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 SliverPadding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0.w),
                   sliver: SliverToBoxAdapter(
-                    child: _buildSelectedScreen(state.community),
+                    child: _buildSelectedScreen(community),
                   ),
                 ),
               ],
-            ),
-          );
-        } else {
+            );
+          }
           return const SizedBox.shrink();
-        }
-      },
+        },
+      ),
     );
   }
 
@@ -146,10 +139,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
         return ClassroomTab(community: community);
       case 2:
         return ForumTab(
-          posts: _posts,
           onCreatePost: _createNewPost,
           community: community,
-          currentUser: _currentUser,
           imagePicker: imagePicker,
         );
       case 3:
