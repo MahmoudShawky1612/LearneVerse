@@ -10,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../home/data/models/community_model.dart';
+import '../../logic/cubit/join_requests_cubit.dart';
+import '../../logic/cubit/join_requests_states.dart';
 import '../../logic/cubit/single_community_cubit.dart';
 import '../../logic/cubit/single_community_states.dart';
 import '../widgets/classroom_tab.dart';
@@ -45,7 +47,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   void initState() {
     super.initState();
     context.read<SingleCommunityCubit>().fetchSingleCommunity(widget.community.id);
-
+    context.read<CommunityRoleCubit>().fetchUserRole(widget.community.id);
     searchController.clear();
   }
 
@@ -79,45 +81,76 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   void _createNewPost() {}
 
+  void _joinCommunity() {
+    // Implement join community logic here
+    setState(() => _userHasJoined = true);
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body: BlocBuilder<SingleCommunityCubit, SingleCommunityStates>(
-        builder: (context, state) {
-          if (state is SingleCommunityLoading) {
+      body: BlocBuilder<CommunityRoleCubit, CommunityRoleState>(
+        builder: (context, roleState) {
+          if (roleState is CommunityRoleLoading) {
             return const Center(child: CupertinoActivityIndicator());
-          } else if (state is SingleCommunityFailure) {
-            return Center(child: Text("Error: ${state.message}"));
-          } else if (state is SingleCommunitySuccess) {
-            final community = state.community;
-            return CustomScrollView(
-              slivers: <Widget>[
-                CommunitySliverAppBar(community: community),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        CommunityHeader(community: community),
-                        SizedBox(height: 24.h),
-                        if (community.isPublic || _userHasJoined)
-                          TabSelector(
-                            currentIndex: _currentIndex,
-                            onTabSelected: (index) => setState(() => _currentIndex = index),
+          } else if (roleState is CommunityRoleError) {
+            return Center(child: Text("Error: ${roleState.message}"));
+          } else if (roleState is CommunityRoleLoaded) {
+            return BlocBuilder<SingleCommunityCubit, SingleCommunityStates>(
+              builder: (context, communityState) {
+                if (communityState is SingleCommunityLoading) {
+                  return const Center(child: CupertinoActivityIndicator());
+                } else if (communityState is SingleCommunityFailure) {
+                  return Center(child: Text("Error: ${communityState.message}"));
+                } else if (communityState is SingleCommunitySuccess) {
+                  final community = communityState.community;
+                  return CustomScrollView(
+                    slivers: <Widget>[
+                      CommunitySliverAppBar(community: community),
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              CommunityHeader(community: community),
+                              SizedBox(height: 24.h),
+                              if (roleState.role == null)
+                                Center(
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: _joinCommunity,
+                                      child: const Text('Join'),
+                                    ),
+                                  ),
+                                )
+                              else if (community.isPublic || _userHasJoined)
+                                TabSelector(
+                                  currentIndex: _currentIndex,
+                                  onTabSelected: (index) => setState(() => _currentIndex = index),
+                                ),
+                            ],
                           ),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0.w),
-                  sliver: SliverToBoxAdapter(
-                    child: _buildSelectedScreen(community),
-                  ),
-                ),
-              ],
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0.w),
+                        sliver: SliverToBoxAdapter(
+                          child: roleState.role == null
+                              ? InfoTab(
+                            community: community,
+                            formatDuration: _formatDuration,
+                            onJoinToggle: () => setState(() => _userHasJoined = !_userHasJoined),
+                          )
+                              : _buildSelectedScreen(community),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             );
           }
           return const SizedBox.shrink();
@@ -132,7 +165,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
         return InfoTab(
           community: community,
           formatDuration: _formatDuration,
-          userHasJoined: _userHasJoined,
           onJoinToggle: () => setState(() => _userHasJoined = !_userHasJoined),
         );
       case 1:
@@ -155,7 +187,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
         return InfoTab(
           community: community,
           formatDuration: _formatDuration,
-          userHasJoined: _userHasJoined,
           onJoinToggle: () => setState(() => _userHasJoined = !_userHasJoined),
         );
     }

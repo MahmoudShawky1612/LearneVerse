@@ -7,6 +7,7 @@ import 'package:flutterwidgets/features/comments/services/comment_service.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/single_community_cubit.dart';
 import 'package:flutterwidgets/features/community/services/forum_service.dart';
+import 'package:flutterwidgets/features/community/services/join_requests_service.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/downvote_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
@@ -20,6 +21,7 @@ import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 import 'features/community/logic/cubit/classroom_cubit.dart';
 import 'features/community/logic/cubit/community_members_cubit.dart';
+import 'features/community/logic/cubit/join_requests_cubit.dart';
 import 'features/community/services/classroom_service.dart';
 import 'features/community/services/community_members_api_service.dart';
 import 'features/community/services/single_community_service.dart';
@@ -53,6 +55,7 @@ void main() async {
         BlocProvider<ClassroomCubit>(create: (_) => ClassroomCubit(ClassroomService())),
         BlocProvider<ForumCubit>(create: (_) => ForumCubit(ForumApiService())),
         BlocProvider<CommunityMembersCubit>(create: (_) => CommunityMembersCubit(CommunityMembersApiService())),
+        BlocProvider<CommunityRoleCubit>(create: (_) => CommunityRoleCubit(ApiService())),
       ],
       child: const MyApp(),
     ),

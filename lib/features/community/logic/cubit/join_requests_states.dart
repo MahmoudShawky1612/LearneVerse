@@ -1,23 +1,18 @@
-// create_join_request_state.dart
 
+abstract class CommunityRoleState {}
 
-import '../../data/models/creat_request_model.dart';
+class CommunityRoleInitial extends CommunityRoleState {}
 
-abstract class CreateJoinRequestStates{}
+class CommunityRoleLoading extends CommunityRoleState {}
 
-class CreateJoinRequestInitial extends CreateJoinRequestStates {}
+class CommunityRoleLoaded extends CommunityRoleState {
+  final String? role;
 
-class CreateJoinRequestLoading extends CreateJoinRequestStates {}
-
-class CreateJoinRequestSuccess extends CreateJoinRequestStates{
-  final CreateRequestResponse joinRequest;
-
-   CreateJoinRequestSuccess(this.joinRequest);
+  CommunityRoleLoaded({required this.role});
 }
 
-class CreateJoinRequestError extends CreateJoinRequestStates {
-  final String error;
+class CommunityRoleError extends CommunityRoleState {
+  final String message;
 
-   CreateJoinRequestError(this.error);
-
+  CommunityRoleError({required this.message});
 }

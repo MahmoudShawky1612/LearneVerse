@@ -8,14 +8,12 @@ import 'join_button.dart';
 class InfoTab extends StatelessWidget {
   final Community community;
   final String Function(Duration) formatDuration;
-  final bool userHasJoined;
   final VoidCallback onJoinToggle;
 
   const InfoTab({
     super.key,
     required this.community,
     required this.formatDuration,
-    required this.userHasJoined,
     required this.onJoinToggle,
   });
 
@@ -86,16 +84,6 @@ class InfoTab extends StatelessWidget {
           title: 'Stay On Topic',
           description: 'Keep discussions relevant to the community focus.',
         ),
-        SizedBox(height: 24.h),
-        if (!community.isPublic)
-          SizedBox(
-            width: double.infinity,
-            child: JoinButton(
-              userHasJoined: userHasJoined,
-              onJoinToggle: onJoinToggle,
-            ),
-          ),
-        SizedBox(height: 36.h),
       ],
     );
   }
