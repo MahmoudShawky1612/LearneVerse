@@ -14,14 +14,23 @@ class SearchService {
     String? type,
   }) async {
     final token = await TokenStorage.getToken();
-    final queryParameters = {
-      'q': query,
-      if (type != null) 'type': type,
-      if (tagNames != null && tagNames.isNotEmpty) 'tags': tagNames.join(','),
-    };
+    final queryParameters = <String, String>{};
+    if (query.isNotEmpty) {
+      queryParameters['q'] = query;
+    }
+    if (type != null) {
+      queryParameters['type'] = type;
+    }
+    if (tagNames != null && tagNames.isNotEmpty) {
+      queryParameters.addAll({
+        for (var tag in tagNames) 'tags[]': tag,
+      });
+    }
 
+    final uri = Uri.parse('$baseUrl/search').replace(queryParameters: queryParameters);
+    print('Request URL: $uri'); // Debug log
     final response = await http.get(
-      Uri.parse('$baseUrl/search').replace(queryParameters: queryParameters),
+      uri,
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -29,6 +38,7 @@ class SearchService {
       },
     );
 
+    print('Response: ${response.statusCode} - ${response.body}'); // Debug log
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       if (body['success'] != true) {
