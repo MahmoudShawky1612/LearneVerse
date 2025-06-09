@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutterwidgets/features/home/data/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/post_item.dart';
 
 class BuildPosts extends StatelessWidget {
   final bool shrinkWrap;
   final ScrollPhysics scrollPhysics;
-  final List posts;
+  final List<Post> posts;
   final dynamic userInfo;
   final Function? delete;
   final Function? edit;

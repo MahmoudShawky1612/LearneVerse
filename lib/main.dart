@@ -27,7 +27,9 @@ import 'features/home/service/community_service.dart';
 import 'features/login/logic/cubit/auth_cubit.dart';
 import 'features/login/services/auth_api_service.dart';
 import 'features/profile/logic/cubit/profile_cubit.dart';
+import 'features/profile/logic/cubit/user_posts_cubit.dart';
 import 'features/profile/services/profile_api_services.dart';
+import 'features/profile/services/user_posts_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +56,7 @@ void main() async {
         BlocProvider<ForumCubit>(create: (_) => ForumCubit(ForumApiService())),
         BlocProvider<CommunityMembersCubit>(create: (_) => CommunityMembersCubit(CommunityMembersApiService())),
         BlocProvider<CommunityRoleCubit>(create: (_) => CommunityRoleCubit(ApiService())),
+        BlocProvider<UserPostCubit>(create: (_) => UserPostCubit(UserPostApiService())),
       ],
       child: const MyApp(),
     ),

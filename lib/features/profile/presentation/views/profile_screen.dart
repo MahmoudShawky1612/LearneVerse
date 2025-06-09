@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterwidgets/features/profile/logic/cubit/user_posts_states.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_state.dart';
 
+import '../../logic/cubit/user_posts_cubit.dart';
 import '../widgets/contributions.dart';
 import '../widgets/profile_header.dart';
-import '../widgets/profile_tab_button.dart';
 import '../widgets/user_contribution_comments.dart';
 import '../widgets/user_contribution_posts.dart';
 import '../widgets/user_joined_communities.dart';
@@ -20,13 +22,12 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  int selectedIndex = 0;
-
+class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-print(widget.userId);    context.read<ProfileCubit>().loadProfile(widget.userId);
+    context.read<ProfileCubit>().loadProfile(widget.userId);
+    context.read<UserPostCubit>().fetchPostsByUser(widget.userId);
   }
 
   @override
@@ -42,102 +43,97 @@ print(widget.userId);    context.read<ProfileCubit>().loadProfile(widget.userId)
             if (state is ProfileLoading) {
               return const Center(child: CupertinoActivityIndicator());
             }
-      
+
             if (state is ProfileError) {
               return Center(child: Text(state.message));
             }
-      
+
             if (state is ProfileLoaded) {
               final UserProfile userInfo = state.profile;
-      
-              return CustomScrollView(
-                slivers: [
-                  ProfileHeader(userInfo: userInfo),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          Card(
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            color: theme.cardColor,
-                            child: const Padding(
-                              padding: EdgeInsets.all(14),
-                              child: ContributionChart(),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: colorScheme.surface,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color:
-                                  colorScheme.onSurface.withOpacity(0.1),
-                                  blurRadius: 6,
-                                  spreadRadius: 0,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: ProfileTabButton(
-                                    title: "Contributions",
-                                    index: 0,
-                                    icon: Icons.edit_note,
-                                    selectedIndex: selectedIndex,
-                                    onTap: (index) =>
-                                        setState(() => selectedIndex = index),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ProfileTabButton(
-                                    title: "Communities",
-                                    index: 1,
-                                    icon: Icons.people,
-                                    selectedIndex: selectedIndex,
-                                    onTap: (index) =>
-                                        setState(() => selectedIndex = index),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (selectedIndex == 0)
+
+              return DefaultTabController(
+                length: 3,
+                child: NestedScrollView(
+                  headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                    ProfileHeader(userInfo: userInfo),
                     SliverPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       sliver: SliverToBoxAdapter(
                         child: Column(
                           children: [
-                            UserComments(userInfo: userInfo),
-                            UserPostsScreen(userInfo: userInfo),
+                            Card(
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              color: theme.cardColor,
+                              child: const Padding(
+                                padding: EdgeInsets.all(14),
+                                child: ContributionChart(),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: colorScheme.surface,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: colorScheme.onSurface.withOpacity(0.1),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const TabBar(
+                                labelColor: Colors.black,
+                                indicatorColor: Colors.deepOrange,
+                                tabs: [
+                                  Tab(
+                                    icon: FaIcon(FontAwesomeIcons.solidPenToSquare),
+                                    text: 'Posts',
+                                  ),
+                                  Tab(
+                                    icon: FaIcon(FontAwesomeIcons.solidCommentDots),
+                                    text: 'Comments',
+                                  ),
+                                  Tab(
+                                    icon: FaIcon(FontAwesomeIcons.peopleGroup),
+                                    text: 'Communities',
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 16),
                           ],
                         ),
                       ),
-                    )
-                  else if (selectedIndex == 1)
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: UserJoinedCommunities(userInfo: userInfo),
-                      ),
                     ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 32)),
-                ],
+                  ],
+                  body: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TabBarView(
+                      children: [
+                        BlocBuilder<UserPostCubit, UserPostState>(
+                          builder: (BuildContext context, UserPostState state) {
+                            if (state is UserPostLoading) {
+                              return const Center(child: CupertinoActivityIndicator());
+                            } else if (state is UserPostError) {
+                              return Center(child: Text(state.message));
+                            } else if (state is UserPostLoaded) {
+                              return UserPostsScreen(posts: state.posts);
+                            }
+                            return const SizedBox();
+                          },
+                        ),
+                        UserComments(userInfo: userInfo),
+                      UserJoinedCommunities(userInfo: userInfo),
+                    ],
+                    ),
+                  ),
+                ),
               );
             }
-      
             return const SizedBox(); // initial or fallback
           },
         ),

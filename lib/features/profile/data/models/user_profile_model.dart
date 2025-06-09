@@ -31,6 +31,7 @@ class User {
   }
 }
 class UserProfile {
+  final int userId;
   final String? bio;
   final String? twitter;
   final String? facebook;
@@ -42,6 +43,7 @@ class UserProfile {
   final User user;
 
   UserProfile({
+    required this.userId,
     this.bio,
     this.twitter,
     this.facebook,
@@ -55,6 +57,7 @@ class UserProfile {
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
+      userId: json['userId'],
       bio: json['bio'],
       twitter: json['twitter'],
       facebook: json['facebook'],
