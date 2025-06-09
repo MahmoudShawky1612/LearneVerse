@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterwidgets/features/profile/logic/cubit/user_posts_states.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_state.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../logic/cubit/user_comments_cubit.dart';
 import '../../logic/cubit/user_comments_states.dart';
 import '../../logic/cubit/user_communities_cubit.dart';
 import '../../logic/cubit/user_communities_states.dart';
+import '../../logic/cubit/user_contributions_cubit.dart';
+import '../../logic/cubit/user_contributions.states.dart';
 import '../../logic/cubit/user_posts_cubit.dart';
+import '../../logic/cubit/user_posts_states.dart';
 import '../widgets/contributions.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/user_contribution_comments.dart';
@@ -18,7 +20,7 @@ import '../widgets/user_contribution_posts.dart';
 import '../widgets/user_joined_communities.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final  userId;
+  final userId;
   const ProfileScreen({super.key, required this.userId});
 
   @override
@@ -37,13 +39,13 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
       setState(() {
         _currentIndex = _tabController.index;
       });
-      print('Current idddddddddddddddddddddddddddd index: ${widget.userId}');
     });
 
     context.read<ProfileCubit>().loadProfile(widget.userId);
     context.read<UserPostCubit>().fetchPostsByUser(widget.userId);
     context.read<UserCommentsCubit>().fetchCommentsByUser(widget.userId);
     context.read<UserCommunitiesCubit>().fetchCommunitiesByUser(widget.userId);
+    context.read<UserContributionsCubit>().fetchContributionsByUser(widget.userId);
   }
 
   @override
@@ -147,8 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
             }
 
             if (state is ProfileLoaded) {
-              final UserProfile userInfo = state.profile;
-
+              final userInfo = state.profile;
               return NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
                   ProfileHeader(userInfo: userInfo),
@@ -163,9 +164,20 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                               borderRadius: BorderRadius.circular(12),
                             ),
                             color: theme.cardColor,
-                            child: const Padding(
-                              padding: EdgeInsets.all(14),
-                              child: ContributionChart(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(14),
+                              child: BlocBuilder<UserContributionsCubit, UserContributionsState>(
+                                builder: (context, state) {
+                                  if (state is UserContributionsLoading) {
+                                    return const Center(child: CupertinoActivityIndicator());
+                                  } else if (state is UserContributionsError) {
+                                    return Center(child: Text(state.message));
+                                  } else if (state is UserContributionsLoaded) {
+                                    return ContributionChart(contributions: state.contributions);
+                                  }
+                                  return const SizedBox();
+                                },
+                              ),
                             ),
                           ),
                           const SizedBox(height: 24),
@@ -248,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                     controller: _tabController,
                     children: [
                       BlocBuilder<UserPostCubit, UserPostState>(
-                        builder: (BuildContext context, UserPostState state) {
+                        builder: (context, state) {
                           if (state is UserPostLoading) {
                             return const Center(child: CupertinoActivityIndicator());
                           } else if (state is UserPostError) {
@@ -260,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                         },
                       ),
                       BlocBuilder<UserCommentsCubit, UserCommentsState>(
-                        builder: (BuildContext context, UserCommentsState state) {
+                        builder: (context, state) {
                           if (state is UserCommentsLoading) {
                             return const Center(child: CupertinoActivityIndicator());
                           } else if (state is UserCommentsError) {
@@ -272,7 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                         },
                       ),
                       BlocBuilder<UserCommunitiesCubit, UserCommunitiesState>(
-                        builder: (BuildContext context, UserCommunitiesState state) {
+                        builder: (context, state) {
                           if (state is UserCommunitiesLoading) {
                             return const Center(child: CupertinoActivityIndicator());
                           } else if (state is UserCommunitiesError) {
@@ -288,7 +300,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 ),
               );
             }
-            return const SizedBox(); // initial or fallback
+            return const SizedBox();
           },
         ),
       ),

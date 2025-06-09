@@ -13,6 +13,7 @@ import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/user_communities_cubit.dart';
+import 'package:flutterwidgets/features/profile/logic/cubit/user_contributions_cubit.dart';
 import 'package:flutterwidgets/features/profile/services/user_comments.service.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
@@ -33,6 +34,7 @@ import 'features/profile/logic/cubit/profile_cubit.dart';
 import 'features/profile/logic/cubit/user_posts_cubit.dart';
 import 'features/profile/services/profile_api_services.dart';
 import 'features/profile/services/user_communities_service.dart';
+import 'features/profile/services/user_contributions_service.dart';
 import 'features/profile/services/user_posts_service.dart';
 
 void main() async {
@@ -63,6 +65,7 @@ void main() async {
         BlocProvider<UserPostCubit>(create: (_) => UserPostCubit(UserPostApiService())),
         BlocProvider<UserCommentsCubit>(create: (_) => UserCommentsCubit(UserCommentsApiService())),
         BlocProvider<UserCommunitiesCubit>(create: (_) => UserCommunitiesCubit(UserCommunitiesApiService())),
+        BlocProvider<UserContributionsCubit>(create: (_) => UserContributionsCubit(UserContributionsApiService())),
       ],
       child: const MyApp(),
     ),

@@ -3,14 +3,13 @@ import 'package:flutterwidgets/utils/api_helper.dart';
 import 'package:http/http.dart' as http;
 import '../../../utils/token_storage.dart';
 import '../data/models/contributions_model.dart';
-import '../data/models/user_profile_model.dart';
 
-class UserProfileApiService {
+class UserContributionsApiService {
   final baseUrl = ApiHelper.baseUrl;
 
-  Future<UserProfile> fetchUserProfile(int userId) async {
+  Future<List<UserContribution>> fetchUserContributions(int userId) async {
     final token = await TokenStorage.getToken();
-    final url = Uri.parse('$baseUrl/profiles/$userId');
+    final url = Uri.parse('$baseUrl/profiles/contributions/$userId');
 
     final response = await http.get(
       url,
@@ -23,10 +22,12 @@ class UserProfileApiService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       print('Response data: $data');
-      return UserProfile.fromJson(data['data']);
+      final List<dynamic> contributionsJson = data['data'][0]['UserContributions']; // Adjusted for nested structure
+      return contributionsJson
+          .map((json) => UserContribution.fromJson(json))
+          .toList();
     } else {
-      throw Exception('Failed to fetch user profile: ${response.statusCode}');
+      throw Exception('Failed to fetch user contributions: ${response.statusCode}');
     }
   }
-
 }

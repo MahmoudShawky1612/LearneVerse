@@ -13,7 +13,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileLoading());
     try {
       final profile = await apiService.fetchUserProfile(userId);
-      emit(ProfileLoaded(profile));
+       emit(ProfileLoaded(profile));
     } catch (e) {
       emit(ProfileError(e.toString()));
     }
