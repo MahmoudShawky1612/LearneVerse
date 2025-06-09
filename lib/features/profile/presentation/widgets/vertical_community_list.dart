@@ -9,7 +9,7 @@ class VerticalCommunityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return communities.isEmpty ? const Center(child: Text("No communities yet 😔"),) : ListView.builder(
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
       itemCount: communities.length,

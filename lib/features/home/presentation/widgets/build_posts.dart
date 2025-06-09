@@ -26,7 +26,7 @@ class BuildPosts extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ListView.separated(
+    return posts.isEmpty ? const Center(child: Text("No Posts Yet 😔"),) : ListView.separated(
       shrinkWrap: shrinkWrap,
       physics: scrollPhysics,
       padding: EdgeInsets.zero,
