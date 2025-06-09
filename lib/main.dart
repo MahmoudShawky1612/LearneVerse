@@ -27,6 +27,8 @@ import 'features/community/logic/cubit/join_requests_cubit.dart';
 import 'features/community/services/classroom_service.dart';
 import 'features/community/services/community_members_api_service.dart';
 import 'features/community/services/single_community_service.dart';
+import 'features/discover/logic/cubit/search_cubit.dart';
+import 'features/discover/services/search_service.dart';
 import 'features/home/service/community_service.dart';
 import 'features/login/logic/cubit/auth_cubit.dart';
 import 'features/login/services/auth_api_service.dart';
@@ -66,6 +68,7 @@ void main() async {
         BlocProvider<UserCommentsCubit>(create: (_) => UserCommentsCubit(UserCommentsApiService())),
         BlocProvider<UserCommunitiesCubit>(create: (_) => UserCommunitiesCubit(UserCommunitiesApiService())),
         BlocProvider<UserContributionsCubit>(create: (_) => UserContributionsCubit(UserContributionsApiService())),
+        BlocProvider<SearchCubit>(create: (_) => SearchCubit(SearchService())),
       ],
       child: const MyApp(),
     ),

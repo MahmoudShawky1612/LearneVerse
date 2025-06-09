@@ -25,17 +25,6 @@ class _BuildDefaultContentState extends State<BuildDefaultContent> {
         child: Column(
           children: [
             BuildSectionHeader(
-              title: "Pending Communities",
-              isExpanded: _isPendingExpanded,
-              onTap: () {
-                setState(() {
-                  _isPendingExpanded = !_isPendingExpanded;
-                });
-              },
-            ),
-            if (_isPendingExpanded) CommunityGrid(communities: _communities),
-            SizedBox(height: 30.h),
-            BuildSectionHeader(
               title: "Favorite Communities",
               isExpanded: _isFavoriteExpanded,
               onTap: () {

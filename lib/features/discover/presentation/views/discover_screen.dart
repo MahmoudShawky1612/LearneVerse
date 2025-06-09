@@ -1,13 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterwidgets/features/community/models/owner_model.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_default_content.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_header.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_search_results.dart';
-import 'package:flutterwidgets/features/home/models/author_model.dart';
- import 'package:flutterwidgets/features/home/presentation/widgets/search_bar.dart';
-import '../../../home/data/models/community_model.dart';
-import '../widgets/build_filters_list.dart';
+import 'package:flutterwidgets/features/home/presentation/widgets/search_bar.dart';
+import 'package:flutterwidgets/features/discover/presentation/widgets/build_filters_list.dart';
+import '../../logic/cubit/search_cubit.dart';
+import '../../logic/cubit/search_states.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
@@ -18,29 +19,18 @@ class DiscoverScreen extends StatefulWidget {
 
 class _DiscoverScreenState extends State<DiscoverScreen> {
   final TextEditingController _searchController = TextEditingController();
-
-  List<Community> _foundCommunities = [];
-  List<Author> _foundUsers = [];
   final List<String> _selectedFilters = [];
-  List<Owner> _foundOwners = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _foundCommunities = [];
-    _foundUsers = [];
-    _foundOwners = [];
-  }
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
-
-  void _search(String query) {
+  @override
+  void initState() {
+    super.initState();
+    context.read<SearchCubit>().search(query: '', tagNames: []);
   }
-
   void _toggleFilter(String filter) {
     setState(() {
       if (_selectedFilters.contains(filter)) {
@@ -49,7 +39,10 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         _selectedFilters.add(filter);
       }
       if (_searchController.text.isNotEmpty) {
-        _search(_searchController.text);
+        context.read<SearchCubit>().search(
+          query: _searchController.text,
+          tagNames: _selectedFilters.isNotEmpty ? _selectedFilters : null,
+        );
       }
     });
   }
@@ -70,31 +63,41 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               const BuildHeader(),
               SizedBox(height: 24.h),
               CustomSearchBar(
-                  searchController: _searchController, searchFunction: _search),
+                searchController: _searchController,
+                searchFunction: (query) => context.read<SearchCubit>().search(
+                  query: query,
+                  tagNames: _selectedFilters.isNotEmpty ? _selectedFilters : null,
+                ),
+              ),
               SizedBox(height: 24.h),
               BuildFiltersList(
                 selectedFilters: _selectedFilters,
                 onFilterToggle: _toggleFilter,
               ),
               SizedBox(height: 24.h),
-              _isSearchActive()
-                  ? Expanded(
-                      child: BuildSearchResults(
-                          foundCommunities: _foundCommunities,
-                          foundUsers: _foundUsers,
-                          foundOwners: _foundOwners),
-                    )
-                  : const BuildDefaultContent(),
+              Expanded(
+                child: BlocBuilder<SearchCubit, SearchStates>(
+                  builder: (context, state) {
+                    if (state is SearchLoading) {
+                      return Center(child: CupertinoActivityIndicator());
+                    } else if (state is SearchLoaded) {
+                      if (state.communities.isEmpty && state.users.isEmpty) {
+                        return const BuildDefaultContent();
+                      }
+                      return BuildSearchResults(
+                        foundCommunities: state.communities,
+                        foundUsers: state.users,
+                      );
+                    } else {
+                      return const BuildDefaultContent();
+                    }
+                  },
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  bool _isSearchActive() {
-    return _foundCommunities.isNotEmpty ||
-        _foundUsers.isNotEmpty ||
-        _foundOwners.isNotEmpty;
   }
 }

@@ -17,12 +17,12 @@ class CommunityMember {
 
   factory CommunityMember.fromJson(Map<String, dynamic> json) {
     return CommunityMember(
-      id: json['id'],
-      fullname: json['fullname'],
-      email: json['email'],
-      profilePictureURL: json['profilePictureURL'] ??'',
-      role: json['role'],
-      username: json['username'],
+      id: json['id'] ?? 0,
+      fullname: json['fullname'] ?? '',
+      email: json['email'] ?? '',
+      profilePictureURL: json['profilePictureURL']?? '',
+      role: json['role'] ?? '',
+      username: json['username'] ?? '',
     );
   }
 }

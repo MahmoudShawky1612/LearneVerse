@@ -14,9 +14,9 @@ class BuildFiltersList extends StatelessWidget {
   });
 
   final List<String> filters = [
-    'beginner',
+    'backend',
     'go lang',
-    'angular',
+    'cloud',
     'c',
     'problem solving',
     'intermediate',
