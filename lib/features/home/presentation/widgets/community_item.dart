@@ -5,6 +5,7 @@ import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/discover/logic/cubit/toggle_cubit.dart';
 import 'package:flutterwidgets/features/discover/logic/cubit/toggle_states.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
+import 'package:flutterwidgets/utils/snackber_util.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../utils/url_helper.dart';
@@ -33,6 +34,7 @@ class CommunityItem extends StatelessWidget {
 
     // Use ValueNotifier to track the favorite state locally
     final isFavoritedNotifier = ValueNotifier<bool>(isFavoriteCommunity);
+    final isFavoriteButtonEnabled = ValueNotifier<bool>(true);
 
     return Container(
       width: itemWidth,
@@ -119,12 +121,11 @@ class CommunityItem extends StatelessWidget {
                 child: BlocConsumer<ToggleCubit, ToggleStates>(
                   listener: (context, state) {
                     if (state is ToggleToggled) {
-                      // Toggle the local favorite state
-                      isFavoritedNotifier.value = !isFavoritedNotifier.value;
-                      // Notify parent widget if callback is provided
+                      isFavoritedNotifier.value = false; // Unfavorite it
+                      isFavoriteButtonEnabled.value = false; // Disable button
                       onFavoriteToggle?.call();
+                      SnackBarUtils.showInfoSnackBar(context, message: "Community Marked as not Favorite 😢");
                     } else if (state is ToggleError) {
-                      // Show error message (e.g., via a SnackBar)
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(state.message)),
                       );
@@ -132,7 +133,6 @@ class CommunityItem extends StatelessWidget {
                   },
                   builder: (context, state) {
                     bool isLoading = state is ToggleLoading;
-
                     return ValueListenableBuilder<bool>(
                       valueListenable: isFavoritedNotifier,
                       builder: (context, isFavorited, child) {
@@ -141,6 +141,8 @@ class CommunityItem extends StatelessWidget {
                           colorScheme,
                           isFavorited,
                           isLoading,
+                          // Pass the notifier to handle favorite state
+                          isFavoriteButtonEnabled,
                         );
                       },
                     );
@@ -273,7 +275,7 @@ class CommunityItem extends StatelessWidget {
       ColorScheme colorScheme,
       bool isFavorited,
       bool isLoading,
-      ) {
+      ValueNotifier<bool> isEnabled,      ) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -302,11 +304,12 @@ class CommunityItem extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: isLoading
+          onTap: (isLoading || !isEnabled.value)
               ? null
               : () {
             context.read<ToggleCubit>().toggleToggleCommunity(community.id);
           },
+
           borderRadius: BorderRadius.circular(20.r),
           child: Container(
             padding: EdgeInsets.all(6.w),
