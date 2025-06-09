@@ -235,7 +235,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                     ),
                   if (post.attachments.isNotEmpty)
                     ...post.attachments.map((url) => _buildImageWidget(url)),
-
                   SizedBox(height: 12.h),
 
                   Row(
