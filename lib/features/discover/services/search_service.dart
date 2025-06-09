@@ -38,8 +38,7 @@ class SearchService {
       },
     );
 
-    print('Response: ${response.statusCode} - ${response.body}'); // Debug log
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 400) {
       final body = jsonDecode(response.body);
       if (body['success'] != true) {
         throw Exception('Search failed: ${body['message']}');
@@ -63,4 +62,5 @@ class SearchService {
       throw Exception('Failed to search - ${response.statusCode}: ${response.reasonPhrase}');
     }
   }
+
 }
