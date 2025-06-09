@@ -13,7 +13,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^10.8.0
   go_router: ^14.8.1
-  fl_chart: ^0.68.0
+  fl_chart: ^1.0.0
   table_calendar: ^3.2.0
   google_fonts: ^6.2.1
   provider: ^6.1.2
@@ -32,6 +32,8 @@ dependencies:
   path_provider: ^2.1.5
   bloc: any
   url_launcher: ^6.3.1
+  syncfusion_flutter_charts: ^29.2.9
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

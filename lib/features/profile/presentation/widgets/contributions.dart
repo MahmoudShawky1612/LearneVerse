@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/profile/data/models/contributions_model.dart';
-import 'dart:math';
 
 // Custom ScrollBehavior to disable overscroll glow
 class NoGlowScrollBehavior extends ScrollBehavior {
   @override
   Widget buildOverscrollIndicator(
       BuildContext context, Widget child, ScrollableDetails details) {
-    return child; // Removes the glow effect
+    return child;
   }
 }
 
@@ -30,104 +29,47 @@ class ContributionChart extends StatefulWidget {
   State<ContributionChart> createState() => _ContributionChartState();
 }
 
-class _ContributionChartState extends State<ContributionChart>
-    with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeInAnimation;
-  late Animation<double> _scaleAnimation;
-  late ScrollController _scrollController; // Shared ScrollController
-
-  String? _hoveredDate;
-  int? _hoveredValue;
-  Offset? _tooltipPosition;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
-
-    _fadeInAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
-    ));
-
-    _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.2, 1.0, curve: Curves.elasticOut),
-    ));
-
-    _scrollController = ScrollController(); // Initialize ScrollController
-
-    _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _scrollController.dispose(); // Dispose ScrollController
-    super.dispose();
-  }
-
+class _ContributionChartState extends State<ContributionChart> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final data = _mapContributionsToGrid(widget.contributions, widget.weeks);
     final totalContributions = widget.contributions.fold<int>(0, (sum, c) => sum + c.count);
 
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (context, child) {
-        return FadeTransition(
-          opacity: _fadeInAnimation,
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  theme.colorScheme.surface,
-                  theme.colorScheme.surface.withOpacity(0.8),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(16.r),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
-            padding: EdgeInsets.all(20.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(theme, totalContributions),
-                SizedBox(height: 16.h),
-                _buildChart(theme, data),
-                SizedBox(height: 16.h),
-                _buildLegend(theme),
-                if (_hoveredDate != null) _buildTooltip(theme),
-              ],
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            theme.colorScheme.surface,
+            theme.colorScheme.surface.withOpacity(0.8),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.primary.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
-        );
-      },
+        ],
+      ),
+      padding: EdgeInsets.all(20.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(theme, totalContributions),
+          SizedBox(height: 16.h),
+          _buildChart(theme, data),
+          SizedBox(height: 16.h),
+          _buildLegend(theme),
+        ],
+      ),
     );
   }
 
   Widget _buildHeader(ThemeData theme, int totalContributions) {
-    final maxStreak = _calculateMaxStreak();
-
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -145,89 +87,60 @@ class _ContributionChartState extends State<ContributionChart>
           width: 1.5,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      'Contribution Activity✨',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.onSurface,
-                        fontSize: 16.sp,
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                  ],
-                ),
+          Expanded(
+            child: Text(
+              'Contribution Activity✨',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.onSurface,
+                fontSize: 16.sp,
               ),
-              SizedBox(width: 12.w),
-              Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          theme.colorScheme.primary,
-                          theme.colorScheme.primary.withOpacity(0.8),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                      borderRadius: BorderRadius.circular(12.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withOpacity(0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          totalContributions.toString(),
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 18.sp,
-                          ),
-                        ),
-                        Text(
-                          'contributions',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: Colors.white.withOpacity(0.9),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 9.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.primary,
+                  theme.colorScheme.primary.withOpacity(0.8),
                 ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-            ],
+              borderRadius: BorderRadius.circular(12.r),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.primary.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  totalContributions.toString(),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18.sp,
+                  ),
+                ),
+                Text(
+                  'contributions',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: Colors.white.withOpacity(0.9),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 9.sp,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -238,7 +151,7 @@ class _ContributionChartState extends State<ContributionChart>
     final monthLabels = _getMonthLabels(widget.weeks);
 
     return SizedBox(
-      height: (7 * widget.cellSize.w) + (6 * widget.cellSpacing.w) + 20.h, // Height for 7 rows + spacing + month labels
+      height: (7 * widget.cellSize.w) + (6 * widget.cellSpacing.w) + 20.h,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -274,34 +187,30 @@ class _ContributionChartState extends State<ContributionChart>
             }),
           ),
           SizedBox(width: 8.w),
-          // Contribution grid with month labels
+          // Heatmap grid
           Expanded(
             child: ScrollConfiguration(
               behavior: NoGlowScrollBehavior(),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                controller: _scrollController,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: (widget.weeks * (widget.cellSize.w + widget.cellSpacing.w)) - widget.cellSpacing.w,
-                  ),
+                child: SizedBox(
+                  width: (widget.weeks * (widget.cellSize.w + widget.cellSpacing.w)) - widget.cellSpacing.w,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Month labels
                       Row(
                         children: List.generate(widget.weeks, (week) {
-                          final label = monthLabels[week];
                           return Padding(
                             padding: EdgeInsets.only(right: week < widget.weeks - 1 ? widget.cellSpacing.w : 0),
                             child: SizedBox(
                               width: widget.cellSize.w,
                               height: 20.h,
                               child: Text(
-                                label ?? '',
+                                monthLabels[week] ?? '',
                                 style: theme.textTheme.labelSmall?.copyWith(
                                   color: theme.colorScheme.onSurface.withOpacity(0.6),
-                                  fontSize: 10.sp,
+                                  fontSize: 9.sp,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -309,68 +218,47 @@ class _ContributionChartState extends State<ContributionChart>
                           );
                         }),
                       ),
-                      // Contribution grid
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: List.generate(widget.weeks, (week) {
-                          return ScaleTransition(
-                            scale: _scaleAnimation,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: week < widget.weeks - 1 ? widget.cellSpacing.w : 0),
-                              child: Column(
-                                children: List.generate(7, (day) {
-                                  final value = data[week][day];
-                                  final date = _getDateForCell(week, day);
+                      // Grid
+                      SizedBox(
+                        height: (7 * widget.cellSize.w) + (6 * widget.cellSpacing.w),
+                        child: GridView.builder(
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 7,
+                            mainAxisSpacing: widget.cellSpacing.w,
+                            crossAxisSpacing: widget.cellSpacing.w,
+                            childAspectRatio: 1.0,
+                          ),
+                          itemCount: widget.weeks * 7,
+                          itemBuilder: (context, index) {
+                            final week = index ~/ 7;
+                            final day = index % 7;
+                            final value = data[week][day];
 
-                                  return Padding(
-                                    padding: EdgeInsets.only(bottom: day < 6 ? widget.cellSpacing.w : 0),
-                                    child: MouseRegion(
-                                      onEnter: (event) => _showTooltip(date, value, event.position),
-                                      onExit: (event) => _hideTooltip(),
-                                      child: AnimatedContainer(
-                                        duration: const Duration(milliseconds: 200),
-                                        curve: Curves.easeInOut,
-                                        width: widget.cellSize.w,
-                                        height: widget.cellSize.w,
-                                        decoration: BoxDecoration(
-                                          color: _getColorForValue(value, theme),
-                                          borderRadius: BorderRadius.circular(3.r),
-                                          border: value > 0
-                                              ? Border.all(
-                                            color: theme.colorScheme.primary.withOpacity(0.3),
-                                            width: 0.5,
-                                          )
-                                              : null,
-                                          boxShadow: value > 0
-                                              ? [
-                                            BoxShadow(
-                                              color: _getColorForValue(value, theme).withOpacity(0.4),
-                                              blurRadius: 4,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ]
-                                              : null,
-                                        ),
-                                        child: value > 0
-                                            ? Center(
-                                          child: Container(
-                                            width: 2.w,
-                                            height: 2.w,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white.withOpacity(0.8),
-                                              shape: BoxShape.circle,
-                                            ),
-                                          ),
-                                        )
-                                            : null,
-                                      ),
-                                    ),
-                                  );
-                                }),
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: _getColorForValue(value, theme),
+                                borderRadius: BorderRadius.circular(3.r),
+                                border: value > 0
+                                    ? Border.all(
+                                  color: theme.colorScheme.primary.withOpacity(0.3),
+                                  width: 0.5,
+                                )
+                                    : null,
+                                boxShadow: value > 0
+                                    ? [
+                                  BoxShadow(
+                                    color: _getColorForValue(value, theme).withOpacity(0.4),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                                    : null,
                               ),
-                            ),
-                          );
-                        }),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -422,126 +310,85 @@ class _ContributionChartState extends State<ContributionChart>
     );
   }
 
-  Widget _buildTooltip(ThemeData theme) {
-    if (_tooltipPosition == null || _hoveredDate == null) return const SizedBox.shrink();
-
-    return Positioned(
-      left: _tooltipPosition!.dx + 30.w, // Adjust for day labels
-      top: _tooltipPosition!.dy - 60,
-      child: Material(
-        elevation: 8,
-        borderRadius: BorderRadius.circular(8.r),
-        color: theme.colorScheme.inverseSurface,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                _hoveredDate!,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.onInverseSurface,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(
-                '${_hoveredValue} contributions',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onInverseSurface.withOpacity(0.8),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showTooltip(String date, int value, Offset position) {
-    setState(() {
-      _hoveredDate = date;
-      _hoveredValue = value;
-      _tooltipPosition = position;
-    });
-  }
-
-  void _hideTooltip() {
-    setState(() {
-      _hoveredDate = null;
-      _hoveredValue = null;
-      _tooltipPosition = null;
-    });
-  }
-
-  String _getDateForCell(int week, int day) {
-    final now = DateTime.now();
-    // Calculate date by going backward from the current date
-    final cellDate = now.subtract(Duration(days: (week * 7) + (6 - day)));
-
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    return '${months[cellDate.month - 1]} ${cellDate.day}, ${cellDate.year}';
-  }
-
   List<String?> _getMonthLabels(int weeks) {
-    final now = DateTime.now();
+    // Get the date range that covers all contributions
+    final dates = widget.contributions.map((c) => c.dateOnly).toList();
+    if (dates.isEmpty) {
+      final now = DateTime.now();
+      final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      List<String?> labels = List.filled(weeks, null);
+      for (int week = 0; week < weeks; week++) {
+        final weekDate = now.subtract(Duration(days: week * 7));
+        if (week == 0 || weekDate.month != now.subtract(Duration(days: (week - 1) * 7)).month) {
+          labels[week] = months[weekDate.month - 1];
+        }
+      }
+      return labels;
+    }
+
+    dates.sort();
+    final startDate = dates.first;
+    final endDate = dates.last;
+
+    // Calculate start of the chart (start of week containing startDate)
+    final startOfWeek = startDate.subtract(Duration(days: startDate.weekday % 7));
+
     final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     List<String?> labels = List.filled(weeks, null);
 
     for (int week = 0; week < weeks; week++) {
-      final weekDate = now.subtract(Duration(days: week * 7));
-      // Show month label if it's the first week or the month changes
-      if (week == 0 || weekDate.month != now.subtract(Duration(days: (week - 1) * 7)).month) {
+      final weekDate = startOfWeek.add(Duration(days: week * 7));
+      if (week == 0 || weekDate.month != startOfWeek.add(Duration(days: (week - 1) * 7)).month) {
         labels[week] = months[weekDate.month - 1];
       }
     }
     return labels;
   }
 
-  int _calculateMaxStreak() {
-    int maxStreak = 0;
-    int currentStreak = 0;
-
-    final sortedContributions = List<UserContribution>.from(widget.contributions)
-      ..sort((a, b) => a.dateOnly.compareTo(b.dateOnly));
-
-    DateTime? lastDate;
-    for (final contribution in sortedContributions) {
-      if (lastDate == null || contribution.dateOnly.difference(lastDate).inDays == 1) {
-        currentStreak++;
-        maxStreak = max(maxStreak, currentStreak);
-      } else {
-        currentStreak = 1;
-      }
-      lastDate = contribution.dateOnly;
+  List<List<int>> _mapContributionsToGrid(List<UserContribution> contributions, int weeks) {
+    if (contributions.isEmpty) {
+      return List.generate(weeks, (_) => List.filled(7, 0));
     }
 
-    return maxStreak;
-  }
+    // Sort contributions by date
+    final sortedContributions = [...contributions];
+    sortedContributions.sort((a, b) => a.dateOnly.compareTo(b.dateOnly));
 
-  List<List<int>> _mapContributionsToGrid(List<UserContribution> contributions, int weeks) {
-    final now = DateTime.now();
-    final end = now.subtract(Duration(days: weeks * 7));
+    // Get the date range
+    final startDate = sortedContributions.first.dateOnly;
+    final endDate = sortedContributions.last.dateOnly;
+
+    // Calculate the start of the chart (start of week containing the earliest date)
+    final chartStart = startDate.subtract(Duration(days: startDate.weekday % 7));
+
+    // Initialize grid
     List<List<int>> grid = List.generate(weeks, (_) => List.filled(7, 0));
 
+    // Create a map for faster lookup
+    final contributionMap = <String, int>{};
     for (final c in contributions) {
-      // Calculate days from the contribution date to the end date
-      final diff = now.difference(c.dateOnly).inDays;
-      if (diff >= 0 && diff < weeks * 7) {
-        final week = diff ~/ 7;
-        final day = (c.dateOnly.weekday + 6) % 7; // Adjust for Sunday=0 to Saturday=6
-        if (week < weeks && day < 7) {
-          grid[week][day] = c.count;
+      final dateKey = "${c.dateOnly.year}-${c.dateOnly.month.toString().padLeft(2, '0')}-${c.dateOnly.day.toString().padLeft(2, '0')}";
+      contributionMap[dateKey] = c.count;
+    }
+
+    // Fill the grid
+    for (int week = 0; week < weeks; week++) {
+      for (int day = 0; day < 7; day++) {
+        final currentDate = chartStart.add(Duration(days: (week * 7) + day));
+        final dateKey = "${currentDate.year}-${currentDate.month.toString().padLeft(2, '0')}-${currentDate.day.toString().padLeft(2, '0')}";
+
+        if (contributionMap.containsKey(dateKey)) {
+          grid[week][day] = contributionMap[dateKey]!;
         }
       }
     }
+
     return grid;
   }
 
   Color _getColorForValue(int value, ThemeData theme) {
     final isDark = theme.brightness == Brightness.dark;
     final primary = theme.colorScheme.primary;
-
     if (isDark) {
       switch (value) {
         case 0:
