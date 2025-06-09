@@ -2,7 +2,7 @@ class ForumPost {
   final int id;
   final String title;
   final String? content;
-  final List<String> attachments;
+  final List<String>? attachments;
   final int forumId;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -15,31 +15,40 @@ class ForumPost {
     required this.id,
     required this.title,
     this.content,
-    required this.attachments,
+    this.attachments,
     required this.forumId,
     required this.createdAt,
     required this.updatedAt,
-     this.voteCounter = 0,
-     this.commentCount = 0,
+    this.voteCounter = 0,
+    this.commentCount = 0,
     required this.author,
-     this.voteType = 'NONE',
+    this.voteType = 'NONE',
   });
 
   factory ForumPost.fromJson(Map<String, dynamic> json) {
     return ForumPost(
-      id: json['id'],
-      title: json['title'],
+      id: json['id'] ?? 0,
+      title: json['title'] ?? '',
       content: json['content'],
-      attachments: List<String>.from(json['attachments']),
-      forumId: json['forumId'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      attachments: json['attachments'] != null
+          ? List<String>.from(json['attachments'])
+          : [],
+      forumId: json['forumId'] ?? 0,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt']) ?? DateTime.now()
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt']) ?? DateTime.now()
+          : DateTime.now(),
       voteCounter: json['voteScore'] ?? 0,
       commentCount: json['commentCount'] ?? 0,
-      author: Author.fromJson(json['author']),
+      author: json['author'] != null
+          ? Author.fromJson(json['author'])
+          : Author.fallback(),
       voteType: json['voteType'] ?? 'NONE',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -55,9 +64,7 @@ class ForumPost {
       'voteType': voteType,
     };
   }
-
 }
-
 
 class Author {
   final int id;
@@ -74,12 +81,22 @@ class Author {
 
   factory Author.fromJson(Map<String, dynamic> json) {
     return Author(
-      id: json['id'],
-      username: json['username'],
-      fullname: json['fullname'],
-      avatarUrl: json['avatarUrl'],
+      id: json['id'] ?? 0,
+      username: json['username'] ?? '',
+      fullname: json['fullname'] ?? '',
+      avatarUrl: json['avatarUrl'] ?? '',
     );
   }
+
+  factory Author.fallback() {
+    return Author(
+      id: 0,
+      username: 'unknown',
+      fullname: 'Unknown User',
+      avatarUrl: '',
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

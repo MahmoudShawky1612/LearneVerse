@@ -110,7 +110,7 @@ class _ModernButtonState extends State<ModernButton>
     }
 
     if (widget.isDisabled || widget.isLoading) {
-      backgroundColor = colorScheme.surfaceVariant;
+      backgroundColor = colorScheme.surfaceContainerHighest;
       foregroundColor = colorScheme.onSurfaceVariant;
       borderColor = null;
     }

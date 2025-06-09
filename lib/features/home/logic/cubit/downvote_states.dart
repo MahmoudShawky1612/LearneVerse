@@ -1,4 +1,3 @@
-import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 
 
 abstract class DownVoteStates  {}

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
-import 'rating_stars.dart';
 
 class CommunityHeader extends StatelessWidget {
   final Community community;

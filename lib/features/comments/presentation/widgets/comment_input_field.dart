@@ -29,7 +29,7 @@ class _CommentInputFieldState extends State<CommentInputField> {
   Future<void> _getPp() async {
     try {
       final token = await TokenStorage.getToken() ?? '';
-      final pp = await getUserProfilePictureURLFromToken(token);
+      final pp = getUserProfilePictureURLFromToken(token);
       setState(() {
         pP = pp;
         isLoading = false;

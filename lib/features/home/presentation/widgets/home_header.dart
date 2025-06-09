@@ -4,9 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/utils/jwt_helper.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:provider/provider.dart';
-import 'package:flutterwidgets/core/providers/user_provider.dart';
 
 import '../../../../core/constants/app_colors.dart';
 
@@ -35,8 +32,8 @@ class _HomeHeaderState extends State<HomeHeader> {
         return;
       }
 
-      final fullname = await getFullNameFromToken(token);
-      final pp = await getUserProfilePictureURLFromToken(token);
+      final fullname = getFullNameFromToken(token);
+      final pp = getUserProfilePictureURLFromToken(token);
       setState(() {
         fullName = fullname;
         pP = pp;

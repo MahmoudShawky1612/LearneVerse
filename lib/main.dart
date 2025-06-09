@@ -9,9 +9,7 @@ import 'package:flutterwidgets/features/community/logic/cubit/single_community_c
 import 'package:flutterwidgets/features/community/services/forum_service.dart';
 import 'package:flutterwidgets/features/community/services/join_requests_service.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/downvote_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/upvote_cubit.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';

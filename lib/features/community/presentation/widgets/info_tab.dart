@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
-import 'package:video_player/video_player.dart';
 import 'guideline.dart';
-import 'join_button.dart';
 
 class InfoTab extends StatelessWidget {
   final Community community;

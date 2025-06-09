@@ -1,6 +1,5 @@
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 
-import '../../../home/data/models/post_model.dart';
 
 
 abstract class SingleCommunityStates {}

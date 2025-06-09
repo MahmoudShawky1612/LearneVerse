@@ -11,6 +11,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../utils/url_helper.dart';
+
 class PostItem extends StatefulWidget {
   final Post post;
   final dynamic userInfo;
@@ -49,10 +51,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     commentCounter = widget.post.commentCount;
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   Widget _buildActionButton({required IconData icon, required String text, required VoidCallback onTap}) {
     return InkWell(
@@ -77,6 +75,77 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     } else {
       return '${difference.inMinutes}m';
     }
+  }
+  Widget _buildImageWidget(String imageUrl) {
+    final transformedUrl = UrlHelper.transformUrl(imageUrl);
+    print('Original URL: $imageUrl');
+    print('Transformed URL: $transformedUrl');
+
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.network(
+          transformedUrl,
+          fit: BoxFit.cover,
+          headers: {
+            'ngrok-skip-browser-warning': 'true', // Skip ngrok warning
+          },
+          errorBuilder: (context, error, stackTrace) {
+            print('Error loading image: $error');
+            print('URL: $transformedUrl');
+            return Container(
+              height: 200,
+              width: double.infinity,
+              color: Colors.grey[300],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error, color: Colors.grey[600], size: 32),
+                  SizedBox(height: 8),
+                  Text(
+                    'Failed to load image',
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  ),
+                  SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'URL: $transformedUrl',
+                      style: TextStyle(color: Colors.grey[500], fontSize: 10),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              height: 200,
+              width: double.infinity,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                    SizedBox(height: 8),
+                    Text('Loading image...', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -105,8 +174,11 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
               children: [
                 CircleAvatar(
                   radius: 16.r,
-                  backgroundImage: NetworkImage(post.author.profilePictureURL),
+                  backgroundImage: NetworkImage(UrlHelper.transformUrl(post.author.profilePictureURL)),
                   backgroundColor: Colors.transparent,
+                  onBackgroundImageError: (exception, stackTrace) {
+                    print('Error loading profile picture: $exception');
+                  },
                 ),
                 SizedBox(width: 10.w),
                 Expanded(
@@ -162,10 +234,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                       ),
                     ),
                   if (post.attachments.isNotEmpty)
-                    ...post.attachments.map((url) => Container(
-                      margin: EdgeInsets.only(top: 8),
-                      child: Image.network(url, fit: BoxFit.cover),
-                    )),
+                    ...post.attachments.map((url) => _buildImageWidget(url)),
 
                   SizedBox(height: 12.h),
 
@@ -236,11 +305,11 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                 alignment: Alignment.topRight,
                 child: Container(
                   margin: EdgeInsets.only(top: 8.h),
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: theme.cardColor,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black12,
                         blurRadius: 4,

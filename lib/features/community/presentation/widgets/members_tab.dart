@@ -56,7 +56,7 @@ class _MembersTabState extends State<MembersTab> {
                 } else if (state is CommunityMembersError) {
                   return Text(
                     'Error: ${state.message}',
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   );
                 } else if (state is CommunityMembersSuccess) {
                   return Container(
@@ -87,7 +87,7 @@ class _MembersTabState extends State<MembersTab> {
             } else if (state is CommunityMembersError) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text('Error: ${state.message}', style: TextStyle(color: Colors.red)),
+                child: Text('Error: ${state.message}', style: const TextStyle(color: Colors.red)),
               );
             } else if (state is CommunityMembersSuccess) {
               return Column(

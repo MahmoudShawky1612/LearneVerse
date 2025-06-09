@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/features/community/services/forum_service.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:image_picker/image_picker.dart';
@@ -155,12 +156,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
         if (widget.community.isPublic) {
           SnackBarUtils.showSuccessSnackBar(
             context,
-            message: '🎉 Welcome to ${widget.community.name}!',
+            message: '👋 🎉 Welcome to ${widget.community.name}!',
           );
         } else {
           SnackBarUtils.showInfoSnackBar(
             context,
-            message: '📝 Join request sent!.',
+            message: '✍️Join request sent!.',
             duration: const Duration(seconds: 4),
           );
         }
@@ -228,10 +229,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
       case 1:
         return ClassroomTab(community: community);
       case 2:
-        return ForumTab(
-          onCreatePost: _createNewPost,
-          community: community,
-          imagePicker: _selectImage,
+        return RepositoryProvider(
+          create: (BuildContext context) => ForumApiService(),
+          child: ForumTab(
+             community: community,
+           ),
         );
       case 3:
         return LeaderboardTab(members: _members);

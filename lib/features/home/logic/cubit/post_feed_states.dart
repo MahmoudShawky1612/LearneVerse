@@ -1,6 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/post_model.dart';
-import '../../service/feed_post_service.dart';
 
 
 abstract class PostFeedState {}

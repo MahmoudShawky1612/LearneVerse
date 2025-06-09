@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
-import 'package:flutterwidgets/features/home/data/models/post_model.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:http/http.dart' as http;
 import '../../../utils/api_helper.dart';
-import '../../comments/data/models/comment_model.dart';
 
 class SingleCommunityApiService {
 

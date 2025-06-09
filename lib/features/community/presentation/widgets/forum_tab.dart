@@ -1,27 +1,23 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterwidgets/features/community/logic/cubit/forum.states.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
-import 'package:flutterwidgets/features/home/models/author_model.dart';
-import 'package:flutterwidgets/features/home/models/community_model.dart';
-import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/build_posts.dart';
-import '../../logic/cubit/single_community_cubit.dart';
-import '../../logic/cubit/single_community_states.dart';
-import 'create_post_dialog.dart';
+import 'package:mime/mime.dart';
+import 'package:path_provider/path_provider.dart';
+import '../../logic/cubit/forum.states.dart';
+import '../../services/forum_service.dart';
+import 'package:image/image.dart' as img;
 
 class ForumTab extends StatefulWidget {
-  final VoidCallback onCreatePost;
   final dynamic community;
-  final Future<void> Function() imagePicker;
 
   const ForumTab({
     super.key,
-    required this.onCreatePost,
     required this.community,
-    required this.imagePicker,
   });
 
   @override
@@ -34,6 +30,148 @@ class _ForumTabState extends State<ForumTab> {
     super.initState();
     print(widget.community.id);
     context.read<ForumCubit>().fetchForumPosts(widget.community.id);
+  }
+
+
+  Future<String?> _uploadImage(File image) async {
+    try {
+      final fileSize = await image.length();
+      if (fileSize > 10 * 1024 * 1024) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Image size exceeds 10MB limit')),
+        );
+        return null;
+      }
+
+      // Convert image to JPEG
+      final imageBytes = await image.readAsBytes();
+      final decodedImage = img.decodeImage(imageBytes);
+      if (decodedImage == null) {
+        throw Exception('Failed to decode image');
+      }
+      final jpegBytes = img.encodeJpg(decodedImage, quality: 85);
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File('${tempDir.path}/temp_image.jpg');
+      await tempFile.writeAsBytes(jpegBytes);
+
+      print('Converted image MIME type: ${lookupMimeType(tempFile.path)}'); // Debug log
+      return await context.read<ForumApiService>().uploadImage(tempFile);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to upload image: $e')),
+      );
+      print(e);
+      return null;
+    }
+  }
+  void _showCreatePostDialog() {
+    final titleController = TextEditingController();
+    final contentController = TextEditingController();
+    XFile? pickedImage;
+    final ImagePicker _picker = ImagePicker();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Create New Post'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(labelText: 'Title'),
+                  ),
+                  TextField(
+                    controller: contentController,
+                    decoration: const InputDecoration(labelText: 'Content'),
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final XFile? image = await _picker.pickImage(
+                            source: ImageSource.gallery,
+                          );
+                          if (image != null) {
+                            setDialogState(() {
+                              pickedImage = image;
+                            });
+                          }
+                        },
+                        child: const Text('Pick Image'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final XFile? image = await _picker.pickImage(
+                            source: ImageSource.camera,
+                          );
+                          if (image != null) {
+                            setDialogState(() {
+                              pickedImage = image;
+                            });
+                          }
+                        },
+                        child: const Text('Take Photo'),
+                      ),
+                    ],
+                  ),
+                  if (pickedImage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        'Selected: ${pickedImage!.name}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    if (titleController.text.isNotEmpty && contentController.text.isNotEmpty) {
+                      List<String> attachments = [];
+                      if (pickedImage != null) {
+                        final imageUrl = await _uploadImage(File(pickedImage!.path));
+                        if (imageUrl != null) {
+                          attachments.add(imageUrl);
+                        } else {
+                          return; // Stop if image upload fails
+                        }
+                      }
+                      context.read<ForumCubit>().createForumPost(
+                        widget.community.id,
+                        titleController.text,
+                        contentController.text,
+                        attachments,
+                      );
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Post created successfully')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Title and content are required')),
+                      );
+                    }
+                  },
+                  child: const Text('Create'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -57,9 +195,7 @@ class _ForumTabState extends State<ForumTab> {
               ),
             ),
             ElevatedButton.icon(
-              onPressed: () {
-
-              },
+              onPressed: _showCreatePostDialog,
               icon: const Icon(Icons.add),
               label: const Text('New Post'),
               style: ElevatedButton.styleFrom(
@@ -100,7 +236,7 @@ class _ForumTabState extends State<ForumTab> {
               return Center(
                 child: Text(
                   'Failed to load posts: ${state.message}',
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
               );
             }

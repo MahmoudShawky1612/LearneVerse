@@ -3,9 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/upvote_comment_cubit.dart';
 import 'package:flutterwidgets/features/comments/services/comment_service.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/upvote_states.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../comments/data/models/comment_model.dart';
 import '../../../comments/logic/cubit/downvote_comment_cubit.dart';
@@ -122,7 +119,7 @@ class _CommentItemState extends State<CommentItem> {
                         ],
                       ),
                     ),
-                   widget.flag == false ? SizedBox.shrink() : IconButton(
+                   widget.flag == false ? const SizedBox.shrink() : IconButton(
                       icon: Icon(
                         Icons.more_horiz,
                         color: colorScheme.onSurface.withOpacity(0.8),

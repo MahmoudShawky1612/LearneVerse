@@ -1,10 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterwidgets/features/community/logic/cubit/single_community_states.dart';
-import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 
 import '../../../home/data/models/post_model.dart';
 import '../../services/forum_service.dart';
-import '../../services/single_community_service.dart';
 import 'forum.states.dart';
 
 class ForumCubit extends Cubit<ForumStates> {
@@ -19,6 +16,14 @@ class ForumCubit extends Cubit<ForumStates> {
       emit(ForumSuccess(posts));
     } catch (e) {
       emit(ForumFailure(e.toString()));
+    }
+  }
+  void createForumPost(int forumId, String title, String content, List<String> attachments) async {
+    try {
+      final post = await forumApiService.createPost(forumId, title, content, attachments);
+      fetchForumPosts(forumId);
+    } catch (e) {
+      emit(ForumFailure('Failed to create post: $e'));
     }
   }
 }

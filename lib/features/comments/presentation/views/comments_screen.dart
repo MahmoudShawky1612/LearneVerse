@@ -6,12 +6,10 @@ import 'package:flutterwidgets/features/comments/logic/cubit/comment_states.dart
 import 'package:flutterwidgets/features/comments/models/comments_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../home/data/models/post_model.dart';
-import '../../../home/models/author_model.dart';
 import '../../../home/presentation/widgets/post_item.dart';
 import '../../../profile/presentation/widgets/build_comments.dart';
 import '../../logic/cubit/comment_cubit.dart';
 import '../widgets/comment_input_field.dart';
-import '../widgets/comment_sort_options.dart';
 
 class CommentsScreen extends StatefulWidget {
   final dynamic post;
@@ -78,7 +76,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   BlocBuilder<CommentCubit, CommentStates>(
                     builder: (BuildContext context, CommentStates state) {
                       if (state is CommentLoading) {
-                        return Center(
+                        return const Center(
                           child: CupertinoActivityIndicator(),
                         );
                       } else if (state is CommentError) {
@@ -122,7 +120,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                         );
                       }
                       // Add a default return to avoid "body might complete normally" error
-                      return SizedBox.shrink();
+                      return const SizedBox.shrink();
                     },
                   ),
                 ],
