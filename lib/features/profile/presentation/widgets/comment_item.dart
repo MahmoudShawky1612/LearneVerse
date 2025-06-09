@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/upvote_comment_cubit.dart';
 import 'package:flutterwidgets/features/comments/services/comment_service.dart';
 import 'package:flutterwidgets/utils/url_helper.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../comments/data/models/comment_model.dart';
 import '../../../comments/logic/cubit/downvote_comment_cubit.dart';
@@ -82,12 +83,15 @@ class _CommentItemState extends State<CommentItem> {
                   children: [
                     GestureDetector(
                       onTap: () {},
-                      child: CircleAvatar(
-                        radius: 14.r,
-                        backgroundImage: comment.author.userProfile?.profilePictureURL != null
-                            ? NetworkImage(UrlHelper.transformUrl(comment.author.userProfile!.profilePictureURL!))
-                            : null,
-                        backgroundColor: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => context.push('/profile', extra: widget.comment.author.id),
+                        child: CircleAvatar(
+                          radius: 14.r,
+                          backgroundImage: comment.author.userProfile?.profilePictureURL != null
+                              ? NetworkImage(UrlHelper.transformUrl(comment.author.userProfile!.profilePictureURL!))
+                              : null,
+                          backgroundColor: Colors.transparent,
+                        ),
                       ),
                     ),
                     SizedBox(width: 8.w),

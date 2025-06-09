@@ -78,8 +78,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
   }
   Widget _buildImageWidget(String imageUrl) {
     final transformedUrl = UrlHelper.transformUrl(imageUrl);
-    print('Original URL: $imageUrl');
-    print('Transformed URL: $transformedUrl');
+
 
     return Container(
       margin: const EdgeInsets.only(top: 8),
@@ -89,8 +88,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
           transformedUrl,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
-            print('Error loading image: $error');
-            print('URL: $transformedUrl');
             return Container(
               height: 200,
               width: double.infinity,
@@ -169,12 +166,15 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
             // Header
             Row(
               children: [
-                CircleAvatar(
-                  radius: 16.r,
-                  backgroundImage: NetworkImage(UrlHelper.transformUrl(post.author.profilePictureURL!)),
-                  backgroundColor: Colors.transparent,
-                  onBackgroundImageError: (exception, stackTrace) {
-                  },
+                InkWell(
+                  onTap: () => context.push('/profile', extra: post.author.id),
+                  child: CircleAvatar(
+                    radius: 16.r,
+                    backgroundImage: NetworkImage(UrlHelper.transformUrl(post.author.profilePictureURL!)),
+                    backgroundColor: Colors.transparent,
+                    onBackgroundImageError: (exception, stackTrace) {
+                    },
+                  ),
                 ),
                 SizedBox(width: 10.w),
                 Expanded(

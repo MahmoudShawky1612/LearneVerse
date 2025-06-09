@@ -11,13 +11,15 @@ class UserProfile {
 }
 
 class Author {
+  final int id;
   final String fullname;
   final UserProfile? userProfile;
 
-  Author({required this.fullname, this.userProfile});
+  Author({required this.id,required this.fullname, this.userProfile});
 
   factory Author.fromJson(Map<String, dynamic> json) {
     return Author(
+      id: json['id'],
       fullname: json['fullname'],
       userProfile: json['UserProfile'] != null
           ? UserProfile.fromJson(json['UserProfile'])

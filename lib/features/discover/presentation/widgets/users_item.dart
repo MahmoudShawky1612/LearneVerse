@@ -50,20 +50,38 @@ class UserItem extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.network(
-                      UrlHelper.transformUrl(user.profilePictureURL!),
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey.shade300,
-                          alignment: Alignment.center,
-                          child: Icon(
-                            Icons.person,
-                            size: 48.r,
-                            color: Colors.grey,
+                    Container(
+                      width: 48.w,
+                      height: 48.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey.shade200,
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Image.network(
+                        UrlHelper.transformUrl(user.profilePictureURL!),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                            width: 48.w,
+                            height: 48.w,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey.shade200,
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: Image.network(
+                              UrlHelper.transformUrl(user.profilePictureURL ?? ''),
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.person,
+                                  size: 24.r,
+                                  color: Colors.grey,
+                                );
+                              },
+                            ),
                           ),
-                        );
-                      },
+                      ),
                     ),
                     SizedBox(width: 8.w),
 
