@@ -106,6 +106,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
     await prefs.setBool(key, isDisabled);
   }
 
+  void _clearJoinButtonState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = await _getJoinRequestKeyWithUser();
+    await prefs.remove(key);
+  }
+
   Future<String> _getJoinRequestKeyWithUser() async {
     final userId = await getIdFromToken();
     return '$_joinRequestPrefixKey${widget.community.id}_$userId';
@@ -125,31 +131,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
     });
   }
 
-  // Image Picker
-  Future<void> _selectImage() async {
-    try {
-      final picker = ImagePicker();
-      final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-
-      if (pickedImage != null && mounted) {
-        setState(() {
-          _selectedImage = File(pickedImage.path);
-        });
-
-        SnackBarUtils.showSuccessSnackBar(
-          context,
-          message: 'Image selected successfully!',
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        SnackBarUtils.showErrorSnackBar(
-          context,
-          message: 'Failed to select image. Please try again.',
-        );
-      }
-    }
-  }
 
   // Community Actions
   void _joinCommunity() async {
@@ -168,6 +149,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             context,
             message: '👋 🎉 Welcome to ${widget.community.name}!',
           );
+          _clearJoinButtonState();
         } else {
           SnackBarUtils.showInfoSnackBar(
             context,
@@ -330,8 +312,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 setState(() {
                   _isJoinButtonDisabled = false;
                 });
-                _saveJoinButtonState(false);
-              });
+                _clearJoinButtonState();              });
             }
 
             return BlocBuilder<SingleCommunityCubit, SingleCommunityStates>(
