@@ -4,6 +4,8 @@ import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../utils/url_helper.dart';
+
 class CommunityItem extends StatelessWidget {
   final Community community;
 
@@ -88,7 +90,7 @@ class CommunityItem extends StatelessWidget {
         ],
       ),
       child: Image(
-        image: NetworkImage(community.logoImgURL),
+        image: NetworkImage(UrlHelper.transformUrl(community.logoImgURL)),
         width: 40.h,
         height: 40.h,
         fit: BoxFit.contain,

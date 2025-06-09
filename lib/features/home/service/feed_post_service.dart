@@ -23,7 +23,7 @@ class FeedPostsApiService {
       final List<dynamic> postsJson = jsonData['data'];
       return postsJson.map((json) => Post.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to fetch posts');
+      throw Exception('Failed to fetch posts - ${response.statusCode}: ${response.reasonPhrase}');
     }
   }
 

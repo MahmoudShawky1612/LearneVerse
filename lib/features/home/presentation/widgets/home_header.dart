@@ -6,6 +6,7 @@ import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../utils/url_helper.dart'; // Add this import
 
 class HomeHeader extends StatefulWidget {
   const HomeHeader({super.key});
@@ -52,7 +53,6 @@ class _HomeHeaderState extends State<HomeHeader> {
   void initState() {
     super.initState();
     fullName = 'Loading...';
-    pP = null;
     _getUserData();
   }
 
@@ -118,8 +118,17 @@ class _HomeHeaderState extends State<HomeHeader> {
                 )
                     : CircleAvatar(
                   radius: 17.r,
-                  backgroundImage: pP != null ? NetworkImage(pP!) : null,
+                  backgroundImage: pP != null ? NetworkImage(
+                    UrlHelper.transformUrl(pP!),
+                    headers: {
+                      'ngrok-skip-browser-warning': 'true',
+                    },
+                  ) : null,
                   backgroundColor: Colors.grey[200],
+                  onBackgroundImageError: pP != null ? (exception, stackTrace) {
+                    print('Error loading profile picture in HomeHeader: $exception');
+                    print('URL: ${UrlHelper.transformUrl(pP!)}');
+                  } : null,
                   child: pP == null
                       ? Icon(Icons.person, color: Colors.grey[600])
                       : null,

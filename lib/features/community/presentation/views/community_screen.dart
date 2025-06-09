@@ -7,11 +7,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/services/forum_service.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:flutterwidgets/features/home/models/post_model.dart';
+import 'package:flutterwidgets/utils/jwt_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../utils/snackber_util.dart';
+import '../../../../utils/token_storage.dart';
 import '../../../home/data/models/community_model.dart';
 import '../../logic/cubit/join_requests_cubit.dart';
 import '../../logic/cubit/join_requests_states.dart';
@@ -87,19 +89,27 @@ class _CommunityScreenState extends State<CommunityScreen> {
   // SharedPreferences Methods
   Future<void> _loadJoinButtonState() async {
     final prefs = await SharedPreferences.getInstance();
+    final key = await _getJoinRequestKeyWithUser();
     if (mounted) {
       setState(() {
-        _isJoinButtonDisabled = prefs.getBool(_getJoinRequestKey()) ?? false;
+        _isJoinButtonDisabled = prefs.getBool(key) ?? false;
       });
     }
   }
-
+  Future<int> getIdFromToken()async {
+    final token = await TokenStorage.getToken();
+    return await getUserIdFromToken(token!);
+  }
   Future<void> _saveJoinButtonState(bool isDisabled) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_getJoinRequestKey(), isDisabled);
+    final key = await _getJoinRequestKeyWithUser();
+    await prefs.setBool(key, isDisabled);
   }
 
-  String _getJoinRequestKey() => '$_joinRequestPrefixKey${widget.community.id}';
+  Future<String> _getJoinRequestKeyWithUser() async {
+    final userId = await getIdFromToken();
+    return '$_joinRequestPrefixKey${widget.community.id}_$userId';
+  }
 
   // Utility Methods
   String formatDuration(Duration duration) {
