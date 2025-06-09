@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/community_item.dart';
 
 class CommunityGrid extends StatelessWidget {
-  final List communities;
+  final List<Community> communities;
 
   const CommunityGrid({super.key, required this.communities});
 

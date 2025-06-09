@@ -8,6 +8,7 @@ import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/single_community_cubit.dart';
 import 'package:flutterwidgets/features/community/services/forum_service.dart';
 import 'package:flutterwidgets/features/community/services/join_requests_service.dart';
+import 'package:flutterwidgets/features/discover/logic/cubit/favorite_communities_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
@@ -28,6 +29,7 @@ import 'features/community/services/classroom_service.dart';
 import 'features/community/services/community_members_api_service.dart';
 import 'features/community/services/single_community_service.dart';
 import 'features/discover/logic/cubit/search_cubit.dart';
+import 'features/discover/services/favorite_service.dart';
 import 'features/discover/services/search_service.dart';
 import 'features/home/service/community_service.dart';
 import 'features/login/logic/cubit/auth_cubit.dart';
@@ -69,6 +71,7 @@ void main() async {
         BlocProvider<UserCommunitiesCubit>(create: (_) => UserCommunitiesCubit(UserCommunitiesApiService())),
         BlocProvider<UserContributionsCubit>(create: (_) => UserContributionsCubit(UserContributionsApiService())),
         BlocProvider<SearchCubit>(create: (_) => SearchCubit(SearchService())),
+        BlocProvider<FavoriteCubit>(create: (_) => FavoriteCubit(FavoriteService())),
       ],
       child: const MyApp(),
     ),
