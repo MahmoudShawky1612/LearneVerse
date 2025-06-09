@@ -46,7 +46,7 @@ class CommunityItem extends StatelessWidget {
           
           Padding(
             padding: EdgeInsets.only(top: 12.w, bottom: 6.w),
-            child: _buildCommunityIcon(colorScheme),
+            child: _buildCommunityImage(theme),
           ),
 
           
@@ -74,30 +74,39 @@ class CommunityItem extends StatelessWidget {
     );
   }
 
-  Widget _buildCommunityIcon(ColorScheme colorScheme) {
-    return Container(
-      padding: EdgeInsets.all(6.w),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.onSurface.withOpacity(0.05),
-            blurRadius: 4,
-            spreadRadius: 0,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Image(
-        image: NetworkImage(UrlHelper.transformUrl(community.logoImgURL)),
-        width: 40.h,
+  Widget _buildCommunityImage(ThemeData theme) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(14.r),
+      boxShadow: [
+        BoxShadow(
+          color: theme.shadowColor.withOpacity(0.1),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(14.r),
+      child: Image.network(
+        UrlHelper.transformUrl(community.logoImgURL),
+        width: 40.w,
         height: 40.h,
-        fit: BoxFit.contain,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 40.w,
+            height: 40.h,
+            color: theme.colorScheme.surfaceVariant, // fallback background
+            child: Icon(
+              Icons.broken_image,
+              size: 24.r,
+              color: theme.colorScheme.onSurface.withOpacity(0.5),
+            ),
+          );
+        },
       ),
-    );
-  }
-
+    ),
+  );
 
   Widget _buildViewButton(BuildContext context, ColorScheme colorScheme,
       AppThemeExtension? themeExtension) {

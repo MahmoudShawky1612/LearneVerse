@@ -5,8 +5,8 @@ import 'package:flutterwidgets/features/discover/presentation/widgets/build_defa
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_header.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_search_results.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
-import 'package:flutterwidgets/features/home/models/community_model.dart';
-import 'package:flutterwidgets/features/home/presentation/widgets/search_bar.dart';
+ import 'package:flutterwidgets/features/home/presentation/widgets/search_bar.dart';
+import '../../../home/data/models/community_model.dart';
 import '../widgets/build_filters_list.dart';
 
 class DiscoverScreen extends StatefulWidget {
@@ -39,16 +39,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }
 
   void _search(String query) {
-    setState(() {
-      if (_selectedFilters.isNotEmpty) {
-        _foundCommunities =
-            Community.searchWithFilters(_selectedFilters, query);
-      } else {
-        _foundCommunities = Community.searchCommunities(query);
-      }
-      _foundUsers = Author.searchUsers(query);
-      _foundOwners = Owner.searchOwners(query);
-    });
   }
 
   void _toggleFilter(String filter) {

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:flutterwidgets/features/profile/presentation/widgets/user_community_item.dart';
 
 class VerticalCommunityList extends StatelessWidget {
-  final communities;
+  final List<Community> communities;
 
   const VerticalCommunityList({super.key, required this.communities});
 

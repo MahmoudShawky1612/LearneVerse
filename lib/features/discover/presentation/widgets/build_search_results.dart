@@ -4,7 +4,7 @@ import 'package:flutterwidgets/features/community/models/owner_model.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_section_title.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/vertical_users_list.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
-import 'package:flutterwidgets/features/home/models/community_model.dart';
+import '../../../home/data/models/community_model.dart';
 import '../../../profile/presentation/widgets/vertical_community_list.dart';
 
 class BuildSearchResults extends StatelessWidget {
