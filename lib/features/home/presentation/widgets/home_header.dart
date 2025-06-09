@@ -49,6 +49,19 @@ class _HomeHeaderState extends State<HomeHeader> {
     }
   }
 
+  Future<int> getUserId() async {
+    final token = await TokenStorage.getToken();
+    if (token != null) {
+      return getUserIdFromToken(token);
+    }
+    return 0; // Return 0 or handle as needed
+  }
+  void goToProfile() async {
+    final userId = await getUserId();
+    if (userId != 0) {
+      context.push('/profile', extra: userId);
+    }
+  }
   @override
   void initState() {
     super.initState();
@@ -94,17 +107,7 @@ class _HomeHeaderState extends State<HomeHeader> {
               border: Border.all(color: Colors.red, width: 1.5.w),
             ),
             child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isClicked = true;
-                });
-                Future.delayed(const Duration(seconds: 2), () {
-                  context.push('/profile');
-                  setState(() {
-                    isClicked = false;
-                  });
-                });
-              },
+              onTap: () => goToProfile(),
               child: SizedBox(
                 width: 34.r,
                 height: 34.r,

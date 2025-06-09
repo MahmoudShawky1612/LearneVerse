@@ -6,15 +6,13 @@ import '../../services/profile_api_services.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final UserProfileApiService apiService;
-  final String token;
 
-  ProfileCubit(this.apiService, this.token) : super(ProfileInitial());
+  ProfileCubit(this.apiService) : super(ProfileInitial());
 
-  void loadProfile() async {
+  void loadProfile(int userId) async {
     emit(ProfileLoading());
     try {
-      final userId = getUserIdFromToken(token);
-      final profile = await apiService.fetchUserProfile(userId, token);
+      final profile = await apiService.fetchUserProfile(userId);
       emit(ProfileLoaded(profile));
     } catch (e) {
       emit(ProfileError(e.toString()));

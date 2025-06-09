@@ -1,12 +1,15 @@
 import 'dart:convert';
+import 'package:flutterwidgets/utils/api_helper.dart';
 import 'package:http/http.dart' as http;
+import '../../../utils/token_storage.dart';
 import '../data/models/user_profile_model.dart';
 
 class UserProfileApiService {
-  static const String baseUrl = 'https://5cb0-217-55-221-35.ngrok-free.app/api/v1';
+    final baseUrl = ApiHelper.baseUrl;
 
-  Future<UserProfile> fetchUserProfile(int userId, String token) async {
-    final url = Uri.parse('$baseUrl/profile/$userId');
+  Future<UserProfile> fetchUserProfile(int userId) async {
+    final token = await TokenStorage.getToken();
+    final url = Uri.parse('$baseUrl/profiles/$userId');
 
     final response = await http.get(
       url,
@@ -18,6 +21,7 @@ class UserProfileApiService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+       print('Response data: $data');
       return UserProfile.fromJson(data['data']);
     } else {
       throw Exception('Failed to fetch user profile: ${response.statusCode}');

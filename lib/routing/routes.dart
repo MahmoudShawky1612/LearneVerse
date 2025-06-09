@@ -23,7 +23,7 @@ final GoRouter route = GoRouter(
     ),
     GoRoute(
       path: '/profile',
-      builder: (context, state) => const ProfileScreen(),
+      builder: (context, state) => ProfileScreen(userId: state.extra as int),
     ),
     GoRoute(
       path: '/discover',

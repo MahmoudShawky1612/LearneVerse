@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 
 class ProfileBioQuote extends StatelessWidget {
-  final userInfo;
+  final UserProfile userInfo;
 
-  const ProfileBioQuote({super.key, this.userInfo});
+  const ProfileBioQuote({super.key, required this.userInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class ProfileBioQuote extends StatelessWidget {
           SizedBox(width: 6.w),
           Expanded(
             child: Text(
-              userInfo?.quote ?? "كَلَّا إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ",
+              userInfo.bio ?? "كَلَّا إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ",
               style: TextStyle(
                 fontSize: 15.sp,
                 fontStyle: FontStyle.italic,

@@ -42,7 +42,7 @@ void main() async {
           create: (_) => AuthCubit(AuthApiService()),
         ),
         BlocProvider<ProfileCubit>(
-          create: (_) => ProfileCubit(UserProfileApiService(), token ?? ''),
+          create: (_) => ProfileCubit(UserProfileApiService()),
         ),
         BlocProvider<CommunityCubit>(create: (_) => CommunityCubit(CommunityApiService())),
         BlocProvider<PostFeedCubit>(create: (_) => PostFeedCubit(FeedPostsApiService())),

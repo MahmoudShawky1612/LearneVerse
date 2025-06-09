@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,11 +12,11 @@ import 'profile_social_links_row.dart';
 import 'profile_user_stats_row.dart';
 
 class ProfileHeader extends StatelessWidget {
-  final userInfo;
+  final UserProfile userInfo;
 
   const ProfileHeader({
     super.key,
-    this.userInfo,
+    required this.userInfo,
   });
 
   @override
@@ -25,7 +26,7 @@ class ProfileHeader extends StatelessWidget {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final size = MediaQuery.of(context).size;
 
-    final expandedHeight = (size.height * 0.45).h;
+    final expandedHeight = (size.height * 0.35).h;
 
     return SliverAppBar(
       expandedHeight: expandedHeight,
@@ -141,15 +142,11 @@ class ProfileHeader extends StatelessWidget {
                             SizedBox(height: 12.h),
                             ProfileBioQuote(userInfo: userInfo),
                             SizedBox(height: 14.h),
-                            if (userInfo != null &&
-                                userInfo.interests != null &&
-                                userInfo.interests.isNotEmpty)
+                            if (userInfo.tags != null &&
+                                userInfo.tags.isNotEmpty)
                               _buildInterestTags(colorScheme, userInfo),
-                            SizedBox(height: 14.h),
-                            Center(
-                                child: ProfileUserStatsRow(userInfo: userInfo)),
                             SizedBox(height: 12.h),
-                            const Center(child: ProfileSocialLinksRow()),
+                             Center(child: ProfileSocialLinksRow(userInfo: userInfo)),
                           ],
                         ),
                       ),
@@ -164,13 +161,13 @@ class ProfileHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildInterestTags(ColorScheme colorScheme, dynamic userInfo) {
+  Widget _buildInterestTags(ColorScheme colorScheme, UserProfile userInfo) {
     return Center(
       child: Wrap(
         alignment: WrapAlignment.center,
         spacing: 8.w,
         runSpacing: 8.h,
-        children: userInfo.interests.map<Widget>((interest) {
+        children: userInfo.tags.map<Widget>((tag) {
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
             decoration: BoxDecoration(
@@ -182,7 +179,7 @@ class ProfileHeader extends StatelessWidget {
               ),
             ),
             child: Text(
-              interest,
+              tag.name,
               style: TextStyle(
                 color: colorScheme.onPrimary,
                 fontWeight: FontWeight.w600,

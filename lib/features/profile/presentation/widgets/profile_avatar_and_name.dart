@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 
 class ProfileAvatarAndName extends StatelessWidget {
-  final userInfo;
-  const ProfileAvatarAndName({super.key, this.userInfo});
+  final UserProfile userInfo;
+  const ProfileAvatarAndName({super.key, required this.userInfo});
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -30,7 +31,7 @@ class ProfileAvatarAndName extends StatelessWidget {
               ),
               child: CircleAvatar(
                 backgroundImage:
-                    AssetImage(userInfo?.avatar ?? 'assets/images/avatar.jpg'),
+                    AssetImage(userInfo.profilePictureURL),
                 radius: 36,
               ),
             ),
@@ -55,7 +56,7 @@ class ProfileAvatarAndName extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                userInfo.name ?? 'unknown',
+                userInfo.user.fullname,
                 style: TextStyle(
                   fontSize: 22.sp,
                   fontWeight: FontWeight.w700,
@@ -66,6 +67,16 @@ class ProfileAvatarAndName extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               SizedBox(height: 2.h),
+              Text(
+                '@${userInfo.user.username}',
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  color: colorScheme.onPrimary,
+                  letterSpacing: -0.3,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ],
           ),
         ),

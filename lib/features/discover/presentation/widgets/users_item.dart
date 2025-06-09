@@ -171,7 +171,7 @@ class UserItem extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfileScreen(userInfo: authorFromOwner),
+          builder: (context) => ProfileScreen(userId: 1),
         ),
       );
     } else {
@@ -182,7 +182,7 @@ class UserItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProfileScreen(userInfo: selectedUser),
+            builder: (context) => ProfileScreen(userId: 1),
           ),
         );
       } catch (e) {

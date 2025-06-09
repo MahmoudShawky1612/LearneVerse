@@ -31,6 +31,7 @@ dependencies:
   mime: ^1.0.4
   path_provider: ^2.1.5
   bloc: any
+  url_launcher: ^6.3.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
