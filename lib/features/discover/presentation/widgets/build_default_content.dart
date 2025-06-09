@@ -44,7 +44,7 @@ class _BuildDefaultContentState extends State<BuildDefaultContent> {
               if (state.communities.isEmpty) {
                 return const Center(child: Text("You have no favorite communities yet 🧐"));
               }
-              return CommunityGrid(communities: state.communities);
+              return CommunityGrid(communities: state.communities, isFavoriteCommunity: true);
             } else if (state is FavoriteError) {
               return Center(child: Text(state.message));
             }

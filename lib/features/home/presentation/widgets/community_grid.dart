@@ -5,8 +5,8 @@ import 'package:flutterwidgets/features/home/presentation/widgets/community_item
 
 class CommunityGrid extends StatelessWidget {
   final List<Community> communities;
-
-  const CommunityGrid({super.key, required this.communities});
+  final isFavoriteCommunity;
+  const CommunityGrid({super.key, required this.communities, this.isFavoriteCommunity = false});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class CommunityGrid extends StatelessWidget {
         itemCount: communities.length > 7 ? 7 : communities.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          return CommunityItem(community: communities[index]);
+          return CommunityItem(community: communities[index], isFavoriteCommunity: isFavoriteCommunity);
         },
       ),
     );
