@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
+import 'package:flutterwidgets/utils/url_helper.dart';
 
 class ProfileAvatarAndName extends StatelessWidget {
   final UserProfile userInfo;
@@ -31,21 +32,8 @@ class ProfileAvatarAndName extends StatelessWidget {
               ),
               child: CircleAvatar(
                 backgroundImage:
-                    AssetImage(userInfo.profilePictureURL),
+                    NetworkImage(UrlHelper.transformUrl(userInfo.profilePictureURL)),
                 radius: 36,
-              ),
-            ),
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Container(
-                width: 18.w,
-                height: 18.h,
-                decoration: BoxDecoration(
-                  color: themeExtension?.upVote ?? colorScheme.primary,
-                  border: Border.all(color: colorScheme.onPrimary, width: 2.w),
-                  borderRadius: BorderRadius.circular(9.r),
-                ),
               ),
             ),
           ],

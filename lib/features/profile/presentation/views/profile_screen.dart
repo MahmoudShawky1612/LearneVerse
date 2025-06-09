@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_state.dart';
@@ -15,7 +16,7 @@ import '../../logic/cubit/user_posts_cubit.dart';
 import '../../logic/cubit/user_posts_states.dart';
 import '../widgets/contributions.dart';
 import '../widgets/profile_header.dart';
-import '../widgets/user_contribution_comments.dart';
+import '../widgets/user_comments.dart';
 import '../widgets/user_contribution_posts.dart';
 import '../widgets/user_joined_communities.dart';
 
@@ -154,18 +155,18 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
                   ProfileHeader(userInfo: userInfo),
                   SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding:  EdgeInsets.symmetric(horizontal: 16.w),
                     sliver: SliverToBoxAdapter(
                       child: Column(
                         children: [
                           Card(
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(12.r),
                             ),
                             color: theme.cardColor,
                             child: Padding(
-                              padding: const EdgeInsets.all(14),
+                              padding:  EdgeInsets.all(14.w),
                               child: BlocBuilder<UserContributionsCubit, UserContributionsState>(
                                 builder: (context, state) {
                                   if (state is UserContributionsLoading) {
@@ -180,14 +181,14 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                               ),
                             ),
                           ),
-                          const SizedBox(height: 24),
+                           SizedBox(height: 24.h),
                           // Modern Tab Selector
                           Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            padding: const EdgeInsets.all(4),
+                            margin:  EdgeInsets.symmetric(horizontal: 4.w),
+                            padding:  EdgeInsets.all(4.w),
                             decoration: BoxDecoration(
                               color: colorScheme.surface,
-                              borderRadius: BorderRadius.circular(30),
+                              borderRadius: BorderRadius.circular(30.r),
                               border: Border.all(
                                 color: colorScheme.outline.withOpacity(0.1),
                                 width: 1,
@@ -248,14 +249,14 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                               ],
                             ),
                           ),
-                          const SizedBox(height: 20),
+                            SizedBox(height: 20.h),
                         ],
                       ),
                     ),
                   ),
                 ],
                 body: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding:   EdgeInsets.symmetric(horizontal: 16.w),
                   child: TabBarView(
                     controller: _tabController,
                     children: [

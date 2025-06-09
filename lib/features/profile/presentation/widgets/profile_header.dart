@@ -127,7 +127,7 @@ class ProfileHeader extends StatelessWidget {
                 ),
                 SafeArea(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                     physics: const BouncingScrollPhysics(),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
@@ -142,8 +142,7 @@ class ProfileHeader extends StatelessWidget {
                             SizedBox(height: 12.h),
                             ProfileBioQuote(userInfo: userInfo),
                             SizedBox(height: 14.h),
-                            if (userInfo.tags != null &&
-                                userInfo.tags.isNotEmpty)
+                            if (userInfo.tags.isNotEmpty)
                               _buildInterestTags(colorScheme, userInfo),
                             SizedBox(height: 12.h),
                              Center(child: ProfileSocialLinksRow(userInfo: userInfo)),
