@@ -88,9 +88,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         child: Image.network(
           transformedUrl,
           fit: BoxFit.cover,
-          headers: {
-            'ngrok-skip-browser-warning': 'true', // Skip ngrok warning
-          },
           errorBuilder: (context, error, stackTrace) {
             print('Error loading image: $error');
             print('URL: $transformedUrl');

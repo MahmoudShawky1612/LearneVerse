@@ -129,8 +129,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                   ) : null,
                   backgroundColor: Colors.grey[200],
                   onBackgroundImageError: pP != null ? (exception, stackTrace) {
-                    print('Error loading profile picture in HomeHeader: $exception');
-                    print('URL: ${UrlHelper.transformUrl(pP!)}');
+
                   } : null,
                   child: pP == null
                       ? Icon(Icons.person, color: Colors.grey[600])

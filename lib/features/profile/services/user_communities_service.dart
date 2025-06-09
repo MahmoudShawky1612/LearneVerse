@@ -22,13 +22,10 @@ class UserCommunitiesApiService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print('Communities response data: $data');
-      // Extract the 'Community' object from each item in the 'data' list
       return (data['data'] as List)
           .map((json) => Community.fromJson(json['Community']))
           .toList();
     } else {
-      print('Failed to fetch communities: ${response.statusCode} - ${response.body}');
       throw Exception('Failed to fetch communities: ${response.statusCode}');
     }
   }

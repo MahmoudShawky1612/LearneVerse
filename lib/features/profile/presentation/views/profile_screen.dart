@@ -18,7 +18,7 @@ import '../widgets/user_contribution_posts.dart';
 import '../widgets/user_joined_communities.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final int userId;
+  final  userId;
   const ProfileScreen({super.key, required this.userId});
 
   @override
@@ -37,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
       setState(() {
         _currentIndex = _tabController.index;
       });
+      print('Current idddddddddddddddddddddddddddd index: ${widget.userId}');
     });
 
     context.read<ProfileCubit>().loadProfile(widget.userId);

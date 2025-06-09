@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutterwidgets/features/community/data/models/community_members_model.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../utils/url_helper.dart';
 import '../../../community/models/owner_model.dart';
@@ -7,7 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../profile/presentation/views/profile_screen.dart';
 
 class UserItem extends StatelessWidget {
-  final  user;
+  final CommunityMember user;
 
   const UserItem({super.key, required this.user});
 
@@ -44,152 +46,116 @@ class UserItem extends StatelessWidget {
           child: InkWell(
             onTap: () {},
             child: Padding(
-              padding: EdgeInsets.all(8.w),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(14.r),
-                    child: Image.network(
-                      UrlHelper.transformUrl(user.profilePictureURL),
-                      width: 30.w,
-                      height: 30.w,
+                padding: EdgeInsets.all(8.w),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.network(
+                      UrlHelper.transformUrl(user.profilePictureURL!),
                       fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-
-                  /// 🛠 Wrap column with Flexible to prevent overflow
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          user.fullname,
-                          style: textTheme.bodyLarge?.copyWith(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w700,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey.shade300,
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.person,
+                            size: 48.r,
+                            color: Colors.grey,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 4.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "@${user.username}",
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: colorScheme.onSurface.withOpacity(0.7),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                        );
+                      },
+                    ),
+                    SizedBox(width: 8.w),
+
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            user.fullname,
+                            style: textTheme.bodyLarge?.copyWith(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w700,
                             ),
-                            SizedBox(width: 5.w),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8.w,
-                                vertical: 4.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: colorScheme.surface,
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                              child: Text(
-                                user.role,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: role == "Member"
-                                      ? colorScheme.onSurface
-                                      : colorScheme.tertiary,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 4.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "@${user.username}",
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: colorScheme.onSurface.withOpacity(
+                                        0.7),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
+                              SizedBox(width: 5.w),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: Text(
+                                  user.role,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: role == "Member"
+                                        ? colorScheme.onSurface
+                                        : colorScheme.tertiary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(width: 8.w),
+
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 100.w),
+                      decoration: BoxDecoration(
+                        gradient: themeExtension?.buttonGradient,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          context.push('/profile', extra: user.id);
+                        },                        borderRadius: BorderRadius.circular(10.r),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 6.h,
+                          ),
+                          child: Text(
+                            "Profile",
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w600,
+                              color: colorScheme.onPrimary,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(width: 8.w),
-
-                  Container(
-                    constraints: BoxConstraints(maxWidth: 100.w),
-                    decoration: BoxDecoration(
-                      gradient: themeExtension?.buttonGradient,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: InkWell(
-                      onTap: () => navigateToProfile(context),
-                      borderRadius: BorderRadius.circular(10.r),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 6.h,
-                        ),
-                        child: Text(
-                          "Profile",
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w600,
-                            color: colorScheme.onPrimary,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              )
+                  ],
+                )
             ),
           ),
         ),
       ),
     );
-  }
-
-  void navigateToProfile(BuildContext context) {
-    if (user is Owner) {
-      final ownerUser = user as Owner;
-      final authorFromOwner = Author(
-        id: ownerUser.id,
-        name: ownerUser.name,
-        avatar: ownerUser.avatar,
-        userName: ownerUser.userName,
-        role: ownerUser.role,
-        points: 0,
-        joinedCommunities: [],
-        quote: "Owner of communities",
-        totalJoinedCommunities: 0,
-        totalPostUpvotes: 0,
-        totalCommentUpvotes: 0,
-        interests: [],
-      );
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProfileScreen(userId: 1),
-        ),
-      );
-    } else {
-      try {
-        List<Author> users = Author.users;
-        final selectedUser =
-            users.firstWhere((u) => u.userName == user.userName);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProfileScreen(userId: 1),
-          ),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile not available')),
-        );
-      }
-    }
   }
 }

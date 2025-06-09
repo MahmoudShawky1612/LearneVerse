@@ -20,7 +20,7 @@ class CommunityMember {
       id: json['id'],
       fullname: json['fullname'],
       email: json['email'],
-      profilePictureURL: json['profilePictureURL']?? 'https://static8.depositphotos.com/1009634/988/v/450/depositphotos_9883921-stock-illustration-no-user-profile-picture.jpg',
+      profilePictureURL: json['profilePictureURL'] ??'',
       role: json['role'],
       username: json['username'],
     );
