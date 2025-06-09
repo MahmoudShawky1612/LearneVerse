@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
+import 'package:flutterwidgets/utils/url_helper.dart';
 
 class CommunitySliverAppBar extends StatelessWidget {
   final Community community;
@@ -20,9 +21,21 @@ class CommunitySliverAppBar extends StatelessWidget {
           fit: StackFit.expand,
           children: <Widget>[
             Image.network(
-              community.coverImgURL,
+              UrlHelper.transformUrl(community.coverImgURL),
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: Colors.grey.shade300,
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.image_not_supported,
+                    size: 48.r,
+                    color: Colors.grey,
+                  ),
+                );
+              },
             ),
+
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/upvote_comment_cubit.dart';
 import 'package:flutterwidgets/features/comments/services/comment_service.dart';
+import 'package:flutterwidgets/utils/url_helper.dart';
 
 import '../../../comments/data/models/comment_model.dart';
 import '../../../comments/logic/cubit/downvote_comment_cubit.dart';
@@ -84,7 +85,7 @@ class _CommentItemState extends State<CommentItem> {
                       child: CircleAvatar(
                         radius: 14.r,
                         backgroundImage: comment.author.userProfile?.profilePictureURL != null
-                            ? NetworkImage(comment.author.userProfile!.profilePictureURL!)
+                            ? NetworkImage(UrlHelper.transformUrl(comment.author.userProfile!.profilePictureURL!))
                             : null,
                         backgroundColor: Colors.transparent,
                       ),

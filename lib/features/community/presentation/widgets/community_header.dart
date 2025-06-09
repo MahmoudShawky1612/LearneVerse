@@ -12,14 +12,34 @@ class CommunityHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+
     final theme = Theme.of(context);
+    Widget buildCircleAvatar() {
+      return ClipOval(
+        child: Image.network(
+          UrlHelper.transformUrl(community.logoImgURL),
+          width: 80.r,
+          height: 80.r,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              width: 80.r,
+              height: 80.r,
+              color: Colors.grey.shade200,
+              child: Icon(
+                Icons.broken_image_rounded,
+                size: 40.r,
+                color: Colors.grey,
+              ),
+            );
+          },
+        ),
+      );
+    }
 
     return Row(
       children: <Widget>[
-        CircleAvatar(
-          radius: 40.r,
-          backgroundImage: NetworkImage(UrlHelper.transformUrl(community.logoImgURL)),
-        ),
+        buildCircleAvatar(),
         SizedBox(width: 16.w),
         Expanded(
           child: Column(
