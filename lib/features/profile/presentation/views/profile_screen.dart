@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterwidgets/features/profile/logic/cubit/user_posts_states.dart';
+  import 'package:flutterwidgets/features/profile/logic/cubit/user_posts_states.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_state.dart';
 
+import '../../logic/cubit/user_comments_cubit.dart';
+import '../../logic/cubit/user_comments_states.dart';
 import '../../logic/cubit/user_posts_cubit.dart';
 import '../widgets/contributions.dart';
 import '../widgets/profile_header.dart';
@@ -28,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     super.initState();
     context.read<ProfileCubit>().loadProfile(widget.userId);
     context.read<UserPostCubit>().fetchPostsByUser(widget.userId);
+    context.read<UserCommentsCubit>().fetchCommentsByUser(widget.userId);
   }
 
   @override
@@ -126,9 +129,20 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                             return const SizedBox();
                           },
                         ),
-                        UserComments(userInfo: userInfo),
-                      UserJoinedCommunities(userInfo: userInfo),
-                    ],
+                        BlocBuilder<UserCommentsCubit, UserCommentsState>(
+                          builder: (BuildContext context, UserCommentsState state) {
+                            if (state is UserCommentsLoading) {
+                              return const Center(child: CupertinoActivityIndicator());
+                            } else if (state is UserCommentsError) {
+                              return Center(child: Text(state.message));
+                            } else if (state is UserCommentsLoaded) {
+                              return UserComments(comments: state.comments);
+                            }
+                            return const SizedBox();
+                          },
+                        ),
+                        UserJoinedCommunities(userInfo: userInfo),
+                      ],
                     ),
                   ),
                 ),

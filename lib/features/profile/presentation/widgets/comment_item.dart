@@ -98,7 +98,7 @@ class _CommentItemState extends State<CommentItem> {
                             children: [
                               Flexible(
                                 child: Text(
-                                  comment.author.username,
+                                  comment.author.fullname,
                                   style: textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 13.sp,

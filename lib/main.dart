@@ -11,6 +11,8 @@ import 'package:flutterwidgets/features/community/services/join_requests_service
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
+import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_cubit.dart';
+import 'package:flutterwidgets/features/profile/services/user_comments.service.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +59,7 @@ void main() async {
         BlocProvider<CommunityMembersCubit>(create: (_) => CommunityMembersCubit(CommunityMembersApiService())),
         BlocProvider<CommunityRoleCubit>(create: (_) => CommunityRoleCubit(ApiService())),
         BlocProvider<UserPostCubit>(create: (_) => UserPostCubit(UserPostApiService())),
+        BlocProvider<UserCommentsCubit>(create: (_) => UserCommentsCubit(UserCommentsApiService())),
       ],
       child: const MyApp(),
     ),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/features/comments/data/models/comment_model.dart';
 
 import 'comment_item.dart';
 
 class BuildComments extends StatelessWidget {
   final bool shrinkWrap;
   final ScrollPhysics scrollPhysics;
-  final comments;
+  final List<Comment> comments;
   final bool flag;
-  final userInfo;
   final Function? delete;
   final Function? edit;
 
@@ -18,7 +18,6 @@ class BuildComments extends StatelessWidget {
     required this.scrollPhysics,
     required this.comments,
     this.flag = true,
-    this.userInfo,
     this.delete,
     this.edit,
   });
@@ -41,7 +40,6 @@ class BuildComments extends StatelessWidget {
         return CommentItem(
           comment: comments[index],
           flag: flag,
-          userInfo: userInfo,
           delete: delete,
           edit: edit,
         );

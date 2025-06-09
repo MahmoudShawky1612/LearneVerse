@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../profile/presentation/widgets/build_comments.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../data/models/comment_model.dart';
 import '../../models/comments_model.dart';
 
 class CommentsList extends StatelessWidget {
-  final List<Comments> comments;
+  final List<Comment> comments;
   final Function? delete;
 
   const CommentsList({
@@ -16,7 +17,6 @@ class CommentsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
