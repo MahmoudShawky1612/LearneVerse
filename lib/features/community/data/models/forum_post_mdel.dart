@@ -84,7 +84,7 @@ class Author {
       id: json['id'] ?? 0,
       username: json['username'] ?? '',
       fullname: json['fullname'] ?? '',
-      avatarUrl: json['avatarUrl'] ?? '',
+      avatarUrl: json['profilePictureURL'] ?? '',
     );
   }
 

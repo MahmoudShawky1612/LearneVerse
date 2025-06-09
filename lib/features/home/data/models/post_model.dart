@@ -63,13 +63,13 @@ class Author {
   final int id;
   final String username;
   final String fullname;
-  final String profilePictureURL;
+  final String? profilePictureURL;
 
   Author({
     required this.id,
     required this.username,
     required this.fullname,
-    required this.profilePictureURL,
+     this.profilePictureURL,
   });
 
   factory Author.fromJson(Map<String, dynamic> json) {
@@ -77,7 +77,7 @@ class Author {
       id: json['id'],
       username: json['username'],
       fullname: json['fullname'],
-      profilePictureURL: json['profilePictureURL'],
+      profilePictureURL: json['profilePictureURL'], // Default to empty string if null
     );
   }
   Map<String, dynamic> toJson() {

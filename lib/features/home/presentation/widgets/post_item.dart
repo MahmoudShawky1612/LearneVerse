@@ -174,10 +174,9 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
               children: [
                 CircleAvatar(
                   radius: 16.r,
-                  backgroundImage: NetworkImage(UrlHelper.transformUrl(post.author.profilePictureURL)),
+                  backgroundImage: NetworkImage(UrlHelper.transformUrl(post.author.profilePictureURL!)),
                   backgroundColor: Colors.transparent,
                   onBackgroundImageError: (exception, stackTrace) {
-                    print('Error loading profile picture: $exception');
                   },
                 ),
                 SizedBox(width: 10.w),

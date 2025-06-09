@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../utils/url_helper.dart';
 import '../../../community/models/owner_model.dart';
 import '../../../home/models/author_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,7 +51,7 @@ class UserItem extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(14.r),
                     child: Image.network(
-                      user.profilePictureURL,
+                      UrlHelper.transformUrl(user.profilePictureURL),
                       width: 30.w,
                       height: 30.w,
                       fit: BoxFit.cover,
