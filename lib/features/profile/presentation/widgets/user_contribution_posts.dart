@@ -26,9 +26,6 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
       shrinkWrap: true,
       scrollPhysics: const BouncingScrollPhysics(),
       posts: widget.posts,
-      delete: onDeletePost,
-      isUserPost: true,
-      edit: onEditPost,
     );
   }
 }

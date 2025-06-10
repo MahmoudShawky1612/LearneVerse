@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/features/home/data/models/post_model.dart';
 import '../../../home/presentation/widgets/post_item.dart';
 
 class PostCard extends StatelessWidget {
-  final dynamic post;
+  final Post post;
 
   const PostCard({super.key, required this.post});
 

@@ -11,22 +11,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../utils/jwt_helper.dart';
+import '../../../../utils/token_storage.dart';
 import '../../../../utils/url_helper.dart';
 
 class PostItem extends StatefulWidget {
   final Post post;
-  final dynamic userInfo;
-  final Function? delete;
-  final Function? edit;
-  final  isUserPost;
 
   const PostItem({
     super.key,
     required this.post,
-    this.userInfo,
-    this.delete,
-     this.isUserPost,
-    this.edit,
   });
 
   @override
@@ -35,12 +29,12 @@ class PostItem extends StatefulWidget {
 
 class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
   bool isExpanded = false;
-  bool showOptions = false;
+  bool isMenuVisible = false;
   late Color upVoteColor;
   late Color downVoteColor;
   late int voteCounter;
   late int commentCounter;
-
+  bool isAuthor = false;
 
   @override
   void initState() {
@@ -49,10 +43,31 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     upVoteColor = widget.post.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
     downVoteColor = widget.post.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
     commentCounter = widget.post.commentCount;
+    _checkIfAuthor();
   }
 
+  Future<void> _checkIfAuthor() async {
+    final userId = await getUserId();
+    if (mounted) {
+      setState(() {
+        isAuthor = userId == widget.post.author.id;
+      });
+    }
+  }
 
-  Widget _buildActionButton({required IconData icon, required String text, required VoidCallback onTap}) {
+  Future<dynamic> getUserId() async {
+    final token = await TokenStorage.getToken();
+    if (token != null) {
+      return getUserIdFromToken(token);
+    }
+    return null;
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
@@ -65,6 +80,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
       ),
     );
   }
+
   String _getTimeAgo(DateTime createdAt) {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
@@ -76,37 +92,37 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
       return '${difference.inMinutes}m';
     }
   }
+
   Widget _buildImageWidget(String imageUrl) {
     final transformedUrl = UrlHelper.transformUrl(imageUrl);
 
-
     return Container(
-      margin: const EdgeInsets.only(top: 8),
+      margin: EdgeInsets.only(top: 8.h),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
         child: Image.network(
           transformedUrl,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
             return Container(
-              height: 200,
+              height: 200.h,
               width: double.infinity,
               color: Colors.grey[300],
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error, color: Colors.grey[600], size: 32),
-                  SizedBox(height: 8),
+                  Icon(Icons.error, color: Colors.grey[600], size: 32.sp),
+                  SizedBox(height: 8.h),
                   Text(
                     'Failed to load image',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14.sp),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 4.h),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Text(
                       'URL: $transformedUrl',
-                      style: TextStyle(color: Colors.grey[500], fontSize: 10),
+                      style: TextStyle(color: Colors.grey[500], fontSize: 10.sp),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -119,7 +135,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
             return Container(
-              height: 200,
+              height: 200.h,
               width: double.infinity,
               child: Center(
                 child: Column(
@@ -130,8 +146,8 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                           ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
                           : null,
                     ),
-                    SizedBox(height: 8),
-                    Text('Loading image...', style: TextStyle(fontSize: 12)),
+                    SizedBox(height: 8.h),
+                    Text('Loading image...', style: TextStyle(fontSize: 12.sp)),
                   ],
                 ),
               ),
@@ -166,39 +182,38 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
             // Header
             Row(
               children: [
-                InkWell(
-                  onTap: () => context.push('/profile', extra: post.author.id),
-                  child: CircleAvatar(
-                    radius: 16.r,
-                    backgroundImage: NetworkImage(UrlHelper.transformUrl(post.author.profilePictureURL!)),
-                    backgroundColor: Colors.transparent,
-                    onBackgroundImageError: (exception, stackTrace) {
-                    },
-                  ),
-                ),
+                PostProfileAvatar(post: post,)   ,
                 SizedBox(width: 10.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(post.author.fullname,
-                          style: textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w600, fontSize: 14.sp)),
+                      Text(
+                        post.author.fullname,
+                        style: textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
+                        ),
+                      ),
                       SizedBox(height: 2.h),
-                      Text('${_getTimeAgo(post.createdAt)} ago',
-                          style: TextStyle(
-                              color: colorScheme.onSurface.withOpacity(0.7),
-                              fontSize: 11.sp)),
+                      Text(
+                        '${_getTimeAgo(post.createdAt)} ago',
+                        style: TextStyle(
+                          color: colorScheme.onSurface.withOpacity(0.7),
+                          fontSize: 11.sp,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                if (widget.isUserPost)
-                  IconButton(
-                    icon: Icon(Icons.more_horiz, size: 18.r),
-                    onPressed: () => setState(() => showOptions = !showOptions),
-                    padding: EdgeInsets.zero,
-                    constraints: BoxConstraints(minWidth: 32.w, minHeight: 32.w),
-                  ),
+                isAuthor
+                    ? IconButton(
+                  icon: Icon(Icons.more_horiz, size: 18.r),
+                  onPressed: () => setState(() => isMenuVisible = !isMenuVisible),
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(minWidth: 32.w, minHeight: 32.w),
+                )
+                    : const SizedBox.shrink(),
               ],
             ),
             SizedBox(height: 12.h),
@@ -209,24 +224,33 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(post.title,
-                      style: textTheme.titleMedium?.copyWith(
-                          fontSize: 16.sp, fontWeight: FontWeight.w700)),
+                  Text(
+                    post.title,
+                    style: textTheme.titleMedium?.copyWith(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   SizedBox(height: 8.h),
-                  Text(post.content ?? '',
-                      maxLines: isExpanded ? null : 3,
-                      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-                      style: textTheme.bodyMedium?.copyWith(fontSize: 14.sp, height: 1.4)),
+                  Text(
+                    post.content ?? '',
+                    maxLines: isExpanded ? null : 3,
+                    overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                    style: textTheme.bodyMedium?.copyWith(fontSize: 14.sp, height: 1.4),
+                  ),
                   if (post.content != null && post.content!.length > 200)
                     GestureDetector(
                       onTap: () => setState(() => isExpanded = !isExpanded),
                       child: Padding(
                         padding: EdgeInsets.only(top: 6.h),
-                        child: Text(isExpanded ? 'Show less' : 'Read more',
-                            style: TextStyle(
-                                color: colorScheme.primary,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12.sp)),
+                        child: Text(
+                          isExpanded ? 'Show less' : 'Read more',
+                          style: TextStyle(
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12.sp,
+                          ),
+                        ),
                       ),
                     ),
                   if (post.attachments.isNotEmpty)
@@ -260,6 +284,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                       Text('$voteCounter', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp)),
                       SizedBox(width: 10.w),
 
+                      // Downvote
                       BlocConsumer<DownvoteCubit, DownVoteStates>(
                         listener: (context, state) {
                           if (state is DownVoteSuccess) {
@@ -290,50 +315,319 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
+
+                  // Options Menu
+                  if (isAuthor && isMenuVisible) _buildOptionsMenu(colorScheme),
                 ],
               ),
             ),
-
-            // Show delete/edit options
-            if (showOptions)
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  margin: EdgeInsets.only(top: 8.h),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: theme.cardColor,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (widget.edit != null)
-                        TextButton.icon(
-                          onPressed: () => widget.edit!(),
-                          icon: Icon(Icons.edit, size: 18.sp),
-                          label: Text("Edit", style: TextStyle(fontSize: 13.sp)),
-                        ),
-                      if (widget.delete != null)
-                        TextButton.icon(
-                          onPressed: () => widget.delete!(),
-                          icon: Icon(Icons.delete, size: 18.sp, color: Colors.red),
-                          label: Text("Delete", style: TextStyle(fontSize: 13.sp, color: Colors.red)),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildOptionsMenu(ColorScheme colorScheme) {
+    return Container(
+      margin: EdgeInsets.only(top: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(8.r),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.2),
+            blurRadius: 4.r,
+            offset: Offset(0, 2.h),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildOptionsItem(
+            'Edit',
+            Icons.edit_outlined,
+            colorScheme.primary,
+                () => _showEditPostDialog(widget.post.title, widget.post.content ?? ''),
+          ),
+          Divider(
+            height: 8.h,
+            color: colorScheme.onSurface.withOpacity(0.1),
+          ),
+          _buildOptionsItem(
+            'Delete',
+            Icons.delete_outline,
+            colorScheme.error,
+                () {
+              setState(() {
+                isMenuVisible = false;
+              });
+              _showDeleteConfirmationDialog();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOptionsItem(
+      String text,
+      IconData icon,
+      Color color,
+      VoidCallback onTap,
+      ) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          isMenuVisible = false;
+        });
+        onTap();
+      },
+      borderRadius: BorderRadius.circular(4.r),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: 8.h,
+          horizontal: 12.w,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 16.r,
+              color: color,
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              text,
+              style: TextStyle(
+                color: color,
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEditPostDialog(String title, String content) {
+    final post = widget.post;
+    final titleController = TextEditingController(text: title);
+    final contentController = TextEditingController(text: content);
+
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+
+        return AlertDialog(
+          backgroundColor: theme.cardColor,
+          title: Row(
+            children: [
+              CircleAvatar(
+                radius: 16.r,
+                backgroundImage: post.author.profilePictureURL != null
+                    ? NetworkImage(UrlHelper.transformUrl(post.author.profilePictureURL!))
+                    : null,
+                backgroundColor: Colors.grey[300],
+                child: post.author.profilePictureURL == null
+                    ? Icon(
+                  Icons.person,
+                  size: 18.r,
+                  color: Colors.grey,
+                )
+                    : null,
+              ),
+              SizedBox(width: 10.w),
+              Text(
+                'Edit Post',
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                    hintText: 'Post Title',
+                    hintStyle: TextStyle(color: theme.hintColor),
+                    filled: true,
+                    fillColor: theme.inputDecorationTheme.fillColor ?? Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                TextFormField(
+                  controller: contentController,
+                  maxLines: 4,
+                  decoration: InputDecoration(
+                    hintText: 'Post Content',
+                    hintStyle: TextStyle(color: theme.hintColor),
+                    filled: true,
+                    fillColor: theme.inputDecorationTheme.fillColor ?? Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: colorScheme.onSurfaceVariant),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final newTitle = titleController.text.trim();
+                final newContent = contentController.text.trim();
+                if (newTitle.isNotEmpty) {
+                  // Assuming a service or callback to update the post
+                  Navigator.pop(context);
+                  // Implement post update logic here (e.g., call an API or update state)
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmationDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+
+        return AlertDialog(
+          backgroundColor: theme.cardColor,
+          title: Text(
+            'Delete Post',
+            style: TextStyle(
+              color: colorScheme.onSurface,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            'Are you sure you want to delete this post?',
+            style: TextStyle(
+              color: colorScheme.onSurface,
+              fontSize: 14.sp,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: colorScheme.onSurfaceVariant),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // Implement delete logic here (e.g., call an API or notify parent)
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.error,
+                foregroundColor: colorScheme.onError,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}class PostProfileAvatar extends StatelessWidget {
+  final Post post;
+
+  const PostProfileAvatar({Key? key, required this.post}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.push('/profile', extra: post.author.id),
+      child: CircleAvatar(
+        radius: 14.r,
+        backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        child: _getAvatarContent(post, context),
+      ),
+    );
+  }
+
+  Widget _getAvatarContent(Post post, BuildContext context) {
+    final profilePictureURL = post.author.profilePictureURL;
+
+    if (profilePictureURL != null && profilePictureURL.isNotEmpty) {
+      return ClipOval(
+        child: Image.network(
+          UrlHelper.transformUrl(profilePictureURL),
+          width: 28.r,
+          height: 28.r,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return _getDefaultAvatar(context);
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return SizedBox(
+              width: 28.r,
+              height: 28.r,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    } else {
+      return _getDefaultAvatar(context);
+    }
+  }
+  Widget _getDefaultAvatar(BuildContext context) {
+    return Icon(
+      Icons.person,
+      size: 16.r,
+      color: Theme.of(context).colorScheme.primary,
+    );
+  }
+
 }

@@ -70,7 +70,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
                     padding: EdgeInsets.all(8.0.w),
                     child: PostItem(
                       post: post,
-                      isUserPost: false,
                     ),
                   ),
                   BlocBuilder<CommentCubit, CommentStates>(
@@ -114,7 +113,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             BuildComments(
                               comments: state.comments,
                               scrollPhysics: const NeverScrollableScrollPhysics(),
-                              flag: false,
                             ),
                           ],
                         );

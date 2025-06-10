@@ -3,29 +3,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/upvote_comment_cubit.dart';
 import 'package:flutterwidgets/features/comments/services/comment_service.dart';
+import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:flutterwidgets/utils/url_helper.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../utils/jwt_helper.dart';
 import '../../../comments/data/models/comment_model.dart';
 import '../../../comments/logic/cubit/downvote_comment_cubit.dart';
 import '../../../comments/logic/cubit/downvote_comment_states.dart';
 import '../../../comments/logic/cubit/upvote_comment_states.dart';
+import '../../../comments/presentation/widgets/profile_avatar.dart';
 import '../../../home/presentation/widgets/vote_button.dart';
 
 class CommentItem extends StatefulWidget {
   final Comment comment;
-  final dynamic userInfo;
   final Function? delete;
   final Function? edit;
-  final bool? flag;
 
   const CommentItem({
     super.key,
     required this.comment,
-    this.userInfo,
     this.delete,
     this.edit,
-    this.flag,
   });
 
   @override
@@ -36,7 +35,8 @@ class _CommentItemState extends State<CommentItem> {
   bool isUpVoted = false;
   bool isDownVoted = false;
   bool isExpanded = false;
-  bool showOptions = false;
+  bool isMenuVisible = false;
+  bool isAuthor = false;
   late Color upVoteColor;
   late Color downVoteColor;
   late int voteCounter;
@@ -53,6 +53,24 @@ class _CommentItemState extends State<CommentItem> {
         : Colors.grey;
     print('Vote Counter: ${widget.comment.voteCounter}');
     print('Vote Type: ${widget.comment.voteType}');
+    _checkIfAuthor();
+  }
+
+  Future<void> _checkIfAuthor() async {
+    final userId = await getUserId();
+    if (mounted) {
+      setState(() {
+        isAuthor = userId == widget.comment.author.id;
+      });
+    }
+  }
+
+  Future<dynamic> getUserId() async {
+    final token = await TokenStorage.getToken();
+    if (token != null) {
+      return getUserIdFromToken(token);
+    }
+    return null;
   }
 
   @override
@@ -82,7 +100,7 @@ class _CommentItemState extends State<CommentItem> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildProfileAvatar(comment),
+                    ProfileAvatar(comment: comment),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Column(
@@ -115,7 +133,7 @@ class _CommentItemState extends State<CommentItem> {
                         ],
                       ),
                     ),
-                    _buildOptionsButton(colorScheme),
+                    isAuthor ? _buildOptionsButton(colorScheme) : const SizedBox.shrink(),
                   ],
                 ),
                 SizedBox(height: 8.h),
@@ -127,6 +145,7 @@ class _CommentItemState extends State<CommentItem> {
                       _buildCommentContent(comment, textTheme, colorScheme),
                       SizedBox(height: 8.h),
                       _buildVotingRow(comment),
+                      if (isAuthor && isMenuVisible) _buildOptionsMenu(colorScheme),
                     ],
                   ),
                 ),
@@ -138,133 +157,67 @@ class _CommentItemState extends State<CommentItem> {
     );
   }
 
-  Widget _buildProfileAvatar(Comment comment) {
-    return GestureDetector(
-      onTap: () => context.push('/profile', extra: comment.author.id),
-      child: CircleAvatar(
-        radius: 14.r,
-        backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-        child: _getAvatarContent(comment),
+  Widget _buildOptionsButton(ColorScheme colorScheme) {
+    return IconButton(
+      icon: Icon(
+        Icons.more_horiz,
+        color: colorScheme.onSurface.withOpacity(0.8),
+        size: 18.r,
+      ),
+      onPressed: () {
+        setState(() {
+          isMenuVisible = !isMenuVisible;
+        });
+      },
+      padding: EdgeInsets.zero,
+      constraints: BoxConstraints(
+        minWidth: 20.w,
+        minHeight: 20.w,
       ),
     );
   }
 
-  Widget _getAvatarContent(Comment comment) {
-    final profilePictureURL = comment.author.userProfile?.profilePictureURL;
-
-    if (profilePictureURL != null && profilePictureURL.isNotEmpty) {
-      return ClipOval(
-        child: Image.network(
-          UrlHelper.transformUrl(profilePictureURL),
-          width: 28.r,
-          height: 28.r,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return _getDefaultAvatar();
-          },
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return SizedBox(
-              width: 28.r,
-              height: 28.r,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            );
-          },
-        ),
-      );
-    } else {
-      return _getDefaultAvatar();
-    }
-  }
-
-  Widget _getDefaultAvatar() {
-    return Icon(
-      Icons.person,
-      size: 16.r,
-      color: Theme.of(context).colorScheme.primary,
-    );
-  }
-
-  Widget _buildOptionsButton(ColorScheme colorScheme) {
-    if (widget.flag != true) return const SizedBox.shrink();
-
-    return Stack(
-      children: [
-        IconButton(
-          icon: Icon(
-            Icons.more_horiz,
-            color: colorScheme.onSurface.withOpacity(0.8),
-            size: 18.r,
-          ),
-          onPressed: () {
-            setState(() {
-              showOptions = !showOptions;
-            });
-          },
-          padding: EdgeInsets.zero,
-          constraints: BoxConstraints(
-            minWidth: 20.w,
-            minHeight: 20.w,
-          ),
-        ),
-        if (showOptions) _buildOptionsMenu(colorScheme),
-      ],
-    );
-  }
-
   Widget _buildOptionsMenu(ColorScheme colorScheme) {
-    return Positioned(
-      right: 30.w,
-      top: 30.h,
-      child: Material(
-        elevation: 4,
+    return Container(
+      margin: EdgeInsets.only(top: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8.r),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 8.w,
-            vertical: 4.h,
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.2),
+            blurRadius: 4.r,
+            offset: Offset(0, 2.h),
           ),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(8.r),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildOptionsItem(
+            'Edit',
+            Icons.edit_outlined,
+            colorScheme.primary,
+                () => _showEditCommentDialog(widget.comment.content ?? ''),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildOptionsItem(
-                'Edit',
-                Icons.edit_outlined,
-                colorScheme.primary,
-                    () => _showEditCommentDialog(widget.comment.content ?? ''),
-              ),
-              Divider(
-                height: 8.h,
-                color: colorScheme.onSurface.withOpacity(0.1),
-              ),
-              _buildOptionsItem(
-                'Delete',
-                Icons.delete_outline,
-                colorScheme.error,
-                    () {
-                  setState(() {
-                    showOptions = false;
-                  });
-                  if (widget.delete != null) {
-                    Future.delayed(Duration.zero, () {
-                      widget.delete!(widget.comment.id);
-                    });
-                  }
-                },
-              ),
-            ],
+          Divider(
+            height: 8.h,
+            color: colorScheme.onSurface.withOpacity(0.1),
           ),
-        ),
+          _buildOptionsItem(
+            'Delete',
+            Icons.delete_outline,
+            colorScheme.error,
+                () {
+              setState(() {
+                isMenuVisible = false;
+              });
+              _showDeleteConfirmationDialog();
+              },
+          ),
+        ],
       ),
     );
   }
@@ -322,7 +275,6 @@ class _CommentItemState extends State<CommentItem> {
   Widget _buildVotingRow(Comment comment) {
     return Row(
       children: [
-        // Upvote
         BlocConsumer<UpvoteCommentCubit, UpVoteCommentStates>(
           listener: (context, state) {
             if (state is UpVoteCommentSuccess) {
@@ -354,7 +306,6 @@ class _CommentItemState extends State<CommentItem> {
           ),
         ),
         SizedBox(width: 10.w),
-        // Downvote
         BlocConsumer<DownvoteCommentCubit, DownVoteCommentStates>(
           listener: (context, state) {
             if (state is DownVoteCommentSuccess) {
@@ -389,7 +340,12 @@ class _CommentItemState extends State<CommentItem> {
       VoidCallback onTap,
       ) {
     return InkWell(
-      onTap: onTap,
+      onTap: () {
+        setState(() {
+          isMenuVisible = false;
+        });
+        onTap();
+      },
       borderRadius: BorderRadius.circular(4.r),
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -420,7 +376,7 @@ class _CommentItemState extends State<CommentItem> {
   }
 
   void _showEditCommentDialog(String content) {
-    final currentUserAvatar = widget.userInfo?.avatar;
+    final comment = widget.comment;
 
     showDialog(
       context: context,
@@ -434,12 +390,12 @@ class _CommentItemState extends State<CommentItem> {
           title: Row(
             children: [
               CircleAvatar(
-                backgroundImage: currentUserAvatar != null && currentUserAvatar.isNotEmpty
-                    ? AssetImage(currentUserAvatar)
+                backgroundImage: comment.author.userProfile?.profilePictureURL != null
+                    ? NetworkImage(UrlHelper.transformUrl(comment.author.userProfile!.profilePictureURL!))
                     : null,
                 radius: 16.r,
                 backgroundColor: colorScheme.primary.withOpacity(0.1),
-                child: currentUserAvatar == null || currentUserAvatar.isEmpty
+                child: comment.author.userProfile?.profilePictureURL == null
                     ? Icon(
                   Icons.person,
                   size: 18.r,
@@ -494,7 +450,7 @@ class _CommentItemState extends State<CommentItem> {
                 final newContent = commentController.text.trim();
                 if (newContent.isNotEmpty && widget.edit != null) {
                   setState(() {
-                    showOptions = false;
+                    isMenuVisible = false;
                   });
                   Future.delayed(Duration.zero, () {
                     widget.edit!(widget.comment, newContent);
@@ -516,6 +472,57 @@ class _CommentItemState extends State<CommentItem> {
       },
     );
   }
+void _showDeleteConfirmationDialog() {
+  showDialog<void>(
+    context: context,
+    builder: (context) {
+      final theme = Theme.of(context);
+      final colorScheme = theme.colorScheme;
+
+      return AlertDialog(
+        backgroundColor: theme.cardColor,
+        title: Text(
+          'Delete Post',
+          style: TextStyle(
+            color: colorScheme.onSurface,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to delete this post?',
+          style: TextStyle(
+            color: colorScheme.onSurface,
+            fontSize: 14.sp,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: colorScheme.onSurfaceVariant),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // Implement delete logic here (e.g., call an API or notify parent)
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.error,
+              foregroundColor: colorScheme.onError,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   String _getTimeAgo(DateTime createdAt) {
     final now = DateTime.now();

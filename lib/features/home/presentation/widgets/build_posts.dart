@@ -6,20 +6,14 @@ class BuildPosts extends StatelessWidget {
   final bool shrinkWrap;
   final ScrollPhysics scrollPhysics;
   final List<Post> posts;
-  final dynamic userInfo;
-  final Function? delete;
-  final Function? edit;
-  final bool isUserPost;
+
 
   const BuildPosts({
     super.key,
     this.shrinkWrap = true,
     required this.scrollPhysics,
     required this.posts,
-    this.userInfo,
-    this.delete,
-    this.isUserPost = false,
-    this.edit,
+
   });
 
   @override
@@ -39,9 +33,6 @@ class BuildPosts extends StatelessWidget {
       itemBuilder: (context, index) {
         return PostItem(
           post: posts[index],
-          delete: delete,
-          isUserPost: isUserPost,
-          edit: edit,
         );
       },
     );

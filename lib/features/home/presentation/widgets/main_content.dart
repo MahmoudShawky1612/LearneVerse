@@ -225,7 +225,6 @@ class _MainContentState extends State<MainContent> {
                       BuildPosts(
                         scrollPhysics: const NeverScrollableScrollPhysics(),
                         posts: state.posts,
-                        delete: () {},
                       ),
                     ],
                   ),

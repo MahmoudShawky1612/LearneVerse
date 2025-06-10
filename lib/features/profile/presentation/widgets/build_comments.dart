@@ -8,7 +8,6 @@ class BuildComments extends StatelessWidget {
   final bool shrinkWrap;
   final ScrollPhysics scrollPhysics;
   final List<Comment> comments;
-  final bool flag;
   final Function? delete;
   final Function? edit;
 
@@ -17,7 +16,6 @@ class BuildComments extends StatelessWidget {
     this.shrinkWrap = true,
     required this.scrollPhysics,
     required this.comments,
-    this.flag = true,
     this.delete,
     this.edit,
   });
@@ -39,7 +37,6 @@ class BuildComments extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return CommentItem(
           comment: comments[index],
-          flag: flag,
           delete: delete,
           edit: edit,
         );
