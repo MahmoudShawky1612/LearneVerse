@@ -21,6 +21,7 @@ class UserPostApiService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      print(data);
       return (data['data'] as List).map((json) => Post.fromJson(json)).toList();
     } else {
       throw Exception('Failed to fetch posts: ${response.statusCode}');
