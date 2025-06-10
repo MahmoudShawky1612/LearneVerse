@@ -9,6 +9,8 @@ import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_states.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/build_posts.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/community_grid.dart';
+import 'package:flutterwidgets/utils/loading_state.dart';
+import '../../../../utils/error_state.dart';
 import '../../logic/cubit/community_states.dart';
 
 class MainContent extends StatefulWidget {
@@ -22,10 +24,16 @@ class _MainContentState extends State<MainContent> {
   @override
   void initState() {
     super.initState();
-    context.read<PostFeedCubit>().fetchFeedPosts();
-    context.read<CommunityCubit>().fetchCommunities();
+    fetchCommunities();
+    fetchPosts();
   }
 
+  void fetchCommunities() {
+    context.read<CommunityCubit>().fetchCommunities();
+  }
+  void fetchPosts() {
+    context.read<PostFeedCubit>().fetchFeedPosts();
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -37,13 +45,13 @@ class _MainContentState extends State<MainContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 55.h),
+          SizedBox(height: 7.h),
           BlocBuilder<CommunityCubit, CommunityStates>(
             builder: (context, state) {
               if (state is CommunityLoading) {
-                return const Center(child: CupertinoActivityIndicator());
+                return const Center(child: LoadingState());
               } else if (state is CommunityFailure) {
-                return Center(child: Text(state.message));
+                return Center(child: ErrorStateWidget(message: state.message, onRetry:fetchCommunities,));
               } else if (state is CommunitySuccess) {
                 return Container(
                   margin: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
@@ -117,9 +125,9 @@ class _MainContentState extends State<MainContent> {
           BlocBuilder<PostFeedCubit, PostFeedState>(
             builder: (BuildContext context, PostFeedState state) {
               if (state is PostFeedLoading) {
-                return const Center(child: CupertinoActivityIndicator());
+                return const Center(child:  LoadingState());
               } else if (state is PostFeedError) {
-                return Center(child: Text(state.message));
+                return Center(child:  ErrorStateWidget(message: state.message, onRetry: fetchPosts));
               } else if (state is PostFeedLoaded) {
                 return Container(
                   margin: EdgeInsets.only(

@@ -47,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
             child: Container(
               margin: EdgeInsets.symmetric(
                   vertical: 15.h, horizontal: horizontalMargin),
-              height: 60.h, 
+              height: 60.h,
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(20.r),

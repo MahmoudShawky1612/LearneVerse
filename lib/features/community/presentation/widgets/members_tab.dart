@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/community_members_cubit.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/vertical_users_list.dart';
+import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 
+import '../../../../utils/error_state.dart';
+import '../../../../utils/loading_state.dart';
 import '../../logic/cubit/community_members_state.dart';
 
 class MembersTab extends StatefulWidget {
-  final dynamic community;
+  final Community community;
 
   const MembersTab({
     super.key,
@@ -23,6 +26,10 @@ class _MembersTabState extends State<MembersTab> {
   @override
   void initState() {
     super.initState();
+    fetchCommunityMembers();
+
+  }
+  void fetchCommunityMembers() {
     context.read<CommunityMembersCubit>().fetchCommunityMembers(widget.community.id);
   }
   @override
@@ -78,12 +85,9 @@ class _MembersTabState extends State<MembersTab> {
         BlocBuilder<CommunityMembersCubit, CommunityMembersStates>(
           builder: (context, state) {
             if (state is CommunityMembersLoading) {
-              return const Center(child: CupertinoActivityIndicator());
+              return const Center(child: LoadingState());
             } else if (state is CommunityMembersError) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text('Error: ${state.message}', style: const TextStyle(color: Colors.red)),
-              );
+              return ErrorStateWidget(message: state.message, onRetry: fetchCommunityMembers);
             } else if (state is CommunityMembersSuccess) {
               return Column(
                 children: [

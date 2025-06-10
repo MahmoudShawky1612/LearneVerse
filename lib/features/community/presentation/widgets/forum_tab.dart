@@ -3,17 +3,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/features/home/data/models/community_model.dart';
+import 'package:flutterwidgets/utils/error_state.dart';
+import 'package:flutterwidgets/utils/jwt_helper.dart';
+import 'package:flutterwidgets/utils/loading_state.dart';
+import 'package:flutterwidgets/utils/url_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/build_posts.dart';
-import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutterwidgets/utils/snackber_util.dart';
+import '../../../../utils/token_storage.dart';
 import '../../logic/cubit/forum.states.dart';
 import '../../services/forum_service.dart';
 import 'package:image/image.dart' as img;
 
 class ForumTab extends StatefulWidget {
-  final dynamic community;
+  final Community community;
 
   const ForumTab({
     super.key,
@@ -28,22 +34,41 @@ class _ForumTabState extends State<ForumTab> {
   @override
   void initState() {
     super.initState();
-    print(widget.community.id);
-    context.read<ForumCubit>().fetchForumPosts(widget.community.id);
+    fetchForumPosts();
+    _checkIfAuthor();
   }
 
+  void fetchForumPosts() {
+    context.read<ForumCubit>().fetchForumPosts(widget.community.id);
+  }
+  String? userPp;
+  Future<void> _checkIfAuthor() async {
+    final pP = await getUserPp();
+    if (mounted) {
+      setState(() {
+        userPp = pP;
+      });
+    }
+  }
 
+  Future<dynamic> getUserPp() async {
+    final token = await TokenStorage.getToken();
+    if (token != null) {
+      return getUserProfilePictureURLFromToken(token);
+    }
+    return null;
+  }
   Future<String?> _uploadImage(File image) async {
     try {
       final fileSize = await image.length();
       if (fileSize > 10 * 1024 * 1024) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Image size exceeds 10MB limit')),
+        SnackBarUtils.showErrorSnackBar(
+          context,
+          message: 'Image size exceeds 10MB limit',
         );
         return null;
       }
 
-      // Convert image to JPEG
       final imageBytes = await image.readAsBytes();
       final decodedImage = img.decodeImage(imageBytes);
       if (decodedImage == null) {
@@ -51,122 +76,627 @@ class _ForumTabState extends State<ForumTab> {
       }
       final jpegBytes = img.encodeJpg(decodedImage, quality: 85);
       final tempDir = await getTemporaryDirectory();
-      final tempFile = File('${tempDir.path}/temp_image.jpg');
+      final tempFile = File('${tempDir.path}/temp_image_${image.hashCode}.jpg');
       await tempFile.writeAsBytes(jpegBytes);
 
-      print('Converted image MIME type: ${lookupMimeType(tempFile.path)}'); // Debug log
       return await context.read<ForumApiService>().uploadImage(tempFile);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to upload image: $e')),
+      SnackBarUtils.showErrorSnackBar(
+        context,
+        message: 'Image upload failed: ${e.toString()}',
       );
-      print(e);
+      debugPrint('Image upload error: $e');
       return null;
     }
   }
+
   void _showCreatePostDialog() {
     final titleController = TextEditingController();
     final contentController = TextEditingController();
-    XFile? pickedImage;
+    List<XFile> pickedImages = [];
+    bool isCreating = false;
     final ImagePicker _picker = ImagePicker();
 
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            return AlertDialog(
-              title: const Text('Create New Post'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: titleController,
-                    decoration: const InputDecoration(labelText: 'Title'),
-                  ),
-                  TextField(
-                    controller: contentController,
-                    decoration: const InputDecoration(labelText: 'Content'),
-                    maxLines: 3,
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          final XFile? image = await _picker.pickImage(
-                            source: ImageSource.gallery,
-                          );
-                          if (image != null) {
-                            setDialogState(() {
-                              pickedImage = image;
-                            });
-                          }
-                        },
-                        child: const Text('Pick Image'),
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              insetPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+              child: Container(
+                width: double.infinity,
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.9,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(28.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Header with gradient
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(24.w),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context).primaryColor,
+                            Theme.of(context).primaryColor.withOpacity(0.8),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(28.r),
+                          topRight: Radius.circular(28.r),
+                        ),
                       ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          final XFile? image = await _picker.pickImage(
-                            source: ImageSource.camera,
-                          );
-                          if (image != null) {
-                            setDialogState(() {
-                              pickedImage = image;
-                            });
-                          }
-                        },
-                        child: const Text('Take Photo'),
-                      ),
-                    ],
+                      child: Row(
+                        children: [
+                      Container(
+                      padding: EdgeInsets.all(8.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
-                  if (pickedImage != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Text(
-                        'Selected: ${pickedImage!.name}',
-                        style: const TextStyle(fontSize: 12),
+                  child: CircleAvatar(
+                    radius: 20.r, // Adjust radius as needed to fit design
+                    backgroundColor: Colors.grey[200],
+                    child: userPp != null && userPp!.isNotEmpty
+                        ? ClipOval(
+                      child: Image.network(
+                        UrlHelper.transformUrl(userPp!),
+                        width: 40.r, // 2 * radius to fill CircleAvatar
+                        height: 40.r,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Icon(
+                          Icons.person,
+                          color: Colors.blue,
+                          size: 24.sp,
+                        ),
+                      ),
+                    )
+                        : Icon(
+                      Icons.person,
+                      color: Colors.blue,
+                      size: 24.sp,
+                    ),
+                  ),
+                ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Create New Post',
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  'Share your thoughts with the community',
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: Colors.white.withOpacity(0.8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (!isCreating)
+                            IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: Icon(
+                                Icons.close_rounded,
+                                color: Colors.white,
+                                size: 24.sp,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                ],
+
+                    // Content - Scrollable
+                    Flexible(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.all(24.w),
+                        child: Column(
+                          children: [
+                            // Title Field
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor,
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(
+                                  color: Theme.of(context).dividerColor.withOpacity(0.1),
+                                ),
+                              ),
+                              child: TextField(
+                                controller: titleController,
+                                enabled: !isCreating,
+                                style: TextStyle(fontSize: 16.sp),
+                                decoration: InputDecoration(
+                                  labelText: 'Post Title',
+                                  labelStyle: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontSize: 14.sp,
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.title_rounded,
+                                    color: Theme.of(context).primaryColor,
+                                    size: 20.sp,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.all(16.w),
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(height: 16.h),
+
+                            // Content Field
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor,
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(
+                                  color: Theme.of(context).dividerColor.withOpacity(0.1),
+                                ),
+                              ),
+                              child: TextField(
+                                controller: contentController,
+                                enabled: !isCreating,
+                                maxLines: 4,
+                                style: TextStyle(fontSize: 16.sp),
+                                decoration: InputDecoration(
+                                  labelText: 'What\'s on your mind?',
+                                  labelStyle: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontSize: 14.sp,
+                                  ),
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.only(bottom: 60.h),
+                                    child: Icon(
+                                      Icons.edit_note_rounded,
+                                      color: Theme.of(context).primaryColor,
+                                      size: 20.sp,
+                                    ),
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.all(16.w),
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(height: 20.h),
+
+                            // Images Preview
+                            if (pickedImages.isNotEmpty)
+                              Container(
+                                margin: EdgeInsets.only(bottom: 16.h),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.photo_library_rounded,
+                                          color: Theme.of(context).primaryColor,
+                                          size: 16.sp,
+                                        ),
+                                        SizedBox(width: 8.w),
+                                        Text(
+                                          '${pickedImages.length} photo${pickedImages.length > 1 ? 's' : ''} selected',
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 12.h),
+                                    SizedBox(
+                                      height: 120.h,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: pickedImages.length,
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            width: 120.w,
+                                            margin: EdgeInsets.only(right: 12.w),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(16.r),
+                                              border: Border.all(
+                                                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                                width: 2,
+                                              ),
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(14.r),
+                                                  child: Image.file(
+                                                    File(pickedImages[index].path),
+                                                    width: double.infinity,
+                                                    height: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context, error, stackTrace) => Container(
+                                                      color: Colors.grey[200],
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons.person,
+                                                          color: Colors.blue,
+                                                          size: 40.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                if (!isCreating)
+                                                  Positioned(
+                                                    top: 4.w,
+                                                    right: 4.w,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        setDialogState(() {
+                                                          pickedImages.removeAt(index);
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        padding: EdgeInsets.all(4.w),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.red.withOpacity(0.9),
+                                                          borderRadius: BorderRadius.circular(12.r),
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.close,
+                                                          color: Colors.white,
+                                                          size: 12.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            // Image Picker Buttons
+                            Container(
+                              padding: EdgeInsets.all(16.w),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(
+                                  color: Theme.of(context).dividerColor.withOpacity(0.1),
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.add_photo_alternate_rounded,
+                                        color: Theme.of(context).primaryColor,
+                                        size: 16.sp,
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      Text(
+                                        'Add Photos',
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Colors.purple.withOpacity(0.1),
+                                                Colors.blue.withOpacity(0.1),
+                                              ],
+                                            ),
+                                            borderRadius: BorderRadius.circular(12.r),
+                                            border: Border.all(
+                                              color: Colors.purple.withOpacity(0.3),
+                                            ),
+                                          ),
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              borderRadius: BorderRadius.circular(12.r),
+                                              onTap: isCreating
+                                                  ? null
+                                                  : () async {
+                                                final List<XFile> images = await _picker.pickMultiImage();
+                                                if (images.isNotEmpty) {
+                                                  setDialogState(() {
+                                                    // Limit to 5 images total
+                                                    int remainingSlots = 5 - pickedImages.length;
+                                                    if (remainingSlots > 0) {
+                                                      pickedImages.addAll(images.take(remainingSlots));
+                                                    }
+                                                  });
+                                                  if (images.length > (5 - (pickedImages.length - images.length))) {
+                                                    SnackBarUtils.showErrorSnackBar(
+                                                      context,
+                                                      message: 'Maximum 5 photos allowed',
+                                                    );
+                                                  }
+                                                }
+                                              },
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(vertical: 12.h),
+                                                child: Column(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.photo_library_rounded,
+                                                      color: Colors.purple,
+                                                      size: 20.sp,
+                                                    ),
+                                                    SizedBox(height: 4.h),
+                                                    Text(
+                                                      'Gallery',
+                                                      style: TextStyle(
+                                                        color: Colors.purple,
+                                                        fontSize: 11.sp,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      SizedBox(width: 8.w),
+
+                                      Expanded(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Colors.teal.withOpacity(0.1),
+                                                Colors.green.withOpacity(0.1),
+                                              ],
+                                            ),
+                                            borderRadius: BorderRadius.circular(12.r),
+                                            border: Border.all(
+                                              color: Colors.teal.withOpacity(0.3),
+                                            ),
+                                          ),
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              borderRadius: BorderRadius.circular(12.r),
+                                              onTap: isCreating
+                                                  ? null
+                                                  : () async {
+                                                if (pickedImages.length >= 5) {
+                                                  SnackBarUtils.showErrorSnackBar(
+                                                    context,
+                                                    message: 'Maximum 5 photos allowed',
+                                                  );
+                                                  return;
+                                                }
+                                                final XFile? image = await _picker.pickImage(
+                                                  source: ImageSource.camera,
+                                                );
+                                                if (image != null) {
+                                                  setDialogState(() {
+                                                    pickedImages.add(image);
+                                                  });
+                                                }
+                                              },
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(vertical: 12.h),
+                                                child: Column(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.camera_alt_rounded,
+                                                      color: Colors.teal,
+                                                      size: 20.sp,
+                                                    ),
+                                                    SizedBox(height: 4.h),
+                                                    Text(
+                                                      'Camera',
+                                                      style: TextStyle(
+                                                        color: Colors.teal,
+                                                        fontSize: 11.sp,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (pickedImages.length >= 5)
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8.h),
+                                      child: Text(
+                                        'Maximum photos reached (5/5)',
+                                        style: TextStyle(
+                                          fontSize: 10.sp,
+                                          color: Colors.orange,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(height: 24.h),
+
+                            // Action Buttons
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextButton(
+                                    onPressed: isCreating ? null : () => Navigator.pop(context),
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16.r),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(width: 12.w),
+
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Theme.of(context).primaryColor,
+                                          Theme.of(context).primaryColor.withOpacity(0.8),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(16.r),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(16.r),
+                                        onTap: isCreating
+                                            ? null
+                                            : () async {
+                                          if (titleController.text.isNotEmpty && contentController.text.isNotEmpty) {
+                                            setDialogState(() {
+                                              isCreating = true;
+                                            });
+
+                                            List<String> attachments = [];
+                                            for (var image in pickedImages) {
+                                              final imageUrl = await _uploadImage(File(image.path));
+                                              if (imageUrl != null) {
+                                                attachments.add(imageUrl);
+                                              } else {
+                                                setDialogState(() {
+                                                  isCreating = false;
+                                                });
+                                                SnackBarUtils.showErrorSnackBar(
+                                                  context,
+                                                  message: 'Failed to upload one or more images',
+                                                );
+                                                return;
+                                              }
+                                            }
+
+                                            context.read<ForumCubit>().createForumPost(
+                                              widget.community.id,
+                                              titleController.text,
+                                              contentController.text,
+                                              attachments,
+                                            );
+                                            Navigator.pop(context);
+                                            SnackBarUtils.showSuccessSnackBar(
+                                              context,
+                                              message: 'Post created successfully! 😃',
+                                            );
+                                          } else {
+                                            SnackBarUtils.showErrorSnackBar(
+                                              context,
+                                              message: 'Please fill in all fields. 😡',
+                                            );
+                                          }
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              if (isCreating)
+                                                SizedBox(
+                                                  width: 20.w,
+                                                  height: 20.w,
+                                                  child: const CupertinoActivityIndicator(
+                                                  ),
+                                                )
+                                              else
+                                                Icon(
+                                                  Icons.send_rounded,
+                                                  color: Colors.white,
+                                                  size: 20.sp,
+                                                ),
+                                              SizedBox(width: 8.w),
+                                              Text(
+                                                isCreating ? 'Creating...' : 'Create Post',
+                                                style: TextStyle(
+                                                  fontSize: 16.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    if (titleController.text.isNotEmpty && contentController.text.isNotEmpty) {
-                      List<String> attachments = [];
-                      if (pickedImage != null) {
-                        final imageUrl = await _uploadImage(File(pickedImage!.path));
-                        if (imageUrl != null) {
-                          attachments.add(imageUrl);
-                        } else {
-                          return; // Stop if image upload fails
-                        }
-                      }
-                      context.read<ForumCubit>().createForumPost(
-                        widget.community.id,
-                        titleController.text,
-                        contentController.text,
-                        attachments,
-                      );
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Post created successfully')),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Title and content are required')),
-                      );
-                    }
-                  },
-                  child: const Text('Create'),
-                ),
-              ],
             );
           },
         );
@@ -213,7 +743,7 @@ class _ForumTabState extends State<ForumTab> {
         BlocBuilder<ForumCubit, ForumStates>(
           builder: (context, state) {
             if (state is ForumLoading) {
-              return const Center(child: CupertinoActivityIndicator());
+              return const Center(child: LoadingState());
             } else if (state is ForumSuccess) {
               return Container(
                 decoration: BoxDecoration(
@@ -234,10 +764,7 @@ class _ForumTabState extends State<ForumTab> {
               );
             } else if (state is ForumFailure) {
               return Center(
-                child: Text(
-                  'Failed to load posts: ${state.message}',
-                  style: const TextStyle(color: Colors.red),
-                ),
+                child: ErrorStateWidget(message: state.message, onRetry: fetchForumPosts),
               );
             }
             return const SizedBox(); // Default empty state

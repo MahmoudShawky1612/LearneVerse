@@ -17,54 +17,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController searchController = TextEditingController();
-  List<Community> _foundCommunities = [];
-  List<Author> _foundUsers = [];
-  List<Owner> _foundOwners = [];
-  bool _isSearching = false;
 
   @override
   void initState() {
     super.initState();
-    _foundCommunities = [];
-    _foundUsers = [];
-    _foundOwners = [];
+
   }
 
   @override
   void dispose() {
-    searchController.dispose();
     super.dispose();
   }
 
-  void _search(String query) {
-    if (query.isEmpty) {
-      setState(() {
-        _foundCommunities = [];
-        _foundUsers = [];
-        _foundOwners = [];
-        _isSearching = false;
-      });
-      return;
-    }
-
-    setState(() {
-      _isSearching = true;
-      _foundCommunities = Community.searchCommunities(query);
-      _foundUsers = Author.searchUsers(query);
-      _foundOwners = Owner.searchOwners(query);
-    });
-  }
-
-  void _clearSearch() {
-    setState(() {
-      searchController.clear();
-      _foundCommunities = [];
-      _foundUsers = [];
-      _foundOwners = [];
-      _isSearching = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double buttonSize = 30.h;
 
     Widget layout;
-
     layout = _buildMobileLayout();
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
@@ -82,14 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
           clipBehavior: Clip.none,
           children: [
             layout,
-            Positioned(
-              top: 120.h,
-              left: 0,
-              right: 0,
-              child: CustomSearchBar(
-                  searchController: searchController, searchFunction: _search),
-            ),
-            
             Positioned(
               right: buttonSize,
               top: 10.h,
@@ -108,22 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            if (_hasSearchResults())
-              GestureDetector(
-                onTap: _clearSearch,
-                child: Container(
-                  color: theme.shadowColor.withOpacity(0.4),
-                  width: double.infinity,
-                  height: double.infinity,
-                ),
-              ),
-            if (_hasSearchResults())
-              BuildSearchResults(
-                communities: _foundCommunities,
-                users: _foundUsers,
-                owners: _foundOwners,
-                onClose: _clearSearch,
-              ),
           ],
         ),
       ),
@@ -145,10 +83,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  bool _hasSearchResults() {
-    return _isSearching &&
-        (_foundCommunities.isNotEmpty ||
-            _foundUsers.isNotEmpty ||
-            _foundOwners.isNotEmpty);
-  }
 }

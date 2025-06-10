@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
+import 'package:flutterwidgets/utils/error_state.dart';
+import 'package:flutterwidgets/utils/loading_state.dart';
 import '../../logic/cubit/classroom_cubit.dart';
 import '../../logic/cubit/classroom_states.dart';
 import 'section_card.dart';
@@ -20,12 +22,14 @@ class _ClassroomTabState extends State<ClassroomTab> {
   @override
   void initState() {
     super.initState();
-    context.read<ClassroomCubit>().fetchClassrooms(widget.community.id);
+    fetchClassrooms();
   }
 
+  void fetchClassrooms() {
+    context.read<ClassroomCubit>().fetchClassrooms(widget.community.id);
+  }
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,23 +52,27 @@ class _ClassroomTabState extends State<ClassroomTab> {
         BlocBuilder<ClassroomCubit, ClassroomStates>(
           builder: (context, state) {
             if (state is ClassroomLoading) {
-              return const Center(child: CupertinoActivityIndicator());
+              return const Center(child: LoadingState());
             } else if (state is ClassroomLoaded) {
               final classrooms = state.classrooms;
-
               if (classrooms.isEmpty) {
-                return const Text("No classrooms available yet.");
+                return const Center(child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.hourglass_empty, size: 48, color: Colors.blue),
+                    SizedBox(height: 8),
+                    Text('No classes yet', style: TextStyle(color: Colors.grey)),
+                  ],
+                ));
               }
-
               return Column(
                 children: classrooms
                     .map((classroom) => ClassroomCard(classroom: classroom,))
                     .toList(),
               );
             } else if (state is ClassroomError) {
-              return Text(state.message, style: const TextStyle(color: Colors.red));
+              return ErrorStateWidget(message: state.message, onRetry: fetchClassrooms);
             }
-
             return const SizedBox.shrink();
           },
         ),

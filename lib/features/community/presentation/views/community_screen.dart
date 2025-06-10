@@ -206,7 +206,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
            ),
         );
       case 3:
-        return LeaderboardTab();
+        return const LeaderboardTab();
       case 4:
         return MembersTab(
           community: community,
@@ -271,11 +271,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                               CommunityHeader(community: community),
                               SizedBox(height: 16.h),
 
-                              // Show join button if user hasn't joined
-                              if (!hasJoined)
+                               if (!hasJoined)
                                 _buildJoinButton()
-                              // Show tabs if user has joined or community is public
-                              else if (community.isPublic || hasJoined)
+                               else if (community.isPublic || hasJoined)
                                 TabSelector(
                                   currentIndex: _currentIndex,
                                   onTabSelected: (index) {

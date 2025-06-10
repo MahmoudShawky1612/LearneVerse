@@ -54,7 +54,7 @@ class _HomeHeaderState extends State<HomeHeader> {
     if (token != null) {
       return getUserIdFromToken(token);
     }
-    return 0; // Return 0 or handle as needed
+    return 0;
   }
   void goToProfile() async {
     final userId = await getUserId();
@@ -71,8 +71,7 @@ class _HomeHeaderState extends State<HomeHeader> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+     final themeExtension = Theme.of(context).extension<AppThemeExtension>();
     final screenWidth = MediaQuery.of(context).size.width;
     final baseFontSize = screenWidth < 360
         ? 20.sp
