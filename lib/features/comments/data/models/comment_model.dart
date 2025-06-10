@@ -3,11 +3,13 @@ class UserProfile {
 
   UserProfile({this.profilePictureURL});
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
+  factory UserProfile.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return UserProfile();
     return UserProfile(
       profilePictureURL: json['profilePictureURL'] as String?,
     );
   }
+
 }
 
 class Author {
@@ -17,15 +19,20 @@ class Author {
 
   Author({required this.id,required this.fullname, this.userProfile});
 
-  factory Author.fromJson(Map<String, dynamic> json) {
+  factory Author.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return Author(id: 0, fullname: 'Unknown');
+    }
+
     return Author(
-      id: json['id'],
-      fullname: json['fullname'],
+      id: json['id'] ?? 0,
+      fullname: json['fullname'] ?? 'Unknown',
       userProfile: json['UserProfile'] != null
           ? UserProfile.fromJson(json['UserProfile'])
           : null,
     );
   }
+
 }
 
 
@@ -54,18 +61,27 @@ class Comment {
      this.voteType = "NONE",
   });
 
-  factory Comment.fromJson(Map<String, dynamic> json) {
+  factory Comment.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      throw ArgumentError("Comment JSON data is null");
+    }
+
     return Comment(
-      id: json['id'],
-      content: json['content'],
-      parentId: json['parentId'],
-      postId: json['postId'],
-      authorId: json['authorId'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      id: json['id'] ?? 0,
+      content: json['content'] ?? '',
+      parentId: json['parentId'], // can be null
+      postId: json['postId'] ?? 0,
+      authorId: json['authorId'] ?? 0,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt']) ?? DateTime.now()
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt']) ?? DateTime.now()
+          : DateTime.now(),
       author: Author.fromJson(json['Author']),
       voteCounter: json['voteCount'] ?? 0,
       voteType: json['voteType'] ?? "NONE",
     );
   }
+
 }
