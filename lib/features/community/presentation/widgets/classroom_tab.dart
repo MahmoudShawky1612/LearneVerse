@@ -52,7 +52,13 @@ class _ClassroomTabState extends State<ClassroomTab> {
         BlocBuilder<ClassroomCubit, ClassroomStates>(
           builder: (context, state) {
             if (state is ClassroomLoading) {
-              return const Center(child: LoadingState());
+              return   Center(child: Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  const LoadingState(),
+                  SizedBox(height: 200.h),
+                ],
+              ));
             } else if (state is ClassroomLoaded) {
               final classrooms = state.classrooms;
               if (classrooms.isEmpty) {

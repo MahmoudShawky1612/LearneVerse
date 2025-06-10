@@ -85,7 +85,13 @@ class _MembersTabState extends State<MembersTab> {
         BlocBuilder<CommunityMembersCubit, CommunityMembersStates>(
           builder: (context, state) {
             if (state is CommunityMembersLoading) {
-              return const Center(child: LoadingState());
+              return   Center(child: Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  const LoadingState(),
+                  SizedBox(height: 200.h),
+                ],
+              ));
             } else if (state is CommunityMembersError) {
               return ErrorStateWidget(message: state.message, onRetry: fetchCommunityMembers);
             } else if (state is CommunityMembersSuccess) {

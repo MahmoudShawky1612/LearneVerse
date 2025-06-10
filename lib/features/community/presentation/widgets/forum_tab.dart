@@ -41,6 +41,7 @@ class _ForumTabState extends State<ForumTab> {
   void fetchForumPosts() {
     context.read<ForumCubit>().fetchForumPosts(widget.community.id);
   }
+
   String? userPp;
   Future<void> _checkIfAuthor() async {
     final pP = await getUserPp();
@@ -58,12 +59,13 @@ class _ForumTabState extends State<ForumTab> {
     }
     return null;
   }
-  Future<String?> _uploadImage(File image) async {
+
+  Future<String?> _uploadImage(File image, BuildContext dialogContext) async {
     try {
       final fileSize = await image.length();
       if (fileSize > 10 * 1024 * 1024) {
         SnackBarUtils.showErrorSnackBar(
-          context,
+          dialogContext,
           message: 'Image size exceeds 10MB limit',
         );
         return null;
@@ -82,7 +84,7 @@ class _ForumTabState extends State<ForumTab> {
       return await context.read<ForumApiService>().uploadImage(tempFile);
     } catch (e) {
       SnackBarUtils.showErrorSnackBar(
-        context,
+        dialogContext,
         message: 'Image upload failed: ${e.toString()}',
       );
       debugPrint('Image upload error: $e');
@@ -100,19 +102,19 @@ class _ForumTabState extends State<ForumTab> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) {
+      builder: (dialogContext) {
         return StatefulBuilder(
-          builder: (context, setDialogState) {
+          builder: (dialogContext, setDialogState) {
             return Dialog(
               backgroundColor: Colors.transparent,
               insetPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
               child: Container(
                 width: double.infinity,
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.9,
+                  maxHeight: MediaQuery.of(dialogContext).size.height * 0.9,
                 ),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
+                  color: Theme.of(dialogContext).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(28.r),
                   boxShadow: [
                     BoxShadow(
@@ -132,8 +134,8 @@ class _ForumTabState extends State<ForumTab> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Theme.of(context).primaryColor,
-                            Theme.of(context).primaryColor.withOpacity(0.8),
+                            Theme.of(dialogContext).primaryColor,
+                            Theme.of(dialogContext).primaryColor.withOpacity(0.8),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -145,36 +147,36 @@ class _ForumTabState extends State<ForumTab> {
                       ),
                       child: Row(
                         children: [
-                      Container(
-                      padding: EdgeInsets.all(8.w),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: CircleAvatar(
-                    radius: 20.r, // Adjust radius as needed to fit design
-                    backgroundColor: Colors.grey[200],
-                    child: userPp != null && userPp!.isNotEmpty
-                        ? ClipOval(
-                      child: Image.network(
-                        UrlHelper.transformUrl(userPp!),
-                        width: 40.r, // 2 * radius to fill CircleAvatar
-                        height: 40.r,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Icon(
-                          Icons.person,
-                          color: Colors.blue,
-                          size: 24.sp,
-                        ),
-                      ),
-                    )
-                        : Icon(
-                      Icons.person,
-                      color: Colors.blue,
-                      size: 24.sp,
-                    ),
-                  ),
-                ),
+                          Container(
+                            padding: EdgeInsets.all(8.w),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: CircleAvatar(
+                              radius: 20.r,
+                              backgroundColor: Colors.grey[200],
+                              child: userPp != null && userPp!.isNotEmpty
+                                  ? ClipOval(
+                                child: Image.network(
+                                  UrlHelper.transformUrl(userPp!),
+                                  width: 40.r,
+                                  height: 40.r,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Icon(
+                                    Icons.person,
+                                    color: Colors.blue,
+                                    size: 24.sp,
+                                  ),
+                                ),
+                              )
+                                  : Icon(
+                                Icons.person,
+                                color: Colors.blue,
+                                size: 24.sp,
+                              ),
+                            ),
+                          ),
                           SizedBox(width: 12.w),
                           Expanded(
                             child: Column(
@@ -200,7 +202,7 @@ class _ForumTabState extends State<ForumTab> {
                           ),
                           if (!isCreating)
                             IconButton(
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () => Navigator.pop(dialogContext),
                               icon: Icon(
                                 Icons.close_rounded,
                                 color: Colors.white,
@@ -220,10 +222,10 @@ class _ForumTabState extends State<ForumTab> {
                             // Title Field
                             Container(
                               decoration: BoxDecoration(
-                                color: Theme.of(context).cardColor,
+                                color: Theme.of(dialogContext).cardColor,
                                 borderRadius: BorderRadius.circular(16.r),
                                 border: Border.all(
-                                  color: Theme.of(context).dividerColor.withOpacity(0.1),
+                                  color: Theme.of(dialogContext).dividerColor.withOpacity(0.1),
                                 ),
                               ),
                               child: TextField(
@@ -233,12 +235,12 @@ class _ForumTabState extends State<ForumTab> {
                                 decoration: InputDecoration(
                                   labelText: 'Post Title',
                                   labelStyle: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(dialogContext).primaryColor,
                                     fontSize: 14.sp,
                                   ),
                                   prefixIcon: Icon(
                                     Icons.title_rounded,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(dialogContext).primaryColor,
                                     size: 20.sp,
                                   ),
                                   border: InputBorder.none,
@@ -252,10 +254,10 @@ class _ForumTabState extends State<ForumTab> {
                             // Content Field
                             Container(
                               decoration: BoxDecoration(
-                                color: Theme.of(context).cardColor,
+                                color: Theme.of(dialogContext).cardColor,
                                 borderRadius: BorderRadius.circular(16.r),
                                 border: Border.all(
-                                  color: Theme.of(context).dividerColor.withOpacity(0.1),
+                                  color: Theme.of(dialogContext).dividerColor.withOpacity(0.1),
                                 ),
                               ),
                               child: TextField(
@@ -266,14 +268,14 @@ class _ForumTabState extends State<ForumTab> {
                                 decoration: InputDecoration(
                                   labelText: 'What\'s on your mind?',
                                   labelStyle: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(dialogContext).primaryColor,
                                     fontSize: 14.sp,
                                   ),
                                   prefixIcon: Padding(
                                     padding: EdgeInsets.only(bottom: 60.h),
                                     child: Icon(
                                       Icons.edit_note_rounded,
-                                      color: Theme.of(context).primaryColor,
+                                      color: Theme.of(dialogContext).primaryColor,
                                       size: 20.sp,
                                     ),
                                   ),
@@ -296,7 +298,7 @@ class _ForumTabState extends State<ForumTab> {
                                       children: [
                                         Icon(
                                           Icons.photo_library_rounded,
-                                          color: Theme.of(context).primaryColor,
+                                          color: Theme.of(dialogContext).primaryColor,
                                           size: 16.sp,
                                         ),
                                         SizedBox(width: 8.w),
@@ -305,7 +307,7 @@ class _ForumTabState extends State<ForumTab> {
                                           style: TextStyle(
                                             fontSize: 14.sp,
                                             fontWeight: FontWeight.w600,
-                                            color: Theme.of(context).primaryColor,
+                                            color: Theme.of(dialogContext).primaryColor,
                                           ),
                                         ),
                                       ],
@@ -323,7 +325,7 @@ class _ForumTabState extends State<ForumTab> {
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(16.r),
                                               border: Border.all(
-                                                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                                color: Theme.of(dialogContext).primaryColor.withOpacity(0.3),
                                                 width: 2,
                                               ),
                                             ),
@@ -386,10 +388,10 @@ class _ForumTabState extends State<ForumTab> {
                             Container(
                               padding: EdgeInsets.all(16.w),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).cardColor.withOpacity(0.5),
+                                color: Theme.of(dialogContext).cardColor.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(16.r),
                                 border: Border.all(
-                                  color: Theme.of(context).dividerColor.withOpacity(0.1),
+                                  color: Theme.of(dialogContext).dividerColor.withOpacity(0.1),
                                 ),
                               ),
                               child: Column(
@@ -439,18 +441,8 @@ class _ForumTabState extends State<ForumTab> {
                                                 final List<XFile> images = await _picker.pickMultiImage();
                                                 if (images.isNotEmpty) {
                                                   setDialogState(() {
-                                                    // Limit to 5 images total
-                                                    int remainingSlots = 5 - pickedImages.length;
-                                                    if (remainingSlots > 0) {
-                                                      pickedImages.addAll(images.take(remainingSlots));
-                                                    }
+                                                    pickedImages.addAll(images);
                                                   });
-                                                  if (images.length > (5 - (pickedImages.length - images.length))) {
-                                                    SnackBarUtils.showErrorSnackBar(
-                                                      context,
-                                                      message: 'Maximum 5 photos allowed',
-                                                    );
-                                                  }
                                                 }
                                               },
                                               child: Padding(
@@ -502,13 +494,6 @@ class _ForumTabState extends State<ForumTab> {
                                               onTap: isCreating
                                                   ? null
                                                   : () async {
-                                                if (pickedImages.length >= 5) {
-                                                  SnackBarUtils.showErrorSnackBar(
-                                                    context,
-                                                    message: 'Maximum 5 photos allowed',
-                                                  );
-                                                  return;
-                                                }
                                                 final XFile? image = await _picker.pickImage(
                                                   source: ImageSource.camera,
                                                 );
@@ -545,18 +530,6 @@ class _ForumTabState extends State<ForumTab> {
                                       ),
                                     ],
                                   ),
-                                  if (pickedImages.length >= 5)
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 8.h),
-                                      child: Text(
-                                        'Maximum photos reached (5/5)',
-                                        style: TextStyle(
-                                          fontSize: 10.sp,
-                                          color: Colors.orange,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
                                 ],
                               ),
                             ),
@@ -568,7 +541,7 @@ class _ForumTabState extends State<ForumTab> {
                               children: [
                                 Expanded(
                                   child: TextButton(
-                                    onPressed: isCreating ? null : () => Navigator.pop(context),
+                                    onPressed: isCreating ? null : () => Navigator.pop(dialogContext),
                                     style: TextButton.styleFrom(
                                       padding: EdgeInsets.symmetric(vertical: 16.h),
                                       shape: RoundedRectangleBorder(
@@ -580,7 +553,7 @@ class _ForumTabState extends State<ForumTab> {
                                       style: TextStyle(
                                         fontSize: 16.sp,
                                         fontWeight: FontWeight.w600,
-                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                                        color: Theme.of(dialogContext).colorScheme.onSurface.withOpacity(0.6),
                                       ),
                                     ),
                                   ),
@@ -594,14 +567,14 @@ class _ForumTabState extends State<ForumTab> {
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: [
-                                          Theme.of(context).primaryColor,
-                                          Theme.of(context).primaryColor.withOpacity(0.8),
+                                          Theme.of(dialogContext).primaryColor,
+                                          Theme.of(dialogContext).primaryColor.withOpacity(0.8),
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(16.r),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                          color: Theme.of(dialogContext).primaryColor.withOpacity(0.3),
                                           blurRadius: 8,
                                           offset: const Offset(0, 4),
                                         ),
@@ -621,17 +594,13 @@ class _ForumTabState extends State<ForumTab> {
 
                                             List<String> attachments = [];
                                             for (var image in pickedImages) {
-                                              final imageUrl = await _uploadImage(File(image.path));
+                                              final imageUrl = await _uploadImage(File(image.path), dialogContext);
                                               if (imageUrl != null) {
                                                 attachments.add(imageUrl);
                                               } else {
                                                 setDialogState(() {
                                                   isCreating = false;
                                                 });
-                                                SnackBarUtils.showErrorSnackBar(
-                                                  context,
-                                                  message: 'Failed to upload one or more images',
-                                                );
                                                 return;
                                               }
                                             }
@@ -642,14 +611,14 @@ class _ForumTabState extends State<ForumTab> {
                                               contentController.text,
                                               attachments,
                                             );
-                                            Navigator.pop(context);
+                                            Navigator.pop(dialogContext);
                                             SnackBarUtils.showSuccessSnackBar(
                                               context,
                                               message: 'Post created successfully! 😃',
                                             );
                                           } else {
                                             SnackBarUtils.showErrorSnackBar(
-                                              context,
+                                              dialogContext,
                                               message: 'Please fill in all fields. 😡',
                                             );
                                           }
@@ -663,8 +632,7 @@ class _ForumTabState extends State<ForumTab> {
                                                 SizedBox(
                                                   width: 20.w,
                                                   height: 20.w,
-                                                  child: const CupertinoActivityIndicator(
-                                                  ),
+                                                  child: const CupertinoActivityIndicator(),
                                                 )
                                               else
                                                 Icon(
@@ -743,7 +711,13 @@ class _ForumTabState extends State<ForumTab> {
         BlocBuilder<ForumCubit, ForumStates>(
           builder: (context, state) {
             if (state is ForumLoading) {
-              return const Center(child: LoadingState());
+              return   Center(child: Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  LoadingState(),
+                  SizedBox(height: 200.h),
+                ],
+              ));
             } else if (state is ForumSuccess) {
               return Container(
                 decoration: BoxDecoration(
@@ -767,7 +741,7 @@ class _ForumTabState extends State<ForumTab> {
                 child: ErrorStateWidget(message: state.message, onRetry: fetchForumPosts),
               );
             }
-            return const SizedBox(); // Default empty state
+            return const SizedBox();
           },
         ),
       ],

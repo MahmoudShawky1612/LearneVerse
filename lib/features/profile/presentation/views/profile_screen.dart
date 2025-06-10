@@ -42,10 +42,27 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
       });
     });
 
+    fetchProfile();
+    fetchUserPosts();
+    fetchUserComments();
+    fetchUserCommunities();
+    fetchUserContributions();
+
+  }
+
+  void fetchProfile() {
     context.read<ProfileCubit>().loadProfile(widget.userId);
+  }
+  void fetchUserPosts() {
     context.read<UserPostCubit>().fetchPostsByUser(widget.userId);
+  }
+  void fetchUserComments() {
     context.read<UserCommentsCubit>().fetchCommentsByUser(widget.userId);
+  }
+  void fetchUserCommunities() {
     context.read<UserCommunitiesCubit>().fetchCommunitiesByUser(widget.userId);
+  }
+  void fetchUserContributions() {
     context.read<UserContributionsCubit>().fetchContributionsByUser(widget.userId);
   }
 

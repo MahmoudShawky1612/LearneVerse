@@ -7,6 +7,7 @@ import 'package:flutterwidgets/features/discover/presentation/widgets/build_head
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_search_results.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/search_bar.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_filters_list.dart';
+import 'package:flutterwidgets/utils/loading_state.dart';
 import '../../logic/cubit/search_cubit.dart';
 import '../../logic/cubit/search_states.dart';
 
@@ -79,7 +80,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 child: BlocBuilder<SearchCubit, SearchStates>(
                   builder: (context, state) {
                     if (state is SearchLoading) {
-                      return Center(child: CupertinoActivityIndicator());
+                      return const Center(child: LoadingState());
                     } else if (state is SearchLoaded) {
                       if (state.communities.isEmpty && state.users.isEmpty) {
                         return const BuildDefaultContent();
