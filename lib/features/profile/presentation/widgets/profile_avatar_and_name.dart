@@ -7,11 +7,13 @@ import 'package:flutterwidgets/utils/url_helper.dart';
 class ProfileAvatarAndName extends StatelessWidget {
   final UserProfile userInfo;
   const ProfileAvatarAndName({super.key, required this.userInfo});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -31,9 +33,27 @@ class ProfileAvatarAndName extends StatelessWidget {
                 ],
               ),
               child: CircleAvatar(
-                backgroundImage:
-                    NetworkImage(UrlHelper.transformUrl(userInfo.profilePictureURL)),
-                radius: 36,
+                radius: 36.r,
+                backgroundColor: Colors.grey[200],
+                child: userInfo.profilePictureURL == null || userInfo.profilePictureURL!.isEmpty
+                    ? Icon(
+                  Icons.person,
+                  color: Colors.blue,
+                  size: 40.sp,
+                )
+                    : ClipOval(
+                  child: Image.network(
+                    UrlHelper.transformUrl(userInfo.profilePictureURL!),
+                    width: 72.r, // 2 * radius
+                    height: 72.r,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Icon(
+                      Icons.person,
+                      color: Colors.blue,
+                      size: 40.sp,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],

@@ -5,9 +5,8 @@ import 'podium_item.dart';
 import 'top_member_item.dart';
 
 class LeaderboardTab extends StatelessWidget {
-  final List<dynamic> members;
 
-  const LeaderboardTab({super.key, required this.members});
+  const LeaderboardTab({super.key, });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class LeaderboardTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             PodiumItem(
-              user: members[1],
+              user: 1,
               rank: 2,
               height: 120.h,
               theme: theme,
@@ -41,7 +40,7 @@ class LeaderboardTab extends StatelessWidget {
             ),
             SizedBox(width: 12.w),
             PodiumItem(
-              user: members[0],
+              user: 1,
               rank: 1,
               height: 150.h,
               theme: theme,
@@ -51,7 +50,7 @@ class LeaderboardTab extends StatelessWidget {
             ),
             SizedBox(width: 12.w),
             PodiumItem(
-              user: members[2],
+              user: 1,
               rank: 3,
               height: 100.h,
               theme: theme,
@@ -108,10 +107,10 @@ class LeaderboardTab extends StatelessWidget {
                 7,
                     (index) => TopMemberItem(
                   rank: index + 4,
-                  name: members[index + 3].name,
-                  username: members[index + 3].userName,
-                  avatarUrl: members[index + 3].avatar,
-                  points: members[index + 3].points,
+                  name: 'members[index + 3].name,',
+                  username: 'members[index + 3].userName,',
+                  avatarUrl: 'members[index + 3].avatar',
+                  points: 3,
                 ),
               ),
             ],

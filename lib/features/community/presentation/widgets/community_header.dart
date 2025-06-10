@@ -27,9 +27,9 @@ class CommunityHeader extends StatelessWidget {
               height: 80.r,
               color: Colors.grey.shade200,
               child: Icon(
-                Icons.broken_image_rounded,
+                Icons.group,
                 size: 40.r,
-                color: Colors.grey,
+                color: Colors.blue,
               ),
             );
           },

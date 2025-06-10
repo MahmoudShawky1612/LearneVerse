@@ -9,14 +9,10 @@ import '../../logic/cubit/community_members_state.dart';
 
 class MembersTab extends StatefulWidget {
   final dynamic community;
-  final TextEditingController searchController;
-  final void Function(String) onSearch;
 
   const MembersTab({
     super.key,
     required this.community,
-    required this.searchController,
-    required this.onSearch,
   });
 
   @override
@@ -26,7 +22,6 @@ class MembersTab extends StatefulWidget {
 class _MembersTabState extends State<MembersTab> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<CommunityMembersCubit>().fetchCommunityMembers(widget.community.id);
   }

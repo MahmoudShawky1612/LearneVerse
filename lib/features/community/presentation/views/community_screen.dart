@@ -7,11 +7,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/services/forum_service.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:flutterwidgets/features/home/models/post_model.dart';
+import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/jwt_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../utils/loading_state.dart';
 import '../../../../utils/snackber_util.dart';
 import '../../../../utils/token_storage.dart';
 import '../../../home/data/models/community_model.dart';
@@ -40,21 +42,13 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
-  // UI State
   int _currentIndex = 0;
   bool _isJoinButtonDisabled = false;
 
-  // Controllers
   final TextEditingController _searchController = TextEditingController();
   VideoPlayerController? _videoController;
 
-  // Data
-  late final List<Post> _posts;
-  late final List<Author> _members;
-  late final List<Author> _foundUsers;
-  File? _selectedImage;
 
-  // Constants
   static const String _joinRequestPrefixKey = 'join_request_';
 
   @override
@@ -69,7 +63,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
     super.dispose();
   }
 
-  // Initialization Methods
   void _initializeScreen() {
     _fetchCommunityData();
     _loadJoinButtonState();
@@ -86,7 +79,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
     _videoController?.dispose();
   }
 
-  // SharedPreferences Methods
   Future<void> _loadJoinButtonState() async {
     final prefs = await SharedPreferences.getInstance();
     final key = await _getJoinRequestKeyWithUser();
@@ -117,7 +109,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return '$_joinRequestPrefixKey${widget.community.id}_$userId';
   }
 
-  // Utility Methods
   String formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
@@ -125,14 +116,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return '$minutes:$seconds';
   }
 
-  void _searchUsers(String query) {
-    setState(() {
-      _foundUsers = Author.searchUsers(query);
-    });
-  }
 
 
-  // Community Actions
+
   void _joinCommunity() async {
     try {
       context.read<CommunityRoleCubit>().joinCommunity(widget.community.id);
@@ -175,15 +161,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     }
   }
 
-  void _createNewPost() {
-    // Implementation for creating new post
-    SnackBarUtils.showInfoSnackBar(
-      context,
-      message: 'Post creation feature coming soon!',
-    );
-  }
 
-  // UI Builders
   Widget _buildJoinButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -228,12 +206,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
            ),
         );
       case 3:
-        return LeaderboardTab(members: _members);
+        return LeaderboardTab();
       case 4:
         return MembersTab(
           community: community,
-          searchController: _searchController,
-          onSearch: _searchUsers,
         );
       default:
         return InfoTab(
@@ -244,51 +220,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     }
   }
 
-  Widget _buildLoadingState() {
-    return const Center(
-      child: CupertinoActivityIndicator(),
-    );
-  }
 
-  Widget _buildErrorState(String message) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 48.sp,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'Oops! Something went wrong',
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            message,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 24.h),
-          ModernButton(
-            text: 'Try Again',
-            onPressed: () => _fetchCommunityData(),
-            style: ModernButtonStyle.outline,
-            icon: Icons.refresh,
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -296,17 +228,16 @@ class _CommunityScreenState extends State<CommunityScreen> {
       body: BlocBuilder<CommunityRoleCubit, CommunityRoleState>(
         builder: (context, roleState) {
           if (roleState is CommunityRoleLoading) {
-            return _buildLoadingState();
+            return const LoadingState();
           }
 
           if (roleState is CommunityRoleError) {
-            return _buildErrorState(roleState.message);
+            return ErrorStateWidget(message: roleState.message, onRetry: _fetchCommunityData);
           }
 
           if (roleState is CommunityRoleLoaded) {
             final hasJoined = roleState.role != null;
 
-            // Reset button state if user has joined
             if (hasJoined && _isJoinButtonDisabled) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 setState(() {
@@ -318,11 +249,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
             return BlocBuilder<SingleCommunityCubit, SingleCommunityStates>(
               builder: (context, communityState) {
                 if (communityState is SingleCommunityLoading) {
-                  return _buildLoadingState();
+                  return const LoadingState();
                 }
 
                 if (communityState is SingleCommunityFailure) {
-                  return _buildErrorState(communityState.message);
+                  return ErrorStateWidget(message: communityState.message, onRetry: _fetchCommunityData);
                 }
 
                 if (communityState is SingleCommunitySuccess) {

@@ -121,19 +121,21 @@ class _HomeHeaderState extends State<HomeHeader> {
                 )
                     : CircleAvatar(
                   radius: 17.r,
-                  backgroundImage: pP != null ? NetworkImage(
+                  backgroundImage: pP != null && pP != ''
+                      ? NetworkImage(
                     UrlHelper.transformUrl(pP!),
                     headers: {
                       'ngrok-skip-browser-warning': 'true',
                     },
-                  ) : null,
-                  backgroundColor: Colors.grey[200],
-                  onBackgroundImageError: pP != null ? (exception, stackTrace) {
-
-                  } : null,
-                  child: pP == null
-                      ? Icon(Icons.person, color: Colors.grey[600])
+                  )
                       : null,
+                  backgroundColor: Colors.grey[200],
+                  onBackgroundImageError: pP != null && pP != '' ? (exception, stackTrace) {} : null,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.blue,
+                    size: 20.sp,
+                  ),
                 ),
               ),
             ),
