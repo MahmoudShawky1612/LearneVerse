@@ -6,6 +6,9 @@ import 'package:flutterwidgets/features/comments/services/comment_service.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:flutterwidgets/utils/url_helper.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_cubit.dart';
+import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_states.dart';
+import 'package:flutterwidgets/features/profile/services/user_comments.service.dart';
 
 import '../../../../utils/jwt_helper.dart';
 import '../../../comments/data/models/comment_model.dart';
@@ -17,14 +20,10 @@ import '../../../home/presentation/widgets/vote_button.dart';
 
 class CommentItem extends StatefulWidget {
   final Comment comment;
-  final Function? delete;
-  final Function? edit;
 
   const CommentItem({
     super.key,
     required this.comment,
-    this.delete,
-    this.edit,
   });
 
   @override
@@ -51,8 +50,6 @@ class _CommentItemState extends State<CommentItem> {
     downVoteColor = widget.comment.voteType == "DOWNVOTE"
         ? const Color(0xFFFF1744)
         : Colors.grey;
-    print('Vote Counter: ${widget.comment.voteCounter}');
-    print('Vote Type: ${widget.comment.voteType}');
     _checkIfAuthor();
   }
 
@@ -88,71 +85,83 @@ class _CommentItemState extends State<CommentItem> {
         BlocProvider<DownvoteCommentCubit>(
           create: (context) => DownvoteCommentCubit(CommentService()),
         ),
+        BlocProvider<UserCommentsCubit>(
+          create: (context) => UserCommentsCubit(UserCommentsApiService()),
+        ),
       ],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ProfileAvatar(comment: comment),
-                    SizedBox(width: 8.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  comment.author.fullname.isNotEmpty
-                                      ? comment.author.fullname
-                                      : 'Anonymous User',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13.sp,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            '${_getTimeAgo(comment.createdAt)} ago',
-                            style: textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurface.withOpacity(0.7),
-                              fontSize: 11.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    isAuthor ? _buildOptionsButton(colorScheme) : const SizedBox.shrink(),
-                  ],
-                ),
-                SizedBox(height: 8.h),
-                Padding(
-                  padding: EdgeInsets.only(left: 36.w),
-                  child: Column(
+      child: BlocListener<UserCommentsCubit, UserCommentsState>(
+        listener: (context, state) {
+          if (state is UserCommentsError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildCommentContent(comment, textTheme, colorScheme),
-                      SizedBox(height: 8.h),
-                      _buildVotingRow(comment),
-                      if (isAuthor && isMenuVisible) _buildOptionsMenu(colorScheme),
+                      ProfileAvatar(comment: comment),
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    comment.author.fullname.isNotEmpty
+                                        ? comment.author.fullname
+                                        : 'Anonymous User',
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13.sp,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 2.h),
+                            Text(
+                              '${_getTimeAgo(comment.createdAt)} ago',
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurface.withOpacity(0.7),
+                                fontSize: 11.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      isAuthor ? _buildOptionsButton(colorScheme) : const SizedBox.shrink(),
                     ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 8.h),
+                  Padding(
+                    padding: EdgeInsets.only(left: 36.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildCommentContent(comment, textTheme, colorScheme),
+                        SizedBox(height: 8.h),
+                        _buildVotingRow(comment),
+                        if (isAuthor && isMenuVisible) _buildOptionsMenu(colorScheme),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -215,7 +224,7 @@ class _CommentItemState extends State<CommentItem> {
                 isMenuVisible = false;
               });
               _showDeleteConfirmationDialog();
-              },
+            },
           ),
         ],
       ),
@@ -263,9 +272,9 @@ class _CommentItemState extends State<CommentItem> {
         child: Text(
           isExpanded ? 'Show less' : 'Read more',
           style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.w600,
-            fontSize: 12.sp,
+              color: colorScheme.primary,
+              fontWeight: FontWeight.w600,
+              fontSize:12.sp
           ),
         ),
       ),
@@ -377,6 +386,7 @@ class _CommentItemState extends State<CommentItem> {
 
   void _showEditCommentDialog(String content) {
     final comment = widget.comment;
+    final userId = widget.comment.author.id;
 
     showDialog(
       context: context,
@@ -447,16 +457,12 @@ class _CommentItemState extends State<CommentItem> {
             ),
             ElevatedButton(
               onPressed: () {
-                final newContent = commentController.text.trim();
-                if (newContent.isNotEmpty && widget.edit != null) {
-                  setState(() {
-                    isMenuVisible = false;
-                  });
-                  Future.delayed(Duration.zero, () {
-                    widget.edit!(widget.comment, newContent);
-                  });
-                  Navigator.pop(context);
-                }
+                context.read<UserCommentsCubit>().updateComment(
+                  userId,
+                  comment.id,
+                  commentController.text.trim(),
+                );
+                Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: colorScheme.primary,
@@ -472,57 +478,59 @@ class _CommentItemState extends State<CommentItem> {
       },
     );
   }
-void _showDeleteConfirmationDialog() {
-  showDialog<void>(
-    context: context,
-    builder: (context) {
-      final theme = Theme.of(context);
-      final colorScheme = theme.colorScheme;
 
-      return AlertDialog(
-        backgroundColor: theme.cardColor,
-        title: Text(
-          'Delete Post',
-          style: TextStyle(
-            color: colorScheme.onSurface,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text(
-          'Are you sure you want to delete this post?',
-          style: TextStyle(
-            color: colorScheme.onSurface,
-            fontSize: 14.sp,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: colorScheme.onSurfaceVariant),
+  void _showDeleteConfirmationDialog() {
+    final userId = widget.comment.author.id;
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+
+        return AlertDialog(
+          backgroundColor: theme.cardColor,
+          title: Text(
+            'Delete Comment',
+            style: TextStyle(
+              color: colorScheme.onSurface,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // Implement delete logic here (e.g., call an API or notify parent)
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.error,
-              foregroundColor: colorScheme.onError,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
+          content: Text(
+            'Are you sure you want to delete this comment?',
+            style: TextStyle(
+              color: colorScheme.onSurface,
+              fontSize: 14.sp,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: colorScheme.onSurfaceVariant),
               ),
             ),
-            child: const Text('Delete'),
-          ),
-        ],
-      );
-    },
-  );
-}
+            ElevatedButton(
+              onPressed: () {
+                context.read<UserCommentsCubit>().deleteComment(userId, widget.comment.id);
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.error,
+                foregroundColor: colorScheme.onError,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   String _getTimeAgo(DateTime createdAt) {
     final now = DateTime.now();

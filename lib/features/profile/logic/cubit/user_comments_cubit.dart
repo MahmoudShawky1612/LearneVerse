@@ -17,4 +17,28 @@ class UserCommentsCubit extends Cubit<UserCommentsState> {
       emit(UserCommentsError(e.toString()));
     }
   }
+
+  void deleteComment(int userId, int commentId) async {
+    emit(UserCommentsLoading());
+    try {
+      await commentsApiService.deleteComment(commentId);
+      // Refresh comments after deletion
+      final comments = await commentsApiService.fetchCommentsByUser(userId);
+      emit(UserCommentsLoaded(comments));
+    } catch (e) {
+      emit(UserCommentsError(e.toString()));
+    }
+  }
+
+  void updateComment(int userId, int commentId, String newContent) async {
+    emit(UserCommentsLoading());
+    try {
+      await commentsApiService.updateComment(commentId, newContent);
+      // Refresh comments after update
+      final comments = await commentsApiService.fetchCommentsByUser(userId);
+      emit(UserCommentsLoaded(comments));
+    } catch (e) {
+      emit(UserCommentsError(e.toString()));
+    }
+  }
 }

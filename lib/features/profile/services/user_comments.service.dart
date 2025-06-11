@@ -22,4 +22,42 @@ if (response.statusCode == 200) {
   return Future.error('${body['message'] ?? 'Unknown error'}');
 }
 
-} }
+}
+  Future<void> deleteComment(int commentId) async {
+    final token = await TokenStorage.getToken();
+    final url = Uri.parse('$baseUrl/comments/$commentId');
+
+    final response = await http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': '*/*',
+      },
+    );
+    final body = jsonDecode(response.body);
+
+    if (response.statusCode != 200) {
+      return Future.error(body['message'] ?? 'Failed to delete comment');
+    }
+  }
+
+   Future<void> updateComment(int commentId, String newContent) async {
+    final token = await TokenStorage.getToken();
+    final url = Uri.parse('$baseUrl/comments/$commentId');
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+      },
+      body: jsonEncode({'content': newContent}),
+    );
+    final body = jsonDecode(response.body);
+
+    if (response.statusCode != 200) {
+      return Future.error(body['message'] ?? 'Failed to update comment');
+    }
+  }
+}

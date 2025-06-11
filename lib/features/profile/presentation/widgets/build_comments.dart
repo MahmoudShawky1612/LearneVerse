@@ -37,9 +37,7 @@ class BuildComments extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return CommentItem(
           comment: comments[index],
-          delete: delete,
-          edit: edit,
-        );
+          );
       },
     );
   }
