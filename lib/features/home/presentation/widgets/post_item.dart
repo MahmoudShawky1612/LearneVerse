@@ -471,6 +471,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
   void _showEditPostDialog() {
     final titleController = TextEditingController(text: currentPost.title);
     final contentController = TextEditingController(text: currentPost.content ?? '');
+    List<String> editableAttachments = List.from(currentPost.attachments);
 
     showDialog<void>(
       context: context,
@@ -479,123 +480,608 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         final theme = Theme.of(context);
         final colorScheme = theme.colorScheme;
 
-        return BlocProvider.value(
-          value: context.read<ForumCubit>(),
-          child: AlertDialog(
-            backgroundColor: theme.cardColor,
-            title: Row(
-              children: [
-                CircleAvatar(
-                  radius: 16.r,
-                  backgroundImage: currentPost.author.profilePictureURL != null
-                      ? NetworkImage(UrlHelper.transformUrl(currentPost.author.profilePictureURL!))
-                      : null,
-                  backgroundColor: Colors.grey[300],
-                  child: currentPost.author.profilePictureURL == null
-                      ? Icon(
-                    Icons.person,
-                    size: 18.r,
-                    color: Colors.grey,
-                  )
-                      : null,
-                ),
-                SizedBox(width: 10.w),
-                Text(
-                  'Edit Post',
-                  style: TextStyle(
-                    color: colorScheme.onSurface,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            bool _listsEqual(List<String> list1, List<String> list2) {
+              if (list1.length != list2.length) return false;
+              for (int i = 0; i < list1.length; i++) {
+                if (list1[i] != list2[i]) return false;
+              }
+              return true;
+            }
+            bool _hasChanges() {
+              final titleChanged = titleController.text.trim() != currentPost.title;
+              final contentChanged = contentController.text.trim() != (currentPost.content ?? '');
+              final attachmentsChanged = !_listsEqual(editableAttachments, currentPost.attachments);
+              return titleChanged || contentChanged || attachmentsChanged;
+            }
+
+            return BlocProvider.value(
+              value: context.read<ForumCubit>(),
+              child: Dialog(
+                backgroundColor: Colors.transparent,
+                insetPadding: EdgeInsets.all(16.w),
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.85,
+                    maxWidth: MediaQuery.of(context).size.width - 32.w,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.cardColor,
+                    borderRadius: BorderRadius.circular(20.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.shadow.withOpacity(0.3),
+                        blurRadius: 20.r,
+                        offset: Offset(0, 10.h),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Modern Header with Gradient
+                      Container(
+                        padding: EdgeInsets.all(20.w),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              colorScheme.primary.withOpacity(0.1),
+                              colorScheme.primary.withOpacity(0.05),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20.r),
+                            topRight: Radius.circular(20.r),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10.w),
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              child: Icon(
+                                Icons.edit_rounded,
+                                color: colorScheme.primary,
+                                size: 24.r,
+                              ),
+                            ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Edit Your Post',
+                                    style: TextStyle(
+                                      color: colorScheme.onSurface,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    'Make your post shine ✨',
+                                    style: TextStyle(
+                                      color: colorScheme.onSurface.withOpacity(0.7),
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => Navigator.pop(dialogContext),
+                              icon: Icon(
+                                Icons.close_rounded,
+                                color: colorScheme.onSurface.withOpacity(0.7),
+                                size: 20.r,
+                              ),
+                              style: IconButton.styleFrom(
+                                backgroundColor: colorScheme.surface.withOpacity(0.5),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Content
+                      Flexible(
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.all(20.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Author Info
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 18.r,
+                                    backgroundImage: currentPost.author.profilePictureURL != null
+                                        ? NetworkImage(UrlHelper.transformUrl(currentPost.author.profilePictureURL!))
+                                        : null,
+                                    backgroundColor: colorScheme.primary.withOpacity(0.1),
+                                    child: currentPost.author.profilePictureURL == null
+                                        ? Icon(
+                                      Icons.person,
+                                      size: 20.r,
+                                      color: colorScheme.primary,
+                                    )
+                                        : null,
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        currentPost.author.fullname,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14.sp,
+                                          color: colorScheme.onSurface,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Editing post',
+                                        style: TextStyle(
+                                          color: colorScheme.onSurface.withOpacity(0.6),
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(height: 24.h),
+
+                              // Title Field
+                              _buildModernTextField(
+                                controller: titleController,
+                                label: 'Post Title',
+                                hint: 'What\'s on your mind?',
+                                icon: Icons.title_rounded,
+                                colorScheme: colorScheme,
+                                theme: theme,
+                              ),
+
+                              SizedBox(height: 16.h),
+
+                              // Content Field
+                              _buildModernTextField(
+                                controller: contentController,
+                                label: 'Post Content',
+                                hint: 'Share your thoughts...',
+                                icon: Icons.description_rounded,
+                                colorScheme: colorScheme,
+                                theme: theme,
+                                maxLines: 4,
+                              ),
+
+                              SizedBox(height: 20.h),
+
+                              // Images Section
+                              if (editableAttachments.isNotEmpty) ...[
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.image_rounded,
+                                      color: colorScheme.primary,
+                                      size: 20.r,
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      'Attached Images (${editableAttachments.length})',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16.sp,
+                                        color: colorScheme.onSurface,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 12.h),
+
+                                // Images Grid
+                                GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: editableAttachments.length == 1 ? 1 : 2,
+                                    crossAxisSpacing: 12.w,
+                                    mainAxisSpacing: 12.h,
+                                    childAspectRatio: editableAttachments.length == 1 ? 1.5 : 1.0,
+                                  ),
+                                  itemCount: editableAttachments.length,
+                                  itemBuilder: (context, index) {
+                                    return _buildEditableImageItem(
+                                      editableAttachments[index],
+                                      index,
+                                      colorScheme,
+                                          () {
+                                        setDialogState(() {
+                                          editableAttachments.removeAt(index);
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                                SizedBox(height: 20.h),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // Action Buttons
+                      Container(
+                        padding: EdgeInsets.all(20.w),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surface.withOpacity(0.3),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20.r),
+                            bottomRight: Radius.circular(20.r),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () => Navigator.pop(dialogContext),
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    side: BorderSide(
+                                      color: colorScheme.outline.withOpacity(0.3),
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    color: colorScheme.onSurfaceVariant,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              flex: 2,
+                              child: BlocConsumer<ForumCubit, ForumStates>(
+                                listener: (context, state) {
+                                  if (state is EditPostSuccess) {
+                                    Navigator.pop(dialogContext);
+                                    // Use Future.delayed to ensure dialog is closed first
+                                    Future.delayed(Duration(milliseconds: 100), () {
+                                      SnackBarUtils.showSuccessSnackBar(
+                                          context,
+                                          message: 'Post updated successfully! 🎉'
+                                      );
+                                    });
+                                  } else if (state is ForumFailure) {
+                                    Future.delayed(Duration(milliseconds: 100), () {
+                                      SnackBarUtils.showErrorSnackBar(
+                                          context,
+                                          message: 'Failed to update post: ${state.message} 😞'
+                                      );
+                                    });
+                                  }
+                                },
+                                builder: (context, state) {
+                                  return ElevatedButton(
+                                    onPressed: state is ForumLoading ? null : () {
+                                      final newTitle = titleController.text.trim();
+                                      final newContent = contentController.text.trim();
+
+                                      if (newTitle.isEmpty) {
+                                        SnackBarUtils.showErrorSnackBar(
+                                            context,
+                                            message: 'Title cannot be empty! 📝'
+                                        );
+                                        return;
+                                      }
+
+                                      if (!_hasChanges()) {
+                                        SnackBarUtils.showInfoSnackBar(
+                                            context,
+                                            message: 'No changes detected! Make some edits first ✏️'
+                                        );
+                                        return;
+                                      }
+
+                                      final updatedData = {
+                                        'title': newTitle,
+                                        'content': newContent,
+                                        'attachments': editableAttachments,
+                                      };
+
+                                      context.read<ForumCubit>().editPost(
+                                          currentPost.id,
+                                          updatedData,
+                                          widget.post.forumId
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: colorScheme.primary,
+                                      foregroundColor: colorScheme.onPrimary,
+                                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12.r),
+                                      ),
+                                      elevation: 2,
+                                    ),
+                                    child: state is ForumLoading
+                                        ? Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 16.w,
+                                          height: 16.h,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor: AlwaysStoppedAnimation<Color>(
+                                              colorScheme.onPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 8.w),
+                                        Text(
+                                          'Updating...',
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                        : Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.check_circle_rounded,
+                                          size: 18.r,
+                                        ),
+                                        SizedBox(width: 8.w),
+                                        Text(
+                                          'Update Post',
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    controller: titleController,
-                    decoration: InputDecoration(
-                      hintText: 'Post Title',
-                      hintStyle: TextStyle(color: theme.hintColor),
-                      filled: true,
-                      fillColor: theme.inputDecorationTheme.fillColor ?? Colors.grey[100],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  TextFormField(
-                    controller: contentController,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      hintText: 'Post Content',
-                      hintStyle: TextStyle(color: theme.hintColor),
-                      filled: true,
-                      fillColor: theme.inputDecorationTheme.fillColor ?? Colors.grey[100],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ],
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(color: colorScheme.onSurfaceVariant),
-                ),
-              ),
-              BlocBuilder<ForumCubit, ForumStates>(
-                builder: (context, state) {
-                  return ElevatedButton(
-                    onPressed: state is ForumLoading ? null : () {
-                      final newTitle = titleController.text.trim();
-                      final newContent = contentController.text.trim();
-                      if (newTitle.isNotEmpty) {
-                        final updatedData = {
-                          'title': newTitle,
-                          'content': newContent,
-                          'attachments': currentPost.attachments,
-                        };
-                        context.read<ForumCubit>().editPost(currentPost.id, updatedData, widget.post.forumId);
-                        Navigator.pop(dialogContext);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
-                      foregroundColor: colorScheme.onPrimary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                    ),
-                    child: state is ForumLoading
-                        ? SizedBox(
-                      width: 16.w,
-                      height: 16.h,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
-                      ),
-                    )
-                        : const Text('Update'),
-                  );
-                },
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
   }
 
+
+  Widget _buildModernTextField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required IconData icon,
+    required ColorScheme colorScheme,
+    required ThemeData theme,
+    int? maxLines,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              color: colorScheme.primary,
+              size: 18.r,
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14.sp,
+                color: colorScheme.onSurface,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.r),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.shadow.withOpacity(0.05),
+                blurRadius: 8.r,
+                offset: Offset(0, 2.h),
+              ),
+            ],
+          ),
+          child: TextFormField(
+            controller: controller,
+            maxLines: maxLines ?? 1,
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: colorScheme.onSurface,
+            ),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: TextStyle(
+                color: colorScheme.onSurface.withOpacity(0.5),
+                fontSize: 16.sp,
+              ),
+              filled: true,
+              fillColor: colorScheme.surface.withOpacity(0.7),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: BorderSide(
+                  color: colorScheme.primary,
+                  width: 2.w,
+                ),
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 16.h,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Widget _buildEditableImageItem(
+      String imageUrl,
+      int index,
+      ColorScheme colorScheme,
+      VoidCallback onRemove,
+      ) {
+    final transformedUrl = UrlHelper.transformUrl(imageUrl);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.1),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12.r),
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: Image.network(
+                transformedUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: colorScheme.errorContainer,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.broken_image_rounded,
+                          color: colorScheme.onErrorContainer,
+                          size: 32.r,
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          'Failed to load',
+                          style: TextStyle(
+                            color: colorScheme.onErrorContainer,
+                            fontSize: 12.sp,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    color: colorScheme.surface,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                            : null,
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+
+          // Remove Button
+          Positioned(
+            top: 8.h,
+            right: 8.w,
+            child: GestureDetector(
+              onTap: onRemove,
+              child: Container(
+                padding: EdgeInsets.all(6.w),
+                decoration: BoxDecoration(
+                  color: colorScheme.errorContainer.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(20.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.shadow.withOpacity(0.2),
+                      blurRadius: 4.r,
+                      offset: Offset(0, 2.h),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.close_rounded,
+                  color: colorScheme.onErrorContainer,
+                  size: 16.r,
+                ),
+              ),
+            ),
+          ),
+
+          // Image Index
+          Positioned(
+            bottom: 8.h,
+            left: 8.w,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+              decoration: BoxDecoration(
+                color: colorScheme.surface.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Text(
+                '${index + 1}',
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   void _showDeleteConfirmationDialog() {
     showDialog<void>(
       context: context,
