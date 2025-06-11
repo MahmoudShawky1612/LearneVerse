@@ -607,7 +607,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                     widget.onDelete!(currentPost);
                   }
                 } else if (state is ForumFailure) {
-                  SnackBarUtils.showErrorSnackBar(context, message: 'Failed to updated post: \\${state.message} 🧐');
+                  SnackBarUtils.showErrorSnackBar(context, message: 'Failed to updated post: ${state.message} 🧐');
                 }
               },
             ),
@@ -635,7 +635,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                           ),
                           SizedBox(height: 2.h),
                           Text(
-                            '\\${_getTimeAgo(currentPost.createdAt)} ago',
+                            '${_getTimeAgo(currentPost.createdAt)} ago',
                             style: TextStyle(
                               color: colorScheme.onSurface.withOpacity(0.7),
                               fontSize: 11.sp,
@@ -717,7 +717,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                             },
                           ),
                           SizedBox(width: 4.w),
-                          Text('\\$voteCounter', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp)),
+                          Text('$voteCounter', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp)),
                           SizedBox(width: 10.w),
                           // Downvote
                           BlocConsumer<DownvoteCubit, DownVoteStates>(
@@ -744,7 +744,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                           // Comments
                           _buildActionButton(
                             icon: FontAwesomeIcons.comment,
-                            text: '\\$commentCounter',
+                            text: '$commentCounter',
                             onTap: () => context.push('/comments', extra: currentPost),
                           ),
                         ],
@@ -1115,7 +1115,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                                     Future.delayed(Duration(milliseconds: 100), () {
                                       SnackBarUtils.showErrorSnackBar(
                                           context,
-                                          message: 'Failed to update post: \\${state.message} 😞'
+                                          message: 'Failed to update post: ${state.message} 😞'
                                       );
                                     });
                                   }
