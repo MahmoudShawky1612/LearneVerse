@@ -8,16 +8,16 @@ class BuildComments extends StatelessWidget {
   final bool shrinkWrap;
   final ScrollPhysics scrollPhysics;
   final List<Comment> comments;
-  final Function? delete;
-  final Function? edit;
+  final void Function(Comment comment)? onDelete;
+  final void Function(Comment comment, String newContent)? onEdit;
 
   const BuildComments({
     super.key,
     this.shrinkWrap = true,
     required this.scrollPhysics,
     required this.comments,
-    this.delete,
-    this.edit,
+    this.onDelete,
+    this.onEdit,
   });
 
   @override
@@ -37,7 +37,9 @@ class BuildComments extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return CommentItem(
           comment: comments[index],
-          );
+          onDelete: onDelete,
+          onEdit: onEdit,
+        );
       },
     );
   }

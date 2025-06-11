@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,10 +21,14 @@ import '../../../home/presentation/widgets/vote_button.dart';
 
 class CommentItem extends StatefulWidget {
   final Comment comment;
+  final void Function(Comment comment)? onDelete;
+  final void Function(Comment comment, String newContent)? onEdit;
 
   const CommentItem({
     super.key,
     required this.comment,
+    this.onDelete,
+    this.onEdit,
   });
 
   @override
@@ -463,6 +468,9 @@ class _CommentItemState extends State<CommentItem> {
                   commentController.text.trim(),
                 );
                 Navigator.pop(context);
+                if (widget.onEdit != null) {
+                  widget.onEdit!(comment, commentController.text.trim());
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: colorScheme.primary,
@@ -479,9 +487,9 @@ class _CommentItemState extends State<CommentItem> {
     );
   }
 
-  void _showDeleteConfirmationDialog() {
+  void _showDeleteConfirmationDialog() async {
     final userId = widget.comment.author.id;
-    showDialog<void>(
+    await showDialog<void>(
       context: context,
       builder: (context) {
         final theme = Theme.of(context);
@@ -512,20 +520,36 @@ class _CommentItemState extends State<CommentItem> {
                 style: TextStyle(color: colorScheme.onSurfaceVariant),
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                context.read<UserCommentsCubit>().deleteComment(userId, widget.comment.id);
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorScheme.error,
-                foregroundColor: colorScheme.onError,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-              ),
-              child: const Text('Delete'),
-            ),
+        BlocBuilder<UserCommentsCubit, UserCommentsState>(
+        builder: (context, state) {
+        return ElevatedButton(
+        onPressed: state is UserCommentsLoading
+        ? null
+            : () async {
+        await context.read<UserCommentsCubit>().deleteComment(userId, widget.comment.id);
+        Navigator.pop(context);
+        if (widget.onDelete != null) {
+        widget.onDelete!(widget.comment);
+        }
+        },
+        style: ElevatedButton.styleFrom(
+        backgroundColor: colorScheme.error,
+        foregroundColor: colorScheme.onError,
+        shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        ),
+        ),
+        child: state is UserCommentsLoading
+        ? SizedBox(
+        width: 18,
+        height: 18,
+        child: CupertinoActivityIndicator(
+        ),
+        )
+            : const Text('Delete'),
+        );
+        },
+        ),
           ],
         );
       },

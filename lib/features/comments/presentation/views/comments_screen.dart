@@ -116,6 +116,8 @@ void fetchComments() {
                             BuildComments(
                               comments: state.comments,
                               scrollPhysics: const NeverScrollableScrollPhysics(),
+                              onDelete: (comment) => context.read<CommentCubit>().fetchComments(post.id),
+                              onEdit: (comment, newContent) => context.read<CommentCubit>().fetchComments(post.id),
                             ),
                           ],
                         );

@@ -53,7 +53,6 @@ class CommentsList extends StatelessWidget {
             child: BuildComments(
               comments: comments,
               scrollPhysics: const AlwaysScrollableScrollPhysics(),
-              delete: delete,
             ),
           ),
         ],

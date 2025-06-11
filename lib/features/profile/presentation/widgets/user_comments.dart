@@ -32,8 +32,7 @@ class _UserCommentsState extends State<UserComments> {
               shrinkWrap: true,
               scrollPhysics: const ClampingScrollPhysics(),
               comments: widget.comments,
-              delete: _onCommentDelete,
-              edit: _onCommentEdit,
+
             ),
           ),
           Divider(height: 1.h),

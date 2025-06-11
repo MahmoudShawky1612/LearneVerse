@@ -18,7 +18,7 @@ class UserCommentsCubit extends Cubit<UserCommentsState> {
     }
   }
 
-  void deleteComment(int userId, int commentId) async {
+  Future<void> deleteComment(int userId, int commentId) async {
     emit(UserCommentsLoading());
     try {
       await commentsApiService.deleteComment(commentId);
@@ -30,7 +30,7 @@ class UserCommentsCubit extends Cubit<UserCommentsState> {
     }
   }
 
-  void updateComment(int userId, int commentId, String newContent) async {
+  Future<void> updateComment(int userId, int commentId, String newContent) async {
     emit(UserCommentsLoading());
     try {
       await commentsApiService.updateComment(commentId, newContent);
