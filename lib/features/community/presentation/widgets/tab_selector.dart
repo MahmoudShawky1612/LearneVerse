@@ -5,11 +5,13 @@ import 'package:flutterwidgets/core/constants/app_colors.dart';
 class TabSelector extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTabSelected;
+  final bool showJoinRequestsTab;
 
   const TabSelector({
     super.key,
     required this.currentIndex,
     required this.onTabSelected,
+    this.showJoinRequestsTab = false,
   });
 
   @override
@@ -21,6 +23,9 @@ class TabSelector extends StatelessWidget {
       'Leaderboard',
       'Members',
     ];
+    if (showJoinRequestsTab) {
+      tabs.add('Join Requests');
+    }
 
     return SizedBox(
       height: 50.h,

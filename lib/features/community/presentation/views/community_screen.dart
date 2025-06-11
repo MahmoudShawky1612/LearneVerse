@@ -30,6 +30,8 @@ import '../widgets/leaderboard_tab.dart';
 import '../widgets/members_tab.dart';
 import '../widgets/sliver_app_bar.dart';
 import '../widgets/tab_selector.dart';
+import '../../data/models/creat_request_model.dart';
+import '../../services/join_requests_service.dart';
 
 
 class CommunityScreen extends StatefulWidget {
@@ -44,6 +46,8 @@ class CommunityScreen extends StatefulWidget {
 class _CommunityScreenState extends State<CommunityScreen> {
   int _currentIndex = 0;
   bool _isJoinButtonDisabled = false;
+  bool get _showJoinRequestsTab => _userRole == 'OWNER' || _userRole == 'MODERATOR';
+  String? _userRole;
 
   final TextEditingController _searchController = TextEditingController();
   VideoPlayerController? _videoController;
@@ -71,7 +75,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   void _fetchCommunityData() {
     context.read<SingleCommunityCubit>().fetchSingleCommunity(widget.community.id);
-    context.read<CommunityRoleCubit>().fetchUserRole(widget.community.id);
+    context.read<CommunityRoleCubit>().fetchUserRole(widget.community.id).then((_) {
+      final state = context.read<CommunityRoleCubit>().state;
+      if (state is CommunityRoleLoaded) {
+        setState(() {
+          _userRole = state.role;
+        });
+      }
+    });
   }
 
   void _disposeResources() {
@@ -189,6 +200,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
       );
     }
 
+    // Adjust tab index for join requests tab
+    final joinRequestsTabIndex = _showJoinRequestsTab ? 5 : -1;
+
     switch (_currentIndex) {
       case 0:
         return InfoTab(
@@ -210,6 +224,61 @@ class _CommunityScreenState extends State<CommunityScreen> {
       case 4:
         return MembersTab(
           community: community,
+        );
+      case 5:
+        if (_showJoinRequestsTab) {
+          return BlocProvider(
+            create: (context) => JoinRequestsCubit(ApiService())..fetchJoinRequests(widget.community.id),
+            child: BlocBuilder<JoinRequestsCubit, JoinRequestsState>(
+              builder: (context, state) {
+                if (state is JoinRequestsLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is JoinRequestsLoaded) {
+                  final requests = state.requests;
+                  if (requests.isEmpty) {
+                    return const Center(child: Text('No pending join requests.'));
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: requests.length,
+                    itemBuilder: (context, index) {
+                      final req = requests[index];
+                      final user = req['User'];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(user['UserProfile'] != null ? user['UserProfile']['profilePictureURL'] : ''),
+                        ),
+                        title: Text(user['username'] ?? ''),
+                        subtitle: Text(user['fullname'] ?? ''),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ElevatedButton(
+                              onPressed: null, // Accept
+                              child: const Text('Accept'),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: null, // Reject
+                              child: const Text('Reject'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                } else if (state is JoinRequestsError) {
+                  return Center(child: Text(state.message));
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          );
+        }
+        return InfoTab(
+          community: community,
+          formatDuration: formatDuration,
+          onJoinToggle: _joinCommunity,
         );
       default:
         return InfoTab(
@@ -279,6 +348,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                   onTabSelected: (index) {
                                     setState(() => _currentIndex = index);
                                   },
+                                  showJoinRequestsTab: _showJoinRequestsTab,
                                 ),
                             ],
                           ),

@@ -43,4 +43,22 @@ class ApiService {
       return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
+
+  Future<List<Map<String, dynamic>>> fetchJoinRequests(int communityId) async {
+    final token = await TokenStorage.getToken();
+    final response = await http.get(
+      Uri.parse('$baseUrl/communities/$communityId/join-requests'),
+      headers: {
+        'accept': '*/*',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    final body = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      final data = body['data'] as List;
+      return data.cast<Map<String, dynamic>>();
+    } else {
+      return Future.error(body['message'] ?? 'Unknown error');
+    }
+  }
 }

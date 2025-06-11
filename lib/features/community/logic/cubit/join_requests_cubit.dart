@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../services/join_requests_service.dart';
+import '../../data/models/creat_request_model.dart';
 import 'join_requests_states.dart';
 
 
@@ -28,6 +29,22 @@ class CommunityRoleCubit extends Cubit<CommunityRoleState> {
       emit(CommunityRoleLoaded(role: role));
     } catch (e) {
       emit(CommunityRoleError(message: e.toString()));
+    }
+  }
+}
+
+class JoinRequestsCubit extends Cubit<JoinRequestsState> {
+  final ApiService apiService;
+
+  JoinRequestsCubit(this.apiService) : super(JoinRequestsInitial());
+
+  Future<void> fetchJoinRequests(int communityId) async {
+    emit(JoinRequestsLoading());
+    try {
+      final requests = await apiService.fetchJoinRequests(communityId);
+      emit(JoinRequestsLoaded(requests: requests));
+    } catch (e) {
+      emit(JoinRequestsError(message: e.toString()));
     }
   }
 }

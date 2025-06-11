@@ -1,3 +1,4 @@
+import '../../data/models/creat_request_model.dart';
 
 abstract class CommunityRoleState {}
 
@@ -15,4 +16,20 @@ class CommunityRoleError extends CommunityRoleState {
   final String message;
 
   CommunityRoleError({required this.message});
+}
+
+abstract class JoinRequestsState {}
+
+class JoinRequestsInitial extends JoinRequestsState {}
+
+class JoinRequestsLoading extends JoinRequestsState {}
+
+class JoinRequestsLoaded extends JoinRequestsState {
+  final List<Map<String, dynamic>> requests;
+  JoinRequestsLoaded({required this.requests});
+}
+
+class JoinRequestsError extends JoinRequestsState {
+  final String message;
+  JoinRequestsError({required this.message});
 }
