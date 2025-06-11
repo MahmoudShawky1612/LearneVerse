@@ -520,36 +520,27 @@ class _CommentItemState extends State<CommentItem> {
                 style: TextStyle(color: colorScheme.onSurfaceVariant),
               ),
             ),
-        BlocBuilder<UserCommentsCubit, UserCommentsState>(
-        builder: (context, state) {
-        return ElevatedButton(
-        onPressed: state is UserCommentsLoading
-        ? null
-            : () async {
-        await context.read<UserCommentsCubit>().deleteComment(userId, widget.comment.id);
-        Navigator.pop(context);
-        if (widget.onDelete != null) {
-        widget.onDelete!(widget.comment);
-        }
-        },
-        style: ElevatedButton.styleFrom(
-        backgroundColor: colorScheme.error,
-        foregroundColor: colorScheme.onError,
-        shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        ),
-        ),
-        child: state is UserCommentsLoading
-        ? SizedBox(
-        width: 18,
-        height: 18,
-        child: CupertinoActivityIndicator(
-        ),
-        )
-            : const Text('Delete'),
-        );
-        },
-        ),
+            BlocBuilder<UserCommentsCubit, UserCommentsState>(
+              builder: (context, state) {
+                return ElevatedButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    await context.read<UserCommentsCubit>().deleteComment(userId, widget.comment.id);
+                    if (widget.onDelete != null) {
+                      widget.onDelete!(widget.comment);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colorScheme.error,
+                    foregroundColor: colorScheme.onError,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                  ),
+                  child: const Text('Delete'),
+                );
+              },
+            ),
           ],
         );
       },
