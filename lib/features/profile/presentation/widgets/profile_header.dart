@@ -33,65 +33,7 @@ class ProfileHeader extends StatelessWidget {
       pinned: true,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      actions: [
-        Padding(
-          padding: EdgeInsets.only(right: 12.w),
-          child: Row(
-            children: [
-              IconButton(
-                icon: Icon(Icons.logout, color: colorScheme.onPrimary),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      backgroundColor:
-                          const Color(0xFF1E1E1E), 
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      title: const Text(
-                        'Confirm Logout',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      content: const Text(
-                        'Are you sure you want to log out?',
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context), 
-                          child: Text('Cancel',
-                              style: TextStyle(color: Colors.grey[400])),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.redAccent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context); 
-                            TokenStorage.deleteToken();
-                            context.go('/login');
-                            showPremiumSnackbar(
-                              context,
-                              message: "Logged out successfully",
-                              isSuccess: true,
-                            );
-                          },
-                          child: const Text('Logout',
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
+
       flexibleSpace: FlexibleSpaceBar(
         background: LayoutBuilder(
           builder: (context, constraints) {
