@@ -16,12 +16,6 @@ class UserPostsScreen extends StatefulWidget {
 class _UserPostsScreenState extends State<UserPostsScreen> {
   @override
   Widget build(BuildContext context) {
-    void onDeletePost(String id) {
-    }
-
-    void onEditPost(String id, String title, String description) {
-    }
-
     return BuildPosts(
       shrinkWrap: true,
       scrollPhysics: const BouncingScrollPhysics(),
