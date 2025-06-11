@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -143,11 +144,11 @@ class _ModernButtonState extends State<ModernButton>
   double _getHeight() {
     switch (widget.size) {
       case ModernButtonSize.small:
-        return 36.h;
+        return 25.h;
       case ModernButtonSize.medium:
-        return 48.h;
+        return 30.h;
       case ModernButtonSize.large:
-        return 56.h;
+        return 35.h;
     }
   }
 
@@ -175,29 +176,7 @@ class _ModernButtonState extends State<ModernButton>
 
   Widget _buildButtonContent() {
     if (widget.isLoading) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: _getIconSize(),
-            height: _getIconSize(),
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-          ),
-          SizedBox(width: 8.w),
-          Text(
-            'Loading...',
-            style: TextStyle(
-              fontSize: _getFontSize(),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      );
+      return const Center(child: CupertinoActivityIndicator());
     }
 
     final displayText = widget.isDisabled && widget.disabledText != null

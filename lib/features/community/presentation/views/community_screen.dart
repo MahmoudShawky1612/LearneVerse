@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/services/forum_service.dart';
 import 'package:flutterwidgets/features/home/models/author_model.dart';
 import 'package:flutterwidgets/features/home/models/post_model.dart';
+import 'package:flutterwidgets/features/profile/presentation/widgets/no_profile_widget.dart';
 import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/jwt_helper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -232,11 +233,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
             child: BlocBuilder<JoinRequestsCubit, JoinRequestsState>(
               builder: (context, state) {
                 if (state is JoinRequestsLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: LoadingState());
                 } else if (state is JoinRequestsLoaded) {
                   final requests = state.requests;
                   if (requests.isEmpty) {
-                    return const Center(child: Text('No pending join requests.'));
+                    return const Center(child: NoDataWidget(message: 'Looks like no one wanna join ATM 😕', width: 100, height: 100,));
                   }
                   return ListView.builder(
                     shrinkWrap: true,
@@ -244,31 +245,48 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     itemBuilder: (context, index) {
                       final req = requests[index];
                       final user = req['User'];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(user['UserProfile'] != null ? user['UserProfile']['profilePictureURL'] : ''),
-                        ),
-                        title: Text(user['username'] ?? ''),
-                        subtitle: Text(user['fullname'] ?? ''),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ElevatedButton(
-                              onPressed: null, // Accept
-                              child: const Text('Accept'),
+                      return Column(
+                        children: [
+                          ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(user['UserProfile'] != null ? user['UserProfile']['profilePictureURL'] : ''),
                             ),
-                            const SizedBox(width: 8),
-                            ElevatedButton(
-                              onPressed: null, // Reject
-                              child: const Text('Reject'),
+                            title: Text(user['fullname'] ?? ''),
+                            subtitle: Text('@${user['username']}'?? ''),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    context.read<JoinRequestsCubit>().updateRequestStatus(
+                                      req['id'],
+                                      'APPROVED',
+                                      widget.community.id,
+                                    );
+                                  },
+                                  child: const Text('Accept'),
+                                ),
+                                const SizedBox(width: 8),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    context.read<JoinRequestsCubit>().updateRequestStatus(
+                                      req['id'],
+                                      'REJECTED',
+                                      widget.community.id,
+                                    );
+                                  },
+                                  child: const Text('Reject'),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: 50,),
+                        ],
                       );
                     },
                   );
                 } else if (state is JoinRequestsError) {
-                  return Center(child: Text(state.message));
+                  return Center(child: ErrorStateWidget(message: state.message, onRetry: (){},));
                 }
                 return const SizedBox.shrink();
               },

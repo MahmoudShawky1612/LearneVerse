@@ -61,4 +61,24 @@ class ApiService {
       return Future.error(body['message'] ?? 'Unknown error');
     }
   }
+
+  Future<bool> updateJoinRequestStatus(int requestId, String status) async {
+    final token = await TokenStorage.getToken();
+    final url = Uri.parse('$baseUrl/communities/join-requests/status/$requestId');
+    final response = await http.patch(
+      url,
+      headers: {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'status': status}),
+    );
+    final body = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(body['message'] ?? 'Failed to update join request status');
+    }
+  }
 }
