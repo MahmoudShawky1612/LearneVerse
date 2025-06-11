@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/home/data/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/post_item.dart';
 
+import '../../../profile/presentation/widgets/no_profile_widget.dart';
+
 class BuildPosts extends StatelessWidget {
   final bool shrinkWrap;
   final ScrollPhysics scrollPhysics;
@@ -24,7 +26,8 @@ class BuildPosts extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return posts.isEmpty ? const Center(child: Text("No Posts Yet 😔"),) : ListView.separated(
+    return posts.isEmpty ? const NoDataWidget(message: "No posts yet... 👀", width: 100, height: 100,)
+    : ListView.separated(
       shrinkWrap: shrinkWrap,
       physics: scrollPhysics,
       padding: EdgeInsets.zero,

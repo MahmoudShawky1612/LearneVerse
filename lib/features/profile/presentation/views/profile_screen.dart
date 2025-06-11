@@ -336,8 +336,8 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 ),
               );
             }
-            return   Center(
-              child: noProfileDataWidget()
+            return   const Center(
+              child: NoDataWidget(message: 'Looks like this user has no profile yet... 👀',),
             );
           },
         ),

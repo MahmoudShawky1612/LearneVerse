@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:flutterwidgets/features/profile/presentation/widgets/user_community_item.dart';
 
+import 'no_profile_widget.dart';
+
 class VerticalCommunityList extends StatelessWidget {
   final List<Community> communities;
   final void Function(BuildContext context, Community community)? onLeave;
@@ -10,7 +12,8 @@ class VerticalCommunityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return communities.isEmpty ? const Center(child: Text("No communities yet 😔"),) : ListView.builder(
+    return communities.isEmpty ?   const NoDataWidget(message: "Try to join communities and come here again... 😁", width: 100, height: 100,)
+    : ListView.builder(
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
       itemCount: communities.length,

@@ -8,6 +8,7 @@ import 'package:flutterwidgets/features/discover/presentation/widgets/build_sect
 import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/loading_state.dart';
 import '../../../home/presentation/widgets/community_grid.dart';
+import '../../../profile/presentation/widgets/no_profile_widget.dart';
 
 class BuildDefaultContent extends StatefulWidget {
   const BuildDefaultContent({super.key});
@@ -50,7 +51,8 @@ class _BuildDefaultContentState extends State<BuildDefaultContent> {
               return const Center(child: LoadingState());
             } else if (state is FavoriteLoaded) {
               if (state.communities.isEmpty) {
-                return const Center(child: Text("You have no favorite communities yet 🧐", style: TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.bold)));
+                return const NoDataWidget(
+                    message: "Looks like you haven't added any favorite communities yet... 👀", height: 100, width: 100,);
               }
               return CommunityGrid(communities: state.communities, isFavoriteCommunity: true);
             } else if (state is FavoriteError) {

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/data/models/comment_model.dart';
 
 import 'comment_item.dart';
+import 'no_profile_widget.dart';
 
 class BuildComments extends StatelessWidget {
   final bool shrinkWrap;
@@ -24,7 +25,7 @@ class BuildComments extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return comments.isEmpty? Center(child: Text("No Comments Yet 🙁"),) :ListView.separated(
+    return comments.isEmpty? const NoDataWidget(message: "No comments yet... 👀", width: 100, height: 100,):ListView.separated(
       shrinkWrap: shrinkWrap,
       physics: scrollPhysics,
       padding: EdgeInsets.zero,

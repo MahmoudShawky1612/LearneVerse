@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/loading_state.dart';
+import '../../../profile/presentation/widgets/no_profile_widget.dart';
 import '../../logic/cubit/classroom_cubit.dart';
 import '../../logic/cubit/classroom_states.dart';
 import 'section_card.dart';
@@ -62,14 +63,7 @@ class _ClassroomTabState extends State<ClassroomTab> {
             } else if (state is ClassroomLoaded) {
               final classrooms = state.classrooms;
               if (classrooms.isEmpty) {
-                return const Center(child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.hourglass_empty, size: 48, color: Colors.blue),
-                    SizedBox(height: 8),
-                    Text('No classes yet', style: TextStyle(color: Colors.grey)),
-                  ],
-                ));
+                return const NoDataWidget(message: "No classes yet... 👀", width: 100, height: 100,);
               }
               return Column(
                 children: classrooms
