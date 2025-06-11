@@ -19,27 +19,42 @@ class Post {
     required this.forumId,
     required this.createdAt,
     required this.updatedAt,
-     this.voteCounter = 0,
-     this.commentCount = 0,
+    this.voteCounter = 0,
+    this.commentCount = 0,
     required this.author,
-     this.voteType = 'NONE',
+    this.voteType = 'NONE',
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      id: json['id'],
-      title: json['title'],
+      id: json['id'] ?? 0,
+      title: json['title'] ?? '',
       content: json['content'],
-      attachments: List<String>.from(json['attachments']),
-      forumId: json['forumId'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      attachments: (json['attachments'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ??
+          [],
+      forumId: json['forumId'] ?? 0,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt']) ?? DateTime.now()
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt']) ?? DateTime.now()
+          : DateTime.now(),
       voteCounter: json['voteCounter'] ?? 0,
       commentCount: json['commentCount'] ?? 0,
-      author: Author.fromJson(json['author']),
+      author: json['author'] != null
+          ? Author.fromJson(json['author'])
+          : Author(
+        id: 0,
+        username: 'unknown',
+        fullname: 'Guest',
+        profilePictureURL: null,
+      ),
       voteType: json['voteType'] ?? 'NONE',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -55,10 +70,7 @@ class Post {
       'voteType': voteType,
     };
   }
-
 }
-
-
 class Author {
   final int id;
   final String username;
@@ -69,17 +81,18 @@ class Author {
     required this.id,
     required this.username,
     required this.fullname,
-     this.profilePictureURL,
+    this.profilePictureURL,
   });
 
   factory Author.fromJson(Map<String, dynamic> json) {
     return Author(
-      id: json['id'],
-      username: json['username'],
-      fullname: json['fullname'],
-      profilePictureURL: json['profilePictureURL'], // Default to empty string if null
+      id: json['id'] ?? 0,
+      username: json['username'] ?? 'unknown',
+      fullname: json['fullname'] ?? 'Guest',
+      profilePictureURL: json['profilePictureURL'],
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

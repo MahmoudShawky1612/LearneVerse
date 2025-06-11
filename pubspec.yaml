@@ -33,6 +33,8 @@ dependencies:
   bloc: any
   url_launcher: ^6.3.1
   syncfusion_flutter_charts: ^29.2.9
+  lottie: ^2.7.0
+  simple_animations: ^5.0.2
 
 dev_dependencies:
   flutter_test:

@@ -17,6 +17,7 @@ class SingleCommunityApiService {
         'Content-Type': 'application/json',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> json = jsonDecode(response.body);
@@ -25,8 +26,8 @@ class SingleCommunityApiService {
 
       return Community.fromJson(communityJson);
     } else {
-      throw Exception('Failed to load community'
-          ' - ${response.statusCode}: ${response.reasonPhrase}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
+
     }
   }
 }

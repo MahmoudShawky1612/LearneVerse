@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutterwidgets/utils/api_helper.dart';
 import 'package:http/http.dart' as http;
 import '../../../utils/token_storage.dart';
-import '../data/models/contributions_model.dart';
 import '../data/models/user_profile_model.dart';
 
 class UserProfileApiService {
@@ -19,13 +18,14 @@ class UserProfileApiService {
         'Content-Type': 'application/json',
       },
     );
+    final body = jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 404) {
       final data = jsonDecode(response.body);
       print('Response data: $data');
       return UserProfile.fromJson(data['data']);
     } else {
-      throw Exception('Failed to fetch user profile: ${response.statusCode}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 

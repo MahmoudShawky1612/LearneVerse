@@ -18,6 +18,7 @@ class UserContributionsApiService {
         'Content-Type': 'application/json',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -27,7 +28,7 @@ class UserContributionsApiService {
           .map((json) => UserContribution.fromJson(json))
           .toList();
     } else {
-      throw Exception('Failed to fetch user contributions: ${response.statusCode}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 }

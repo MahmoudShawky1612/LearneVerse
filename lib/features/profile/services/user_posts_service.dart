@@ -18,13 +18,14 @@ class UserPostApiService {
         'Content-Type': 'application/json',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       print(data);
       return (data['data'] as List).map((json) => Post.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to fetch posts: ${response.statusCode}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 }

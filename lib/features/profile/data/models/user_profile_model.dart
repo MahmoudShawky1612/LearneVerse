@@ -14,6 +14,7 @@ class Tag {
     );
   }
 }
+
 class User {
   final String fullname;
   final String username;
@@ -30,6 +31,7 @@ class User {
     );
   }
 }
+
 class UserProfile {
   final int userId;
   final String? bio;
@@ -57,7 +59,7 @@ class UserProfile {
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
-      userId: json['userId'],
+      userId: json['userId'] ?? 0,
       bio: json['bio'],
       twitter: json['twitter'],
       facebook: json['facebook'],
@@ -69,7 +71,9 @@ class UserProfile {
           ?.map((e) => Tag.fromJson(e))
           .toList() ??
           [],
-      user: User.fromJson(json['User']),
+      user: json['User'] != null
+          ? User.fromJson(json['User'])
+          : User(fullname: "Guest", username: "unknown"),
     );
   }
 }

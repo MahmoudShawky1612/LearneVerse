@@ -34,7 +34,7 @@ class Community {
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       description: json['description'] ?? '',
-      bio: json['bio'] ?? '', // Provide default empty string for bio
+      bio: json['bio'] ?? '',
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt']) ?? DateTime.now()
           : DateTime.now(),
@@ -45,13 +45,12 @@ class Community {
       logoImgURL: json['logoImgURL'] ?? '',
       ownerId: json['ownerId'] ?? 0,
       isPublic: json['isPublic'] ?? false,
-      memberCount: json['membersCount'] ?? 0, // Match JSON key 'membersCount'
+      memberCount: json['membersCount'] ?? 0,
       onlineMembers: json['onlineMembers'] ?? 0,
-      Tags: (json['Tags'] is List)
-          ? (json['Tags'] as List)
-          .map((tagJson) => Tag.fromJson(tagJson))
-          .toList()
-          : [],
+      Tags: (json['Tags'] as List<dynamic>?)
+          ?.map((tagJson) => Tag.fromJson(tagJson))
+          .toList() ??
+          [],
     );
   }
 
@@ -67,7 +66,7 @@ class Community {
       'logoImgURL': logoImgURL,
       'ownerId': ownerId,
       'isPublic': isPublic,
-      'membersCount': memberCount, // Match JSON key
+      'membersCount': memberCount,
       'onlineMembers': onlineMembers,
       'Tags': Tags.map((tag) => tag.toJson()).toList(),
     };
@@ -77,12 +76,15 @@ class Tag {
   final int id;
   final String name;
 
-  Tag({required this.id, required this.name});
+  Tag({
+    required this.id,
+    required this.name,
+  });
 
   factory Tag.fromJson(Map<String, dynamic> json) {
     return Tag(
-      id: json['id'],
-      name: json['name'],
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
     );
   }
 

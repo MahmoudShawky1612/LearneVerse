@@ -17,13 +17,14 @@ class CommunityMembersApiService {
         'Content-Type': 'application/json',
       },
     );
+    final body = jsonDecode(response.body);
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       final List<dynamic> data = body['data'];
       return data.map((json) => CommunityMember.fromJson(json)).toList();
     } else {
-      print('Failed to fetch community members - ${response.statusCode}: ${response.reasonPhrase}');
-      throw Exception('Failed to fetch community members - ${response.statusCode}: ${response.reasonPhrase}');
+       return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 }

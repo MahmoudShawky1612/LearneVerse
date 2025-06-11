@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_state.dart';
+import 'package:flutterwidgets/utils/error_state.dart';
+import 'package:flutterwidgets/utils/loading_state.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../logic/cubit/user_comments_cubit.dart';
 import '../../logic/cubit/user_comments_states.dart';
@@ -15,6 +17,7 @@ import '../../logic/cubit/user_contributions.states.dart';
 import '../../logic/cubit/user_posts_cubit.dart';
 import '../../logic/cubit/user_posts_states.dart';
 import '../widgets/contributions.dart';
+import '../widgets/no_profile_widget.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/user_comments.dart';
 import '../widgets/user_contribution_posts.dart';
@@ -159,14 +162,10 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
         body: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
             if (state is ProfileLoading) {
-              return const Center(child: CupertinoActivityIndicator());
+              return const Center(child: LoadingState());
             }
 
-            if (state is ProfileError) {
-              return Center(child: Text(state.message));
-            }
-
-            if (state is ProfileLoaded) {
+           else if (state is ProfileLoaded) {
               final userInfo = state.profile;
               return NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -187,9 +186,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                               child: BlocBuilder<UserContributionsCubit, UserContributionsState>(
                                 builder: (context, state) {
                                   if (state is UserContributionsLoading) {
-                                    return const Center(child: CupertinoActivityIndicator());
+                                    return const Center(child: LoadingState());
                                   } else if (state is UserContributionsError) {
-                                    return Center(child: Text(state.message));
+                                    return Center(child: ErrorStateWidget(message: state.message, onRetry: fetchUserContributions));
                                   } else if (state is UserContributionsLoaded) {
                                     return ContributionChart(contributions: state.contributions);
                                   }
@@ -280,9 +279,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                       BlocBuilder<UserPostCubit, UserPostState>(
                         builder: (context, state) {
                           if (state is UserPostLoading) {
-                            return const Center(child: CupertinoActivityIndicator());
+                            return const Center(child: LoadingState());
                           } else if (state is UserPostError) {
-                            return Center(child: Text(state.message));
+                            return Center(child: ErrorStateWidget(message: state.message, onRetry: fetchUserPosts));
                           } else if (state is UserPostLoaded) {
                             return UserPostsScreen(posts: state.posts);
                           }
@@ -292,9 +291,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                       BlocBuilder<UserCommentsCubit, UserCommentsState>(
                         builder: (context, state) {
                           if (state is UserCommentsLoading) {
-                            return const Center(child: CupertinoActivityIndicator());
+                            return const Center(child: LoadingState());
                           } else if (state is UserCommentsError) {
-                            return Center(child: Text(state.message));
+                            return Center(child: ErrorStateWidget(message: state.message, onRetry: fetchUserComments));
                           } else if (state is UserCommentsLoaded) {
                             return UserComments(comments: state.comments);
                           }
@@ -304,9 +303,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                       BlocBuilder<UserCommunitiesCubit, UserCommunitiesState>(
                         builder: (context, state) {
                           if (state is UserCommunitiesLoading) {
-                            return const Center(child: CupertinoActivityIndicator());
+                            return const Center(child: LoadingState());
                           } else if (state is UserCommunitiesError) {
-                            return Center(child: Text(state.message));
+                            return Center(child: ErrorStateWidget(message: state.message, onRetry: fetchUserCommunities));
                           } else if (state is UserCommunitiesLoaded) {
                             return UserJoinedCommunities(communities: state.communities);
                           }
@@ -318,7 +317,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 ),
               );
             }
-            return const SizedBox();
+            return   Center(
+              child: noProfileDataWidget()
+            );
           },
         ),
       ),

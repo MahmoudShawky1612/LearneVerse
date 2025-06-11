@@ -28,13 +28,13 @@ class CommentService {
       },
       body: jsonEncode(body),
     );
-
+    final jsonBody = jsonDecode(response.body);
     if (response.statusCode == 201) {
       final jsonBody = json.decode(response.body);
       final commentJson = jsonBody['data'];
       return Comment.fromJson(commentJson);
     } else {
-      throw Exception('Failed to create comment: ${response.body}');
+      return Future.error('${jsonBody['message'] ?? 'Unknown error'}');
     }
   }
 
@@ -48,13 +48,14 @@ class CommentService {
         'Content-Type': 'application/json',
       },
     );
+    final jsonBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final jsonBody = json.decode(response.body);
       final List<dynamic> commentsJson = jsonBody['data'];
       return commentsJson.map((json) => Comment.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to fetch comments: ${response.body}');
+      return Future.error('${jsonBody['message'] ?? 'Unknown error'}');
     }
   }
 
@@ -68,6 +69,7 @@ class CommentService {
         'Content-Type': 'application/json',
       },
     );
+    final jsonBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final jsonBody = json.decode(response.body);
@@ -76,7 +78,7 @@ class CommentService {
       print('upvote successful: ${comment.voteCounter}');
       print(comment.voteType);
     } else {
-      throw Exception('Failed to upvote comment: ${response.body}');
+      return Future.error('${jsonBody['message'] ?? 'Unknown error'}');
     }
   }
 
@@ -90,6 +92,7 @@ class CommentService {
         'Content-Type': 'application/json',
       },
     );
+    final jsonBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final jsonBody = json.decode(response.body);
@@ -98,7 +101,7 @@ class CommentService {
       print('Downvote successful: ${comment.voteCounter}');
       print(comment.voteType);
     } else {
-      throw Exception('Failed to downvote comment: ${response.body}');
+      return Future.error('${jsonBody['message'] ?? 'Unknown error'}');
     }
   }
 

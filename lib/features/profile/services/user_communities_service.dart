@@ -19,6 +19,7 @@ class UserCommunitiesApiService {
         'Accept': 'application/json',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -26,7 +27,7 @@ class UserCommunitiesApiService {
           .map((json) => Community.fromJson(json['Community']))
           .toList();
     } else {
-      throw Exception('Failed to fetch communities: ${response.statusCode}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 }

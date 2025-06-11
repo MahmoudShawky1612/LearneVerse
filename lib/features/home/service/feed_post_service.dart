@@ -17,13 +17,14 @@ class FeedPostsApiService {
         'Authorization': 'Bearer $token',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List<dynamic> postsJson = jsonData['data'];
       return postsJson.map((json) => Post.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to fetch posts - ${response.statusCode}: ${response.reasonPhrase}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 
@@ -44,7 +45,7 @@ class FeedPostsApiService {
       post.voteCounter = data['voteCount'];
       post.voteType = data['vote']['type'];
     } else {
-      throw Exception('Failed to upvote post ${jsonData['message']}');
+      return Future.error('${jsonData['message'] ?? 'Unknown error'}');
     }
   }
 
@@ -65,7 +66,7 @@ class FeedPostsApiService {
       post.voteCounter = data['voteCount'];
       post.voteType = data['vote']['type'];
     } else {
-      throw Exception('Failed to downvote post ${jsonData['message']}');
+      return Future.error('${jsonData['message'] ?? 'Unknown error'}');
     }
   }
 }

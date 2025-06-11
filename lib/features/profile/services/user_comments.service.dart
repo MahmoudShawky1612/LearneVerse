@@ -13,12 +13,13 @@ final response = await http.get(
     'Accept': 'application/json',
   },
 );
+final body = jsonDecode(response.body);
 
 if (response.statusCode == 200) {
   final data = jsonDecode(response.body);
   return (data['data'] as List).map((json) => Comment.fromJson(json)).toList();
 } else {
-  throw Exception('Failed to fetch comments: ${response.statusCode}');
+  return Future.error('${body['message'] ?? 'Unknown error'}');
 }
 
 } }

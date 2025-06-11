@@ -37,6 +37,7 @@ class SearchService {
         'Accept': 'application/json',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200 || response.statusCode == 400) {
       final body = jsonDecode(response.body);
@@ -59,7 +60,7 @@ class SearchService {
       }
       return {'communities': communities, 'users': users};
     } else {
-      throw Exception('Failed to search - ${response.statusCode}: ${response.reasonPhrase}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 

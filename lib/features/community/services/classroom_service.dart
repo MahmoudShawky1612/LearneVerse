@@ -20,14 +20,15 @@ class ClassroomService {
         'Content-Type': 'application/json',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       final List<dynamic> data = body['data'];
       return data.map((json) => Classroom.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to load community classrooms '
-          '- ${response.statusCode}: ${response.reasonPhrase}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
+
     }
 }
 

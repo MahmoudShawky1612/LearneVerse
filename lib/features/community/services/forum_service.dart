@@ -21,13 +21,14 @@ class ForumApiService {
         'Content-Type': 'application/json',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
       return json.map((post) => Post.fromJson(post)).toList();
     } else {
-      throw Exception('Failed to load posts'
-          ' - ${response.statusCode}: ${response.reasonPhrase}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
+
     }
   }
 
@@ -46,6 +47,8 @@ class ForumApiService {
         'attachments': attachments,
       }),
     );
+    final body = jsonDecode(response.body);
+
     if (response.statusCode == 201) {
       final json = jsonDecode(response.body);
       if (json['data'] == null) {
@@ -53,7 +56,7 @@ class ForumApiService {
       }
       return ForumPost.fromJson(json['data']);
     } else {
-      throw Exception('Failed to create post - ${response.statusCode}: ${response.reasonPhrase}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 
@@ -64,9 +67,7 @@ class ForumApiService {
       Uri.parse('$baseUrl/upload/file'),
     );
 
-    // Detect MIME type or default to image/jpeg (since we converted to JPEG)
     final mimeType = lookupMimeType(image.path) ?? 'image/jpeg';
-    print('Uploading file with MIME type: $mimeType'); // Debug log
 
     request.files.add(
       await http.MultipartFile.fromPath(

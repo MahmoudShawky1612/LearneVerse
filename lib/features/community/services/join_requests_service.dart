@@ -15,12 +15,13 @@ class ApiService {
         'Authorization': 'Bearer $token',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return data['data'] as String?;
     } else {
-      throw Exception('Failed to fetch user role: ${response.statusCode}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 
@@ -33,12 +34,13 @@ class ApiService {
         'Authorization': 'Bearer $token',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 201 || response.statusCode == 400) {
       final data = jsonDecode(response.body);
       return data['message'] == 'Joined community successfully';
     } else {
-      throw Exception('Failed to create join request: ${response.statusCode}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 }

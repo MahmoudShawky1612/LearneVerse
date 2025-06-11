@@ -13,10 +13,12 @@ class UserContribution {
 
   factory UserContribution.fromJson(Map<String, dynamic> json) {
     return UserContribution(
-      id: json['id'],
-      userId: json['userId'],
-      count: json['count'],
-      dateOnly: DateTime.parse(json['dateOnly']),
+      id: json['id'] ?? 0,
+      userId: json['userId'] ?? 0,
+      count: json['count'] ?? 0,
+      dateOnly: json['dateOnly'] != null
+          ? DateTime.tryParse(json['dateOnly']) ?? DateTime.now()
+          : DateTime.now(),
     );
   }
 }

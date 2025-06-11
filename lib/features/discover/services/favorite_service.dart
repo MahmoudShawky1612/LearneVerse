@@ -20,6 +20,7 @@ class FavoriteService {
         'Accept': 'application/json',
       },
     );
+    final body = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
@@ -30,7 +31,7 @@ class FavoriteService {
           .map((json) => Community.fromJson(json))
           .toList();
     } else {
-      throw Exception('Failed to fetch favorite communities - ${response.statusCode}: ${response.reasonPhrase}');
+      return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
 }

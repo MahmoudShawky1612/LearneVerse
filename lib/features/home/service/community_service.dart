@@ -24,14 +24,15 @@ class CommunityApiService {
           'Content-Type': 'application/json',
         },
       );
+      final body = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body)['data'];
         return data.map((item) => Community.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to load communities');
+        return Future.error('${body['message'] ?? 'Unknown error'}');
       }
     } catch (e) {
-      print('Error fetching communities: $e');
       throw Exception('Error fetching communities: $e');
     }
   }
