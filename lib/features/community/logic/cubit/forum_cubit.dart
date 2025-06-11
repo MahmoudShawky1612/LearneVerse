@@ -20,10 +20,31 @@ class ForumCubit extends Cubit<ForumStates> {
   }
   void createForumPost(int forumId, String title, String content, List<String> attachments) async {
     try {
-      final post = await forumApiService.createPost(forumId, title, content, attachments);
+       await forumApiService.createPost(forumId, title, content, attachments);
       fetchForumPosts(forumId);
     } catch (e) {
       emit(ForumFailure('Failed to create post: $e'));
+    }
+  }
+  Future<void> deletePost(int id, int forumId) async {
+    emit(ForumLoading());
+    try {
+      await forumApiService.deletePost(id);
+      fetchForumPosts(forumId);
+      emit(DeletePostSuccess());
+    } catch (e) {
+      emit(ForumFailure(e.toString()));
+    }
+  }
+
+  Future<void> editPost(int postId, Map<String, dynamic> updatedData, int forumId) async {
+    emit(ForumLoading());
+    try {
+      final updatedPost = await forumApiService.editPost(postId, updatedData);
+      fetchForumPosts(forumId);
+      emit(EditPostSuccess(updatedPost));
+    } catch (e) {
+      emit(ForumFailure(e.toString()));
     }
   }
 }

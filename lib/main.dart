@@ -77,9 +77,6 @@ void main() async {
         BlocProvider<UserContributionsCubit>(create: (_) => UserContributionsCubit(UserContributionsApiService())),
         BlocProvider<SearchCubit>(create: (_) => SearchCubit(SearchService())),
         BlocProvider<FavoriteCubit>(create: (_) => FavoriteCubit(FavoriteService())),
-        BlocProvider<EditPostCubit>(create: (_) => EditPostCubit(EditDeletePostApiService())),
-        BlocProvider<DeletePostCubit>(create: (_) => DeletePostCubit(EditDeletePostApiService())),
-
       ],
       child: const MyApp(),
     ),

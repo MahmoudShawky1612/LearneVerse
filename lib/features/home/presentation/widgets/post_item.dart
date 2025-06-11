@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+ import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
+import 'package:flutterwidgets/features/community/services/forum_service.dart';
 import 'package:flutterwidgets/features/home/data/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/vote_button.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
-import 'package:flutterwidgets/features/home/service/edit_delete_post_service.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/upvote_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/downvote_cubit.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/edit_post_cubit.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/delete_post_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/upvote_states.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/downvote_states.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/edit_post_states.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/delete_post_states.dart';
+import 'package:flutterwidgets/utils/snackber_util.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,17 +17,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../utils/jwt_helper.dart';
 import '../../../../utils/token_storage.dart';
 import '../../../../utils/url_helper.dart';
+import '../../../community/logic/cubit/forum.states.dart';
 
 class PostItem extends StatefulWidget {
   final Post post;
-  final VoidCallback? onPostDeleted;
-  final Function(Post)? onPostUpdated;
 
   const PostItem({
     super.key,
     required this.post,
-    this.onPostDeleted,
-    this.onPostUpdated,
   });
 
   @override
@@ -174,7 +169,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
-
     return MultiBlocProvider(
       providers: [
         BlocProvider<UpvoteCubit>(
@@ -183,59 +177,31 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         BlocProvider<DownvoteCubit>(
           create: (_) => DownvoteCubit(FeedPostsApiService()),
         ),
-        BlocProvider<EditPostCubit>(
-          create: (_) => EditPostCubit(EditDeletePostApiService()),
-        ),
-        BlocProvider<DeletePostCubit>(
-          create: (_) => DeletePostCubit(EditDeletePostApiService()),
+        BlocProvider<ForumCubit>(
+          create: (_) => ForumCubit(ForumApiService()),
         ),
       ],
       child: MultiBlocListener(
         listeners: [
-          BlocListener<EditPostCubit, EditPostState>(
+          BlocListener<ForumCubit, ForumStates>(
             listener: (context, state) {
-              if (state is EditPostSuccess) {
+              if (state is ForumSuccess) {
+                setState(() {
+                  currentPost = state.posts.firstWhere(
+                        (post) => post.id == currentPost.id,
+                    orElse: () => currentPost,
+                  );
+                });
+              } else if (state is EditPostSuccess) {
                 setState(() {
                   currentPost = state.updatedPost;
                 });
-                widget.onPostUpdated?.call(state.updatedPost);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Post updated successfully'),
-                    backgroundColor: Colors.green,
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              } else if (state is EditPostFailure) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Failed to update post: ${state.error}'),
-                    backgroundColor: Colors.red,
-                    duration: Duration(seconds: 3),
-                  ),
-                );
-              }
-            },
-          ),
-          BlocListener<DeletePostCubit, DeletePostState>(
-            listener: (context, state) {
-              if (state is DeletePostSuccess) {
-                widget.onPostDeleted?.call();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Post deleted successfully'),
-                    backgroundColor: Colors.green,
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              } else if (state is DeletePostFailure) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Failed to delete post: ${state.error}'),
-                    backgroundColor: Colors.red,
-                    duration: Duration(seconds: 3),
-                  ),
-                );
+                SnackBarUtils.showSuccessSnackBar(context, message: 'Post updated successfully 👍');
+              } else if (state is DeletePostSuccess) {
+                     SnackBarUtils.showInfoSnackBar(context, message: 'Post deleted successfully 👍');
+                 context.pop();
+              } else if (state is ForumFailure) {
+                SnackBarUtils.showErrorSnackBar(context, message: 'Failed to updated post: ${state.message} 🧐');
               }
             },
           ),
@@ -413,14 +379,14 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          BlocBuilder<EditPostCubit, EditPostState>(
+          BlocBuilder<ForumCubit, ForumStates>(
             builder: (context, state) {
               return _buildOptionsItem(
                 'Edit',
                 Icons.edit_outlined,
                 colorScheme.primary,
-                state is EditPostLoading ? null : () => _showEditPostDialog(),
-                isLoading: state is EditPostLoading,
+                state is ForumLoading ? null : () => _showEditPostDialog(),
+                isLoading: state is ForumLoading,
               );
             },
           ),
@@ -428,19 +394,19 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
             height: 8.h,
             color: colorScheme.onSurface.withOpacity(0.1),
           ),
-          BlocBuilder<DeletePostCubit, DeletePostState>(
+          BlocBuilder<ForumCubit, ForumStates>(
             builder: (context, state) {
               return _buildOptionsItem(
                 'Delete',
                 Icons.delete_outline,
                 colorScheme.error,
-                state is DeletePostLoading ? null : () {
+                state is ForumLoading ? null : () {
                   setState(() {
                     isMenuVisible = false;
                   });
                   _showDeleteConfirmationDialog();
                 },
-                isLoading: state is DeletePostLoading,
+                isLoading: state is ForumLoading,
               );
             },
           ),
@@ -514,7 +480,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         final colorScheme = theme.colorScheme;
 
         return BlocProvider.value(
-          value: context.read<EditPostCubit>(),
+          value: context.read<ForumCubit>(),
           child: AlertDialog(
             backgroundColor: theme.cardColor,
             title: Row(
@@ -587,10 +553,10 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                   style: TextStyle(color: colorScheme.onSurfaceVariant),
                 ),
               ),
-              BlocBuilder<EditPostCubit, EditPostState>(
+              BlocBuilder<ForumCubit, ForumStates>(
                 builder: (context, state) {
                   return ElevatedButton(
-                    onPressed: state is EditPostLoading ? null : () {
+                    onPressed: state is ForumLoading ? null : () {
                       final newTitle = titleController.text.trim();
                       final newContent = contentController.text.trim();
                       if (newTitle.isNotEmpty) {
@@ -599,7 +565,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                           'content': newContent,
                           'attachments': currentPost.attachments,
                         };
-                        context.read<EditPostCubit>().editPost(currentPost.id, updatedData);
+                        context.read<ForumCubit>().editPost(currentPost.id, updatedData, widget.post.forumId);
                         Navigator.pop(dialogContext);
                       }
                     },
@@ -610,7 +576,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    child: state is EditPostLoading
+                    child: state is ForumLoading
                         ? SizedBox(
                       width: 16.w,
                       height: 16.h,
@@ -639,7 +605,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         final colorScheme = theme.colorScheme;
 
         return BlocProvider.value(
-          value: context.read<DeletePostCubit>(),
+          value: context.read<ForumCubit>(),
           child: AlertDialog(
             backgroundColor: theme.cardColor,
             title: Text(
@@ -665,11 +631,11 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                   style: TextStyle(color: colorScheme.onSurfaceVariant),
                 ),
               ),
-              BlocBuilder<DeletePostCubit, DeletePostState>(
+              BlocBuilder<ForumCubit, ForumStates>(
                 builder: (context, state) {
                   return ElevatedButton(
-                    onPressed: state is DeletePostLoading ? null : () {
-                      context.read<DeletePostCubit>().deletePost(currentPost.id);
+                    onPressed: state is ForumLoading ? null : () {
+                      context.read<ForumCubit>().deletePost(currentPost.id, widget.post.forumId);
                       Navigator.pop(dialogContext);
                     },
                     style: ElevatedButton.styleFrom(
@@ -679,7 +645,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    child: state is DeletePostLoading
+                    child: state is ForumLoading
                         ? SizedBox(
                       width: 16.w,
                       height: 16.h,
