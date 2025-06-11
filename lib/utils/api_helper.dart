@@ -1,4 +1,4 @@
 class ApiHelper {
-  static const String baseUrl = 'https://karaoke-assessed-chem-birmingham.trycloudflare.com/api/v1';
+  static const String baseUrl = 'https://90dd-154-236-133-14.ngrok-free.app/api/v1';
 
 }

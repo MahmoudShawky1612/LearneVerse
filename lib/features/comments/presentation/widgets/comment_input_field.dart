@@ -54,6 +54,15 @@ class _CommentInputFieldState extends State<CommentInputField> {
 
     return BlocListener<CommentCubit, CommentStates>(
       listener: (context, state) {
+        if (state is CommentLoading) {
+          setState(() {
+            isLoading = true; // Show loading indicator
+          });
+        } else {
+          setState(() {
+            isLoading = false; // Hide loading indicator
+          });
+        }
         if (state is CommentError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
@@ -102,7 +111,7 @@ class _CommentInputFieldState extends State<CommentInputField> {
             Expanded(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxHeight: 100.h,
+                  maxHeight: 40.h,
                 ),
                 child: TextField(
                   controller: widget.commentController,
@@ -146,7 +155,7 @@ class _CommentInputFieldState extends State<CommentInputField> {
                   ),
                   borderRadius: BorderRadius.circular(20.r),
                 ),
-                child: Icon(
+                child: isLoading ? const CupertinoActivityIndicator() :Icon(
                   Icons.send_rounded,
                   color: Colors.white,
                   size: 20.w,

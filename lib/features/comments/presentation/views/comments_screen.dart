@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/comment_states.dart';
 import 'package:flutterwidgets/features/comments/models/comments_model.dart';
+import 'package:flutterwidgets/utils/loading_state.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../utils/error_state.dart';
 import '../../../home/data/models/post_model.dart';
 import '../../../home/presentation/widgets/post_item.dart';
 import '../../../profile/presentation/widgets/build_comments.dart';
@@ -30,10 +32,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
     super.initState();
     comments = Comments.generateDummyComments(widget.post.commentCount);
     _commentController = TextEditingController();
-    context.read<CommentCubit>().fetchComments(widget.post.id);
+    fetchComments();
     post = widget.post;
   }
-
+void fetchComments() {
+    context.read<CommentCubit>().fetchComments(widget.post.id);
+  }
   @override
   void dispose() {
     _commentController.dispose();
@@ -76,17 +80,15 @@ class _CommentsScreenState extends State<CommentsScreen> {
                     builder: (BuildContext context, CommentStates state) {
                       if (state is CommentLoading) {
                         return const Center(
-                          child: CupertinoActivityIndicator(),
+                          child: LoadingState(),
                         );
                       } else if (state is CommentError) {
                         return Center(
-                          child: Text(
-                            'Error: ${state.message}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16.sp,
-                              color: colorScheme.error,
-                            ),
+                          child :ErrorStateWidget(
+                            message: state.message,
+                            onRetry: () => context.read<CommentCubit>().fetchComments(widget.post.id
                           ),
+                        )
                         );
                       } else if (state is CommentsFetched) {
                         return Column(

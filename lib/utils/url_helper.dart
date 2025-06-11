@@ -1,5 +1,5 @@
 class UrlHelper {
-  static const String CLOUDFLARED_URL = "https://karaoke-assessed-chem-birmingham.trycloudflare.com";
+  static const String CLOUDFLARED_URL = "https://90dd-154-236-133-14.ngrok-free.app";
   static const String LOCAL_URL = "http://localhost:5500";
 
   static String transformUrl(String url) {
