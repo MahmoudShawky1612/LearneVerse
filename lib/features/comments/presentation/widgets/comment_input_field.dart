@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../utils/jwt_helper.dart';
+import '../../../../utils/snackber_util.dart';
 import '../../../../utils/token_storage.dart';
 import '../../logic/cubit/comment_cubit.dart';
 import '../../logic/cubit/comment_states.dart';
@@ -64,9 +65,8 @@ class _CommentInputFieldState extends State<CommentInputField> {
           });
         }
         if (state is CommentError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          SnackBarUtils.showErrorSnackBar(context, message: state.message);
+
         } else if (state is CommentCreated) {
           widget.commentController.clear();
         }

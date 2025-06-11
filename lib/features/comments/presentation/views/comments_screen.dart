@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/comment_states.dart';
 import 'package:flutterwidgets/features/comments/models/comments_model.dart';
 import 'package:flutterwidgets/utils/loading_state.dart';
+import 'package:flutterwidgets/utils/snackber_util.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../utils/error_state.dart';
 import '../../../home/data/models/post_model.dart';
@@ -119,7 +120,6 @@ void fetchComments() {
                           ],
                         );
                       }
-                      // Add a default return to avoid "body might complete normally" error
                       return const SizedBox.shrink();
                     },
                   ),
