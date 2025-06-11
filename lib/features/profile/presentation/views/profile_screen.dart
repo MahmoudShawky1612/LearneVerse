@@ -7,7 +7,9 @@ import 'package:flutterwidgets/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_state.dart';
 import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/loading_state.dart';
+import 'package:flutterwidgets/utils/snackber_util.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../../home/data/models/community_model.dart';
 import '../../logic/cubit/user_comments_cubit.dart';
 import '../../logic/cubit/user_comments_states.dart';
 import '../../logic/cubit/user_communities_cubit.dart';
@@ -34,6 +36,9 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   int _currentIndex = 0;
+
+  // Local cache for last loaded communities
+  List<Community> _lastLoadedCommunities = [];
 
   @override
   void initState() {
@@ -312,10 +317,16 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                         builder: (context, state) {
                           if (state is UserCommunitiesLoading) {
                             return const Center(child: LoadingState());
+                          } else if (state is UserCommunitiesActionError) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              SnackBarUtils.showErrorSnackBar(context, message: state.message);
+                            });
+                             return UserJoinedCommunities(communities: _lastLoadedCommunities, userId: widget.userId);
+                          } else if (state is UserCommunitiesLoaded) {
+                             _lastLoadedCommunities = state.communities;
+                            return UserJoinedCommunities(communities: state.communities, userId: widget.userId);
                           } else if (state is UserCommunitiesError) {
                             return Center(child: ErrorStateWidget(message: state.message, onRetry: fetchUserCommunities));
-                          } else if (state is UserCommunitiesLoaded) {
-                            return UserJoinedCommunities(communities: state.communities, userId: widget.userId);
                           }
                           return const SizedBox();
                         },

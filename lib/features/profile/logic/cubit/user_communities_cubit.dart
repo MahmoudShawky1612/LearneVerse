@@ -29,7 +29,6 @@ class UserCommunitiesCubit extends Cubit<UserCommunitiesState> {
       emit(UserCommunitiesLoaded(communities));
     } catch (e) {
       emit(UserCommunitiesActionError(e.toString()));
-      emit(UserCommunitiesError(e.toString()));
     }
   }
 }
