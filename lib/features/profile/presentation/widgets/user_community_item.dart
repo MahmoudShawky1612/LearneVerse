@@ -11,12 +11,14 @@ class UserCommunityItem extends StatelessWidget {
   final Community community;
   final VoidCallback? onTap;
   final VoidCallback? onJoinLeave;
+  final VoidCallback? onLeave;
 
   const UserCommunityItem({
     super.key,
     required this.community,
     this.onTap,
     this.onJoinLeave,
+    this.onLeave,
   });
 
   @override
@@ -117,8 +119,6 @@ class UserCommunityItem extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildActionButtons(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -127,38 +127,46 @@ class UserCommunityItem extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            gradient: themeExtension?.buttonGradient,
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: InkWell(
-            onTap: ()
-              =>
-                context.push('/community', extra: community),
-
-
-            borderRadius: BorderRadius.circular(10.r),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "View",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 10.sp,
-                      color: colorScheme.onPrimary,
-                    ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: themeExtension?.buttonGradient,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: InkWell(
+                onTap: () => context.push('/community', extra: community),
+                borderRadius: BorderRadius.circular(10.r),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "View",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 10.sp,
+                          color: colorScheme.onPrimary,
+                        ),
+                      ),
+                      SizedBox(width: 4.w),
+                      Icon(Icons.arrow_forward,
+                          size: 14.w, color: colorScheme.onPrimary),
+                    ],
                   ),
-                  SizedBox(width: 4.w),
-                  Icon(Icons.arrow_forward,
-                      size: 14.w, color: colorScheme.onPrimary),
-                ],
+                ),
               ),
             ),
-          ),
+            SizedBox(width: 8.w),
+            if (onLeave != null)
+              IconButton(
+                icon: Icon(Icons.exit_to_app, color: colorScheme.error, size: 20.r),
+                tooltip: 'Leave Community',
+                onPressed: onLeave,
+              ),
+          ],
         ),
         const SizedBox(height: 8),
       ],

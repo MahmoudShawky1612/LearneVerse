@@ -315,7 +315,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                           } else if (state is UserCommunitiesError) {
                             return Center(child: ErrorStateWidget(message: state.message, onRetry: fetchUserCommunities));
                           } else if (state is UserCommunitiesLoaded) {
-                            return UserJoinedCommunities(communities: state.communities);
+                            return UserJoinedCommunities(communities: state.communities, userId: widget.userId);
                           }
                           return const SizedBox();
                         },

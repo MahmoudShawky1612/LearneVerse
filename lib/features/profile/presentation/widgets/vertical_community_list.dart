@@ -4,8 +4,9 @@ import 'package:flutterwidgets/features/profile/presentation/widgets/user_commun
 
 class VerticalCommunityList extends StatelessWidget {
   final List<Community> communities;
+  final void Function(BuildContext context, Community community)? onLeave;
 
-  const VerticalCommunityList({super.key, required this.communities});
+  const VerticalCommunityList({super.key, required this.communities, this.onLeave});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class VerticalCommunityList extends StatelessWidget {
           children: [
             UserCommunityItem(
               community: communities[index],
+              onLeave: onLeave == null ? null : () => onLeave!(context, communities[index]),
             ),
             const Divider(),
           ],

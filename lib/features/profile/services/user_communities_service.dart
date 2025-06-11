@@ -30,4 +30,24 @@ class UserCommunitiesApiService {
       return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
+
+  Future<String> leaveCommunity(int communityId) async {
+    final token = await TokenStorage.getToken();
+    final url = Uri.parse('$baseUrl/communities/$communityId/leave');
+
+    final response = await http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': '*/*',
+      },
+    );
+
+    if (response.statusCode == 204) {
+      return 'Successfully left the community.';
+    } else {
+      final body = jsonDecode(response.body);
+      return Future.error(body['message'] ?? 'Failed to leave community');
+    }
+  }
 }
