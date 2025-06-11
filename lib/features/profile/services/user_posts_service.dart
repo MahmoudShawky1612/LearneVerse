@@ -28,4 +28,40 @@ class UserPostApiService {
       return Future.error('${body['message'] ?? 'Unknown error'}');
     }
   }
+
+  Future<void> deletePost(int postId) async {
+    final token = await TokenStorage.getToken();
+    final url = Uri.parse('$baseUrl/posts/$postId');
+    final response = await http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': '*/*',
+      },
+    );
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete post: ${response.statusCode}');
+    }
+  }
+
+  Future<Post> editPost(int postId, Map<String, dynamic> updatedData) async {
+    final token = await TokenStorage.getToken();
+    final url = Uri.parse('$baseUrl/posts/$postId');
+    final response = await http.put(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+      },
+      body: jsonEncode(updatedData),
+    );
+    final body = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      final data = body['data'];
+      return Post.fromJson(data);
+    } else {
+      throw Exception(body['message'] ?? 'Failed to update post');
+    }
+  }
 }

@@ -6,7 +6,9 @@ import '../../../home/presentation/widgets/build_posts.dart';
 
 class UserPostsScreen extends StatefulWidget {
   final List<Post> posts;
-  const UserPostsScreen({super.key, required this.posts});
+  final void Function(Post post)? onDelete;
+  final void Function(Post post, Map<String, dynamic> updatedData)? onEdit;
+  const UserPostsScreen({super.key, required this.posts, this.onDelete, this.onEdit});
 
   @override
   State<UserPostsScreen> createState() => _UserPostsScreenState();
@@ -20,6 +22,9 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
       shrinkWrap: true,
       scrollPhysics: const BouncingScrollPhysics(),
       posts: widget.posts,
+      onDelete: widget.onDelete,
+      onEdit: widget.onEdit,
+      useForumCubit: false,
     );
   }
 }

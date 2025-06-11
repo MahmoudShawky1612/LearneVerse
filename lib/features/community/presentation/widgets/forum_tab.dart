@@ -734,6 +734,7 @@ class _ForumTabState extends State<ForumTab> {
                 child: BuildPosts(
                   scrollPhysics: const NeverScrollableScrollPhysics(),
                   posts: state.posts,
+                  useForumCubit: true,
                 ),
               );
             } else if (state is ForumFailure) {

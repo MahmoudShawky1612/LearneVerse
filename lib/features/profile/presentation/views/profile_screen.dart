@@ -283,7 +283,15 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                           } else if (state is UserPostError) {
                             return Center(child: ErrorStateWidget(message: state.message, onRetry: fetchUserPosts));
                           } else if (state is UserPostLoaded) {
-                            return UserPostsScreen(posts: state.posts);
+                            return UserPostsScreen(
+                              posts: state.posts,
+                              onDelete: (post) {
+                                context.read<UserPostCubit>().deletePost(widget.userId, post.id);
+                              },
+                              onEdit: (post, updatedData) {
+                                context.read<UserPostCubit>().editPost(widget.userId, post.id, updatedData);
+                              },
+                            );
                           }
                           return const SizedBox();
                         },

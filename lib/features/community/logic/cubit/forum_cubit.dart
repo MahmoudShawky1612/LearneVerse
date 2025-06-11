@@ -31,7 +31,6 @@ class ForumCubit extends Cubit<ForumStates> {
     try {
       await forumApiService.deletePost(id);
       fetchForumPosts(forumId);
-      emit(DeletePostSuccess());
     } catch (e) {
       emit(ForumFailure(e.toString()));
     }

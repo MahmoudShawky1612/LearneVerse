@@ -16,4 +16,26 @@ class UserPostCubit extends Cubit<UserPostState> {
       emit(UserPostError(e.toString()));
     }
   }
+
+  Future<void> deletePost(int userId, int postId) async {
+    emit(UserPostLoading());
+    try {
+      await userPostApiService.deletePost(postId);
+      final posts = await userPostApiService.fetchPostsByUser(userId);
+      emit(UserPostLoaded(posts));
+    } catch (e) {
+      emit(UserPostError(e.toString()));
+    }
+  }
+
+  Future<void> editPost(int userId, int postId, Map<String, dynamic> updatedData) async {
+    emit(UserPostLoading());
+    try {
+      await userPostApiService.editPost(postId, updatedData);
+      final posts = await userPostApiService.fetchPostsByUser(userId);
+      emit(UserPostLoaded(posts));
+    } catch (e) {
+      emit(UserPostError(e.toString()));
+    }
+  }
 }

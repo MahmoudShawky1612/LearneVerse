@@ -6,14 +6,18 @@ class BuildPosts extends StatelessWidget {
   final bool shrinkWrap;
   final ScrollPhysics scrollPhysics;
   final List<Post> posts;
-
+  final void Function(Post post)? onDelete;
+  final void Function(Post post, Map<String, dynamic> updatedData)? onEdit;
+  final bool useForumCubit;
 
   const BuildPosts({
     super.key,
     this.shrinkWrap = true,
     required this.scrollPhysics,
     required this.posts,
-
+    this.onDelete,
+    this.onEdit,
+    this.useForumCubit = true,
   });
 
   @override
@@ -33,6 +37,9 @@ class BuildPosts extends StatelessWidget {
       itemBuilder: (context, index) {
         return PostItem(
           post: posts[index],
+          onDelete: onDelete,
+          onEdit: onEdit,
+          useForumCubit: useForumCubit,
         );
       },
     );
