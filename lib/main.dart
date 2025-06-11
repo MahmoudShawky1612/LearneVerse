@@ -10,6 +10,7 @@ import 'package:flutterwidgets/features/community/services/forum_service.dart';
 import 'package:flutterwidgets/features/community/services/join_requests_service.dart';
 import 'package:flutterwidgets/features/discover/logic/cubit/favorite_communities_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/edit_post_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_cubit.dart';
@@ -33,7 +34,9 @@ import 'features/discover/logic/cubit/toggle_cubit.dart';
 import 'features/discover/services/favorite_service.dart';
 import 'features/discover/services/search_service.dart';
 import 'features/discover/services/toggle_service.dart';
+import 'features/home/logic/cubit/delete_post_cubit.dart';
 import 'features/home/service/community_service.dart';
+import 'features/home/service/edit_delete_post_service.dart';
 import 'features/login/logic/cubit/auth_cubit.dart';
 import 'features/login/services/auth_api_service.dart';
 import 'features/profile/logic/cubit/profile_cubit.dart';
@@ -74,6 +77,9 @@ void main() async {
         BlocProvider<UserContributionsCubit>(create: (_) => UserContributionsCubit(UserContributionsApiService())),
         BlocProvider<SearchCubit>(create: (_) => SearchCubit(SearchService())),
         BlocProvider<FavoriteCubit>(create: (_) => FavoriteCubit(FavoriteService())),
+        BlocProvider<EditPostCubit>(create: (_) => EditPostCubit(EditDeletePostApiService())),
+        BlocProvider<DeletePostCubit>(create: (_) => DeletePostCubit(EditDeletePostApiService())),
+
       ],
       child: const MyApp(),
     ),

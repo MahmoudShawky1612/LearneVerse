@@ -3,10 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterwidgets/features/home/data/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/vote_button.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
+import 'package:flutterwidgets/features/home/service/edit_delete_post_service.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/upvote_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/downvote_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/edit_post_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/delete_post_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/upvote_states.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/downvote_states.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/edit_post_states.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/delete_post_states.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,10 +22,14 @@ import '../../../../utils/url_helper.dart';
 
 class PostItem extends StatefulWidget {
   final Post post;
+  final VoidCallback? onPostDeleted;
+  final Function(Post)? onPostUpdated;
 
   const PostItem({
     super.key,
     required this.post,
+    this.onPostDeleted,
+    this.onPostUpdated,
   });
 
   @override
@@ -35,14 +44,16 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
   late int voteCounter;
   late int commentCounter;
   bool isAuthor = false;
+  late Post currentPost;
 
   @override
   void initState() {
     super.initState();
-    voteCounter = widget.post.voteCounter;
-    upVoteColor = widget.post.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
-    downVoteColor = widget.post.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
-    commentCounter = widget.post.commentCount;
+    currentPost = widget.post;
+    voteCounter = currentPost.voteCounter;
+    upVoteColor = currentPost.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
+    downVoteColor = currentPost.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
+    commentCounter = currentPost.commentCount;
     _checkIfAuthor();
   }
 
@@ -50,7 +61,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     final userId = await getUserId();
     if (mounted) {
       setState(() {
-        isAuthor = userId == widget.post.author.id;
+        isAuthor = userId == currentPost.author.id;
       });
     }
   }
@@ -163,7 +174,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
-    final post = widget.post;
 
     return MultiBlocProvider(
       providers: [
@@ -173,155 +183,212 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         BlocProvider<DownvoteCubit>(
           create: (_) => DownvoteCubit(FeedPostsApiService()),
         ),
+        BlocProvider<EditPostCubit>(
+          create: (_) => EditPostCubit(EditDeletePostApiService()),
+        ),
+        BlocProvider<DeletePostCubit>(
+          create: (_) => DeletePostCubit(EditDeletePostApiService()),
+        ),
       ],
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                PostProfileAvatar(post: post,)   ,
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        post.author.fullname,
-                        style: textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        '${_getTimeAgo(post.createdAt)} ago',
-                        style: TextStyle(
-                          color: colorScheme.onSurface.withOpacity(0.7),
-                          fontSize: 11.sp,
-                        ),
-                      ),
-                    ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<EditPostCubit, EditPostState>(
+            listener: (context, state) {
+              if (state is EditPostSuccess) {
+                setState(() {
+                  currentPost = state.updatedPost;
+                });
+                widget.onPostUpdated?.call(state.updatedPost);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Post updated successfully'),
+                    backgroundColor: Colors.green,
+                    duration: Duration(seconds: 2),
                   ),
-                ),
-                isAuthor
-                    ? IconButton(
-                  icon: Icon(Icons.more_horiz, size: 18.r),
-                  onPressed: () => setState(() => isMenuVisible = !isMenuVisible),
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(minWidth: 32.w, minHeight: 32.w),
-                )
-                    : const SizedBox.shrink(),
-              ],
-            ),
-            SizedBox(height: 12.h),
-
-            // Content
-            Padding(
-              padding: EdgeInsets.only(left: 40.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                );
+              } else if (state is EditPostFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to update post: ${state.error}'),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              }
+            },
+          ),
+          BlocListener<DeletePostCubit, DeletePostState>(
+            listener: (context, state) {
+              if (state is DeletePostSuccess) {
+                widget.onPostDeleted?.call();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Post deleted successfully'),
+                    backgroundColor: Colors.green,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              } else if (state is DeletePostFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to delete post: ${state.error}'),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
                 children: [
-                  Text(
-                    post.title,
-                    style: textTheme.titleMedium?.copyWith(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w700,
+                  PostProfileAvatar(post: currentPost),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          currentPost.author.fullname,
+                          style: textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          '${_getTimeAgo(currentPost.createdAt)} ago',
+                          style: TextStyle(
+                            color: colorScheme.onSurface.withOpacity(0.7),
+                            fontSize: 11.sp,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    post.content ?? '',
-                    maxLines: isExpanded ? null : 3,
-                    overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-                    style: textTheme.bodyMedium?.copyWith(fontSize: 14.sp, height: 1.4),
-                  ),
-                  if (post.content != null && post.content!.length > 200)
-                    GestureDetector(
-                      onTap: () => setState(() => isExpanded = !isExpanded),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 6.h),
-                        child: Text(
-                          isExpanded ? 'Show less' : 'Read more',
-                          style: TextStyle(
-                            color: colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12.sp,
+                  isAuthor
+                      ? IconButton(
+                    icon: Icon(Icons.more_horiz, size: 18.r),
+                    onPressed: () => setState(() => isMenuVisible = !isMenuVisible),
+                    padding: EdgeInsets.zero,
+                    constraints: BoxConstraints(minWidth: 32.w, minHeight: 32.w),
+                  )
+                      : const SizedBox.shrink(),
+                ],
+              ),
+              SizedBox(height: 12.h),
+
+              // Content
+              Padding(
+                padding: EdgeInsets.only(left: 40.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      currentPost.title,
+                      style: textTheme.titleMedium?.copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      currentPost.content ?? '',
+                      maxLines: isExpanded ? null : 3,
+                      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                      style: textTheme.bodyMedium?.copyWith(fontSize: 14.sp, height: 1.4),
+                    ),
+                    if (currentPost.content != null && currentPost.content!.length > 200)
+                      GestureDetector(
+                        onTap: () => setState(() => isExpanded = !isExpanded),
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 6.h),
+                          child: Text(
+                            isExpanded ? 'Show less' : 'Read more',
+                            style: TextStyle(
+                              color: colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12.sp,
+                            ),
                           ),
                         ),
                       ),
+                    if (currentPost.attachments.isNotEmpty)
+                      ...currentPost.attachments.map((url) => _buildImageWidget(url)),
+                    SizedBox(height: 12.h),
+
+                    Row(
+                      children: [
+                        // Upvote
+                        BlocConsumer<UpvoteCubit, UpVoteStates>(
+                          listener: (context, state) {
+                            if (state is UpVoteSuccess) {
+                              setState(() {
+                                voteCounter = currentPost.voteCounter;
+                                upVoteColor = currentPost.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
+                                downVoteColor = Colors.grey;
+                              });
+                            }
+                          },
+                          builder: (context, state) {
+                            return EnhancedVoteButton(
+                              icon: Icons.arrow_circle_up_rounded,
+                              color: upVoteColor,
+                              isLoading: state is UpVoteLoading,
+                              isUpvote: true,
+                              onTap: () => context.read<UpvoteCubit>().upVote(currentPost),
+                            );
+                          },
+                        ),
+                        SizedBox(width: 4.w),
+                        Text('$voteCounter', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp)),
+                        SizedBox(width: 10.w),
+
+                        // Downvote
+                        BlocConsumer<DownvoteCubit, DownVoteStates>(
+                          listener: (context, state) {
+                            if (state is DownVoteSuccess) {
+                              setState(() {
+                                voteCounter = currentPost.voteCounter;
+                                downVoteColor = currentPost.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
+                                upVoteColor = Colors.grey;
+                              });
+                            }
+                          },
+                          builder: (context, state) {
+                            return EnhancedVoteButton(
+                              icon: Icons.arrow_circle_down_rounded,
+                              color: downVoteColor,
+                              isLoading: state is DownVoteLoading,
+                              isUpvote: false,
+                              onTap: () => context.read<DownvoteCubit>().downVote(currentPost),
+                            );
+                          },
+                        ),
+                        SizedBox(width: 20.w),
+
+                        // Comments
+                        _buildActionButton(
+                          icon: FontAwesomeIcons.comment,
+                          text: '$commentCounter',
+                          onTap: () => context.push('/comments', extra: currentPost),
+                        ),
+                      ],
                     ),
-                  if (post.attachments.isNotEmpty)
-                    ...post.attachments.map((url) => _buildImageWidget(url)),
-                  SizedBox(height: 12.h),
 
-                  Row(
-                    children: [
-                      // Upvote
-                      BlocConsumer<UpvoteCubit, UpVoteStates>(
-                        listener: (context, state) {
-                          if (state is UpVoteSuccess) {
-                            setState(() {
-                              voteCounter = post.voteCounter;
-                              upVoteColor = post.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
-                              downVoteColor = Colors.grey;
-                            });
-                          }
-                        },
-                        builder: (context, state) {
-                          return EnhancedVoteButton(
-                            icon: Icons.arrow_circle_up_rounded,
-                            color: upVoteColor,
-                            isLoading: state is UpVoteLoading,
-                            isUpvote: true,
-                            onTap: () => context.read<UpvoteCubit>().upVote(post),
-                          );
-                        },
-                      ),
-                      SizedBox(width: 4.w),
-                      Text('$voteCounter', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp)),
-                      SizedBox(width: 10.w),
-
-                      // Downvote
-                      BlocConsumer<DownvoteCubit, DownVoteStates>(
-                        listener: (context, state) {
-                          if (state is DownVoteSuccess) {
-                            setState(() {
-                              voteCounter = post.voteCounter;
-                              downVoteColor = post.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
-                              upVoteColor = Colors.grey;
-                            });
-                          }
-                        },
-                        builder: (context, state) {
-                          return EnhancedVoteButton(
-                            icon: Icons.arrow_circle_down_rounded,
-                            color: downVoteColor,
-                            isLoading: state is DownVoteLoading,
-                            isUpvote: false,
-                            onTap: () => context.read<DownvoteCubit>().downVote(post),
-                          );
-                        },
-                      ),
-                      SizedBox(width: 20.w),
-
-                      // Comments
-                      _buildActionButton(
-                        icon: FontAwesomeIcons.comment,
-                        text: '$commentCounter',
-                        onTap: () => context.push('/comments', extra: post),
-                      ),
-                    ],
-                  ),
-
-                  // Options Menu
-                  if (isAuthor && isMenuVisible) _buildOptionsMenu(colorScheme),
-                ],
+                    // Options Menu
+                    if (isAuthor && isMenuVisible) _buildOptionsMenu(colorScheme),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -346,25 +413,35 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildOptionsItem(
-            'Edit',
-            Icons.edit_outlined,
-            colorScheme.primary,
-                () => _showEditPostDialog(widget.post.title, widget.post.content ?? ''),
+          BlocBuilder<EditPostCubit, EditPostState>(
+            builder: (context, state) {
+              return _buildOptionsItem(
+                'Edit',
+                Icons.edit_outlined,
+                colorScheme.primary,
+                state is EditPostLoading ? null : () => _showEditPostDialog(),
+                isLoading: state is EditPostLoading,
+              );
+            },
           ),
           Divider(
             height: 8.h,
             color: colorScheme.onSurface.withOpacity(0.1),
           ),
-          _buildOptionsItem(
-            'Delete',
-            Icons.delete_outline,
-            colorScheme.error,
-                () {
-              setState(() {
-                isMenuVisible = false;
-              });
-              _showDeleteConfirmationDialog();
+          BlocBuilder<DeletePostCubit, DeletePostState>(
+            builder: (context, state) {
+              return _buildOptionsItem(
+                'Delete',
+                Icons.delete_outline,
+                colorScheme.error,
+                state is DeletePostLoading ? null : () {
+                  setState(() {
+                    isMenuVisible = false;
+                  });
+                  _showDeleteConfirmationDialog();
+                },
+                isLoading: state is DeletePostLoading,
+              );
             },
           ),
         ],
@@ -376,14 +453,15 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
       String text,
       IconData icon,
       Color color,
-      VoidCallback onTap,
-      ) {
+      VoidCallback? onTap, {
+        bool isLoading = false,
+      }) {
     return InkWell(
-      onTap: () {
+      onTap: isLoading ? null : () {
         setState(() {
           isMenuVisible = false;
         });
-        onTap();
+        onTap?.call();
       },
       borderRadius: BorderRadius.circular(4.r),
       child: Padding(
@@ -394,11 +472,21 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 16.r,
-              color: color,
-            ),
+            if (isLoading)
+              SizedBox(
+                width: 16.r,
+                height: 16.r,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                ),
+              )
+            else
+              Icon(
+                icon,
+                size: 16.r,
+                color: color,
+              ),
             SizedBox(width: 8.w),
             Text(
               text,
@@ -414,109 +502,129 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     );
   }
 
-  void _showEditPostDialog(String title, String content) {
-    final post = widget.post;
-    final titleController = TextEditingController(text: title);
-    final contentController = TextEditingController(text: content);
+  void _showEditPostDialog() {
+    final titleController = TextEditingController(text: currentPost.title);
+    final contentController = TextEditingController(text: currentPost.content ?? '');
 
     showDialog<void>(
       context: context,
-      builder: (context) {
+      barrierDismissible: false,
+      builder: (dialogContext) {
         final theme = Theme.of(context);
         final colorScheme = theme.colorScheme;
 
-        return AlertDialog(
-          backgroundColor: theme.cardColor,
-          title: Row(
-            children: [
-              CircleAvatar(
-                radius: 16.r,
-                backgroundImage: post.author.profilePictureURL != null
-                    ? NetworkImage(UrlHelper.transformUrl(post.author.profilePictureURL!))
-                    : null,
-                backgroundColor: Colors.grey[300],
-                child: post.author.profilePictureURL == null
-                    ? Icon(
-                  Icons.person,
-                  size: 18.r,
-                  color: Colors.grey,
-                )
-                    : null,
-              ),
-              SizedBox(width: 10.w),
-              Text(
-                'Edit Post',
-                style: TextStyle(
-                  color: colorScheme.onSurface,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+        return BlocProvider.value(
+          value: context.read<EditPostCubit>(),
+          child: AlertDialog(
+            backgroundColor: theme.cardColor,
+            title: Row(
               children: [
-                TextFormField(
-                  controller: titleController,
-                  decoration: InputDecoration(
-                    hintText: 'Post Title',
-                    hintStyle: TextStyle(color: theme.hintColor),
-                    filled: true,
-                    fillColor: theme.inputDecorationTheme.fillColor ?? Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
+                CircleAvatar(
+                  radius: 16.r,
+                  backgroundImage: currentPost.author.profilePictureURL != null
+                      ? NetworkImage(UrlHelper.transformUrl(currentPost.author.profilePictureURL!))
+                      : null,
+                  backgroundColor: Colors.grey[300],
+                  child: currentPost.author.profilePictureURL == null
+                      ? Icon(
+                    Icons.person,
+                    size: 18.r,
+                    color: Colors.grey,
+                  )
+                      : null,
                 ),
-                SizedBox(height: 8.h),
-                TextFormField(
-                  controller: contentController,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                    hintText: 'Post Content',
-                    hintStyle: TextStyle(color: theme.hintColor),
-                    filled: true,
-                    fillColor: theme.inputDecorationTheme.fillColor ?? Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: BorderSide.none,
-                    ),
+                SizedBox(width: 10.w),
+                Text(
+                  'Edit Post',
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: colorScheme.onSurfaceVariant),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      hintText: 'Post Title',
+                      hintStyle: TextStyle(color: theme.hintColor),
+                      filled: true,
+                      fillColor: theme.inputDecorationTheme.fillColor ?? Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  TextFormField(
+                    controller: contentController,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      hintText: 'Post Content',
+                      hintStyle: TextStyle(color: theme.hintColor),
+                      filled: true,
+                      fillColor: theme.inputDecorationTheme.fillColor ?? Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                final newTitle = titleController.text.trim();
-                final newContent = contentController.text.trim();
-                if (newTitle.isNotEmpty) {
-                  // Assuming a service or callback to update the post
-                  Navigator.pop(context);
-                  // Implement post update logic here (e.g., call an API or update state)
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorScheme.primary,
-                foregroundColor: colorScheme.onPrimary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: colorScheme.onSurfaceVariant),
                 ),
               ),
-              child: const Text('Update'),
-            ),
-          ],
+              BlocBuilder<EditPostCubit, EditPostState>(
+                builder: (context, state) {
+                  return ElevatedButton(
+                    onPressed: state is EditPostLoading ? null : () {
+                      final newTitle = titleController.text.trim();
+                      final newContent = contentController.text.trim();
+                      if (newTitle.isNotEmpty) {
+                        final updatedData = {
+                          'title': newTitle,
+                          'content': newContent,
+                          'attachments': currentPost.attachments,
+                        };
+                        context.read<EditPostCubit>().editPost(currentPost.id, updatedData);
+                        Navigator.pop(dialogContext);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      foregroundColor: colorScheme.onPrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    child: state is EditPostLoading
+                        ? SizedBox(
+                      width: 16.w,
+                      height: 16.h,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
+                      ),
+                    )
+                        : const Text('Update'),
+                  );
+                },
+              ),
+            ],
+          ),
         );
       },
     );
@@ -525,55 +633,74 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
   void _showDeleteConfirmationDialog() {
     showDialog<void>(
       context: context,
-      builder: (context) {
+      barrierDismissible: false,
+      builder: (dialogContext) {
         final theme = Theme.of(context);
         final colorScheme = theme.colorScheme;
 
-        return AlertDialog(
-          backgroundColor: theme.cardColor,
-          title: Text(
-            'Delete Post',
-            style: TextStyle(
-              color: colorScheme.onSurface,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: Text(
-            'Are you sure you want to delete this post?',
-            style: TextStyle(
-              color: colorScheme.onSurface,
-              fontSize: 14.sp,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: colorScheme.onSurfaceVariant),
+        return BlocProvider.value(
+          value: context.read<DeletePostCubit>(),
+          child: AlertDialog(
+            backgroundColor: theme.cardColor,
+            title: Text(
+              'Delete Post',
+              style: TextStyle(
+                color: colorScheme.onSurface,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                // Implement delete logic here (e.g., call an API or notify parent)
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorScheme.error,
-                foregroundColor: colorScheme.onError,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+            content: Text(
+              'Are you sure you want to delete this post? This action cannot be undone.',
+              style: TextStyle(
+                color: colorScheme.onSurface,
+                fontSize: 14.sp,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: colorScheme.onSurfaceVariant),
                 ),
               ),
-              child: const Text('Delete'),
-            ),
-          ],
+              BlocBuilder<DeletePostCubit, DeletePostState>(
+                builder: (context, state) {
+                  return ElevatedButton(
+                    onPressed: state is DeletePostLoading ? null : () {
+                      context.read<DeletePostCubit>().deletePost(currentPost.id);
+                      Navigator.pop(dialogContext);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.error,
+                      foregroundColor: colorScheme.onError,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    child: state is DeletePostLoading
+                        ? SizedBox(
+                      width: 16.w,
+                      height: 16.h,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onError),
+                      ),
+                    )
+                        : const Text('Delete'),
+                  );
+                },
+              ),
+            ],
+          ),
         );
       },
     );
   }
-}class PostProfileAvatar extends StatelessWidget {
+}
+
+class PostProfileAvatar extends StatelessWidget {
   final Post post;
 
   const PostProfileAvatar({Key? key, required this.post}) : super(key: key);
@@ -622,6 +749,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
       return _getDefaultAvatar(context);
     }
   }
+
   Widget _getDefaultAvatar(BuildContext context) {
     return Icon(
       Icons.person,
@@ -629,5 +757,4 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
       color: Theme.of(context).colorScheme.primary,
     );
   }
-
 }
