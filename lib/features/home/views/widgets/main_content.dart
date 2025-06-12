@@ -42,7 +42,8 @@ class _MainContentState extends State<MainContent> {
 
     return RefreshIndicator(
       onRefresh: () async{
-        context.read<PostFeedCubit>().fetchFeedPosts(forceRefresh: true); // refresh posts
+        context.read<PostFeedCubit>().fetchFeedPosts(forceRefresh: true);
+        context.read<CommunityCubit>().fetchCommunities(forceRefresh: true);
 
       },
       child: SingleChildScrollView(
