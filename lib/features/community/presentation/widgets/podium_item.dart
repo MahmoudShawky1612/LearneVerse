@@ -33,26 +33,25 @@ class PodiumItem extends StatelessWidget {
 
     switch (rank) {
       case 1:
-        primaryColor = const Color(0xFFE8B86D); // Refined gold
-        accentColor = const Color(0xFFB8860B);  // Darker gold accent
-        shadowColor = const Color(0xFFD4AF37); // Gold shadow
+        primaryColor = const Color(0xFFF0C164); // Brighter, more vibrant gold
+        accentColor = const Color(0xFFCFA108);  // Richer gold accent
+        shadowColor = const Color(0xFFDEB03A); // Slightly lighter gold shadow
         break;
       case 2:
-        primaryColor = const Color(0xFF7B9EB5); // Sophisticated blue-gray
-        accentColor = const Color(0xFF4A6741);  // Deep blue-gray
-        shadowColor = const Color(0xFF5A7A8A); // Blue-gray shadow
+        primaryColor = const Color(0xFF85A8C2); // Livelier blue-gray
+        accentColor = const Color(0xFF557A8A);  // More vibrant deep blue-gray
+        shadowColor = const Color(0xFF668A9A); // Brighter blue-gray shadow
         break;
       case 3:
-        primaryColor = const Color(0xFF8B9B7A); // Elegant sage green
-        accentColor = const Color(0xFF5D6B4F);  // Deep sage
-        shadowColor = const Color(0xFF6B7B5A); // Sage shadow
+        primaryColor = const Color(0xFF95A88A); // More vibrant sage green
+        accentColor = const Color(0xFF677B5A);  // Richer deep sage
+        shadowColor = const Color(0xFF758B6A); // Lighter sage shadow
         break;
       default:
         primaryColor = colorScheme.primary;
         accentColor = colorScheme.secondary;
         shadowColor = colorScheme.primary;
     }
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
