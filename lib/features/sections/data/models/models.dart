@@ -1,5 +1,4 @@
 
-// Enum for content type
 enum ContentType { document, image, video, recording, file }
 
 ContentType contentTypeFromString(String type) {

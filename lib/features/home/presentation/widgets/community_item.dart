@@ -10,7 +10,6 @@ import '../../../discover/presentation/widgets/heart_button.dart';
 import '../../../discover/presentation/widgets/view_button.dart';
 import '../../../discover/services/toggle_service.dart';
 
-// Main CommunityItem widget
 class CommunityItem extends StatelessWidget {
   final Community community;
   final bool isFavoriteCommunity;
