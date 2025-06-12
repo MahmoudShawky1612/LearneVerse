@@ -26,26 +26,26 @@ class PodiumItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Premium, sophisticated colors for each rank
+    // Brighter, sophisticated colors for each rank
     Color primaryColor;
     Color accentColor;
     Color shadowColor;
 
     switch (rank) {
       case 1:
-        primaryColor = const Color(0xFFF0C164); // Brighter, more vibrant gold
-        accentColor = const Color(0xFFCFA108);  // Richer gold accent
-        shadowColor = const Color(0xFFDEB03A); // Slightly lighter gold shadow
+        primaryColor = const Color(0xFFFFD700); // Bright gold
+        accentColor = const Color(0xFFFF8C00);  // Bright orange accent
+        shadowColor = const Color(0xFFFFB400); // Bright gold shadow
         break;
       case 2:
-        primaryColor = const Color(0xFF85A8C2); // Livelier blue-gray
-        accentColor = const Color(0xFF557A8A);  // More vibrant deep blue-gray
-        shadowColor = const Color(0xFF668A9A); // Brighter blue-gray shadow
+        primaryColor = const Color(0xFF4FC3F7); // Bright cyan blue
+        accentColor = const Color(0xFF0288D1);  // Deep blue accent
+        shadowColor = const Color(0xFF29B6F6); // Bright blue shadow
         break;
       case 3:
-        primaryColor = const Color(0xFF95A88A); // More vibrant sage green
-        accentColor = const Color(0xFF677B5A);  // Richer deep sage
-        shadowColor = const Color(0xFF758B6A); // Lighter sage shadow
+        primaryColor = const Color(0xFF66BB6A); // Bright green
+        accentColor = const Color(0xFF2E7D32);  // Deep green accent
+        shadowColor = const Color(0xFF4CAF50); // Bright green shadow
         break;
       default:
         primaryColor = colorScheme.primary;
@@ -58,7 +58,7 @@ class PodiumItem extends StatelessWidget {
         // Premium avatar with refined styling
         GestureDetector(
           onTap: () {
-             context.push('/profile', extra: user.id);
+            context.push('/profile', extra: user.id);
           },
           child: Container(
             width: isFirst ? 75.w : 65.w,

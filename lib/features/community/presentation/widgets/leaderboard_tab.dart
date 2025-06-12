@@ -53,23 +53,56 @@ class LeaderboardTab extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: List.generate(podium.length, (i) {
-                final user = podium[i]['User'];
-                return PodiumItem(
-                  user: _LeaderboardUser(
-                    id: user['id'] ?? 0,
-                    name: user['fullname'] ?? '',
-                    points: podium[i]['score'] ?? 0,
-                    avatar: user['UserProfile']?['profilePictureURL'] ?? '',
+              children: [
+                // Second place (rank 2)
+                if (podium.length > 1)
+                  PodiumItem(
+                    user: _LeaderboardUser(
+                      id: podium[1]['User']['id'] ?? 0,
+                      name: podium[1]['User']['fullname'] ?? '',
+                      points: podium[1]['score'] ?? 0,
+                      avatar: podium[1]['User']['UserProfile']?['profilePictureURL'] ?? '',
+                    ),
+                    rank: 2,
+                    height: 130.h,
+                    theme: theme,
+                    colorScheme: colorScheme,
+                    themeExtension: themeExtension,
+                    isFirst: false,
                   ),
-                  rank: i + 1,
-                  height: [170.h, 130.h, 100.h][i],
-                  theme: theme,
-                  colorScheme: colorScheme,
-                  themeExtension: themeExtension,
-                  isFirst: i == 1,
-                );
-              }),
+                // First place (rank 1, centered)
+                if (podium.isNotEmpty)
+                  PodiumItem(
+                    user: _LeaderboardUser(
+                      id: podium[0]['User']['id'] ?? 0,
+                      name: podium[0]['User']['fullname'] ?? '',
+                      points: podium[0]['score'] ?? 0,
+                      avatar: podium[0]['User']['UserProfile']?['profilePictureURL'] ?? '',
+                    ),
+                    rank: 1,
+                    height: 170.h,
+                    theme: theme,
+                    colorScheme: colorScheme,
+                    themeExtension: themeExtension,
+                    isFirst: true,
+                  ),
+                // Third place (rank 3)
+                if (podium.length > 2)
+                  PodiumItem(
+                    user: _LeaderboardUser(
+                      id: podium[2]['User']['id'] ?? 0,
+                      name: podium[2]['User']['fullname'] ?? '',
+                      points: podium[2]['score'] ?? 0,
+                      avatar: podium[2]['User']['UserProfile']?['profilePictureURL'] ?? '',
+                    ),
+                    rank: 3,
+                    height: 100.h,
+                    theme: theme,
+                    colorScheme: colorScheme,
+                    themeExtension: themeExtension,
+                    isFirst: false,
+                  ),
+              ],
             ),
             SizedBox(height: 32.h),
             Container(
@@ -141,5 +174,5 @@ class _LeaderboardUser {
   final String name;
   final int points;
   final String avatar;
-  _LeaderboardUser( {required this.id, required this.name, required this.points, required this.avatar});
+  _LeaderboardUser({required this.id, required this.name, required this.points, required this.avatar});
 }
