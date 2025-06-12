@@ -1,6 +1,5 @@
 import '../../data/models/post_model.dart';
 
-
 abstract class PostFeedState {}
 
 class PostFeedInitial extends PostFeedState {}
@@ -16,5 +15,3 @@ class PostFeedError extends PostFeedState {
   final String message;
   PostFeedError(this.message);
 }
-
-

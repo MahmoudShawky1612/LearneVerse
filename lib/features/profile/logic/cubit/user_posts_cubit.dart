@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/user_posts_states.dart';
-  import '../../services/user_posts_service.dart';
+import '../../service/user_posts_service.dart';
 
 class UserPostCubit extends Cubit<UserPostState> {
   final UserPostApiService userPostApiService;
@@ -28,7 +28,8 @@ class UserPostCubit extends Cubit<UserPostState> {
     }
   }
 
-  Future<void> editPost(int userId, int postId, Map<String, dynamic> updatedData) async {
+  Future<void> editPost(
+      int userId, int postId, Map<String, dynamic> updatedData) async {
     emit(UserPostLoading());
     try {
       await userPostApiService.editPost(postId, updatedData);

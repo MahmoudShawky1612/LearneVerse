@@ -11,7 +11,7 @@ class UpvoteCubit extends Cubit<UpVoteStates> {
   void upVote(Post post) async {
     emit(UpVoteLoading());
     try {
-       await feedPostsApiService.upVotePost(post);
+      await feedPostsApiService.upVotePost(post);
       emit(UpVoteSuccess());
     } catch (e) {
       emit(UpVoteFailure(e.toString()));

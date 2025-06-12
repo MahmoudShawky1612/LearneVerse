@@ -1,15 +1,15 @@
-import 'package:flutterwidgets/features/comments/presentation/views/comments_screen.dart';
-import 'package:flutterwidgets/features/community/presentation/views/community_screen.dart';
-import 'package:flutterwidgets/features/discover/presentation/views/discover_screen.dart';
+import 'package:flutterwidgets/features/community/views/community_screen.dart';
+import 'package:flutterwidgets/features/discover/views/discover_screen.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
-import 'package:flutterwidgets/features/home/presentation/views/home_screen.dart';
-import 'package:flutterwidgets/features/home/presentation/views/main_screen.dart';
-import 'package:flutterwidgets/features/login/presentation/views/login_screen.dart';
-import 'package:flutterwidgets/features/calendar/presentation/views/calendar_screen.dart';
+import 'package:flutterwidgets/features/home/views/home_screen.dart';
+import 'package:flutterwidgets/features/home/views/main_screen.dart';
+import 'package:flutterwidgets/features/login/views/login_screen.dart';
+import 'package:flutterwidgets/features/calendar/views/calendar_screen.dart';
 import 'package:go_router/go_router.dart';
-import '../features/profile/presentation/views/profile_screen.dart';
-import '../features/splash screen/splash_screen.dart';
-import 'package:flutterwidgets/features/sections/sections_screen.dart';
+import '../features/comments/views/comments_screen.dart';
+import '../features/profile/views/profile_screen.dart';
+import '../features/splash screen/views/splash_screen.dart';
+import 'package:flutterwidgets/features/sections/views/sections_screen.dart';
 
 final GoRouter route = GoRouter(
   initialLocation: '/splash',
@@ -24,7 +24,8 @@ final GoRouter route = GoRouter(
     ),
     GoRoute(
       path: '/profile',
-      builder: (context, state) => ProfileScreen(userId: state.extra as int),    ),
+      builder: (context, state) => ProfileScreen(userId: state.extra as int),
+    ),
     GoRoute(
       path: '/discover',
       builder: (context, state) => const DiscoverScreen(),
@@ -39,7 +40,8 @@ final GoRouter route = GoRouter(
     ),
     GoRoute(
       path: '/community',
-      builder: (context, state) => CommunityScreen(community: state.extra as Community),
+      builder: (context, state) =>
+          CommunityScreen(community: state.extra as Community),
     ),
     GoRoute(
       path: '/splash',
@@ -52,7 +54,9 @@ final GoRouter route = GoRouter(
     // Section route
     GoRoute(
       path: '/sections',
-      builder: (context, state) =>  SectionsScreen(classroomId: state.extra as int,),
+      builder: (context, state) => SectionsScreen(
+        classroomId: state.extra as int,
+      ),
     ),
   ],
 );

@@ -7,10 +7,11 @@ class LoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return   Center(
+    return Center(
       child: SizedBox(
         width: 70.w,
-        child: Lottie.network("https://lottie.host/64b54aab-3736-4af8-8032-19a2f8889a36/gdmbgRDEAK.json",
+        child: Lottie.network(
+          "https://lottie.host/64b54aab-3736-4af8-8032-19a2f8889a36/gdmbgRDEAK.json",
           fit: BoxFit.contain,
           repeat: true,
           errorBuilder: (context, error, stackTrace) {

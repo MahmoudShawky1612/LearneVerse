@@ -1,4 +1,3 @@
-
 import '../../data/models/contributions_model.dart';
 
 abstract class UserContributionsState {}

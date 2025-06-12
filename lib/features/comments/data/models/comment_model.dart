@@ -9,7 +9,6 @@ class UserProfile {
       profilePictureURL: json['profilePictureURL'] as String?,
     );
   }
-
 }
 
 class Author {
@@ -17,7 +16,7 @@ class Author {
   final String fullname;
   final UserProfile? userProfile;
 
-  Author({required this.id,required this.fullname, this.userProfile});
+  Author({required this.id, required this.fullname, this.userProfile});
 
   factory Author.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -32,9 +31,7 @@ class Author {
           : null,
     );
   }
-
 }
-
 
 class Comment {
   final int id;
@@ -57,8 +54,8 @@ class Comment {
     required this.createdAt,
     required this.updatedAt,
     required this.author,
-     this.voteCounter = 0,
-     this.voteType = "NONE",
+    this.voteCounter = 0,
+    this.voteType = "NONE",
   });
 
   factory Comment.fromJson(Map<String, dynamic>? json) {
@@ -83,5 +80,4 @@ class Comment {
       voteType: json['voteType'] ?? "NONE",
     );
   }
-
 }

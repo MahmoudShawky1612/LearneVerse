@@ -20,7 +20,7 @@ class CommunityMember {
       id: json['id'] ?? 0,
       fullname: json['fullname'] ?? '',
       email: json['email'] ?? '',
-      profilePictureURL: json['profilePictureURL']?? '',
+      profilePictureURL: json['profilePictureURL'] ?? '',
       role: json['role'] ?? '',
       username: json['username'] ?? '',
     );

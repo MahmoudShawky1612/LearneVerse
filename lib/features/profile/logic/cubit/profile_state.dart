@@ -8,7 +8,7 @@ class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
   final UserProfile profile;
-   ProfileLoaded(this.profile);
+  ProfileLoaded(this.profile);
 }
 
 class ProfileError extends ProfileState {

@@ -1,4 +1,3 @@
-
 abstract class CommunityRoleState {}
 
 class CommunityRoleInitial extends CommunityRoleState {}

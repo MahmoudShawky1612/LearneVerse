@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
-import '../../services/comment_service.dart';
+import '../../service/comment_service.dart';
 import 'comment_states.dart';
-
 
 class CommentCubit extends Cubit<CommentStates> {
   final CommentService commentService;
@@ -11,7 +10,8 @@ class CommentCubit extends Cubit<CommentStates> {
   Future<void> createComment(String content, int postId, int? parentId) async {
     emit(CommentLoading());
     try {
-      final comment = await commentService.createComment(content: content, postId: postId, parentId: parentId);
+      final comment = await commentService.createComment(
+          content: content, postId: postId, parentId: parentId);
       emit(CommentCreated(comment));
     } catch (e) {
       emit(CommentError(e.toString()));

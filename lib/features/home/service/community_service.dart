@@ -5,7 +5,6 @@ import '../../../utils/api_helper.dart';
 import '../data/models/community_model.dart';
 
 class CommunityApiService {
-
   CommunityApiService();
 
   static const String baseUrl = ApiHelper.baseUrl;
@@ -37,10 +36,9 @@ class CommunityApiService {
     }
   }
 
-
   Future<int> communityMembersCount(int communityId) async {
-    final response = await http.get(
-        Uri.parse('$baseUrl/communities/$communityId/user-count'));
+    final response = await http
+        .get(Uri.parse('$baseUrl/communities/$communityId/user-count'));
     final data = json.decode(response.body);
 
     if (response.statusCode == 200) {

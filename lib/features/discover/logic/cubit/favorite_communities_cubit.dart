@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterwidgets/features/discover/logic/cubit/favorite_communities_states.dart';
-import 'package:flutterwidgets/features/discover/services/favorite_service.dart';
-
+import 'package:flutterwidgets/features/discover/service/favorite_service.dart';
 
 class FavoriteCubit extends Cubit<FavoriteStates> {
   final FavoriteService favoriteService;

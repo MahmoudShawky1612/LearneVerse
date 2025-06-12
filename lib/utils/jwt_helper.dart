@@ -17,5 +17,5 @@ String getFullNameFromToken(String token) {
 
 String getUserProfilePictureURLFromToken(String token) {
   final payload = JwtDecoder.decode(token);
-  return payload['profilePictureURL']  ?? '';
+  return payload['profilePictureURL'] ?? '';
 }

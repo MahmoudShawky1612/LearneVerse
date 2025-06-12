@@ -11,15 +11,18 @@ class CommunityCubit extends Cubit<CommunityStates> {
   Future<void> fetchCommunities() async {
     try {
       emit(CommunityLoading());
-      final List<Community> communities = await communityApiService.getCommunities();
+      final List<Community> communities =
+          await communityApiService.getCommunities();
       emit(CommunitySuccess(communities));
     } catch (error) {
       emit(CommunityFailure('Failed to load communities: $error'));
     }
   }
+
   Future<int> getCommunityMembersCount(int communityId) async {
     try {
-      final int memberCount = await communityApiService.communityMembersCount(communityId);
+      final int memberCount =
+          await communityApiService.communityMembersCount(communityId);
       return memberCount;
     } catch (error) {
       throw Exception('Failed to load member count: $error');

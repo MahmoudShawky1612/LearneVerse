@@ -31,8 +31,8 @@ class Post {
       title: json['title'] ?? '',
       content: json['content'],
       attachments: (json['attachments'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ??
+              ?.map((e) => e.toString())
+              .toList() ??
           [],
       forumId: json['forumId'] ?? 0,
       createdAt: json['createdAt'] != null
@@ -46,11 +46,11 @@ class Post {
       author: json['author'] != null
           ? Author.fromJson(json['author'])
           : Author(
-        id: 0,
-        username: 'unknown',
-        fullname: 'Guest',
-        profilePictureURL: null,
-      ),
+              id: 0,
+              username: 'unknown',
+              fullname: 'Guest',
+              profilePictureURL: null,
+            ),
       voteType: json['voteType'] ?? 'NONE',
     );
   }
@@ -71,6 +71,7 @@ class Post {
     };
   }
 }
+
 class Author {
   final int id;
   final String username;

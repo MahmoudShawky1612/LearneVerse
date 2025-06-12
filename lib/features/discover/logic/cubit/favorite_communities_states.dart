@@ -8,8 +8,11 @@ class FavoriteLoading extends FavoriteStates {}
 
 class FavoriteLoaded extends FavoriteStates {
   final List<Community> communities;
-  FavoriteLoaded(this.communities,);
+  FavoriteLoaded(
+    this.communities,
+  );
 }
+
 class FavoriteError extends FavoriteStates {
   final String message;
   FavoriteError(this.message);

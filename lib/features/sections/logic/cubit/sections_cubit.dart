@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/models.dart';
-import '../../services/api_service.dart';
+import '../../service/api_service.dart';
 
 part 'sections_state.dart';
 
@@ -55,4 +55,4 @@ class SectionsCubit extends Cubit<SectionsState> {
       emit(SectionsError(e.toString()));
     }
   }
-} 
+}

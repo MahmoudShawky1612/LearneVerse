@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SnackBarUtils {
   static void showSuccessSnackBar(
-      BuildContext context, {
-        required String message,
-        String? actionLabel,
-        VoidCallback? onActionPressed,
-        Duration duration = const Duration(seconds: 3),
-      }) {
+    BuildContext context, {
+    required String message,
+    String? actionLabel,
+    VoidCallback? onActionPressed,
+    Duration duration = const Duration(seconds: 3),
+  }) {
     _showCustomSnackBar(
       context,
       message: message,
@@ -21,12 +21,12 @@ class SnackBarUtils {
   }
 
   static void showErrorSnackBar(
-      BuildContext context, {
-        required String message,
-        String? actionLabel,
-        VoidCallback? onActionPressed,
-        Duration duration = const Duration(seconds: 4),
-      }) {
+    BuildContext context, {
+    required String message,
+    String? actionLabel,
+    VoidCallback? onActionPressed,
+    Duration duration = const Duration(seconds: 4),
+  }) {
     _showCustomSnackBar(
       context,
       message: message,
@@ -39,12 +39,12 @@ class SnackBarUtils {
   }
 
   static void showInfoSnackBar(
-      BuildContext context, {
-        required String message,
-        String? actionLabel,
-        VoidCallback? onActionPressed,
-        Duration duration = const Duration(seconds: 3),
-      }) {
+    BuildContext context, {
+    required String message,
+    String? actionLabel,
+    VoidCallback? onActionPressed,
+    Duration duration = const Duration(seconds: 3),
+  }) {
     _showCustomSnackBar(
       context,
       message: message,
@@ -57,12 +57,12 @@ class SnackBarUtils {
   }
 
   static void showWarningSnackBar(
-      BuildContext context, {
-        required String message,
-        String? actionLabel,
-        VoidCallback? onActionPressed,
-        Duration duration = const Duration(seconds: 3),
-      }) {
+    BuildContext context, {
+    required String message,
+    String? actionLabel,
+    VoidCallback? onActionPressed,
+    Duration duration = const Duration(seconds: 3),
+  }) {
     _showCustomSnackBar(
       context,
       message: message,
@@ -75,14 +75,14 @@ class SnackBarUtils {
   }
 
   static void _showCustomSnackBar(
-      BuildContext context, {
-        required String message,
-        required IconData icon,
-        required Color backgroundColor,
-        String? actionLabel,
-        VoidCallback? onActionPressed,
-        required Duration duration,
-      }) {
+    BuildContext context, {
+    required String message,
+    required IconData icon,
+    required Color backgroundColor,
+    String? actionLabel,
+    VoidCallback? onActionPressed,
+    required Duration duration,
+  }) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     final snackBar = SnackBar(
@@ -115,10 +115,10 @@ class SnackBarUtils {
       duration: duration,
       action: actionLabel != null
           ? SnackBarAction(
-        label: actionLabel,
-        textColor: Colors.white,
-        onPressed: onActionPressed ?? () {},
-      )
+              label: actionLabel,
+              textColor: Colors.white,
+              onPressed: onActionPressed ?? () {},
+            )
           : null,
     );
 

@@ -1,7 +1,6 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterwidgets/features/comments/data/models/comment_model.dart';
-import 'package:flutterwidgets/features/comments/services/comment_service.dart';
+import 'package:flutterwidgets/features/comments/service/comment_service.dart';
 
 import 'downvote_comment_states.dart';
 

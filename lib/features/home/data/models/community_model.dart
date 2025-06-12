@@ -48,8 +48,8 @@ class Community {
       memberCount: json['membersCount'] ?? 0,
       onlineMembers: json['onlineMembers'] ?? 0,
       Tags: (json['Tags'] as List<dynamic>?)
-          ?.map((tagJson) => Tag.fromJson(tagJson))
-          .toList() ??
+              ?.map((tagJson) => Tag.fromJson(tagJson))
+              .toList() ??
           [],
     );
   }
@@ -72,6 +72,7 @@ class Community {
     };
   }
 }
+
 class Tag {
   final int id;
   final String name;

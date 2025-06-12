@@ -17,4 +17,4 @@ class SectionsLoaded extends SectionsState {
 class SectionsError extends SectionsState {
   final String message;
   SectionsError(this.message);
-} 
+}

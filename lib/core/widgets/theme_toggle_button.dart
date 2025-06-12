@@ -45,7 +45,6 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton>
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
-    
     if (isDarkMode) {
       _animationController.value = 1.0;
     } else {
@@ -90,7 +89,6 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton>
                   return Stack(
                     alignment: Alignment.center,
                     children: [
-                      
                       Opacity(
                         opacity: 1.0 - _animationController.value,
                         child: Icon(
@@ -99,7 +97,6 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton>
                           color: colorScheme.primary,
                         ),
                       ),
-                      
                       Opacity(
                         opacity: _animationController.value,
                         child: Icon(

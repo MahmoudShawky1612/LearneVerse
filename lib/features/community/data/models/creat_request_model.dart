@@ -1,4 +1,3 @@
-
 class CreateRequestModel {
   final int id;
   final int userId;
@@ -68,7 +67,9 @@ class JoinRequestUser {
       username: json['username'],
       fullname: json['fullname'],
       email: json['email'],
-      profilePictureURL: json['UserProfile'] != null ? json['UserProfile']['profilePictureURL'] : '',
+      profilePictureURL: json['UserProfile'] != null
+          ? json['UserProfile']['profilePictureURL']
+          : '',
     );
   }
 }

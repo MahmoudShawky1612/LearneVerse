@@ -1,9 +1,7 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterwidgets/features/comments/data/models/comment_model.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/upvote_comment_states.dart';
-import 'package:flutterwidgets/features/comments/services/comment_service.dart';
-
+import 'package:flutterwidgets/features/comments/service/comment_service.dart';
 
 class UpvoteCommentCubit extends Cubit<UpVoteCommentStates> {
   final CommentService commentService;

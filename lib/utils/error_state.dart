@@ -13,14 +13,16 @@ class ErrorStateWidget extends StatefulWidget {
     this.title = 'Oops! Something Broke!',
     required this.onRetry,
     this.buttonText = 'Let\'s Try Again',
-    this.message = 'We encountered an unexpected error. Please try again later.',
+    this.message =
+        'We encountered an unexpected error. Please try again later.',
   });
 
   @override
   _ErrorStateWidgetState createState() => _ErrorStateWidgetState();
 }
 
-class _ErrorStateWidgetState extends State<ErrorStateWidget> with TickerProviderStateMixin {
+class _ErrorStateWidgetState extends State<ErrorStateWidget>
+    with TickerProviderStateMixin {
   late AnimationController _lottieController;
   late AnimationController _buttonController;
   late Animation<double> _scaleAnimation;
@@ -111,7 +113,7 @@ class _ErrorStateWidgetState extends State<ErrorStateWidget> with TickerProvider
                     ),
                   ),
                   SizedBox(height: 16.h),
-      
+
                   // Title
                   Text(
                     widget.title,
@@ -124,7 +126,7 @@ class _ErrorStateWidgetState extends State<ErrorStateWidget> with TickerProvider
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 8.h),
-      
+
                   // Message
                   Text(
                     widget.message,
@@ -139,7 +141,7 @@ class _ErrorStateWidgetState extends State<ErrorStateWidget> with TickerProvider
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 24.h),
-      
+
                   // Modern Retry Button
                   GestureDetector(
                     onTapDown: _onTapDown,
@@ -164,14 +166,16 @@ class _ErrorStateWidgetState extends State<ErrorStateWidget> with TickerProvider
                             borderRadius: BorderRadius.circular(24.r),
                             boxShadow: [
                               BoxShadow(
-                                color: theme.colorScheme.primary.withOpacity(0.3),
+                                color:
+                                    theme.colorScheme.primary.withOpacity(0.3),
                                 blurRadius: 12.r,
                                 offset: Offset(0, 4.h),
                                 spreadRadius: 0,
                               ),
                               if (_isPressed)
                                 BoxShadow(
-                                  color: theme.colorScheme.primary.withOpacity(0.2),
+                                  color: theme.colorScheme.primary
+                                      .withOpacity(0.2),
                                   blurRadius: 6.r,
                                   offset: Offset(0, 2.h),
                                   spreadRadius: 0,

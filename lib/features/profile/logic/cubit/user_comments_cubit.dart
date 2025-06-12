@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-  import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_states.dart';
+import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_states.dart';
 
-import '../../services/user_comments.service.dart';
+import '../../service/user_comments.service.dart';
 
 class UserCommentsCubit extends Cubit<UserCommentsState> {
   final UserCommentsApiService commentsApiService;
@@ -30,7 +30,8 @@ class UserCommentsCubit extends Cubit<UserCommentsState> {
     }
   }
 
-  Future<void> updateComment(int userId, int commentId, String newContent) async {
+  Future<void> updateComment(
+      int userId, int commentId, String newContent) async {
     emit(UserCommentsLoading());
     try {
       await commentsApiService.updateComment(commentId, newContent);

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../home/data/models/post_model.dart';
-import '../../services/forum_service.dart';
+import '../../service/forum_service.dart';
 import 'forum.states.dart';
 
 class ForumCubit extends Cubit<ForumStates> {
@@ -12,20 +12,24 @@ class ForumCubit extends Cubit<ForumStates> {
   void fetchForumPosts(int forumId) async {
     emit(ForumLoading());
     try {
-      final List<Post> posts = await forumApiService.fetchPostsForCommunity(forumId);
+      final List<Post> posts =
+          await forumApiService.fetchPostsForCommunity(forumId);
       emit(ForumSuccess(posts));
     } catch (e) {
       emit(ForumFailure(e.toString()));
     }
   }
-  void createForumPost(int forumId, String title, String content, List<String> attachments) async {
+
+  void createForumPost(int forumId, String title, String content,
+      List<String> attachments) async {
     try {
-       await forumApiService.createPost(forumId, title, content, attachments);
+      await forumApiService.createPost(forumId, title, content, attachments);
       fetchForumPosts(forumId);
     } catch (e) {
       emit(ForumFailure('Failed to create post: $e'));
     }
   }
+
   Future<void> deletePost(int id, int forumId) async {
     emit(ForumLoading());
     try {
@@ -36,7 +40,8 @@ class ForumCubit extends Cubit<ForumStates> {
     }
   }
 
-  Future<void> editPost(int postId, Map<String, dynamic> updatedData, int forumId) async {
+  Future<void> editPost(
+      int postId, Map<String, dynamic> updatedData, int forumId) async {
     emit(ForumLoading());
     try {
       final updatedPost = await forumApiService.editPost(postId, updatedData);

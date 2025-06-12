@@ -131,46 +131,36 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
 }
 
 class AppColors {
-  
-  static const Color primary = Color(0xFF1565C0); 
-  static const Color primaryDark = Color(0xFF0D47A1); 
+  static const Color primary = Color(0xFF1565C0);
+  static const Color primaryDark = Color(0xFF0D47A1);
 
-  
-  static const Color secondary = Color(0xFFD81B60); 
-  static const Color secondaryDark = Color(0xFFAD1457); 
+  static const Color secondary = Color(0xFFD81B60);
+  static const Color secondaryDark = Color(0xFFAD1457);
 
-  
-  static const Color accent = Color(0xFF8E24AA); 
-  static const Color accentDark = Color(0xFF6A1B9A); 
+  static const Color accent = Color(0xFF8E24AA);
+  static const Color accentDark = Color(0xFF6A1B9A);
 
-  
-  static const Color backgroundLight = Color(0xFFFFFFFF); 
-  static const Color backgroundDark = Color(0xFF121212); 
+  static const Color backgroundLight = Color(0xFFFFFFFF);
+  static const Color backgroundDark = Color(0xFF121212);
 
-  
-  static const Color surfaceLight = Color(0xFFF5F5F5); 
-  static const Color surfaceDark = Color(0xFF1E1E1E); 
+  static const Color surfaceLight = Color(0xFFF5F5F5);
+  static const Color surfaceDark = Color(0xFF1E1E1E);
 
-  
   static Color lightGrey = Colors.grey.shade100;
   static Color darkGrey = Colors.grey.shade800;
   static Color downVote = Colors.red.shade700;
   static Color upVote = Colors.green.shade700;
 
-  
-  static const Color textPrimary = Color(0xFF212121); 
-  static const Color textPrimaryDark =
-      Color(0xFFE0E0E0); 
+  static const Color textPrimary = Color(0xFF212121);
+  static const Color textPrimaryDark = Color(0xFFE0E0E0);
 
-  static const Color textSecondary = Color(0xFF757575); 
-  static const Color textSecondaryDark = Color(0xFFBDBDBD); 
+  static const Color textSecondary = Color(0xFF757575);
+  static const Color textSecondaryDark = Color(0xFFBDBDBD);
 
-  
   static bool isDarkMode(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark;
   }
 
-  
   static AppThemeExtension themeOf(BuildContext context) {
     return Theme.of(context).extension<AppThemeExtension>()!;
   }

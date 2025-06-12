@@ -1,5 +1,6 @@
 class UrlHelper {
-  static const String CLOUDFLARED_URL = "https://b697-217-55-197-9.ngrok-free.app";
+  static const String CLOUDFLARED_URL =
+      "https://b697-217-55-197-9.ngrok-free.app";
   static const String LOCAL_URL = "http://localhost:5500";
 
   static String transformUrl(String url) {
@@ -13,7 +14,8 @@ class UrlHelper {
   // Alternative method if you need more control
   static String buildImageUrl(String imagePath) {
     // Remove any leading slash and build complete URL
-    final cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
+    final cleanPath =
+        imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
     return '$CLOUDFLARED_URL/$cleanPath';
   }
 }

@@ -68,8 +68,8 @@ class UserProfile {
       youtube: json['youtube'],
       profilePictureURL: json['profilePictureURL'] ?? '',
       tags: (json['Tags'] as List<dynamic>?)
-          ?.map((e) => Tag.fromJson(e))
-          .toList() ??
+              ?.map((e) => Tag.fromJson(e))
+              .toList() ??
           [],
       user: json['User'] != null
           ? User.fromJson(json['User'])

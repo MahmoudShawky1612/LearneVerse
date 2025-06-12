@@ -1,8 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../services/join_requests_service.dart';
+import '../../service/join_requests_service.dart';
 import 'join_requests_states.dart';
-
 
 class CommunityRoleCubit extends Cubit<CommunityRoleState> {
   final ApiService apiService;
@@ -47,7 +46,8 @@ class JoinRequestsCubit extends Cubit<JoinRequestsState> {
     }
   }
 
-  Future<void> updateRequestStatus(int requestId, String status, int communityId) async {
+  Future<void> updateRequestStatus(
+      int requestId, String status, int communityId) async {
     try {
       await apiService.updateJoinRequestStatus(requestId, status);
       fetchJoinRequests(communityId); // Refresh list after update

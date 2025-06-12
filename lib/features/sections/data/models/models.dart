@@ -1,4 +1,3 @@
-
 enum ContentType { document, image, video, recording, file }
 
 ContentType contentTypeFromString(String type) {
@@ -57,7 +56,10 @@ class LessonContent {
       materials: (json['Materials'] as List)
           .map((m) => MaterialModel.fromJson(m))
           .toList(),
-      completedUserIds: (json['CompletedLessons'] as List?)?.map((e) => e['userId'] as int).toList() ?? [],
+      completedUserIds: (json['CompletedLessons'] as List?)
+              ?.map((e) => e['userId'] as int)
+              .toList() ??
+          [],
     );
   }
 
@@ -86,4 +88,4 @@ class SectionModel {
       description: json['description'],
     );
   }
-} 
+}
