@@ -187,19 +187,10 @@ class _PremiumLoginFormState extends State<PremiumLoginForm>
                     ],
                   ),
                 ),
-                child: Text(
-                  'Forgot Password?',
-                  style: TextStyle(
-                    color: const Color(0xFF3B82F6),
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.2,
-                  ),
-                ),
               ),
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 15.h),
           AnimatedBuilder(
             animation:
                 Listenable.merge([_buttonScale, widget.breathingAnimation]),

@@ -62,46 +62,6 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
             );
           },
         ),
-        Text(
-          'Or continue with',
-          style: TextStyle(
-            fontSize: 14.sp,
-            color: const Color(0xFF6B7280),
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.2,
-          ),
-        ),
-        SizedBox(height: 20.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildSocialButton(
-              icon: Icons.g_mobiledata_rounded,
-              label: 'Google',
-              colors: [const Color(0xFF4285F4), const Color(0xFF34A853)],
-              onTap: () {
-                HapticFeedback.selectionClick();
-              },
-            ),
-            _buildSocialButton(
-              icon: Icons.apple_rounded,
-              label: 'Apple',
-              colors: [const Color(0xFF000000), const Color(0xFF333333)],
-              onTap: () {
-                HapticFeedback.selectionClick();
-              },
-            ),
-            _buildSocialButton(
-              icon: Icons.facebook_rounded,
-              label: 'Facebook',
-              colors: [const Color(0xFF1877F2), const Color(0xFF42A5F5)],
-              onTap: () {
-                HapticFeedback.selectionClick();
-              },
-            ),
-          ],
-        ),
-        SizedBox(height: 32.h),
         AnimatedBuilder(
           animation: Listenable.merge([widget.floatingAnimation, _hoverScale]),
           builder: (context, child) {
@@ -126,68 +86,10 @@ class _PremiumLoginFooterState extends State<PremiumLoginFooter>
                     width: 1,
                   ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account? ",
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: const Color(0xFF6B7280),
-                        fontWeight: FontWeight.w400,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                    MouseRegion(
-                      onEnter: (_) {
-                        setState(() => _isHovered = true);
-                        _hoverController.forward();
-                      },
-                      onExit: (_) {
-                        setState(() => _isHovered = false);
-                        _hoverController.reverse();
-                      },
-                      child: GestureDetector(
-                        onTap: () {
-                          HapticFeedback.selectionClick();
-                        },
-                        child: Transform.scale(
-                          scale: _hoverScale.value,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 12.w, vertical: 4.h),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.r),
-                              gradient: LinearGradient(
-                                colors: [
-                                  const Color(0xFF3B82F6)
-                                      .withOpacity(_isHovered ? 0.2 : 0.1),
-                                  const Color(0xFF8B5CF6)
-                                      .withOpacity(_isHovered ? 0.2 : 0.1),
-                                ],
-                              ),
-                            ),
-                            child: Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: const Color(0xFF3B82F6),
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.3,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             );
           },
         ),
-        SizedBox(height: 24.h),
         Wrap(
           alignment: WrapAlignment.center,
           children: [
