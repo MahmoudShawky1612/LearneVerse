@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -65,8 +66,8 @@ class LessonDetail extends StatelessWidget {
       case 'image':
         return ClipRRect(
           borderRadius: BorderRadius.circular(16.r),
-          child: Image.network(
-            material['path'],
+          child: CachedNetworkImage(
+            imageUrl: material['path'],
             width: 320.w,
             height: 180.h,
             fit: BoxFit.cover,

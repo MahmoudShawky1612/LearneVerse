@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
@@ -1134,10 +1135,10 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20.r),
-                            child: Image.network(
-                              widget.lesson.materials[0].fileUrl,
+                            child: CachedNetworkImage(
+                              imageUrl: widget.lesson.materials[0].fileUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
+                              errorWidget: (context, error, stackTrace) {
                                 return Container(
                                   height: 200.h,
                                   color: isDark

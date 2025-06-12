@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -106,19 +108,15 @@ class PodiumItem extends StatelessWidget {
                         color: accentColor,
                         size: isFirst ? 36.sp : 30.sp,
                       )
-                    : Image.network(
-                        user.avatar,
+                    : CachedNetworkImage(
+                        imageUrl: user.avatar,
                         fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.w,
-                              color: accentColor,
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) => Icon(
+                        placeholder: (context, url) => SizedBox(
+                          width: 28.r,
+                          height: 28.r,
+                          child: const CupertinoActivityIndicator(),
+                        ),
+                        errorWidget: (context, error, stackTrace) => Icon(
                           Icons.person,
                           color: accentColor,
                           size: isFirst ? 36.sp : 30.sp,

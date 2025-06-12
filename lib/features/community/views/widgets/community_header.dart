@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
@@ -16,12 +17,12 @@ class CommunityHeader extends StatelessWidget {
     final theme = Theme.of(context);
     Widget buildCircleAvatar() {
       return ClipOval(
-        child: Image.network(
-          UrlHelper.transformUrl(community.logoImgURL),
+        child: CachedNetworkImage(
+          imageUrl: UrlHelper.transformUrl(community.logoImgURL),
           width: 80.r,
           height: 80.r,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
+          errorWidget: (context, error, stackTrace) {
             return Container(
               width: 80.r,
               height: 80.r,

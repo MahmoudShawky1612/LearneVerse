@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterwidgets/features/community/data/models/community_members_model.dart';
 import 'package:go_router/go_router.dart';
@@ -55,10 +56,11 @@ class UserItem extends StatelessWidget {
                         color: Colors.grey.shade200,
                       ),
                       clipBehavior: Clip.antiAlias,
-                      child: Image.network(
-                        UrlHelper.transformUrl(user.profilePictureURL!),
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            UrlHelper.transformUrl(user.profilePictureURL!),
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
+                        errorWidget: (context, error, stackTrace) => Container(
                           width: 48.w,
                           height: 48.w,
                           decoration: BoxDecoration(
@@ -66,11 +68,11 @@ class UserItem extends StatelessWidget {
                             color: Colors.grey.shade200,
                           ),
                           clipBehavior: Clip.antiAlias,
-                          child: Image.network(
-                            UrlHelper.transformUrl(
+                          child: CachedNetworkImage(
+                            imageUrl: UrlHelper.transformUrl(
                                 user.profilePictureURL ?? ''),
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
+                            errorWidget: (context, error, stackTrace) {
                               return Icon(
                                 Icons.person,
                                 size: 24.r,

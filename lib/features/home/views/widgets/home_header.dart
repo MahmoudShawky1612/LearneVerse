@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -124,22 +125,22 @@ class _HomeHeaderState extends State<HomeHeader> {
                     : CircleAvatar(
                         radius: 17.r,
                         backgroundImage: pP != null && pP != ''
-                            ? NetworkImage(
+                            ? CachedNetworkImageProvider(
                                 UrlHelper.transformUrl(pP!),
-                                headers: {
-                                  'ngrok-skip-browser-warning': 'true',
-                                },
+                                headers: const {'ngrok-skip-browser-warning': 'true'},
                               )
                             : null,
                         backgroundColor: Colors.grey[200],
                         onBackgroundImageError: pP != null && pP != ''
                             ? (exception, stackTrace) {}
                             : null,
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.blue,
-                          size: 20.sp,
-                        ),
+                        child: pP != null && pP != ''
+                            ? null // No child when image is available
+                            : Icon(
+                                Icons.person,
+                                color: Colors.blue,
+                                size: 20.sp,
+                              ),
                       ),
               ),
             ),

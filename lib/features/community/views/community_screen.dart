@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -273,22 +274,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                   size: 28,
                                 )
                               : ClipOval(
-                                  child: Image.network(
-                                    profileUrl,
+                                  child: CachedNetworkImage(
+                                    imageUrl: profileUrl,
                                     fit: BoxFit.cover,
                                     width: 40,
                                     // Adjust to match CircleAvatar size
                                     height: 40,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return const Center(
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      );
-                                    },
-                                    errorBuilder: (context, error, stackTrace) {
+                                    placeholder: (context, url) => SizedBox(
+                                      width: 28.r,
+                                      height: 28.r,
+                                      child: const CupertinoActivityIndicator(),
+                                    ),
+                                    errorWidget: (context, error, stackTrace) {
                                       return const Icon(
                                         Icons.person,
                                         color: Colors.blue,

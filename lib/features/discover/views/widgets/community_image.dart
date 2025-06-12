@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -41,12 +42,12 @@ class CommunityImage extends StatelessWidget {
       padding: EdgeInsets.all(4.w),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.r),
-        child: Image.network(
-          UrlHelper.transformUrl(community.logoImgURL),
+        child: CachedNetworkImage(
+          imageUrl: UrlHelper.transformUrl(community.logoImgURL),
           width: 42.w,
           height: 42.h,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
+          errorWidget: (context, error, stackTrace) {
             return Container(
               width: 42.w,
               height: 42.h,

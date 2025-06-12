@@ -38,7 +38,7 @@ dependencies:
   audioplayers: ^5.2.1
   syncfusion_flutter_pdfviewer: ^29.2.9
   dart_code_metrics_presets: ^2.22.0
-
+  cached_network_image: ^3.4.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
@@ -107,10 +109,10 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
       margin: EdgeInsets.only(top: 8.h),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8.r),
-        child: Image.network(
-          transformedUrl,
+        child: CachedNetworkImage(
+          imageUrl: transformedUrl,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
+          errorWidget: (context, error, stackTrace) {
             return Container(
               height: 200.h,
               width: double.infinity,
@@ -140,28 +142,20 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
               ),
             );
           },
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return SizedBox(
-              height: 200.h,
-              width: double.infinity,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
-                    SizedBox(height: 8.h),
-                    Text('Loading image...', style: TextStyle(fontSize: 12.sp)),
-                  ],
-                ),
+          placeholder: (context, url) => SizedBox(
+            height: 200.h,
+            width: double.infinity,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CupertinoActivityIndicator(),
+                  SizedBox(height: 8.h),
+                  Text('Loading image...', style: TextStyle(fontSize: 12.sp)),
+                ],
               ),
-            );
-          },
+            ),
+          ),
         ),
       ),
     );
@@ -310,8 +304,8 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                                   backgroundImage:
                                       currentPost.author.profilePictureURL !=
                                               null
-                                          ? NetworkImage(UrlHelper.transformUrl(
-                                              currentPost
+                                          ? CachedNetworkImageProvider(
+                                              UrlHelper.transformUrl(currentPost
                                                   .author.profilePictureURL!))
                                           : null,
                                   backgroundColor:
@@ -739,7 +733,8 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                             builder: (context, state) {
                               return EnhancedVoteButton(
                                 icon: Icons.arrow_circle_up_rounded,
-                                color: Colors.grey, // upVoteColor,
+                                color: Colors.grey,
+                                // upVoteColor,
                                 isLoading: state is UpVoteLoading,
                                 isUpvote: true,
                                 onTap: () => context
@@ -768,7 +763,8 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                             builder: (context, state) {
                               return EnhancedVoteButton(
                                 icon: Icons.arrow_circle_down_rounded,
-                                color: Colors.grey, // downVoteColor,
+                                color: Colors.grey,
+                                // downVoteColor,
                                 isLoading: state is DownVoteLoading,
                                 isUpvote: false,
                                 onTap: () => context
@@ -1009,8 +1005,8 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                                     backgroundImage: currentPost
                                                 .author.profilePictureURL !=
                                             null
-                                        ? NetworkImage(UrlHelper.transformUrl(
-                                            currentPost
+                                        ? CachedNetworkImageProvider(
+                                            UrlHelper.transformUrl(currentPost
                                                 .author.profilePictureURL!))
                                         : null,
                                     backgroundColor:
@@ -1475,48 +1471,39 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
             child: SizedBox(
               width: double.infinity,
               height: double.infinity,
-              child: Image.network(
-                transformedUrl,
+              child: CachedNetworkImage(
+                imageUrl: transformedUrl,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: colorScheme.errorContainer,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.broken_image_rounded,
-                          color: colorScheme.onErrorContainer,
-                          size: 32.r,
-                        ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          'Failed to load',
-                          style: TextStyle(
-                            color: colorScheme.onErrorContainer,
-                            fontSize: 12.sp,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    color: colorScheme.surface,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
-                        color: colorScheme.primary,
+                errorWidget: (context, url, error) => Container(
+                  color: colorScheme.errorContainer,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.broken_image_rounded,
+                        color: colorScheme.onErrorContainer,
+                        size: 32.r,
                       ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'Failed to load',
+                        style: TextStyle(
+                          color: colorScheme.onErrorContainer,
+                          fontSize: 12.sp,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                placeholder: (context, url) => Container(
+                  color: colorScheme.surface,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: colorScheme.primary,
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
             ),
           ),
@@ -1798,27 +1785,22 @@ class PostProfileAvatar extends StatelessWidget {
 
     if (profilePictureURL != null && profilePictureURL.isNotEmpty) {
       return ClipOval(
-        child: Image.network(
-          UrlHelper.transformUrl(profilePictureURL),
+        child: CachedNetworkImage(
+          imageUrl: UrlHelper.transformUrl(profilePictureURL),
           width: 28.r,
           height: 28.r,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return _getDefaultAvatar(context);
-          },
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return SizedBox(
-              width: 28.r,
-              height: 28.r,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).colorScheme.primary,
-                ),
+          errorWidget: (context, url, error) => _getDefaultAvatar(context),
+          placeholder: (context, url) => SizedBox(
+            width: 28.r,
+            height: 28.r,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).colorScheme.primary,
               ),
-            );
-          },
+            ),
+          ),
         ),
       );
     } else {

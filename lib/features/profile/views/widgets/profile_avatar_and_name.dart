@@ -1,7 +1,9 @@
+ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 import 'package:flutterwidgets/utils/url_helper.dart';
+import 'package:path/path.dart';
 
 class ProfileAvatarAndName extends StatelessWidget {
   final UserProfile userInfo;
@@ -35,23 +37,23 @@ class ProfileAvatarAndName extends StatelessWidget {
                 backgroundColor: Colors.grey[200],
                 child: userInfo.profilePictureURL.isEmpty
                     ? Icon(
-                        Icons.person,
-                        color: Colors.blue,
-                        size: 40.sp,
-                      )
+                  Icons.person,
+                  color: Colors.blue,
+                  size: 40.sp,
+                )
                     : ClipOval(
-                        child: Image.network(
-                          UrlHelper.transformUrl(userInfo.profilePictureURL),
-                          width: 72.r, // 2 * radius
-                          height: 72.r,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Icon(
-                            Icons.person,
-                            color: Colors.blue,
-                            size: 40.sp,
-                          ),
-                        ),
-                      ),
+                    child: CachedNetworkImage(
+                    imageUrl: userInfo.profilePictureURL,
+                    width: 72.r, // 2 * radius
+                    height: 72.r,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.person,
+                      color: Colors.blue,
+                      size: 40.sp,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -163,12 +164,12 @@ class _ForumTabState extends State<ForumTab> {
                               backgroundColor: Colors.grey[200],
                               child: userPp != null && userPp!.isNotEmpty
                                   ? ClipOval(
-                                      child: Image.network(
-                                        UrlHelper.transformUrl(userPp!),
+                                      child: CachedNetworkImage(
+                                        imageUrl: UrlHelper.transformUrl(userPp!),
                                         width: 40.r,
                                         height: 40.r,
                                         fit: BoxFit.cover,
-                                        errorBuilder:
+                                        errorWidget:
                                             (context, error, stackTrace) =>
                                                 Icon(
                                           Icons.person,

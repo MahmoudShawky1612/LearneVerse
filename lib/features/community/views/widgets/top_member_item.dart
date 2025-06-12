@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
@@ -61,14 +62,15 @@ class TopMemberItem extends StatelessWidget {
               child: ClipOval(
                 child: (avatarUrl.isEmpty)
                     ? const Icon(Icons.person, color: Colors.blue, size: 20)
-                    : Image.network(
-                        avatarUrl,
+                    : CachedNetworkImage(
+                        imageUrl: avatarUrl,
                         width: 36.w,
                         height: 36.h,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.person,
-                                color: Colors.blue, size: 20),
+                        errorWidget: (context, error, stackTrace) => const Icon(
+                            Icons.person,
+                            color: Colors.blue,
+                            size: 20),
                       ),
               ),
             ),

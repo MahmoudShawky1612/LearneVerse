@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -26,27 +28,19 @@ class ProfileAvatar extends StatelessWidget {
 
     if (profilePictureURL != null && profilePictureURL.isNotEmpty) {
       return ClipOval(
-        child: Image.network(
-          UrlHelper.transformUrl(profilePictureURL),
+        child: CachedNetworkImage(
+          imageUrl: UrlHelper.transformUrl(profilePictureURL),
           width: 28.r,
           height: 28.r,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
+          errorWidget: (context, error, stackTrace) {
             return _getDefaultAvatar(context);
           },
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return SizedBox(
-              width: 28.r,
-              height: 28.r,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            );
-          },
+          placeholder: (context, url) => SizedBox(
+            width: 28.r,
+            height: 28.r,
+            child: const CupertinoActivityIndicator(),
+          ),
         ),
       );
     } else {

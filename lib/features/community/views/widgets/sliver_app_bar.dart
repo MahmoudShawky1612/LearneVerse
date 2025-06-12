@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
@@ -20,10 +21,10 @@ class CommunitySliverAppBar extends StatelessWidget {
         background: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            Image.network(
-              UrlHelper.transformUrl(community.coverImgURL),
+            CachedNetworkImage(
+              imageUrl: UrlHelper.transformUrl(community.coverImgURL),
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
+              errorWidget: (context, error, stackTrace) {
                 return Container(
                   color: Colors.grey.shade300,
                   alignment: Alignment.center,

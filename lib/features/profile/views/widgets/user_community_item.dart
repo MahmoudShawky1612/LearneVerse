@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
@@ -14,6 +15,7 @@ class UserCommunityItem extends StatefulWidget {
   final VoidCallback? onJoinLeave;
   final VoidCallback? onLeave;
   final int? userId;
+
   const UserCommunityItem({
     super.key,
     required this.community,
@@ -108,12 +110,12 @@ class _UserCommunityItemState extends State<UserCommunityItem> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(14.r),
-          child: Image.network(
-            UrlHelper.transformUrl(widget.community.logoImgURL),
+          child: CachedNetworkImage(
+            imageUrl: UrlHelper.transformUrl(widget.community.logoImgURL),
             width: 40.w,
             height: 40.h,
             fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
+            errorWidget: (context, error, stackTrace) {
               return Container(
                 width: 40.w,
                 height: 40.h,

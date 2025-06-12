@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,7 +94,7 @@ class _CommentInputFieldState extends State<CommentInputField> {
               height: 36.r,
               child: CircleAvatar(
                 backgroundImage:
-                    pP != null && !isLoading ? NetworkImage(pP!) : null,
+                    pP != null && !isLoading ? CachedNetworkImageProvider(pP!) : null,
                 radius: 18.r,
                 backgroundColor: Colors.grey[200],
                 child: isLoading
