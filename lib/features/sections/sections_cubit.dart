@@ -44,4 +44,15 @@ class SectionsCubit extends Cubit<SectionsState> {
     _selectedSectionIndex = index;
     await loadLessons(_sections[index].id);
   }
+
+  Future<void> toggleLessonCompleted(int lessonId, int sectionId) async {
+    emit(SectionsLoading());
+    try {
+      await SectionsApiService.toggleLessonCompleted(lessonId);
+      await loadLessons(sectionId, emitLoading: false);
+      emit(SectionsLoaded(_sections, _lessons, _selectedSectionIndex));
+    } catch (e) {
+      emit(SectionsError(e.toString()));
+    }
+  }
 } 

@@ -11,6 +11,8 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' hide PlayerState;
 import 'package:url_launcher/url_launcher.dart';
+import '../../utils/jwt_helper.dart';
+import '../../utils/token_storage.dart';
 
 class SectionsScreen extends StatefulWidget {
   final int classroomId;
@@ -47,298 +49,343 @@ class _SectionsScreenState extends State<SectionsScreen> {
           final colorScheme = Theme.of(context).colorScheme;
           final currentSection = sections.isNotEmpty ? sections[selectedSectionIndex] : null;
 
-          return Scaffold(
-            backgroundColor: colorScheme.surface,
-            body: CustomScrollView(
-              slivers: [
-                // Modern App Bar
-                SliverAppBar(
-                  expandedHeight: 160.h,
-                  floating: false,
-                  pinned: true,
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            colorScheme.primary,
-                            colorScheme.primary.withOpacity(0.8),
-                          ],
-                        ),
-                      ),
-                      child: SafeArea(
-                        child: Padding(
-                          padding: EdgeInsets.all(24.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 20.h),
-                              Text(
-                                'Learning Path',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 32.sp,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: -0.5,
-                                ),
-                              ),
-                              SizedBox(height: 8.h),
-                              Text(
-                                currentSection?.name ?? '',
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Section Tabs
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 100.h,
-                    margin: EdgeInsets.symmetric(vertical: 16.h),
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      itemCount: sections.length,
-                      itemBuilder: (context, index) {
-                        bool isSelected = index == selectedSectionIndex;
-                        final section = sections[index];
-
-                        return GestureDetector(
-                          onTap: () {
-                            context.read<SectionsCubit>().selectSection(index);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: 12.w),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 60.w,
-                                  height: 60.h,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: isSelected
-                                        ? LinearGradient(
-                                            colors: [colorScheme.primary, colorScheme.primary.withOpacity(0.8)],
-                                          )
-                                        : null,
-                                    color: isSelected ? null : Colors.grey[100],
-                                    boxShadow: isSelected
-                                        ? [
-                                            BoxShadow(
-                                              color: colorScheme.primary.withOpacity(0.3),
-                                              blurRadius: 12.r,
-                                              offset: Offset(0, 4.h),
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '${index + 1}',
-                                      style: TextStyle(
-                                        color: isSelected ? Colors.white : Colors.grey[600],
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 8.h),
-                                SizedBox(
-                                  width: 80.w,
-                                  child: Text(
-                                    section.name,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: isSelected ? colorScheme.primary : Colors.grey[600],
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                SizedBox(height: 4.h),
-                                Container(
-                                  width: 4.w,
-                                  height: 4.h,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: isSelected ? colorScheme.primary : Colors.transparent,
-                                  ),
-                                ),
+          return FutureBuilder<String?>(
+            future: TokenStorage.getToken(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: LoadingState());
+              }
+              final token = snapshot.data!;
+              final userId = getUserIdFromToken(token);
+              return Scaffold(
+                backgroundColor: colorScheme.surface,
+                body: CustomScrollView(
+                  slivers: [
+                    // Modern App Bar
+                    SliverAppBar(
+                      expandedHeight: 160.h,
+                      floating: false,
+                      pinned: true,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                colorScheme.primary,
+                                colorScheme.primary.withOpacity(0.8),
                               ],
                             ),
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-
-                // Lessons List
-                SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final lesson = lessons[index];
-                        bool isDone = index < 1;
-                        bool isLocked = false;
-                        // Use lesson.materials[0] for type and fileUrl if available
-                        final material = lesson.materials.isNotEmpty ? lesson.materials[0] : null;
-                        final fileUrl = material?.fileUrl ?? '';
-                        final fileName = fileUrl.split('/').last;
-                        final contentType = material?.type ?? ContentType.file;
-
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 16.h),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: isLocked
-                                  ? null
-                                  : () {
-                                      _showLessonDetail(context, lesson, contentType);
-                                    },
-                              borderRadius: BorderRadius.circular(20.r),
-                              child: Container(
-                                padding: EdgeInsets.all(20.w),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20.r),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.05),
-                                      blurRadius: 20.r,
-                                      offset: Offset(0, 8.h),
+                          child: SafeArea(
+                            child: Padding(
+                              padding: EdgeInsets.all(24.w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 20.h),
+                                  Text(
+                                    'Learning Path',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 32.sp,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: -0.5,
                                     ),
-                                  ],
-                                  border: isDone
-                                      ? Border.all(
-                                          color: const Color(0xFF4CAF50).withOpacity(0.3),
-                                          width: 2.w,
-                                        )
-                                      : null,
-                                ),
-                                child: Row(
-                                  children: [
-                                    // Content Type Icon
-                                    Container(
-                                      width: 50.w,
-                                      height: 50.h,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: _getContentTypeColor(contentType).withOpacity(0.1),
-                                      ),
-                                      child: Icon(
-                                        _getContentTypeIcon(contentType),
-                                        color: _getContentTypeColor(contentType),
-                                        size: 24.sp,
-                                      ),
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    currentSection?.name ?? '',
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.8),
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    SizedBox(width: 16.w),
-                                    // Lesson Content
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  _getContentTypeLabel(contentType),
-                                                  style: TextStyle(
-                                                    fontSize: 12.sp,
-                                                    color: _getContentTypeColor(contentType),
-                                                    fontWeight: FontWeight.w600,
-                                                    letterSpacing: 0.5,
-                                                  ),
-                                                ),
-                                              ),
-                                              if (isDone)
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 8.w,
-                                                    vertical: 4.h,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: const Color(0xFF4CAF50).withOpacity(0.1),
-                                                    borderRadius: BorderRadius.circular(12.r),
-                                                  ),
-                                                  child: Text(
-                                                    'DONE',
-                                                    style: TextStyle(
-                                                      color: const Color(0xFF4CAF50),
-                                                      fontSize: 10.sp,
-                                                      fontWeight: FontWeight.w700,
-                                                      letterSpacing: 0.5,
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 6.h),
-                                          Text(
-                                            lesson.title,
-                                            style: TextStyle(
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.w700,
-                                              color: isLocked ? Colors.grey[400] : Colors.grey[800],
-                                              letterSpacing: -0.2,
-                                            ),
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          Text(
-                                            lesson.notes,
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              color: isLocked ? Colors.grey[300] : Colors.grey[600],
-                                              height: 1.4,
-                                            ),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    // Arrow
-                                    if (!isLocked)
-                                      Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        size: 16.sp,
-                                        color: Colors.grey[400],
-                                      ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        );
-                      },
-                      childCount: lessons.length,
+                        ),
+                      ),
                     ),
-                  ),
+
+                    // Section Tabs
+                    SliverToBoxAdapter(
+                      child: Container(
+                        height: 100.h,
+                        margin: EdgeInsets.symmetric(vertical: 16.h),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          itemCount: sections.length,
+                          itemBuilder: (context, index) {
+                            bool isSelected = index == selectedSectionIndex;
+                            final section = sections[index];
+
+                            return GestureDetector(
+                              onTap: () {
+                                context.read<SectionsCubit>().selectSection(index);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(right: 12.w),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 60.w,
+                                      height: 60.h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: isSelected
+                                            ? LinearGradient(
+                                                colors: [colorScheme.primary, colorScheme.primary.withOpacity(0.8)],
+                                              )
+                                            : null,
+                                        color: isSelected ? null : Colors.grey[100],
+                                        boxShadow: isSelected
+                                            ? [
+                                                BoxShadow(
+                                                  color: colorScheme.primary.withOpacity(0.3),
+                                                  blurRadius: 12.r,
+                                                  offset: Offset(0, 4.h),
+                                                ),
+                                              ]
+                                            : null,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '${index + 1}',
+                                          style: TextStyle(
+                                            color: isSelected ? Colors.white : Colors.grey[600],
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    SizedBox(
+                                      width: 80.w,
+                                      child: Text(
+                                        section.name,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: isSelected ? colorScheme.primary : Colors.grey[600],
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Container(
+                                      width: 4.w,
+                                      height: 4.h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: isSelected ? colorScheme.primary : Colors.transparent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+
+                    // Lessons List
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final lesson = lessons[index];
+                            final isDone = lesson.isCompleted(userId);
+                            bool isLocked = false;
+                            // Use lesson.materials[0] for type and fileUrl if available
+                            final material = lesson.materials.isNotEmpty ? lesson.materials[0] : null;
+                            final fileUrl = material?.fileUrl ?? '';
+                            final fileName = fileUrl.split('/').last;
+                            final contentType = material?.type ?? ContentType.file;
+
+                            return Container(
+                              margin: EdgeInsets.only(bottom: 16.h),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: isLocked
+                                      ? null
+                                      : () {
+                                          _showLessonDetail(context, lesson, contentType);
+                                        },
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  child: Container(
+                                    padding: EdgeInsets.all(20.w),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20.r),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.05),
+                                          blurRadius: 20.r,
+                                          offset: Offset(0, 8.h),
+                                        ),
+                                      ],
+                                      border: isDone
+                                          ? Border.all(
+                                              color: const Color(0xFF4CAF50).withOpacity(0.3),
+                                              width: 2.w,
+                                            )
+                                          : null,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        // Content Type Icon
+                                        Container(
+                                          width: 50.w,
+                                          height: 50.h,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: _getContentTypeColor(contentType).withOpacity(0.1),
+                                          ),
+                                          child: Icon(
+                                            _getContentTypeIcon(contentType),
+                                            color: _getContentTypeColor(contentType),
+                                            size: 24.sp,
+                                          ),
+                                        ),
+                                        SizedBox(width: 16.w),
+                                        // Lesson Content
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      _getContentTypeLabel(contentType),
+                                                      style: TextStyle(
+                                                        fontSize: 12.sp,
+                                                        color: _getContentTypeColor(contentType),
+                                                        fontWeight: FontWeight.w600,
+                                                        letterSpacing: 0.5,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  if (isDone)
+                                                    Container(
+                                                      padding: EdgeInsets.symmetric(
+                                                        horizontal: 8.w,
+                                                        vertical: 4.h,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: const Color(0xFF4CAF50).withOpacity(0.1),
+                                                        borderRadius: BorderRadius.circular(12.r),
+                                                      ),
+                                                      child: Text(
+                                                        'DONE',
+                                                        style: TextStyle(
+                                                          color: const Color(0xFF4CAF50),
+                                                          fontSize: 10.sp,
+                                                          fontWeight: FontWeight.w700,
+                                                          letterSpacing: 0.5,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 6.h),
+                                              Text(
+                                                lesson.title,
+                                                style: TextStyle(
+                                                  fontSize: 16.sp,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: isLocked ? Colors.grey[400] : Colors.grey[800],
+                                                  letterSpacing: -0.2,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8.h),
+                                              Text(
+                                                lesson.notes,
+                                                style: TextStyle(
+                                                  fontSize: 14.sp,
+                                                  color: isLocked ? Colors.grey[300] : Colors.grey[600],
+                                                  height: 1.4,
+                                                ),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              SizedBox(height: 10.h),
+                                              Row(
+                                                children: [
+                                                  if (isDone)
+                                                    ElevatedButton.icon(
+                                                      icon: Icon(Icons.undo, size: 18.sp),
+                                                      label: Text('Undone'),
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor: Colors.grey[200],
+                                                        foregroundColor: Colors.grey[800],
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                                                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                                                        elevation: 0,
+                                                      ),
+                                                      onPressed: () async {
+                                                        await context.read<SectionsCubit>().toggleLessonCompleted(lesson.id, currentSection!.id);
+                                                      },
+                                                    )
+                                                  else
+                                                    ElevatedButton.icon(
+                                                      icon: Icon(Icons.check, size: 18.sp),
+                                                      label: Text('Done'),
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor: Theme.of(context).colorScheme.primary,
+                                                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                                                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                                                        elevation: 2,
+                                                      ),
+                                                      onPressed: () async {
+                                                        await context.read<SectionsCubit>().toggleLessonCompleted(lesson.id, currentSection!.id);
+                                                      },
+                                                    ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        // Arrow
+                                        if (!isLocked)
+                                          Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            size: 16.sp,
+                                            color: Colors.grey[400],
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          childCount: lessons.length,
+                        ),
+                      ),
+                    ),
+                    // Bottom spacing
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: 40.h),
+                    ),
+                  ],
                 ),
-                // Bottom spacing
-                SliverToBoxAdapter(
-                  child: SizedBox(height: 40.h),
-                ),
-              ],
-            ),
+              );
+            },
           );
         }
         return const SizedBox();
@@ -467,168 +514,180 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.9,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
-      ),
-      child: Column(
-        children: [
-          // Handle
-          Container(
-            margin: EdgeInsets.only(top: 12.h),
-            width: 40.w,
-            height: 4.h,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(2.r),
-            ),
+    final colorScheme = Theme.of(context).colorScheme;
+    final selectedSectionIndex = context.read<SectionsCubit>().selectedSectionIndex ?? 0;
+    final sectionId = context.read<SectionsCubit>().sections[selectedSectionIndex].id;
+    return FutureBuilder<String?>(
+      future: TokenStorage.getToken(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: LoadingState());
+        }
+        final token = snapshot.data!;
+        final userId = getUserIdFromToken(token);
+        final isCompleted = widget.lesson.isCompleted(userId);
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.9,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
           ),
-
-          // Header
-          Container(
-            padding: EdgeInsets.all(24.w),
-            child: Row(
-              children: [
-                Container(
-                  width: 60.w,
-                  height: 60.h,
-                  decoration: BoxDecoration(
-                    color: _getContentTypeColor(widget.type),
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  child: Icon(
-                    _getContentTypeIcon(widget.type),
-                    color: Colors.white,
-                    size: 30.sp,
-                  ),
+          child: Column(
+            children: [
+              // Handle
+              Container(
+                margin: EdgeInsets.only(top: 12.h),
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
-                SizedBox(width: 16.w),
-                Expanded(
+              ),
+
+              // Header
+              Container(
+                padding: EdgeInsets.all(24.w),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 60.w,
+                      height: 60.h,
+                      decoration: BoxDecoration(
+                        color: _getContentTypeColor(widget.type),
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                      child: Icon(
+                        _getContentTypeIcon(widget.type),
+                        color: Colors.white,
+                        size: 30.sp,
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _getContentTypeLabel(widget.type),
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: _getContentTypeColor(widget.type),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            widget.lesson.title,
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close_rounded),
+                      iconSize: 24.sp,
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Content Display
+                      _buildContentDisplay(),
+
+                      SizedBox(height: 24.h),
+
+                      // Description
                       Text(
-                        _getContentTypeLabel(widget.type),
+                        'Description',
                         style: TextStyle(
-                          fontSize: 14.sp,
-                          color: _getContentTypeColor(widget.type),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        widget.lesson.title,
-                        style: TextStyle(
-                          fontSize: 20.sp,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.w700,
                           color: Colors.grey[800],
                         ),
                       ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        widget.lesson.notes,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.grey[600],
+                          height: 1.6,
+                        ),
+                      ),
+
+                      SizedBox(height: 24.h),
+
+                      // Notes Section
+                      Text(
+                        'Lesson Notes',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+
+                      ...widget.lesson.notes.split('\n').map((note) =>
+                          Container(
+                            margin: EdgeInsets.only(bottom: 12.h),
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: Border.all(
+                                color: Colors.grey[200]!,
+                                width: 1.w,
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 6.w,
+                                  height: 6.h,
+                                  margin: EdgeInsets.only(top: 6.h),
+                                  decoration: BoxDecoration(
+                                    color: _getContentTypeColor(widget.type),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Expanded(
+                                  child: Text(
+                                    note,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: Colors.grey[700],
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ).toList(),
                     ],
                   ),
                 ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close_rounded),
-                  iconSize: 24.sp,
-                ),
-              ],
-            ),
-          ),
-
-          // Content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Content Display
-                  _buildContentDisplay(),
-
-                  SizedBox(height: 24.h),
-
-                  // Description
-                  Text(
-                    'Description',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    widget.lesson.notes,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.grey[600],
-                      height: 1.6,
-                    ),
-                  ),
-
-                  SizedBox(height: 24.h),
-
-                  // Notes Section
-                  Text(
-                    'Lesson Notes',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-
-                  ...widget.lesson.notes.split('\n').map((note) =>
-                      Container(
-                        margin: EdgeInsets.only(bottom: 12.h),
-                        padding: EdgeInsets.all(16.w),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: Colors.grey[200]!,
-                            width: 1.w,
-                          ),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 6.w,
-                              height: 6.h,
-                              margin: EdgeInsets.only(top: 6.h),
-                              decoration: BoxDecoration(
-                                color: _getContentTypeColor(widget.type),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            SizedBox(width: 12.w),
-                            Expanded(
-                              child: Text(
-                                note,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Colors.grey[700],
-                                  height: 1.5,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ).toList(),
-
-                  SizedBox(height: 32.h),
-                ],
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

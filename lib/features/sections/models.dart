@@ -41,12 +41,14 @@ class LessonContent {
   final String title;
   final String notes;
   final List<MaterialModel> materials;
+  final List<int> completedUserIds;
 
   LessonContent({
     required this.id,
     required this.title,
     required this.notes,
     required this.materials,
+    required this.completedUserIds,
   });
 
   factory LessonContent.fromJson(Map<String, dynamic> json) {
@@ -57,8 +59,12 @@ class LessonContent {
       materials: (json['Materials'] as List)
           .map((m) => MaterialModel.fromJson(m))
           .toList(),
+      completedUserIds: (json['CompletedLessons'] as List?)?.map((e) => e['userId'] as int).toList() ?? [],
     );
   }
+
+  // Helper: is this lesson completed by the current user?
+  bool isCompleted(int userId) => completedUserIds.contains(userId);
 }
 
 class SectionModel {
