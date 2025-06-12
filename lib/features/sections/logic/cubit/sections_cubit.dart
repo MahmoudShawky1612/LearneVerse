@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'models.dart';
-import 'api_service.dart';
+import '../../data/models/models.dart';
+import '../../services/api_service.dart';
 
 part 'sections_state.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutterwidgets/utils/api_helper.dart';
 import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:flutterwidgets/utils/url_helper.dart';
 import 'package:http/http.dart' as http;
-import 'models.dart';
+import '../data/models/models.dart';
 
 class SectionsApiService {
   final String baseUrl = ApiHelper.baseUrl;

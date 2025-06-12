@@ -45,8 +45,8 @@ import 'features/profile/services/profile_api_services.dart';
 import 'features/profile/services/user_communities_service.dart';
 import 'features/profile/services/user_contributions_service.dart';
 import 'features/profile/services/user_posts_service.dart';
-import 'features/sections/api_service.dart';
-import 'features/sections/sections_cubit.dart';
+import 'features/sections/services/api_service.dart';
+import 'features/sections/logic/cubit/sections_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
