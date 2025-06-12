@@ -13,6 +13,7 @@ import 'package:flutterwidgets/utils/jwt_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../utils/loading_state.dart';
 import '../../../../utils/snackber_util.dart';
@@ -53,6 +54,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
   final TextEditingController _searchController = TextEditingController();
   VideoPlayerController? _videoController;
 
+  // Track loading state for each request
+  int? _loadingRequestId;
 
   static const String _joinRequestPrefixKey = 'join_request_';
 
@@ -237,7 +240,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 } else if (state is JoinRequestsLoaded) {
                   final requests = state.requests;
                   if (requests.isEmpty) {
-                    return const Center(child: NoDataWidget(message: 'Looks like no one wanna join ATM 😕', width: 100, height: 100,));
+                    return   Center(child: Column(
+                      children: [
+                        NoDataWidget(message: 'Looks like no one wanna join ATM 😕', width: 100.w, height: 100.h,),
+                        SizedBox(height: 30.h),
+                      ],
+                    ));
                   }
                   return ListView.builder(
                     shrinkWrap: true,
@@ -245,43 +253,75 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     itemBuilder: (context, index) {
                       final req = requests[index];
                       final user = req['User'];
-                      return Column(
-                        children: [
-                          ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(user['UserProfile'] != null ? user['UserProfile']['profilePictureURL'] : ''),
-                            ),
-                            title: Text(user['fullname'] ?? ''),
-                            subtitle: Text('@${user['username']}'?? ''),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    context.read<JoinRequestsCubit>().updateRequestStatus(
-                                      req['id'],
-                                      'APPROVED',
-                                      widget.community.id,
-                                    );
-                                  },
-                                  child: const Text('Accept'),
-                                ),
-                                const SizedBox(width: 8),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    context.read<JoinRequestsCubit>().updateRequestStatus(
-                                      req['id'],
-                                      'REJECTED',
-                                      widget.community.id,
-                                    );
-                                  },
-                                  child: const Text('Reject'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 50,),
-                        ],
+                      final profileUrl = user['UserProfile'] != null ? user['UserProfile']['profilePictureURL'] : '';
+                      final isLoading = _loadingRequestId == req['id'];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.grey[200], // Optional: Set a background color
+                          radius: 20, // Optional: Adjust the size of the avatar
+                          child: profileUrl == null || profileUrl.isEmpty
+                          ? const Icon(
+                          Icons.person,
+                          color: Colors.blue,
+                          size: 28,
+                      )
+                          : ClipOval(
+                      child: Image.network(
+                      profileUrl,
+                      fit: BoxFit.cover,
+                      width: 40, // Adjust to match CircleAvatar size
+                      height: 40,
+                      loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                      child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      ),
+                      );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                      Icons.person,
+                      color: Colors.blue,
+                      size: 28,
+                      );
+                      },
+                      ),
+                      ),
+                        ),
+                        title: Text(user['fullname'] ?? ''),
+                        subtitle: Text('@${user['username']}'?? ''),
+                        trailing: isLoading
+                            ? const SizedBox(width: 60, child: Center(child: SizedBox(width: 24, height: 24, child: CupertinoActivityIndicator())))
+                            : Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(FontAwesomeIcons.check, color: Colors.green),
+                                    onPressed: () async {
+                                      setState(() => _loadingRequestId = req['id']);
+                                      await context.read<JoinRequestsCubit>().updateRequestStatus(
+                                        req['id'],
+                                        'APPROVED',
+                                        widget.community.id,
+                                      );
+                                      setState(() => _loadingRequestId = null);
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(FontAwesomeIcons.xmark, color: Colors.red),
+                                    onPressed: () async {
+                                      setState(() => _loadingRequestId = req['id']);
+                                      await context.read<JoinRequestsCubit>().updateRequestStatus(
+                                        req['id'],
+                                        'REJECTED',
+                                        widget.community.id,
+                                      );
+                                      setState(() => _loadingRequestId = null);
+                                    },
+                                  ),
+                                ],
+                              ),
                       );
                     },
                   );

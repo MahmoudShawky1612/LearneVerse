@@ -25,7 +25,7 @@ class BuildComments extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return comments.isEmpty? const NoDataWidget(message: "No comments yet... 👀", width: 100, height: 100,):ListView.separated(
+    return comments.isEmpty?  NoDataWidget(message: "No comments yet... 👀", width: 100.w, height: 100.h,):ListView.separated(
       shrinkWrap: shrinkWrap,
       physics: scrollPhysics,
       padding: EdgeInsets.zero,

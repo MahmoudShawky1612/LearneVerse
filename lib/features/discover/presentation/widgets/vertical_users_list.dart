@@ -11,7 +11,7 @@ class VerticalUserList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return users.isEmpty ? const NoDataWidget(message: "No classes yet... 👀", width: 100, height: 100,):ListView.builder(
+    return users.isEmpty ?   NoDataWidget(message: "No classes yet... 👀", width: 100.w, height: 100.h,):ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: users.length,

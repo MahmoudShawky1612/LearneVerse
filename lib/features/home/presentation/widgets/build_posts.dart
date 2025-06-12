@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/home/data/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/post_item.dart';
 
@@ -26,7 +27,7 @@ class BuildPosts extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return posts.isEmpty ? const NoDataWidget(message: "No posts yet... 👀", width: 100, height: 100,)
+    return posts.isEmpty ?   NoDataWidget(message: "No posts yet... 👀", width: 100.w, height: 100.h,)
     : ListView.separated(
       shrinkWrap: shrinkWrap,
       physics: scrollPhysics,

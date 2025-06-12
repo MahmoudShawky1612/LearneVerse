@@ -28,7 +28,7 @@ class CommunitySliverAppBar extends StatelessWidget {
                   color: Colors.grey.shade300,
                   alignment: Alignment.center,
                   child: Icon(
-                    Icons.image_not_supported,
+                    Icons.groups,
                     size: 48.r,
                     color: Colors.grey,
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:flutterwidgets/features/profile/presentation/widgets/user_community_item.dart';
 
@@ -12,7 +13,7 @@ class VerticalCommunityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return communities.isEmpty ?   const NoDataWidget(message: "Try to join communities and come here again... 😁", width: 100, height: 100,)
+    return communities.isEmpty ? NoDataWidget(message: "Try to join communities and come here again... 😁", width: 100.w, height: 100.h,)
     : ListView.builder(
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
