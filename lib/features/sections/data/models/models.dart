@@ -39,7 +39,7 @@ class MaterialModel {
 class LessonContent {
   final int id;
   final String title;
-  final String notes;
+  final List<String> notes;
   final List<MaterialModel> materials;
   final List<int> completedUserIds;
 
@@ -55,7 +55,7 @@ class LessonContent {
     return LessonContent(
       id: json['id'],
       title: json['name'],
-      notes: json['notes'],
+      notes: (json['notes'] as List?)?.map((e) => e.toString()).toList() ?? [],
       materials: (json['Materials'] as List)
           .map((m) => MaterialModel.fromJson(m))
           .toList(),
@@ -65,6 +65,9 @@ class LessonContent {
 
   // Helper: is this lesson completed by the current user?
   bool isCompleted(int userId) => completedUserIds.contains(userId);
+
+  // Helper: join notes for display
+  String get notesDisplay => notes.join('\n');
 }
 
 class SectionModel {

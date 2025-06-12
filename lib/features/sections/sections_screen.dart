@@ -8,7 +8,7 @@ import '../../utils/loading_state.dart';
 import 'data/models/models.dart';
 import 'logic/cubit/sections_cubit.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
- import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../utils/jwt_helper.dart';
 import '../../utils/token_storage.dart';
 
@@ -444,12 +444,10 @@ class _SectionsScreenState extends State<SectionsScreen> {
                                               ),
                                               SizedBox(height: 8.h),
                                               Text(
-                                                lesson.notes,
+                                                lesson.notes.isNotEmpty ? lesson.notes[0] : '',
                                                 style: TextStyle(
                                                   fontSize: 14.sp,
-                                                  color: isDark
-                                                      ? Colors.white.withOpacity(0.7)
-                                                      : Colors.grey[600],
+                                                  color: isDark ? Colors.white.withOpacity(0.7) : Colors.grey[600],
                                                   height: 1.5,
                                                 ),
                                                 maxLines: 2,
@@ -795,8 +793,6 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
     SizedBox(height: 8.h),
     Text(
     widget.lesson.title,
-      // Continuation of the LessonDetailSheet build method
-
       style: TextStyle(
         fontSize: 22.sp,
         fontWeight: FontWeight.w700,
@@ -1108,14 +1104,10 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
                   width: double.infinity,
                   padding: EdgeInsets.all(24.w),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xFF2A2A2A)
-                        : Colors.grey[50],
+                    color: isDark ? const Color(0xFF2A2A2A) : Colors.grey[50],
                     borderRadius: BorderRadius.circular(20.r),
                     border: Border.all(
-                      color: isDark
-                          ? Colors.white.withOpacity(0.1)
-                          : Colors.grey.withOpacity(0.2),
+                      color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey.withOpacity(0.2),
                     ),
                   ),
                   child: Column(
@@ -1140,14 +1132,25 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
                         ],
                       ),
                       SizedBox(height: 16.h),
-                      Text(
-                        widget.lesson.notes,
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          color: isDark ? Colors.white.withOpacity(0.8) : Colors.grey[700],
-                          height: 1.6,
+                      ...widget.lesson.notes.map((note) => Padding(
+                        padding: EdgeInsets.only(bottom: 8.h),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('• ', style: TextStyle(fontSize: 15.sp, color: isDark ? Colors.white : Colors.grey[800])),
+                            Expanded(
+                              child: Text(
+                                note,
+                                style: TextStyle(
+                                  fontSize: 15.sp,
+                                  color: isDark ? Colors.white.withOpacity(0.8) : Colors.grey[700],
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
+                      )),
                     ],
                   ),
                 ),
