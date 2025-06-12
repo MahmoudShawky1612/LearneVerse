@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/comment_states.dart';
-import 'package:flutterwidgets/features/comments/models/comments_model.dart';
-import 'package:flutterwidgets/utils/loading_state.dart';
+ import 'package:flutterwidgets/utils/loading_state.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../utils/error_state.dart';
 import '../../../home/data/models/post_model.dart';
@@ -22,15 +21,13 @@ class CommentsScreen extends StatefulWidget {
 }
 
 class _CommentsScreenState extends State<CommentsScreen> {
-  late List<Comments> comments;
-  late TextEditingController _commentController;
+   late TextEditingController _commentController;
   late Post post;
 
   @override
   void initState() {
     super.initState();
-    comments = Comments.generateDummyComments(widget.post.commentCount);
-    _commentController = TextEditingController();
+     _commentController = TextEditingController();
     fetchComments();
     post = widget.post;
   }

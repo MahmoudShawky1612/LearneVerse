@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterwidgets/core/providers/user_provider.dart';
-import 'package:flutterwidgets/features/comments/logic/cubit/comment_cubit.dart';
+ import 'package:flutterwidgets/features/comments/logic/cubit/comment_cubit.dart';
 import 'package:flutterwidgets/features/comments/services/comment_service.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/single_community_cubit.dart';
@@ -50,8 +49,7 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         BlocProvider<AuthCubit>(
           create: (_) => AuthCubit(AuthApiService()),
         ),
