@@ -8,8 +8,7 @@ import '../../utils/loading_state.dart';
 import 'data/models/models.dart';
 import 'logic/cubit/sections_cubit.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
- import 'package:youtube_player_flutter/youtube_player_flutter.dart' hide PlayerState;
-import 'package:url_launcher/url_launcher.dart';
+ import 'package:url_launcher/url_launcher.dart';
 import '../../utils/jwt_helper.dart';
 import '../../utils/token_storage.dart';
 
