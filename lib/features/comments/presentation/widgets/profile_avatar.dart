@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:path/path.dart';
 import '../../../../utils/url_helper.dart';
 import '../../data/models/comment_model.dart';
 
 class ProfileAvatar extends StatelessWidget {
   final Comment comment;
 
-  const ProfileAvatar({Key? key, required this.comment}) : super(key: key);
+  const ProfileAvatar({super.key, required this.comment});
 
   @override
   Widget build(BuildContext context) {

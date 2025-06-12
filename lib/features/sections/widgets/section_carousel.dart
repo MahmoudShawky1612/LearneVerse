@@ -79,7 +79,7 @@ class SectionCarousel extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: progress,
                       minHeight: 6.h,
-                      backgroundColor: colorScheme.surfaceVariant,
+                      backgroundColor: colorScheme.surfaceContainerHighest,
                       color: isSelected ? colorScheme.secondary : colorScheme.primary,
                     ),
                   ),

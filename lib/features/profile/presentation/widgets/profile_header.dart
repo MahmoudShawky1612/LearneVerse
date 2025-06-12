@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
-import 'package:flutterwidgets/utils/token_storage.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../login/presentation/widgets/snackbar.dart';
 import 'profile_avatar_and_name.dart';
 import 'profile_bio_quote.dart';
 import 'profile_social_links_row.dart';
-import 'profile_user_stats_row.dart';
 
 class ProfileHeader extends StatelessWidget {
   final UserProfile userInfo;

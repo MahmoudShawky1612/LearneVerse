@@ -71,7 +71,7 @@ class LessonDetail extends StatelessWidget {
           width: 320.w,
           height: 180.h,
           decoration: BoxDecoration(
-            color: colorScheme.surfaceVariant,
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Center(
@@ -83,7 +83,7 @@ class LessonDetail extends StatelessWidget {
           width: 320.w,
           height: 120.h,
           decoration: BoxDecoration(
-            color: colorScheme.surfaceVariant,
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Row(
@@ -100,7 +100,7 @@ class LessonDetail extends StatelessWidget {
           width: 320.w,
           height: 80.h,
           decoration: BoxDecoration(
-            color: colorScheme.surfaceVariant,
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Row(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
-import 'package:flutterwidgets/features/community/services/forum_service.dart';
 import 'package:flutterwidgets/features/home/data/models/post_model.dart';
 import 'package:flutterwidgets/features/home/presentation/widgets/vote_button.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
@@ -141,7 +140,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
           },
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
-            return Container(
+            return SizedBox(
               height: 200.h,
               width: double.infinity,
               child: Center(
@@ -178,17 +177,17 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         final colorScheme = theme.colorScheme;
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            bool _listsEqual(List<String> list1, List<String> list2) {
+            bool listsEqual(List<String> list1, List<String> list2) {
               if (list1.length != list2.length) return false;
               for (int i = 0; i < list1.length; i++) {
                 if (list1[i] != list2[i]) return false;
               }
               return true;
             }
-            bool _hasChanges() {
+            bool hasChanges() {
               final titleChanged = titleController.text.trim() != currentPost.title;
               final contentChanged = contentController.text.trim() != (currentPost.content ?? '');
-              final attachmentsChanged = !_listsEqual(editableAttachments, currentPost.attachments);
+              final attachmentsChanged = !listsEqual(editableAttachments, currentPost.attachments);
               return titleChanged || contentChanged || attachmentsChanged;
             }
             return Dialog(
@@ -452,7 +451,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                                   );
                                   return;
                                 }
-                                if (!_hasChanges()) {
+                                if (!hasChanges()) {
                                   SnackBarUtils.showInfoSnackBar(
                                       context,
                                       message: 'No changes detected! Make some edits first ✏️'
@@ -834,17 +833,17 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
 
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            bool _listsEqual(List<String> list1, List<String> list2) {
+            bool listsEqual(List<String> list1, List<String> list2) {
               if (list1.length != list2.length) return false;
               for (int i = 0; i < list1.length; i++) {
                 if (list1[i] != list2[i]) return false;
               }
               return true;
             }
-            bool _hasChanges() {
+            bool hasChanges() {
               final titleChanged = titleController.text.trim() != currentPost.title;
               final contentChanged = contentController.text.trim() != (currentPost.content ?? '');
-              final attachmentsChanged = !_listsEqual(editableAttachments, currentPost.attachments);
+              final attachmentsChanged = !listsEqual(editableAttachments, currentPost.attachments);
               return titleChanged || contentChanged || attachmentsChanged;
             }
 
@@ -1105,14 +1104,14 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                                   if (state is EditPostSuccess) {
                                     Navigator.pop(dialogContext);
                                     // Use Future.delayed to ensure dialog is closed first
-                                    Future.delayed(Duration(milliseconds: 100), () {
+                                    Future.delayed(const Duration(milliseconds: 100), () {
                                       SnackBarUtils.showSuccessSnackBar(
                                           context,
                                           message: 'Post updated successfully! 🎉'
                                       );
                                     });
                                   } else if (state is ForumFailure) {
-                                    Future.delayed(Duration(milliseconds: 100), () {
+                                    Future.delayed(const Duration(milliseconds: 100), () {
                                       SnackBarUtils.showErrorSnackBar(
                                           context,
                                           message: 'Failed to update post: ${state.message} 😞'
@@ -1134,7 +1133,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                                         return;
                                       }
 
-                                      if (!_hasChanges()) {
+                                      if (!hasChanges()) {
                                         SnackBarUtils.showInfoSnackBar(
                                             context,
                                             message: 'No changes detected! Make some edits first ✏️'
@@ -1390,7 +1389,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12.r),
-            child: Container(
+            child: SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: Image.network(
@@ -1687,7 +1686,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
 class PostProfileAvatar extends StatelessWidget {
   final Post post;
 
-  const PostProfileAvatar({Key? key, required this.post}) : super(key: key);
+  const PostProfileAvatar({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {

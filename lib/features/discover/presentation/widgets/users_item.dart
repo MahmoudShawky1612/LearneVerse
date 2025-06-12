@@ -3,10 +3,7 @@ import 'package:flutterwidgets/features/community/data/models/community_members_
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../utils/url_helper.dart';
-import '../../../community/models/owner_model.dart';
-import '../../../home/models/author_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../profile/presentation/views/profile_screen.dart';
 
 class UserItem extends StatelessWidget {
   final CommunityMember user;

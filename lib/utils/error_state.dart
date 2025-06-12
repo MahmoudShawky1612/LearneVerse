@@ -9,12 +9,12 @@ class ErrorStateWidget extends StatefulWidget {
   final String message;
 
   const ErrorStateWidget({
-    Key? key,
+    super.key,
     this.title = 'Oops! Something Broke!',
     required this.onRetry,
     this.buttonText = 'Let\'s Try Again',
     this.message = 'We encountered an unexpected error. Please try again later.',
-  }) : super(key: key);
+  });
 
   @override
   _ErrorStateWidgetState createState() => _ErrorStateWidgetState();

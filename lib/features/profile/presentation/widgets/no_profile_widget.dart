@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,12 +10,12 @@ class NoDataWidget<T> extends StatelessWidget {
   final double? height;
 
   const NoDataWidget({
-    Key? key,
+    super.key,
     required this.message,
     this.lottieUrl = 'https://lottie.host/897f191d-1257-4c7a-9cf3-e780e06cf0b8/DPdpOIc0Za.json',
     this.width,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

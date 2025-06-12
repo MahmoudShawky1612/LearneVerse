@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/utils/url_helper.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../utils/jwt_helper.dart';
@@ -117,7 +116,7 @@ class _UserCommunityItemState extends State<UserCommunityItem> {
           return Container(
             width: 40.w,
             height: 40.h,
-            color: theme.colorScheme.surfaceVariant, // fallback background
+            color: theme.colorScheme.surfaceContainerHighest, // fallback background
             child: Icon(
               Icons.broken_image,
               size: 24.r,

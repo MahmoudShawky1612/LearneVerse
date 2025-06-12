@@ -1,15 +1,10 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/discover/logic/cubit/toggle_cubit.dart';
-import 'package:flutterwidgets/features/discover/logic/cubit/toggle_states.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
-import 'package:flutterwidgets/utils/snackber_util.dart';
-import 'package:go_router/go_router.dart';
-import '../../../../utils/url_helper.dart';
 import '../../../discover/presentation/widgets/community_image.dart';
 import '../../../discover/presentation/widgets/heart_button.dart';
 import '../../../discover/presentation/widgets/view_button.dart';

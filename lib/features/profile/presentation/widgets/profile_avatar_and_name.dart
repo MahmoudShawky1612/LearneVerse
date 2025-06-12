@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 import 'package:flutterwidgets/utils/url_helper.dart';
 
@@ -35,7 +34,7 @@ class ProfileAvatarAndName extends StatelessWidget {
               child: CircleAvatar(
                 radius: 36.r,
                 backgroundColor: Colors.grey[200],
-                child: userInfo.profilePictureURL == null || userInfo.profilePictureURL!.isEmpty
+                child: userInfo.profilePictureURL.isEmpty
                     ? Icon(
                   Icons.person,
                   color: Colors.blue,
@@ -43,7 +42,7 @@ class ProfileAvatarAndName extends StatelessWidget {
                 )
                     : ClipOval(
                   child: Image.network(
-                    UrlHelper.transformUrl(userInfo.profilePictureURL!),
+                    UrlHelper.transformUrl(userInfo.profilePictureURL),
                     width: 72.r, // 2 * radius
                     height: 72.r,
                     fit: BoxFit.cover,

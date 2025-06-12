@@ -400,10 +400,10 @@ class _SectionsScreenState extends State<SectionsScreen> {
                                                         vertical: 4.h,
                                                       ),
                                                       decoration: BoxDecoration(
-                                                        gradient: LinearGradient(
+                                                        gradient: const LinearGradient(
                                                           colors: [
-                                                            const Color(0xFF00C851),
-                                                            const Color(0xFF007E33),
+                                                            Color(0xFF00C851),
+                                                            Color(0xFF007E33),
                                                           ],
                                                         ),
                                                         borderRadius: BorderRadius.circular(8.r),
@@ -455,7 +455,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
                                               ),
                                               SizedBox(height: 16.h),
                                               // Action Button
-                                              Container(
+                                              SizedBox(
                                                 width: double.infinity,
                                                 height: 44.h,
                                                 child: ElevatedButton(
@@ -1158,7 +1158,7 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
               ],
 
               // Progress Action
-              Container(
+              SizedBox(
                 width: double.infinity,
                 height: 56.h,
                 child: ElevatedButton(

@@ -59,14 +59,14 @@ class TopMemberItem extends StatelessWidget {
                 gradient: themeExtension?.circleGradient,
               ),
               child: ClipOval(
-                child: (avatarUrl == null || avatarUrl.isEmpty)
-                    ? Icon(Icons.person, color: Colors.blue, size: 20)
+                child: (avatarUrl.isEmpty)
+                    ? const Icon(Icons.person, color: Colors.blue, size: 20)
                     : Image.network(
                         avatarUrl,
                         width: 36.w,
                         height: 36.h,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Icon(Icons.person, color: Colors.blue, size: 20),
+                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.person, color: Colors.blue, size: 20),
                       ),
               ),
             ),

@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/material.dart';
 
 import 'package:flutterwidgets/features/profile/logic/cubit/user_communities_states.dart';
 

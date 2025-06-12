@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/data/models/community_members_model.dart';
-import 'package:flutterwidgets/features/community/models/owner_model.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/build_section_title.dart';
 import 'package:flutterwidgets/features/discover/presentation/widgets/vertical_users_list.dart';
-import 'package:flutterwidgets/features/home/models/author_model.dart';
 import '../../../home/data/models/community_model.dart';
 import '../../../profile/presentation/widgets/vertical_community_list.dart';
 

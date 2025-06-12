@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterwidgets/features/profile/data/models/user_profile_model.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/profile_state.dart';
 import 'package:flutterwidgets/utils/error_state.dart';

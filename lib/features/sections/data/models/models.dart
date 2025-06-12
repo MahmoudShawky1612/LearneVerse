@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 // Enum for content type
 enum ContentType { document, image, video, recording, file }

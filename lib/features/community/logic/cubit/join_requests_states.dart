@@ -1,4 +1,3 @@
-import '../../data/models/creat_request_model.dart';
 
 abstract class CommunityRoleState {}
 

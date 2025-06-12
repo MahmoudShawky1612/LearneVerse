@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../profile/presentation/widgets/build_comments.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../data/models/comment_model.dart';
-import '../../models/comments_model.dart';
 
 class CommentsList extends StatelessWidget {
   final List<Comment> comments;

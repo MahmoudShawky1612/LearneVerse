@@ -97,7 +97,7 @@ class _ForumTabState extends State<ForumTab> {
     final contentController = TextEditingController();
     List<XFile> pickedImages = [];
     bool isCreating = false;
-    final ImagePicker _picker = ImagePicker();
+    final ImagePicker picker = ImagePicker();
 
     showDialog(
       context: context,
@@ -438,7 +438,7 @@ class _ForumTabState extends State<ForumTab> {
                                               onTap: isCreating
                                                   ? null
                                                   : () async {
-                                                final List<XFile> images = await _picker.pickMultiImage();
+                                                final List<XFile> images = await picker.pickMultiImage();
                                                 if (images.isNotEmpty) {
                                                   setDialogState(() {
                                                     pickedImages.addAll(images);
@@ -494,7 +494,7 @@ class _ForumTabState extends State<ForumTab> {
                                               onTap: isCreating
                                                   ? null
                                                   : () async {
-                                                final XFile? image = await _picker.pickImage(
+                                                final XFile? image = await picker.pickImage(
                                                   source: ImageSource.camera,
                                                 );
                                                 if (image != null) {
@@ -714,7 +714,7 @@ class _ForumTabState extends State<ForumTab> {
               return   Center(child: Column(
                 children: [
                   SizedBox(height: 20.h),
-                  LoadingState(),
+                  const LoadingState(),
                   SizedBox(height: 200.h),
                 ],
               ));

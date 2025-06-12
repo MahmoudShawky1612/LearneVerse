@@ -1,4 +1,3 @@
-import '../../data/models/contributions_model.dart';
 import '../../data/models/user_profile_model.dart';
 
 abstract class ProfileState {}

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/data/models/comment_model.dart';
 
-import '../../models/user_comments_model.dart';
 import 'build_comments.dart';
 
 class UserComments extends StatefulWidget {

@@ -1,16 +1,12 @@
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/services/forum_service.dart';
-import 'package:flutterwidgets/features/home/models/author_model.dart';
-import 'package:flutterwidgets/features/home/models/post_model.dart';
 import 'package:flutterwidgets/features/profile/presentation/widgets/no_profile_widget.dart';
 import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/jwt_helper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,7 +28,6 @@ import '../widgets/leaderboard_tab.dart';
 import '../widgets/members_tab.dart';
 import '../widgets/sliver_app_bar.dart';
 import '../widgets/tab_selector.dart';
-import '../../data/models/creat_request_model.dart';
 import '../../services/join_requests_service.dart';
 
 
@@ -105,7 +100,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   }
   Future<int> getIdFromToken()async {
     final token = await TokenStorage.getToken();
-    return await getUserIdFromToken(token!);
+    return getUserIdFromToken(token!);
   }
   Future<void> _saveJoinButtonState(bool isDisabled) async {
     final prefs = await SharedPreferences.getInstance();
