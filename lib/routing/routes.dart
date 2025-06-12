@@ -9,6 +9,7 @@ import 'package:flutterwidgets/features/calendar/presentation/views/calendar_scr
 import 'package:go_router/go_router.dart';
 import '../features/profile/presentation/views/profile_screen.dart';
 import '../features/splash screen/splash_screen.dart';
+import 'package:flutterwidgets/features/sections/sections_screen.dart';
 
 final GoRouter route = GoRouter(
   initialLocation: '/splash',
@@ -47,6 +48,11 @@ final GoRouter route = GoRouter(
     GoRoute(
       path: '/login',
       builder: (context, state) => const PremiumLoginScreen(),
+    ),
+    // Section route
+    GoRoute(
+      path: '/sections',
+      builder: (context, state) =>  SectionsScreen(classroomId: state.extra as int,),
     ),
   ],
 );

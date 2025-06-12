@@ -8,7 +8,7 @@ import 'package:flutterwidgets/utils/loading_state.dart';
 import '../../../profile/presentation/widgets/no_profile_widget.dart';
 import '../../logic/cubit/classroom_cubit.dart';
 import '../../logic/cubit/classroom_states.dart';
-import 'section_card.dart';
+import 'classroom_card.dart';
 
 class ClassroomTab extends StatefulWidget {
   final Community community;

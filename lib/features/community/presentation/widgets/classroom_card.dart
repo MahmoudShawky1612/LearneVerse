@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/data/models/classroom_model.dart';
+import 'package:go_router/go_router.dart';
 
 class ClassroomCard extends StatefulWidget {
   final Classroom classroom;
@@ -37,7 +38,7 @@ class _ClassroomCardState extends State<ClassroomCard> {
         child: InkWell(
           borderRadius: BorderRadius.circular(16.r),
           onTap: () {
-            // TODO: Navigate to classroom details
+            context.push('/sections', extra: classroom.id);
           },
           child: Padding(
             padding: EdgeInsets.all(16.w),

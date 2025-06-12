@@ -35,6 +35,10 @@ dependencies:
   syncfusion_flutter_charts: ^29.2.9
   lottie: ^2.7.0
   simple_animations: ^5.0.2
+  audioplayers: ^5.2.1
+  syncfusion_flutter_pdfviewer: ^29.2.9
+  webview_flutter: ^4.7.0
+  youtube_player_flutter: ^8.1.2
 
 dev_dependencies:
   flutter_test:
@@ -51,3 +55,5 @@ flutter:
   assets:
     - assets/images/
     - assets/videos/
+    - assets/docs/
+    - assets/rec/
