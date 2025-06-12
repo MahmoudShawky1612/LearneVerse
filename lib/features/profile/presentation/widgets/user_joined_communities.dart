@@ -30,7 +30,7 @@ class UserJoinedCommunities extends StatelessWidget {
         communities: communities,
         onLeave: (ctx, community) {
           ctx.read<UserCommunitiesCubit>().leaveCommunity(userId, community.id);
-        },
+         }, userId: userId,
       ),
     );
   }

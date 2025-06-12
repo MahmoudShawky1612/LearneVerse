@@ -5,22 +5,54 @@ import 'package:flutterwidgets/utils/url_helper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../utils/jwt_helper.dart';
+import '../../../../utils/token_storage.dart';
 import '../../../home/data/models/community_model.dart';
 
-class UserCommunityItem extends StatelessWidget {
+class UserCommunityItem extends StatefulWidget {
   final Community community;
   final VoidCallback? onTap;
   final VoidCallback? onJoinLeave;
   final VoidCallback? onLeave;
-
+  final int? userId;
   const UserCommunityItem({
     super.key,
     required this.community,
     this.onTap,
     this.onJoinLeave,
     this.onLeave,
+     this.userId,
   });
 
+  @override
+  State<UserCommunityItem> createState() => _UserCommunityItemState();
+}
+
+class _UserCommunityItemState extends State<UserCommunityItem> {
+  bool isUserProfile = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfUserProfile();
+  }
+
+  Future<void> _checkIfUserProfile() async {
+    final userId = await getUserId();
+    if (mounted) {
+      setState(() {
+        isUserProfile = userId == widget.userId;
+      });
+    }
+  }
+
+  Future<dynamic> getUserId() async {
+    final token = await TokenStorage.getToken();
+    if (token != null) {
+      return getUserIdFromToken(token);
+    }
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -33,7 +65,7 @@ class UserCommunityItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: onTap,
+          onTap: widget.onTap,
           child: Padding(
             padding: EdgeInsets.all(16.r),
             child: Row(
@@ -77,7 +109,7 @@ class UserCommunityItem extends StatelessWidget {
     child: ClipRRect(
       borderRadius: BorderRadius.circular(14.r),
       child: Image.network(
-        UrlHelper.transformUrl(community.logoImgURL),
+        UrlHelper.transformUrl(widget.community.logoImgURL),
         width: 40.w,
         height: 40.h,
         fit: BoxFit.cover,
@@ -105,7 +137,7 @@ class UserCommunityItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            community.name,
+            widget.community.name,
             style: textTheme.titleMedium?.copyWith(
               fontSize: 13.sp,
               fontWeight: FontWeight.w700,
@@ -136,7 +168,7 @@ class UserCommunityItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: InkWell(
-                onTap: () => context.push('/community', extra: community),
+                onTap: () => context.push('/community', extra: widget.community),
                 borderRadius: BorderRadius.circular(10.r),
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
@@ -160,11 +192,11 @@ class UserCommunityItem extends StatelessWidget {
               ),
             ),
             SizedBox(width: 8.w),
-            if (onLeave != null)
+            if (isUserProfile)
               IconButton(
                 icon: Icon(Icons.exit_to_app, color: colorScheme.error, size: 20.r),
                 tooltip: 'Leave Community',
-                onPressed: onLeave,
+                onPressed: widget.onLeave,
               ),
           ],
         ),

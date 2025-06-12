@@ -128,9 +128,13 @@ class UserItem extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w600,
-                                    color: role == "Member"
-                                        ? colorScheme.onSurface
-                                        : colorScheme.tertiary,
+                                    color: role == "MEMBER"
+                                        ? Colors.blue
+                                        : role == "MODERATOR"
+                                            ? Colors.orange
+                                            : role == "OWNER"
+                                                ? Colors.red
+                                                : colorScheme.onSurface,
                                   ),
                                 ),
                               ),

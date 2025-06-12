@@ -7,9 +7,10 @@ import 'no_profile_widget.dart';
 
 class VerticalCommunityList extends StatelessWidget {
   final List<Community> communities;
+  final int? userId;
   final void Function(BuildContext context, Community community)? onLeave;
 
-  const VerticalCommunityList({super.key, required this.communities, this.onLeave});
+  const VerticalCommunityList({super.key, required this.communities, this.onLeave,  this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class VerticalCommunityList extends StatelessWidget {
             UserCommunityItem(
               community: communities[index],
               onLeave: onLeave == null ? null : () => onLeave!(context, communities[index]),
+              userId: userId,
             ),
             const Divider(),
           ],
