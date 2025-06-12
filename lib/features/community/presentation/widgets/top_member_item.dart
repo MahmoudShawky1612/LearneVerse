@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:go_router/go_router.dart';
 
 class TopMemberItem extends StatelessWidget {
+  final int id;
   final int rank;
   final String name;
   final String username;
@@ -16,6 +18,7 @@ class TopMemberItem extends StatelessWidget {
     required this.username,
     required this.avatarUrl,
     required this.points,
+    required this.id,
   });
 
   @override
@@ -44,19 +47,27 @@ class TopMemberItem extends StatelessWidget {
             ),
           ),
           SizedBox(width: 24.w),
-          Container(
-            width: 36.w,
-            height: 36.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: themeExtension?.circleGradient,
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                avatarUrl,
-                width: 36.w,
-                height: 36.h,
-                fit: BoxFit.cover,
+          InkWell(
+            onTap: () {
+              context.push('/profile', extra: id);
+            },
+            child: Container(
+              width: 36.w,
+              height: 36.h,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: themeExtension?.circleGradient,
+              ),
+              child: ClipOval(
+                child: (avatarUrl == null || avatarUrl.isEmpty)
+                    ? Icon(Icons.person, color: Colors.blue, size: 20)
+                    : Image.network(
+                        avatarUrl,
+                        width: 36.w,
+                        height: 36.h,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Icon(Icons.person, color: Colors.blue, size: 20),
+                      ),
               ),
             ),
           ),

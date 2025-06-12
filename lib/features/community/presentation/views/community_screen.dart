@@ -224,7 +224,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
            ),
         );
       case 3:
-        return const LeaderboardTab();
+        return LeaderboardTab(communityId: widget.community.id);
       case 4:
         return MembersTab(
           community: community,

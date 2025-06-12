@@ -137,4 +137,22 @@ class ForumApiService {
       throw Exception(body['message'] ?? 'Failed to update post');
     }
   }
+
+  Future<List<Map<String, dynamic>>> fetchLeaderboardQuizScores(int communityId) async {
+    final token = await TokenStorage.getToken();
+    final url = Uri.parse('${ApiHelper.baseUrl}/leaderboard/quiz-score/$communityId');
+    final response = await http.get(
+      url,
+      headers: {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    final body = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return List<Map<String, dynamic>>.from(body['data']);
+    } else {
+      throw Exception(body['message'] ?? 'Failed to fetch leaderboard scores');
+    }
+  }
 }
