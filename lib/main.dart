@@ -11,7 +11,9 @@ import 'package:flutterwidgets/features/community/service/forum_service.dart';
 import 'package:flutterwidgets/features/community/service/join_requests_service.dart';
 import 'package:flutterwidgets/features/discover/logic/cubit/favorite_communities_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/downvote_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/upvote_cubit.dart';
 import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/user_communities_cubit.dart';
@@ -84,6 +86,8 @@ void main() async {
             create: (_) => FavoriteCubit(FavoriteService())),
         BlocProvider<SectionsCubit>(
             create: (_) => SectionsCubit(SectionsApiService())),
+        BlocProvider<UpvoteCubit>(create: (_) => UpvoteCubit(FeedPostsApiService())),
+        BlocProvider<DownvoteCubit>(create: (_) =>DownvoteCubit(FeedPostsApiService())),
       ],
       child: const MyApp(),
     ),

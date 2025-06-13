@@ -1700,15 +1700,71 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                   ...currentPost.attachments
                       .map((url) => _buildImageWidget(url)),
                 SizedBox(height: 12.h),
-                // Comments
-                _buildActionButton(
-                  icon: FontAwesomeIcons.comment,
-                  text: '$commentCounter',
-                  onTap: () => context.push('/comments', extra: currentPost),
+                Row(
+                  children: [
+                    // Upvote
+                    BlocConsumer<UpvoteCubit, UpVoteStates>(
+                      listener: (context, state) {
+                        if (state is UpVoteSuccess) {
+                          setState(() {
+                            voteCounter = currentPost.voteCounter;
+                            upVoteColor = currentPost.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
+                            downVoteColor = Colors.grey;
+                          });
+                        }
+                      },
+                      builder: (context, state) {
+                        return EnhancedVoteButton(
+                          icon: Icons.arrow_circle_up_rounded,
+                          color: upVoteColor,
+                          isLoading: state is UpVoteLoading,
+                          isUpvote: true,
+                          onTap: () => context
+                              .read<UpvoteCubit>()
+                              .upVote(currentPost),
+                        );
+                      },
+                    ),
+                    SizedBox(width: 4.w),
+                    Text('$voteCounter',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.sp)),
+                    SizedBox(width: 10.w),
+                    // Downvote
+                    BlocConsumer<DownvoteCubit, DownVoteStates>(
+                      listener: (context, state) {
+                        if (state is DownVoteSuccess) {
+                          setState(() {
+                            voteCounter = currentPost.voteCounter;
+                            downVoteColor = currentPost.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
+                            upVoteColor = Colors.grey;
+                          });
+                        }
+                      },
+                      builder: (context, state) {
+                        return EnhancedVoteButton(
+                          icon: Icons.arrow_circle_down_rounded,
+                          color: downVoteColor,
+                          isLoading: state is DownVoteLoading,
+                          isUpvote: false,
+                          onTap: () => context
+                              .read<DownvoteCubit>()
+                              .downVote(currentPost),
+                        );
+                      },
+                    ),
+                    SizedBox(width: 20.w),
+                    // Comments
+                    _buildActionButton(
+                      icon: FontAwesomeIcons.comment,
+                      text: '$commentCounter',
+                      onTap: () => context.push('/comments', extra: currentPost),
+                    ),
+                  ],
                 ),
-                // Options Menu
                 if (isAuthor && isMenuVisible)
-                  _buildOptionsMenuDumb(colorScheme),
+                  _buildOptionsMenu(colorScheme, context),
               ],
             ),
           ),
@@ -1717,7 +1773,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildOptionsMenuDumb(ColorScheme colorScheme) {
+  Widget _buildOptionsMenu(ColorScheme colorScheme, BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 8.h),
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
