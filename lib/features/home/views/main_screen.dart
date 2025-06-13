@@ -32,8 +32,9 @@ class _MainScreenState extends State<MainScreen> {
         : screenWidth < 600
             ? 30.w
             : 50.w;
-
+  final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBody: true,
       body: Stack(
         children: [
@@ -41,7 +42,7 @@ class _MainScreenState extends State<MainScreen> {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 0,
+            bottom: isKeyboardVisible ? -100.h : 0,
             child: Container(
               margin: EdgeInsets.symmetric(
                   vertical: 15.h, horizontal: horizontalMargin),

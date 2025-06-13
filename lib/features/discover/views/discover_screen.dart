@@ -60,7 +60,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         backgroundColor: theme.scaffoldBackgroundColor,
         extendBody: true,
         body: Padding(
-          padding: EdgeInsets.fromLTRB(20.w, 40.w, 20.w, 80.w),
+          padding: EdgeInsets.fromLTRB(20.w, 16.w, 20.w, 0.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

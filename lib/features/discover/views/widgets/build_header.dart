@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BuildHeader extends StatelessWidget {
   const BuildHeader({super.key});
@@ -12,14 +13,23 @@ class BuildHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Discover",
-          style: TextStyle(
-            fontSize: 32.sp,
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onSurface,
-            letterSpacing: -0.5,
-          ),
+        Row(
+          children: [
+            Text(
+              "Discover",
+              style: GoogleFonts.poppins(
+                fontSize: 28.sp,
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+            ),
+           Spacer(),
+           Icon(
+              Icons.search,
+             color: colorScheme.onSurface,
+              size: 24.r,
+            ),
+          ],
         ),
         SizedBox(height: 8.h),
         Text(
