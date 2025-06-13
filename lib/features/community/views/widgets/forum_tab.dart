@@ -1,23 +1,24 @@
 import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/jwt_helper.dart';
 import 'package:flutterwidgets/utils/loading_state.dart';
-import 'package:flutterwidgets/utils/url_helper.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutterwidgets/utils/snackber_util.dart';
+import 'package:flutterwidgets/utils/url_helper.dart';
+import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+
 import '../../../../utils/token_storage.dart';
 import '../../../home/views/widgets/build_posts.dart';
 import '../../logic/cubit/forum.states.dart';
-import 'package:image/image.dart' as img;
-
 import '../../service/forum_service.dart';
 
 class ForumTab extends StatefulWidget {
@@ -90,8 +91,7 @@ class _ForumTabState extends State<ForumTab> {
         dialogContext,
         message: 'Image upload failed: ${e.toString()}',
       );
-      debugPrint('Image upload error: $e');
-      return null;
+       return null;
     }
   }
 
@@ -165,7 +165,8 @@ class _ForumTabState extends State<ForumTab> {
                               child: userPp != null && userPp!.isNotEmpty
                                   ? ClipOval(
                                       child: CachedNetworkImage(
-                                        imageUrl: UrlHelper.transformUrl(userPp!),
+                                        imageUrl:
+                                            UrlHelper.transformUrl(userPp!),
                                         width: 40.r,
                                         height: 40.r,
                                         fit: BoxFit.cover,
@@ -821,7 +822,12 @@ class _ForumTabState extends State<ForumTab> {
             } else if (state is ForumFailure) {
               return Center(
                 child: ErrorStateWidget(
-                    message: state.message, onRetry: fetchForumPosts),
+                    message: state.message,
+                    onRetry: () {
+                      context
+                          .read<ForumCubit>()
+                          .fetchForumPosts(widget.community.id);
+                    }),
               );
             }
             return const SizedBox();

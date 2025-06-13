@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/features/community/service/forum_service.dart';
 import 'package:flutterwidgets/features/profile/views/widgets/no_profile_widget.dart';
 import 'package:flutterwidgets/utils/error_state.dart';
+import 'package:flutterwidgets/utils/loading_state.dart';
+
 import 'podium_item.dart';
 import 'top_member_item.dart';
-import 'package:flutterwidgets/features/community/service/forum_service.dart';
-import 'package:flutterwidgets/utils/loading_state.dart';
 
 class LeaderboardTab extends StatelessWidget {
   final int communityId;
+
   const LeaderboardTab({super.key, required this.communityId});
 
   @override
@@ -26,7 +29,11 @@ class LeaderboardTab extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(
               child: ErrorStateWidget(
-            onRetry: () {},
+            onRetry: () {
+              context
+                  .read<ForumApiService>()
+                  .fetchLeaderboardQuizScores(communityId);
+            },
             message: snapshot.error.toString(),
           ));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -186,6 +193,7 @@ class _LeaderboardUser {
   final String name;
   final int points;
   final String avatar;
+
   _LeaderboardUser(
       {required this.id,
       required this.name,

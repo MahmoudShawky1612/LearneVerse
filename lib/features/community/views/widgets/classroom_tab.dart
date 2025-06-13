@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/loading_state.dart';
+
 import '../../../profile/views/widgets/no_profile_widget.dart';
 import '../../logic/cubit/classroom_cubit.dart';
 import '../../logic/cubit/classroom_states.dart';
@@ -78,7 +79,12 @@ class _ClassroomTabState extends State<ClassroomTab> {
               );
             } else if (state is ClassroomError) {
               return ErrorStateWidget(
-                  message: state.message, onRetry: fetchClassrooms);
+                  message: state.message,
+                  onRetry: () {
+                    context
+                        .read<ClassroomCubit>()
+                        .fetchClassrooms(widget.community.id);
+                  });
             }
             return const SizedBox.shrink();
           },

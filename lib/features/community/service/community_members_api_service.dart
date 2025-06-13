@@ -10,7 +10,7 @@ class CommunityMembersApiService {
   Future<List<CommunityMember>> fetchCommunityMembers(int communityId) async {
     final token = await TokenStorage.getToken();
     final response = await http.get(
-      Uri.parse('$baseUrl/communities/$communityId/users'),
+      Uri.parse('$baseUrl/communitiess/$communityId/users'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

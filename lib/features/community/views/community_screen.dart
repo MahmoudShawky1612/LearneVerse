@@ -349,7 +349,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   return Center(
                       child: ErrorStateWidget(
                     message: state.message,
-                    onRetry: () {},
+                    onRetry: () {
+                      context
+                          .read<JoinRequestsCubit>()
+                          .fetchJoinRequests(widget.community.id);
+                    },
                   ));
                 }
                 return const SizedBox.shrink();

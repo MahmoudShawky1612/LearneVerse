@@ -60,8 +60,7 @@ class _MembersTabState extends State<MembersTab> {
                   return const CupertinoActivityIndicator();
                 } else if (state is CommunityMembersError) {
                   return Text(
-                    'Error: ${state.message}',
-                    style: const TextStyle(color: Colors.red),
+                    0.toString(),
                   );
                 } else if (state is CommunityMembersSuccess) {
                   return Container(
@@ -99,7 +98,12 @@ class _MembersTabState extends State<MembersTab> {
               ));
             } else if (state is CommunityMembersError) {
               return ErrorStateWidget(
-                  message: state.message, onRetry: fetchCommunityMembers);
+                  message: state.message,
+                  onRetry: () {
+                    context
+                        .read<CommunityMembersCubit>()
+                        .fetchCommunityMembers(widget.community.id);
+                  });
             } else if (state is CommunityMembersSuccess) {
               return Column(
                 children: [
