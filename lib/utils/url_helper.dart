@@ -1,6 +1,6 @@
 class UrlHelper {
   static const String CLOUDFLARED_URL =
-      "https://004f-217-55-181-201.ngrok-free.app";
+      "https://5fa9-154-236-5-110.ngrok-free.app";
   static const String LOCAL_URL = "http://localhost:5500";
 
   static String transformUrl(String url) {

@@ -1,4 +1,4 @@
 class ApiHelper {
   static const String baseUrl =
-      'https://004f-217-55-181-201.ngrok-free.app/api/v1';
+      'https://5fa9-154-236-5-110.ngrok-free.app/api/v1';
 }

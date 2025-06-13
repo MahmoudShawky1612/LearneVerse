@@ -19,7 +19,7 @@ class LoadingState extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      color: backgroundColor ?? (isDark ? const Color(0xFF0A0A0A) : const Color(0xFFF8FAFC)),
+      color: theme.colorScheme.background,
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
