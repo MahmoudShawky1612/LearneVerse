@@ -23,6 +23,7 @@ class UserCommunitiesApiService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      print(data);
       return (data['data'] as List)
           .map((json) => Community.fromJson(json['Community']))
           .toList();

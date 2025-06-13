@@ -104,24 +104,24 @@ class PodiumItem extends StatelessWidget {
               child: ClipOval(
                 child: (user.avatar == null || user.avatar.isEmpty)
                     ? Icon(
-                        Icons.person,
-                        color: accentColor,
-                        size: isFirst ? 36.sp : 30.sp,
-                      )
+                  Icons.person,
+                  color: accentColor,
+                  size: isFirst ? 36.sp : 30.sp,
+                )
                     : CachedNetworkImage(
-                        imageUrl: user.avatar,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => SizedBox(
-                          width: 28.r,
-                          height: 28.r,
-                          child: const CupertinoActivityIndicator(),
-                        ),
-                        errorWidget: (context, error, stackTrace) => Icon(
-                          Icons.person,
-                          color: accentColor,
-                          size: isFirst ? 36.sp : 30.sp,
-                        ),
-                      ),
+                  imageUrl: user.avatar,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => SizedBox(
+                    width: 28.r,
+                    height: 28.r,
+                    child: const CupertinoActivityIndicator(),
+                  ),
+                  errorWidget: (context, error, stackTrace) => Icon(
+                    Icons.person,
+                    color: accentColor,
+                    size: isFirst ? 36.sp : 30.sp,
+                  ),
+                ),
               ),
             ),
           ),
@@ -129,18 +129,21 @@ class PodiumItem extends StatelessWidget {
 
         SizedBox(height: 12.h),
 
-        // Refined name text
-        Text(
-          user.name,
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: isFirst ? 16.sp : 14.sp,
-            color: colorScheme.onSurface,
-            letterSpacing: 0.3,
+        // Constrain name text width to prevent overflow
+        SizedBox(
+          width: isFirst ? 90.w : 80.w, // Match podium width for consistency
+          child: Text(
+            user.name,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: isFirst ? 16.sp : 14.sp,
+              color: colorScheme.onSurface,
+              letterSpacing: 0.3,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         ),
 
         SizedBox(height: 8.h),

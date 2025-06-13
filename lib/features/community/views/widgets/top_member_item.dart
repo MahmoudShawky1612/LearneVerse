@@ -63,15 +63,15 @@ class TopMemberItem extends StatelessWidget {
                 child: (avatarUrl.isEmpty)
                     ? const Icon(Icons.person, color: Colors.blue, size: 20)
                     : CachedNetworkImage(
-                        imageUrl: avatarUrl,
-                        width: 36.w,
-                        height: 36.h,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, error, stackTrace) => const Icon(
-                            Icons.person,
-                            color: Colors.blue,
-                            size: 20),
-                      ),
+                  imageUrl: avatarUrl,
+                  width: 36.w,
+                  height: 36.h,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, error, stackTrace) => const Icon(
+                      Icons.person,
+                      color: Colors.blue,
+                      size: 20),
+                ),
               ),
             ),
           ),
@@ -85,6 +85,8 @@ class TopMemberItem extends StatelessWidget {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
+                  maxLines: 1, // Restrict to one line
+                  overflow: TextOverflow.ellipsis, // Show ellipsis for overflow
                 ),
                 Text(
                   '@$username',
@@ -92,6 +94,8 @@ class TopMemberItem extends StatelessWidget {
                     color: theme.colorScheme.onSurfaceVariant,
                     fontSize: 12.sp,
                   ),
+                  maxLines: 1, // Restrict to one line
+                  overflow: TextOverflow.ellipsis, // Show ellipsis for overflow
                 ),
               ],
             ),

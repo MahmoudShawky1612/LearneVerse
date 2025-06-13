@@ -16,9 +16,9 @@ import 'package:flutterwidgets/features/community/views/widgets/tab_selector.dar
 import 'package:flutterwidgets/features/profile/views/widgets/no_profile_widget.dart';
 import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/jwt_helper.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../utils/loading_state.dart';
 import '../../../../utils/snackber_util.dart';
