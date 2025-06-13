@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/core/constants/app_colors.dart';
+import 'package:flutterwidgets/core/providers/theme_provider.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/comment_cubit.dart';
 import 'package:flutterwidgets/features/comments/service/comment_service.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
@@ -16,10 +18,7 @@ import 'package:flutterwidgets/features/profile/logic/cubit/user_communities_cub
 import 'package:flutterwidgets/features/profile/logic/cubit/user_contributions_cubit.dart';
 import 'package:flutterwidgets/features/profile/service/user_comments.service.dart';
 import 'package:flutterwidgets/routing/routes.dart';
-import 'package:flutterwidgets/utils/token_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:flutterwidgets/core/providers/theme_provider.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
 
 import 'features/community/logic/cubit/classroom_cubit.dart';
 import 'features/community/logic/cubit/community_members_cubit.dart';
@@ -39,12 +38,11 @@ import 'features/profile/service/profile_api_services.dart';
 import 'features/profile/service/user_communities_service.dart';
 import 'features/profile/service/user_contributions_service.dart';
 import 'features/profile/service/user_posts_service.dart';
-import 'features/sections/service/api_service.dart';
 import 'features/sections/logic/cubit/sections_cubit.dart';
+import 'features/sections/service/api_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final token = await TokenStorage.getToken();
 
   runApp(
     MultiBlocProvider(
@@ -103,6 +101,7 @@ class MyApp extends StatelessWidget {
           minTextAdapt: true,
           designSize: const Size(360, 690),
           child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
             routerConfig: route,
             themeMode: themeProvider.themeMode,
             darkTheme: _buildDarkTheme(),

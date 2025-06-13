@@ -289,15 +289,13 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    // Content
-                    Flexible(
+                     Flexible(
                       child: SingleChildScrollView(
                         padding: EdgeInsets.all(20.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Author Info
-                            Row(
+                             Row(
                               children: [
                                 CircleAvatar(
                                   radius: 18.r,

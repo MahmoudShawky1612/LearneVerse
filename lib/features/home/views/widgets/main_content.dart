@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/community_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/post_feed_states.dart';
 import 'package:flutterwidgets/features/home/views/widgets/build_posts.dart';
 import 'package:flutterwidgets/features/home/views/widgets/community_grid.dart';
 import 'package:flutterwidgets/utils/loading_state.dart';
+
 import '../../../../utils/error_state.dart';
 import '../../logic/cubit/community_states.dart';
 
@@ -33,7 +34,8 @@ class _MainContentState extends State<MainContent> {
   void fetchPosts() {
     context.read<PostFeedCubit>().fetchFeedPosts();
   }
-    @override
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -41,10 +43,9 @@ class _MainContentState extends State<MainContent> {
     final themeExtension = theme.extension<AppThemeExtension>();
 
     return RefreshIndicator(
-      onRefresh: () async{
+      onRefresh: () async {
         context.read<PostFeedCubit>().fetchFeedPosts(forceRefresh: true);
         context.read<CommunityCubit>().fetchCommunities(forceRefresh: true);
-
       },
       child: SingleChildScrollView(
         child: Column(
@@ -63,7 +64,8 @@ class _MainContentState extends State<MainContent> {
                   ));
                 } else if (state is CommunitySuccess) {
                   return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
                     padding:
                         EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                     decoration: BoxDecoration(
@@ -101,7 +103,8 @@ class _MainContentState extends State<MainContent> {
                                 color: colorScheme.surface.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(8.r),
                                 border: Border.all(
-                                    color: colorScheme.primary.withOpacity(0.2)),
+                                    color:
+                                        colorScheme.primary.withOpacity(0.2)),
                               ),
                               child: Row(
                                 children: [
@@ -113,12 +116,9 @@ class _MainContentState extends State<MainContent> {
                                   SizedBox(width: 8.w),
                                   Expanded(
                                     child: Text(
-                                      'No communities match your interests. Try exploring more or updating your interests.',
+                                      'Noting in here yet.',
                                       style: TextStyle(
-                                        fontSize: 10.sp,
-                                        color: colorScheme.onSurface
-                                            .withOpacity(0.8),
-                                      ),
+                                          fontSize: 13.sp, color: Colors.blue),
                                     ),
                                   ),
                                 ],
@@ -185,7 +185,6 @@ class _MainContentState extends State<MainContent> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: colorScheme.primary.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 child: Text(
                                   'Personalized',
@@ -208,7 +207,8 @@ class _MainContentState extends State<MainContent> {
                                 color: colorScheme.surface.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                    color: colorScheme.primary.withOpacity(0.2)),
+                                    color:
+                                        colorScheme.primary.withOpacity(0.2)),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,7 +222,7 @@ class _MainContentState extends State<MainContent> {
                                       ),
                                       SizedBox(width: 8.w),
                                       Text(
-                                        'No posts match your interests',
+                                        'Join communities to see posts here',
                                         style: TextStyle(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w600,
@@ -236,8 +236,8 @@ class _MainContentState extends State<MainContent> {
                                     'We\'re showing you popular posts instead. Try refreshing or updating your interests.',
                                     style: TextStyle(
                                       fontSize: 12.sp,
-                                      color:
-                                          colorScheme.onSurface.withOpacity(0.8),
+                                      color: colorScheme.onSurface
+                                          .withOpacity(0.8),
                                     ),
                                   ),
                                 ],
@@ -252,7 +252,11 @@ class _MainContentState extends State<MainContent> {
                     ),
                   );
                 }
-                return   Center(child: ErrorStateWidget(onRetry: (){}, message: "Oppps!...unexpected error",));
+                return Center(
+                    child: ErrorStateWidget(
+                  onRetry: () {},
+                  message: "Oppps!...unexpected error",
+                ));
               },
             ),
           ],
