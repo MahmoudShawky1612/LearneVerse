@@ -32,11 +32,12 @@ class BuildPosts extends StatelessWidget {
             width: 100.w,
             height: 100.h,
           )
-        : ListView.builder(
+        : ListView.separated(
             shrinkWrap: shrinkWrap,
             physics: scrollPhysics,
             padding: EdgeInsets.zero,
             itemCount: posts.length,
+            separatorBuilder: (context, index) => Divider(height: 1.h),
             itemBuilder: (context, index) {
               return PostItem(
                 post: posts[index],

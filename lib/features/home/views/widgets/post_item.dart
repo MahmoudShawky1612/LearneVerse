@@ -2,18 +2,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/logic/cubit/forum_cubit.dart';
 import 'package:flutterwidgets/features/home/data/models/post_model.dart';
-import 'package:flutterwidgets/features/home/views/widgets/vote_button.dart';
-import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/upvote_cubit.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/downvote_cubit.dart';
-import 'package:flutterwidgets/features/home/logic/cubit/upvote_states.dart';
 import 'package:flutterwidgets/features/home/logic/cubit/downvote_states.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/upvote_cubit.dart';
+import 'package:flutterwidgets/features/home/logic/cubit/upvote_states.dart';
+import 'package:flutterwidgets/features/home/service/feed_post_service.dart';
+import 'package:flutterwidgets/features/home/views/widgets/vote_button.dart';
 import 'package:flutterwidgets/utils/snackber_util.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../utils/jwt_helper.dart';
 import '../../../../utils/token_storage.dart';
@@ -289,13 +289,13 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                     Flexible(
+                    Flexible(
                       child: SingleChildScrollView(
                         padding: EdgeInsets.all(20.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             Row(
+                            Row(
                               children: [
                                 CircleAvatar(
                                   radius: 18.r,
@@ -1618,7 +1618,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Row(
             children: [
               PostProfileAvatar(post: currentPost),

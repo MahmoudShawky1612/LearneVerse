@@ -35,7 +35,7 @@ class CommunityItem extends StatelessWidget {
 
     return Container(
       width: itemWidth,
-      margin: EdgeInsets.symmetric(horizontal: 8.w),
+      margin: EdgeInsets.only(left: 8.w, right:8.w, bottom: 5.w),
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(20.r),
@@ -43,26 +43,12 @@ class CommunityItem extends StatelessWidget {
           color: colorScheme.outline.withOpacity(0.1),
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.primary.withOpacity(0.08),
-            blurRadius: 12,
-            spreadRadius: 2,
-            offset: const Offset(0, 4),
-          ),
-          BoxShadow(
-            color: colorScheme.onSurface.withOpacity(0.05),
-            blurRadius: 6,
-            spreadRadius: 0,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Stack(
         children: [
           // Subtle gradient overlay
           Container(
-            decoration: BoxDecoration(
+             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.r),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,

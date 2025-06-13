@@ -76,8 +76,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     containerGradient: LinearGradient(
       colors: [
         Color(0xFFF5F7FA),
-        Color(0xFFE8ECEF),
-        Color(0xFFDCE2E6),
+        Color(0xFFF5F7FA),
       ],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,

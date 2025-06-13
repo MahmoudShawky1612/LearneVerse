@@ -70,7 +70,6 @@ class _MainContentState extends State<MainContent> {
                         EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                     decoration: BoxDecoration(
                       gradient: themeExtension?.containerGradient,
-                      borderRadius: BorderRadius.circular(8.r),
                       boxShadow: [
                         BoxShadow(
                           color: colorScheme.onSurface.withOpacity(0.15),
@@ -93,6 +92,7 @@ class _MainContentState extends State<MainContent> {
                             letterSpacing: 0.2.w,
                           ),
                         ),
+                        SizedBox(height: 12.h),
                         CommunityGrid(communities: state.communities),
                         if (state.communities.isEmpty)
                           Padding(
