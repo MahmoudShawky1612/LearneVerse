@@ -57,92 +57,97 @@ class _CommentsScreenState extends State<CommentsScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: _buildAppBar(context),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8.0.w),
-                    child: PostItem(
-                      post: post,
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<CommentCubit>().fetchComments(widget.post.id, forceRefresh: true);
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: _buildAppBar(context),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0.w),
+                      child: PostItem(
+                        post: post,
+                      ),
                     ),
-                  ),
-                  BlocBuilder<CommentCubit, CommentStates>(
-                    builder: (BuildContext context, CommentStates state) {
-                      if (state is CommentLoading) {
-                        return const Center(
-                          child: LoadingState(),
-                        );
-                      } else if (state is CommentError) {
-                        return Center(
-                            child: ErrorStateWidget(
-                          message: state.message,
-                          onRetry: () => context
-                              .read<CommentCubit>()
-                              .fetchComments(widget.post.id),
-                        ));
-                      } else if (state is CommentsFetched) {
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8.w, vertical: 12.w),
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0.w),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Comments (${state.comments.length})',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: colorScheme.onSurface,
+                    BlocBuilder<CommentCubit, CommentStates>(
+                      builder: (BuildContext context, CommentStates state) {
+                        if (state is CommentLoading) {
+                          return const Center(
+                            child: LoadingState(),
+                          );
+                        } else if (state is CommentError) {
+                          return Center(
+                              child: ErrorStateWidget(
+                            message: state.message,
+                            onRetry: () => context
+                                .read<CommentCubit>()
+                                .fetchComments(widget.post.id),
+                          ));
+                        } else if (state is CommentsFetched) {
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w, vertical: 12.w),
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Comments (${state.comments.length})',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: colorScheme.onSurface,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            BuildComments(
-                              comments: state.comments,
-                              scrollPhysics:
-                                  const NeverScrollableScrollPhysics(),
-                              onDelete: (comment) {
-                                context
+                              BuildComments(
+                                comments: state.comments,
+                                scrollPhysics:
+                                    const NeverScrollableScrollPhysics(),
+                                onDelete: (comment) {
+                                  context
+                                      .read<CommentCubit>()
+                                      .emit(CommentLoading());
+                                  context
+                                      .read<CommentCubit>()
+                                      .fetchComments(post.id);
+                                },
+                                onEdit: (comment, newContent) => context
                                     .read<CommentCubit>()
-                                    .emit(CommentLoading());
-                                context
-                                    .read<CommentCubit>()
-                                    .fetchComments(post.id);
-                              },
-                              onEdit: (comment, newContent) => context
-                                  .read<CommentCubit>()
-                                  .fetchComments(post.id),
-                            ),
-                          ],
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                ],
+                                    .fetchComments(post.id),
+                              ),
+                            ],
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          CommentInputField(
-            commentController: _commentController,
-            createComment: _onCommentSubmitted,
-          ),
-        ],
+            CommentInputField(
+              commentController: _commentController,
+              createComment: _onCommentSubmitted,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -21,7 +21,6 @@ class FavoriteCubit extends Cubit<FavoriteStates> {
     print("fetching favorite communities loading");
     try {
       final communities = await favoriteService.fetchFavoriteCommunities();
-
       if (!_areCommunitiesEqual(_cachedCommunities, communities)) {
         _cachedCommunities = communities;
         emit(FavoriteLoaded(communities));
@@ -39,9 +38,6 @@ class FavoriteCubit extends Cubit<FavoriteStates> {
 
   bool _areCommunitiesEqual(List<Community> oldList, List<Community> newList) {
     if (oldList.length != newList.length) return false;
-    for (int i = 0; i < oldList.length; i++) {
-      if (oldList[i].id != newList[i].id) return false;
-    }
     return true;
   }
 }
