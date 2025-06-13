@@ -25,7 +25,8 @@ class BuildHeader extends StatelessWidget {
             ),
            Spacer(),
            Icon(
-              Icons.search,
+             //planet earth icon from Material Icons
+               Icons.public,
              color: colorScheme.onSurface,
               size: 24.r,
             ),
