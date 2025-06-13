@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/features/discover/logic/cubit/favorite_communities_cubit.dart';
 import '../../../../utils/snackber_util.dart';
 import '../../../home/data/models/community_model.dart';
 import '../../logic/cubit/toggle_cubit.dart';
 import '../../logic/cubit/toggle_states.dart';
 import 'loading_heart_animation.dart';
 
-class FavoriteButton extends StatelessWidget {
+class FavoriteButton extends StatefulWidget {
   final Community community;
   final ValueNotifier<bool> isFavoritedNotifier;
   final ValueNotifier<bool> isFavoriteButtonEnabled;
@@ -24,15 +25,23 @@ class FavoriteButton extends StatelessWidget {
   });
 
   @override
+  State<FavoriteButton> createState() => _FavoriteButtonState();
+}
+
+class _FavoriteButtonState extends State<FavoriteButton> {
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<ToggleCubit, ToggleStates>(
       listener: (context, state) {
         if (state is ToggleToggled) {
-          isFavoritedNotifier.value = false; // Unfavorite it
-          isFavoriteButtonEnabled.value = false; // Disable button
-          onFavoriteToggle?.call();
+          widget.isFavoritedNotifier.value = false; // Unfavorite it
+          widget.isFavoriteButtonEnabled.value = false; // Disable button
+          widget.onFavoriteToggle?.call();
           SnackBarUtils.showInfoSnackBar(context,
               message: "Community Marked as not Favorite 😢");
+          setState(() {
+                context.read<FavoriteCubit>().fetchFavoriteCommunities(forceRefresh: true);
+            });
         } else if (state is ToggleError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
@@ -42,14 +51,14 @@ class FavoriteButton extends StatelessWidget {
       builder: (context, state) {
         bool isLoading = state is ToggleLoading;
         return ValueListenableBuilder<bool>(
-          valueListenable: isFavoritedNotifier,
+          valueListenable: widget.isFavoritedNotifier,
           builder: (context, isFavorited, child) {
             return _FavoriteButtonContent(
-              community: community,
+              community: widget.community,
               isFavorited: isFavorited,
               isLoading: isLoading,
-              isFavoriteButtonEnabled: isFavoriteButtonEnabled,
-              colorScheme: colorScheme,
+              isFavoriteButtonEnabled: widget.isFavoriteButtonEnabled,
+              colorScheme: widget.colorScheme,
             );
           },
         );
