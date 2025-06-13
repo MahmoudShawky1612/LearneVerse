@@ -622,9 +622,6 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                   if (widget.onDelete != null) {
                     widget.onDelete!(currentPost);
                   }
-                } else if (state is ForumFailure) {
-                  SnackBarUtils.showErrorSnackBar(context,
-                      message: 'Failed to updated post: ${state.message} 🧐');
                 }
               },
             ),
