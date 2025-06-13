@@ -38,7 +38,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
     return BlocBuilder<SectionsCubit, SectionsState>(
       builder: (context, state) {
         if (state is SectionsLoading || state is SectionsInitial) {
-          return const Center(child: LoadingState());
+          return const LoadingState();
         } else if (state is SectionsError) {
           return Center(
             child: ErrorStateWidget(
@@ -59,7 +59,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
             future: TokenStorage.getToken(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return const Center(child: LoadingState());
+                return const LoadingState();
               }
               final token = snapshot.data!;
               final userId = getUserIdFromToken(token);
@@ -812,7 +812,7 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
       future: TokenStorage.getToken(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: LoadingState());
+          return const LoadingState();
         }
         final token = snapshot.data!;
         final userId = getUserIdFromToken(token);
