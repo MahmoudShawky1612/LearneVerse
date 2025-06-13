@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:8.6.1'
-        // Add any other required dependencies here
+        classpath 'com.google.gms:google-services:4.4.2' // ✅ Fixed line
     }
 }
 
@@ -16,6 +16,7 @@ allprojects {
         mavenCentral()
     }
 }
+
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"

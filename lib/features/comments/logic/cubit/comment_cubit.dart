@@ -5,7 +5,8 @@ import 'comment_states.dart';
 
 class CommentCubit extends Cubit<CommentStates> {
   final CommentService commentService;
-  List<Comment> _cachedComments = [];
+  final Map<int, List<Comment>> _cachedComments = {}; // ✅ cache per postId
+
   CommentCubit(this.commentService) : super(CommentInitial());
 
   Future<void> createComment(String content, int postId, int? parentId) async {
@@ -13,34 +14,28 @@ class CommentCubit extends Cubit<CommentStates> {
     try {
       final comment = await commentService.createComment(
           content: content, postId: postId, parentId: parentId);
+      // Optionally clear cache for that post to refetch if needed
+      _cachedComments.remove(postId);
       emit(CommentCreated(comment));
     } catch (e) {
       emit(CommentError(e.toString()));
     }
   }
 
-  Future<void> fetchComments(int postId, {forceRefresh = false}) async {
-    if (_cachedComments.isNotEmpty && !forceRefresh) {
-      emit(CommentsFetched(_cachedComments));
+  Future<void> fetchComments(int postId, {bool forceRefresh = false}) async {
+    final cached = _cachedComments[postId];
+    if (cached != null && !forceRefresh) {
+      emit(CommentsFetched(cached));
       return;
     }
+
     emit(CommentLoading());
     try {
       final comments = await commentService.getComments(postId: postId);
-
-      if(!_areCommentsEqual(_cachedComments, comments)) {
-        _cachedComments = comments;
-        emit(CommentsFetched(comments));
-      }else{
-        emit(CommentsFetched(_cachedComments));
-      }
+      _cachedComments[postId] = comments;
       emit(CommentsFetched(comments));
     } catch (e) {
       emit(CommentError(e.toString()));
     }
-  }
-  bool _areCommentsEqual(List<Comment> oldList, List<Comment> newList) {
-    if (oldList.length != newList.length) return false;
-    return true;
   }
 }
