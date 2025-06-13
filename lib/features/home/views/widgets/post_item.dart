@@ -45,6 +45,8 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
   late int commentCounter;
   bool isAuthor = false;
   late Post currentPost;
+  late Color upVoteColor;
+  late Color downVoteColor;
 
   @override
   void initState() {
@@ -52,6 +54,8 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
     currentPost = widget.post;
     voteCounter = currentPost.voteCounter;
     commentCounter = currentPost.commentCount;
+    upVoteColor = currentPost.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
+    downVoteColor = currentPost.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
     _checkIfAuthor();
   }
 
@@ -720,16 +724,15 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                               if (state is UpVoteSuccess) {
                                 setState(() {
                                   voteCounter = currentPost.voteCounter;
-                                  // upVoteColor = currentPost.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
-                                  // downVoteColor = Colors.grey;
+                                  upVoteColor = currentPost.voteType == "UPVOTE" ? const Color(0xFF00E676) : Colors.grey;
+                                  downVoteColor = Colors.grey;
                                 });
                               }
                             },
                             builder: (context, state) {
                               return EnhancedVoteButton(
                                 icon: Icons.arrow_circle_up_rounded,
-                                color: Colors.grey,
-                                // upVoteColor,
+                                color: upVoteColor,
                                 isLoading: state is UpVoteLoading,
                                 isUpvote: true,
                                 onTap: () => context
@@ -750,16 +753,15 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                               if (state is DownVoteSuccess) {
                                 setState(() {
                                   voteCounter = currentPost.voteCounter;
-                                  // downVoteColor = currentPost.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
-                                  // upVoteColor = Colors.grey;
+                                  downVoteColor = currentPost.voteType == "DOWNVOTE" ? const Color(0xFFFF1744) : Colors.grey;
+                                  upVoteColor = Colors.grey;
                                 });
                               }
                             },
                             builder: (context, state) {
                               return EnhancedVoteButton(
                                 icon: Icons.arrow_circle_down_rounded,
-                                color: Colors.grey,
-                                // downVoteColor,
+                                color: downVoteColor,
                                 isLoading: state is DownVoteLoading,
                                 isUpvote: false,
                                 onTap: () => context
@@ -1138,8 +1140,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12.r),
                                     side: BorderSide(
-                                      color:
-                                          colorScheme.outline.withOpacity(0.3),
+                                      color: colorScheme.outline.withOpacity(0.3),
                                     ),
                                   ),
                                 ),
