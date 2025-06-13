@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
 class ErrorStateWidget extends StatefulWidget {
   final String title;
-  final VoidCallback onRetry;
+  final Function onRetry;
   final String buttonText;
   final String message;
 
@@ -182,41 +183,36 @@ class _ErrorStateWidgetState extends State<ErrorStateWidget>
                                 ),
                             ],
                           ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(24.r),
-                              onTap: () {}, // Handled by GestureDetector
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.refresh_rounded,
-                                      size: 18.sp,
-                                      color: theme.colorScheme.onPrimary,
-                                    ),
-                                    SizedBox(width: 8.w),
-                                    Text(
-                                      widget.buttonText,
-                                      style: TextStyle(
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: theme.colorScheme.onPrimary,
-                                        letterSpacing: 0.2,
-                                      ),
-                                    ),
-                                  ],
+                          child: Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.refresh_rounded,
+                                  size: 18.sp,
+                                  color: theme.colorScheme.onPrimary,
                                 ),
-                              ),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  widget.buttonText,
+                                  style: TextStyle(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: theme.colorScheme.onPrimary,
+                                    letterSpacing: 0.2,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 100.h,
+                  )
                 ],
               ),
             ),

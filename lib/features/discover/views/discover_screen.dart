@@ -8,6 +8,7 @@ import 'package:flutterwidgets/features/discover/views/widgets/build_filters_lis
 import 'package:flutterwidgets/utils/loading_state.dart';
 
 import '../../home/views/widgets/search_bar.dart';
+import '../logic/cubit/favorite_communities_cubit.dart';
 import '../logic/cubit/search_cubit.dart';
 import '../logic/cubit/search_states.dart';
 

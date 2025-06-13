@@ -14,6 +14,10 @@ class SearchCubit extends Cubit<SearchStates> {
     List<String>? tagNames,
     String? type,
   }) async {
+    if (query.isEmpty && (tagNames == null || tagNames.isEmpty) && type == null) {
+      emit(SearchLoaded([], []));
+      return;
+    }
     emit(SearchLoading());
     try {
       final result = await _service.search(

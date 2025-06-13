@@ -9,7 +9,7 @@ class FeedPostsApiService {
 
   Future<List<Post>> fetchMyFeedPosts() async {
     final token = await TokenStorage.getToken();
-    final url = Uri.parse('$baseUrl/posts/me/feed');
+    final url = Uri.parse('$baseUrl/posts/me/feed'); 
     final response = await http.get(
       url,
       headers: {

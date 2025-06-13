@@ -32,45 +32,53 @@ class _BuildDefaultContentState extends State<BuildDefaultContent> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        children: [
-          BuildSectionHeader(
-            title: "Favorite Communities",
-            isExpanded: _isFavoriteExpanded,
-            onTap: () {
-              setState(() {
-                _isFavoriteExpanded = !_isFavoriteExpanded;
-              });
-            },
-          ),
-          if (_isFavoriteExpanded)
-            BlocBuilder<FavoriteCubit, FavoriteStates>(
-                builder: (BuildContext context, FavoriteStates state) {
-              if (state is FavoriteLoading) {
-                return const Center(child: LoadingState());
-              } else if (state is FavoriteLoaded) {
-                if (state.communities.isEmpty) {
-                  return NoDataWidget(
-                    message:
-                        "Looks like you haven't added any favorite communities yet... 👀",
-                    height: 100.h,
-                    width: 100.w,
-                  );
+    return RefreshIndicator(
+      onRefresh: () async {
+        context
+            .read<FavoriteCubit>()
+            .fetchFavoriteCommunities(forceRefresh: true);
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            BuildSectionHeader(
+              title: "Favorite Communities",
+              isExpanded: _isFavoriteExpanded,
+              onTap: () {
+                setState(() {
+                  _isFavoriteExpanded = !_isFavoriteExpanded;
+                });
+              },
+            ),
+            if (_isFavoriteExpanded)
+              BlocBuilder<FavoriteCubit, FavoriteStates>(
+                  builder: (BuildContext context, FavoriteStates state) {
+                if (state is FavoriteLoading) {
+                  return const Center(child: LoadingState());
+                } else if (state is FavoriteLoaded) {
+                  if (state.communities.isEmpty) {
+                    return NoDataWidget(
+                      message:
+                          "Looks like you haven't added any favorite communities yet... 👀",
+                      height: 100.h,
+                      width: 100.w,
+                    );
+                  }
+                  return CommunityGrid(
+                      communities: state.communities,
+                      isFavoriteCommunity: true);
+                } else if (state is FavoriteError) {
+                  return Center(
+                      child: ErrorStateWidget(
+                          message: state.message,
+                          onRetry: ()=> context.read<FavoriteCubit>().fetchFavoriteCommunities(forceRefresh: true)));
                 }
-                return CommunityGrid(
-                    communities: state.communities, isFavoriteCommunity: true);
-              } else if (state is FavoriteError) {
-                return Center(
-                    child: ErrorStateWidget(
-                        message: state.message,
-                        onRetry: fetchFavoriteCommunities));
-              }
-              return const Center();
-            }),
-          SizedBox(height: 100.h),
-        ],
+                return const Center();
+              }),
+            SizedBox(height: 100.h),
+          ],
+        ),
       ),
     );
   }
