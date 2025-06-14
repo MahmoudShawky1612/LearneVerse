@@ -3,6 +3,8 @@ import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../service/reminders_service.dart';
+import '../data/models/reminder_model.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -15,27 +17,44 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime today = DateTime.now();
   DateTime focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
-
-  List<Map<String, dynamic>> events = [
-    {'day': DateTime.now(), 'event': 'C++ Quiz', 'color': Colors.deepPurple},
-    {
-      'day': DateTime(2025, 4, 8),
-      'event': 'Flutter Workshop',
-      'color': Colors.pink
-    },
-    {
-      'day': DateTime(2025, 6, 3),
-      'event': 'Dart Basics',
-      'color': Colors.green
-    },
-    {
-      'day': DateTime(2025, 6, 4),
-      'event': 'Data Structures',
-      'color': Colors.orange
-    },
-  ];
-
+  final RemindersApiService _remindersService = RemindersApiService();
+  List<Map<String, dynamic>> events = [];
   List<Map<String, dynamic>> selectedEvents = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchReminders();
+  }
+
+  Future<void> _fetchReminders() async {
+    try {
+      final reminders = await _remindersService.fetchReminders();
+      setState(() {
+        events = _processReminders(reminders);
+      });
+    } catch (e) {
+       print('Error fetching reminders: $e');
+    }
+  }
+
+  List<Map<String, dynamic>> _processReminders(List<Reminder> reminders) {
+    List<Map<String, dynamic>> processedEvents = [];
+    
+    for (var reminder in reminders) {
+      for (var classroom in reminder.community.classrooms) {
+        for (var quiz in classroom.quizzes) {
+          processedEvents.add({
+            'day': quiz.startDate,
+            'event': '${quiz.name} - ${reminder.community.name}',
+            'color': Colors.deepPurple,
+          });
+        }
+      }
+    }
+    
+    return processedEvents;
+  }
 
   void _selectedDay(DateTime day, DateTime newFocusedDay) {
     setState(() {
@@ -243,7 +262,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       icon: Icon(Icons.arrow_forward_ios,
                                           size: 16.w,
                                           color: colorScheme.onSurface),
-                                      onPressed: () {},
+                                      onPressed: () {
+
+                                      },
                                     ),
                                   ),
                                 );
