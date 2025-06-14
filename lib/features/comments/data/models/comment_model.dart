@@ -44,6 +44,8 @@ class Comment {
   final Author author;
   int voteCounter = 0;
   String voteType = "NONE";
+  List<Comment> children = [];
+  bool hasChildren = false;
 
   Comment({
     required this.id,
@@ -56,6 +58,8 @@ class Comment {
     required this.author,
     this.voteCounter = 0,
     this.voteType = "NONE",
+    this.children = const [],
+    this.hasChildren = false,
   });
 
   factory Comment.fromJson(Map<String, dynamic>? json) {
@@ -78,6 +82,7 @@ class Comment {
       author: Author.fromJson(json['Author']),
       voteCounter: json['voteCount'] ?? 0,
       voteType: json['voteType'] ?? "NONE",
+      hasChildren: json['hasChildren'] ?? false,
     );
   }
 }

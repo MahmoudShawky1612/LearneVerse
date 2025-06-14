@@ -12,6 +12,7 @@ import 'package:flutterwidgets/features/profile/service/user_comments.service.da
 
 import '../../../../utils/jwt_helper.dart';
 import '../../../comments/data/models/comment_model.dart';
+import '../../../comments/logic/cubit/comment_cubit.dart';
 import '../../../comments/logic/cubit/downvote_comment_cubit.dart';
 import '../../../comments/logic/cubit/downvote_comment_states.dart';
 import '../../../comments/logic/cubit/upvote_comment_states.dart';
@@ -40,9 +41,13 @@ class _CommentItemState extends State<CommentItem> {
   bool isExpanded = false;
   bool isMenuVisible = false;
   bool isAuthor = false;
+  bool isReplying = false;
+  bool isLoadingChildren = false;
   late Color upVoteColor;
   late Color downVoteColor;
   late int voteCounter;
+  late TextEditingController replyController;
+  List<Comment> children = [];
 
   @override
   void initState() {
@@ -54,7 +59,12 @@ class _CommentItemState extends State<CommentItem> {
     downVoteColor = widget.comment.voteType == "DOWNVOTE"
         ? const Color(0xFFFF1744)
         : Colors.grey;
+    replyController = TextEditingController();
     _checkIfAuthor();
+    if (widget.comment.parentId != null || widget.comment.hasChildren) {
+      widget.comment.hasChildren = true;
+      _loadChildren();
+    }
   }
 
   Future<void> _checkIfAuthor() async {
@@ -72,6 +82,59 @@ class _CommentItemState extends State<CommentItem> {
       return getUserIdFromToken(token);
     }
     return null;
+  }
+
+  Future<void> _loadChildren() async {
+    if (isLoadingChildren) return;
+    setState(() {
+      isLoadingChildren = true;
+    });
+    try {
+      final fetchedChildren = await context.read<CommentCubit>().fetchCommentChildren(widget.comment.id);
+      setState(() {
+        children = fetchedChildren;
+        isLoadingChildren = false;
+        if (fetchedChildren.isNotEmpty) {
+          widget.comment.hasChildren = true;
+        }
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingChildren = false;
+      });
+    }
+  }
+
+  void _toggleReply() {
+    setState(() {
+      isReplying = !isReplying;
+      if (!isReplying) {
+        replyController.clear();
+      }
+    });
+  }
+
+  void _submitReply() {
+    final content = replyController.text.trim();
+    if (content.isEmpty) return;
+
+    context.read<CommentCubit>().createComment(
+      content,
+      widget.comment.postId,
+      widget.comment.id,
+    ).then((_) {
+      replyController.clear();
+      setState(() {
+        isReplying = false;
+      });
+      _loadChildren();
+    });
+  }
+
+  @override
+  void dispose() {
+    replyController.dispose();
+    super.dispose();
   }
 
   @override
@@ -101,73 +164,125 @@ class _CommentItemState extends State<CommentItem> {
             );
           }
         },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ProfileAvatar(comment: comment),
-                      SizedBox(width: 8.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    comment.author.fullname.isNotEmpty
-                                        ? comment.author.fullname
-                                        : 'Anonymous User',
-                                    style: textTheme.bodyMedium?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13.sp,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 2.h),
-                            Text(
-                              '${_getTimeAgo(comment.createdAt)} ago',
-                              style: textTheme.bodySmall?.copyWith(
-                                color: colorScheme.onSurface.withOpacity(0.7),
-                                fontSize: 11.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      isAuthor
-                          ? _buildOptionsButton(colorScheme)
-                          : const SizedBox.shrink(),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-                  Padding(
-                    padding: EdgeInsets.only(left: 36.w),
-                    child: Column(
+        child: Container(
+          margin: EdgeInsets.only(
+            left: comment.parentId != null ? 16.w : 0,
+            bottom: 8.h,
+          ),
+          decoration: BoxDecoration(
+            border: comment.parentId != null
+                ? Border(
+                    left: BorderSide(
+                      color: colorScheme.outline.withOpacity(0.2),
+                      width: 2.w,
+                    ),
+                  )
+                : null,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildCommentContent(comment, textTheme, colorScheme),
-                        SizedBox(height: 8.h),
-                        _buildVotingRow(comment),
-                        if (isAuthor && isMenuVisible)
-                          _buildOptionsMenu(colorScheme),
+                        ProfileAvatar(comment: comment),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      comment.author.fullname.isNotEmpty
+                                          ? comment.author.fullname
+                                          : 'Anonymous User',
+                                      style: textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 13.sp,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                '${_getTimeAgo(comment.createdAt)} ago',
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurface.withOpacity(0.7),
+                                  fontSize: 11.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        isAuthor
+                            ? _buildOptionsButton(colorScheme)
+                            : const SizedBox.shrink(),
                       ],
                     ),
-                  ),
-                ],
+                    SizedBox(height: 8.h),
+                    Padding(
+                      padding: EdgeInsets.only(left: 36.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildCommentContent(comment, textTheme, colorScheme),
+                          SizedBox(height: 8.h),
+                          _buildVotingRow(comment),
+                          if (isReplying) ...[
+                            SizedBox(height: 12.h),
+                            _buildReplyInput(colorScheme),
+                          ],
+                          if (isAuthor && isMenuVisible)
+                            _buildOptionsMenu(colorScheme),
+                          if (isExpanded && (comment.hasChildren || children.isNotEmpty)) ...[
+                            SizedBox(height: 12.h),
+                            if (isLoadingChildren)
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.h),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        colorScheme.primary),
+                                  ),
+                                ),
+                              )
+                            else if (children.isEmpty)
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.h),
+                                  child: Text(
+                                    'No replies yet',
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: colorScheme.onSurface.withOpacity(0.7),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            else
+                              ...children.map((child) => CommentItem(
+                                    comment: child,
+                                    onDelete: widget.onDelete,
+                                    onEdit: widget.onEdit,
+                                  )),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -240,49 +355,18 @@ class _CommentItemState extends State<CommentItem> {
 
   Widget _buildCommentContent(
       Comment comment, TextTheme textTheme, ColorScheme colorScheme) {
-    final content = comment.content;
-
-    if (content == null || content.isEmpty) {
-      return Text(
-        '[No content]',
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
+      decoration: BoxDecoration(
+        color: colorScheme.surface.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Text(
+        comment.content ?? '',
         style: textTheme.bodyMedium?.copyWith(
           fontSize: 14.sp,
-          color: colorScheme.onSurface.withOpacity(0.5),
-          fontStyle: FontStyle.italic,
-          height: 1.4.h,
-        ),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          content,
-          style: textTheme.bodyMedium?.copyWith(
-            fontSize: 14.sp,
-            color: colorScheme.onSurface.withOpacity(0.9),
-            height: 1.4.h,
-          ),
-          maxLines: isExpanded ? null : 3,
-          overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-        ),
-        if (content.length > 100) _buildReadMoreButton(colorScheme),
-      ],
-    );
-  }
-
-  Widget _buildReadMoreButton(ColorScheme colorScheme) {
-    return GestureDetector(
-      onTap: () => setState(() => isExpanded = !isExpanded),
-      child: Padding(
-        padding: EdgeInsets.only(top: 4.h),
-        child: Text(
-          isExpanded ? 'Show less' : 'Read more',
-          style: TextStyle(
-              color: colorScheme.primary,
-              fontWeight: FontWeight.w600,
-              fontSize: 12.sp),
+          height: 1.4,
         ),
       ),
     );
@@ -347,7 +431,88 @@ class _CommentItemState extends State<CommentItem> {
           },
         ),
         SizedBox(width: 20.w),
+        _buildActionButton(
+          icon: Icons.reply_rounded,
+          text: 'Reply',
+          onTap: _toggleReply,
+        ),
+        if (comment.hasChildren || children.isNotEmpty) ...[
+          SizedBox(width: 20.w),
+          _buildActionButton(
+            icon: isExpanded ? Icons.expand_less : Icons.expand_more,
+            text: isExpanded ? 'Hide replies' : 'Show replies',
+            onTap: () {
+              setState(() {
+                isExpanded = !isExpanded;
+                if (isExpanded && children.isEmpty) {
+                  _loadChildren();
+                }
+              });
+            },
+          ),
+        ],
       ],
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Row(
+        children: [
+          Icon(icon, size: 16.sp, color: Colors.grey[600]),
+          SizedBox(width: 4.w),
+          Text(text,
+              style: TextStyle(color: Colors.grey[700], fontSize: 13.sp)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReplyInput(ColorScheme colorScheme) {
+    return Container(
+      margin: EdgeInsets.only(top: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: colorScheme.surface.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: replyController,
+              decoration: InputDecoration(
+                hintText: 'Write a reply...',
+                hintStyle: TextStyle(
+                  color: colorScheme.onSurface.withOpacity(0.5),
+                  fontSize: 14.sp,
+                ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(vertical: 8.h),
+              ),
+              style: TextStyle(
+                color: colorScheme.onSurface,
+                fontSize: 14.sp,
+              ),
+              maxLines: null,
+            ),
+          ),
+          IconButton(
+            onPressed: _submitReply,
+            icon: Icon(
+              Icons.send_rounded,
+              color: colorScheme.primary,
+              size: 20.r,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -560,7 +725,11 @@ class _CommentItemState extends State<CommentItem> {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
 
-    if (difference.inDays > 0) {
+    if (difference.inDays > 365) {
+      return '${(difference.inDays / 365).floor()}y';
+    } else if (difference.inDays > 30) {
+      return '${(difference.inDays / 30).floor()}mo';
+    } else if (difference.inDays > 0) {
       return '${difference.inDays}d';
     } else if (difference.inHours > 0) {
       return '${difference.inHours}h';

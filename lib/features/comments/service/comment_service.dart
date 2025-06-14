@@ -104,4 +104,25 @@ class CommentService {
       return Future.error('${jsonBody['message'] ?? 'Unknown error'}');
     }
   }
+
+  Future<List<Comment>> getCommentChildren(int commentId) async {
+    final token = await TokenStorage.getToken();
+    final url = Uri.parse('$baseUrl/comments/get-children/$commentId');
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+    final jsonBody = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> commentsJson = jsonBody['data'];
+      return commentsJson.map((json) => Comment.fromJson(json)).toList();
+    } else {
+      return Future.error('${jsonBody['message'] ?? 'Unknown error'}');
+    }
+  }
 }
