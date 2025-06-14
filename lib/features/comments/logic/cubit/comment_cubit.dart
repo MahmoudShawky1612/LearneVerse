@@ -14,9 +14,12 @@ class CommentCubit extends Cubit<CommentStates> {
     try {
       final comment = await commentService.createComment(
           content: content, postId: postId, parentId: parentId);
-      // Optionally clear cache for that post to refetch if needed
+      // Clear cache for that post to refetch
       _cachedComments.remove(postId);
+      // Emit both states to handle UI updates
       emit(CommentCreated(comment));
+      // Fetch updated comments to ensure UI is in sync
+      await fetchComments(postId, forceRefresh: true);
     } catch (e) {
       emit(CommentError(e.toString()));
     }
@@ -37,5 +40,10 @@ class CommentCubit extends Cubit<CommentStates> {
     } catch (e) {
       emit(CommentError(e.toString()));
     }
+  }
+
+  // Clear cache for a specific post
+  void clearPostCache(int postId) {
+    _cachedComments.remove(postId);
   }
 }

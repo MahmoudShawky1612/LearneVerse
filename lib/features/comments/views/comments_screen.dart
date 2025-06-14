@@ -10,6 +10,7 @@ import '../../home/data/models/post_model.dart';
 import '../../home/views/widgets/post_item.dart';
 import '../../profile/views/widgets/build_comments.dart';
 import '../logic/cubit/comment_cubit.dart';
+import '../../home/logic/cubit/post_feed_cubit.dart';
 
 class CommentsScreen extends StatefulWidget {
   final dynamic post;
@@ -48,7 +49,23 @@ class _CommentsScreenState extends State<CommentsScreen> {
     final cubit = context.read<CommentCubit>();
     cubit.createComment(text.trim(), widget.post.id, null).then((_) {
       _commentController.clear();
-      cubit.fetchComments(widget.post.id);
+      final updatedPost = Post(
+        id: widget.post.id,
+        title: widget.post.title,
+        content: widget.post.content,
+        author: widget.post.author,
+        createdAt: widget.post.createdAt,
+        updatedAt: widget.post.updatedAt,
+        voteCounter: widget.post.voteCounter,
+        voteType: widget.post.voteType,
+        commentCount: widget.post.commentCount + 1,
+        attachments: widget.post.attachments,
+        forumId: widget.post.forumId,
+      );
+      context.read<PostFeedCubit>().updatePost(updatedPost);
+      setState(() {
+        post = updatedPost;
+      });
     });
   }
 
