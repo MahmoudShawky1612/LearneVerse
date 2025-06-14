@@ -42,9 +42,9 @@ class Post {
           ? DateTime.tryParse(json['updatedAt']) ?? DateTime.now()
           : DateTime.now(),
       voteCounter: json['voteCounter'] ?? 0,
-      commentCount: json['commentCount'] ?? 0,
-      author: json['author'] != null
-          ? Author.fromJson(json['author'])
+      commentCount: json['commentsCount'] ?? 0,
+      author: json['Author'] != null
+          ? Author.fromJson(json['Author'])
           : Author(
               id: 0,
               username: 'unknown',
@@ -90,7 +90,7 @@ class Author {
       id: json['id'] ?? 0,
       username: json['username'] ?? 'unknown',
       fullname: json['fullname'] ?? 'Guest',
-      profilePictureURL: json['profilePictureURL'],
+      profilePictureURL: json['UserProfile']['profilePictureURL'],
     );
   }
 
