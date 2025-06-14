@@ -13,6 +13,7 @@ import 'package:flutterwidgets/features/profile/service/user_comments.service.da
 import '../../../../utils/jwt_helper.dart';
 import '../../../comments/data/models/comment_model.dart';
 import '../../../comments/logic/cubit/comment_cubit.dart';
+import '../../../comments/logic/cubit/comment_states.dart';
 import '../../../comments/logic/cubit/downvote_comment_cubit.dart';
 import '../../../comments/logic/cubit/downvote_comment_states.dart';
 import '../../../comments/logic/cubit/upvote_comment_states.dart';
@@ -127,7 +128,6 @@ class _CommentItemState extends State<CommentItem> {
       setState(() {
         isReplying = false;
       });
-      _loadChildren();
     });
   }
 
@@ -156,14 +156,30 @@ class _CommentItemState extends State<CommentItem> {
           create: (context) => UserCommentsCubit(UserCommentsApiService()),
         ),
       ],
-      child: BlocListener<UserCommentsCubit, UserCommentsState>(
-        listener: (context, state) {
-          if (state is UserCommentsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<UserCommentsCubit, UserCommentsState>(
+            listener: (context, state) {
+              if (state is UserCommentsError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+              }
+            },
+          ),
+          BlocListener<CommentCubit, CommentStates>(
+            listener: (context, state) {
+              if (state is CommentCreated) {
+                if (state.comment.parentId == widget.comment.id) {
+                  setState(() {
+                    children = [state.comment, ...children];
+                    widget.comment.hasChildren = true;
+                  });
+                }
+              }
+            },
+          ),
+        ],
         child: Container(
           margin: EdgeInsets.only(
             left: comment.parentId != null ? 16.w : 0,

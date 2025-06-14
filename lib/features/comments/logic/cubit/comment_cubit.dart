@@ -41,14 +41,15 @@ class CommentCubit extends Cubit<CommentStates> {
           return c;
         }).toList();
         _cachedComments[postId] = updatedComments;
+        emit(CommentCreated(comment));
         emit(CommentsFetched(updatedComments));
       } else {
-        // For top-level comments, clear the cache to refetch
-        _cachedComments.remove(postId);
-        await fetchComments(postId, forceRefresh: true);
+        // For top-level comments, add to existing comments
+        final currentComments = _cachedComments[postId] ?? [];
+        _cachedComments[postId] = [comment, ...currentComments];
+        emit(CommentCreated(comment));
+        emit(CommentsFetched(_cachedComments[postId]!));
       }
-      
-      emit(CommentCreated(comment));
     } catch (e) {
       emit(CommentError(e.toString()));
     }

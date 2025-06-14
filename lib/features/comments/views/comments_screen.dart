@@ -151,6 +151,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
                               ),
                             ],
                           );
+                        } else if (state is CommentCreated) {
+                          return const SizedBox.shrink();
                         }
                         return const SizedBox.shrink();
                       },
