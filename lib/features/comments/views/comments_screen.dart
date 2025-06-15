@@ -112,27 +112,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
                         } else if (state is CommentsFetched) {
                           return Column(
                             children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8.w, vertical: 12.w),
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0.w),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Comments (${state.comments.length})',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: colorScheme.onSurface,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
                               BuildComments(
                                 comments: state.comments,
                                 scrollPhysics:
