@@ -1,3 +1,5 @@
+import 'question_model.dart';
+
 class Quiz {
   final int id;
   final String name;
@@ -9,6 +11,8 @@ class Quiz {
   final bool active;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final List<QuizQuestion> quizQuestions;
+  final int questionCount;
 
   Quiz({
     required this.id,
@@ -21,20 +25,39 @@ class Quiz {
     required this.active,
     required this.createdAt,
     required this.updatedAt,
+    required this.quizQuestions,
+    required this.questionCount,
   });
 
   factory Quiz.fromJson(Map<String, dynamic> json) {
+    List<QuizQuestion> questions = [];
+    if (json['QuizQuestions'] != null) {
+      questions = (json['QuizQuestions'] as List)
+          .map((q) => QuizQuestion.fromJson(q as Map<String, dynamic>))
+          .toList();
+    }
+
     return Quiz(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       duration: json['duration'] ?? 0,
-      startDate: DateTime.parse(json['startDate']),
-      endDate: DateTime.parse(json['endDate']),
+      startDate: json['startDate'] != null 
+          ? DateTime.parse(json['startDate']) 
+          : DateTime.now(),
+      endDate: json['endDate'] != null 
+          ? DateTime.parse(json['endDate']) 
+          : DateTime.now(),
       grade: json['grade'] ?? '',
       classroomId: json['classroomId'] ?? 0,
       active: json['active'] ?? false,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt']) 
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null 
+          ? DateTime.parse(json['updatedAt']) 
+          : DateTime.now(),
+      quizQuestions: questions,
+      questionCount: json['questionCount'] ?? 0,
     );
   }
 } 

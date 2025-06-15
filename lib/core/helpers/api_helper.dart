@@ -1,3 +1,3 @@
 class ApiHelper {
-  static String baseUrl = 'http://localhost:5500/api/v1';  // Default value
+  static String baseUrl = 'https://3802-217-55-244-164.ngrok-free.app/api/v1';  // Default value
 } 

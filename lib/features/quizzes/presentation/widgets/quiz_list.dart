@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/utils/error_state.dart';
+import 'package:flutterwidgets/utils/loading_state.dart';
 import '../../../profile/views/widgets/no_profile_widget.dart';
-import '../../data/models/quiz_model.dart';
 import '../../logic/cubit/quiz_cubit.dart';
 import '../../logic/cubit/quiz_states.dart';
+import '../screens/quiz_taking_screen.dart';
 
 class QuizList extends StatelessWidget {
   final int communityId;
@@ -16,10 +18,12 @@ class QuizList extends StatelessWidget {
     return BlocBuilder<QuizCubit, QuizStates>(
       builder: (context, state) {
         if (state is QuizLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: LoadingState());
         } else if (state is QuizError) {
           return Center(
-            child: Text('Error: ${state.message}'),
+            child: ErrorStateWidget(onRetry: (){
+              context.read<QuizCubit>().fetchCommunityQuizzes(communityId);
+            }, message: state.message,),
           );
         } else if (state is QuizLoaded) {
           if (state.quizzes.isEmpty) {
@@ -47,8 +51,29 @@ class QuizList extends StatelessWidget {
                   color: Colors.transparent,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(16.r),
-                    onTap: () {
-                      // TODO: Navigate to quiz details
+                    onTap: () async {
+                      try {
+                        final quizDetails = await context.read<QuizCubit>().getQuizById(quiz.id);
+                        if (context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuizTakingScreen(quiz: quizDetails),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error loading quiz: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          print(e);
+
+                        }
+                      }
                     },
                     child: Padding(
                       padding: EdgeInsets.all(16.w),
