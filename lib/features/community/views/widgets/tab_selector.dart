@@ -19,6 +19,7 @@ class TabSelector extends StatelessWidget {
     final List<String> tabs = [
       'Info',
       'Classroom',
+      'Quizzes',
       'Forum',
       'Leaderboard',
       'Members',
@@ -39,29 +40,30 @@ class TabSelector extends StatelessWidget {
     );
   }
 
-  Widget _buildTabItem(BuildContext context, String title, int index) {
-    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+  Widget _buildTabItem(BuildContext context, String label, int index) {
+    final isSelected = currentIndex == index;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final bool isSelected = currentIndex == index;
     return GestureDetector(
       onTap: () => onTabSelected(index),
       child: Container(
-        margin: EdgeInsets.only(right: 16.w),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        margin: EdgeInsets.only(right: 8.w),
         decoration: BoxDecoration(
-          gradient: isSelected ? themeExtension?.buttonGradient : null,
-          color: isSelected ? null : theme.colorScheme.surfaceContainerHighest,
+          color: isSelected ? colorScheme.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: isSelected ? colorScheme.primary : colorScheme.outline,
+            width: 1,
+          ),
         ),
         child: Center(
           child: Text(
-            title,
+            label,
             style: TextStyle(
-              color: isSelected
-                  ? colorScheme.onPrimary
-                  : theme.colorScheme.onSurfaceVariant,
+              color: isSelected ? colorScheme.onPrimary : colorScheme.onSurface,
+              fontSize: 14.sp,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),

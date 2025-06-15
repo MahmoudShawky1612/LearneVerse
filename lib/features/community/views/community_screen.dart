@@ -11,6 +11,7 @@ import 'package:flutterwidgets/features/community/views/widgets/info_tab.dart';
 import 'package:flutterwidgets/features/community/views/widgets/join_button.dart';
 import 'package:flutterwidgets/features/community/views/widgets/leaderboard_tab.dart';
 import 'package:flutterwidgets/features/community/views/widgets/members_tab.dart';
+import 'package:flutterwidgets/features/community/views/widgets/quizzes_tab.dart';
 import 'package:flutterwidgets/features/community/views/widgets/sliver_app_bar.dart';
 import 'package:flutterwidgets/features/community/views/widgets/tab_selector.dart';
 import 'package:flutterwidgets/features/profile/views/widgets/no_profile_widget.dart';
@@ -24,6 +25,8 @@ import '../../../../utils/loading_state.dart';
 import '../../../../utils/snackber_util.dart';
 import '../../../../utils/token_storage.dart';
 import '../../home/data/models/community_model.dart';
+import '../../quizzes/logic/cubit/quiz_cubit.dart';
+import '../../quizzes/service/quiz_service.dart';
 import '../logic/cubit/join_requests_cubit.dart';
 import '../logic/cubit/join_requests_states.dart';
 import '../logic/cubit/single_community_cubit.dart';
@@ -216,19 +219,24 @@ class _CommunityScreenState extends State<CommunityScreen> {
       case 1:
         return ClassroomTab(community: community);
       case 2:
+        return BlocProvider(
+          create: (context) => QuizCubit(QuizService()),
+          child: QuizzesTab(community: community),
+        );
+      case 3:
         return RepositoryProvider(
           create: (BuildContext context) => ForumApiService(),
           child: ForumTab(
             community: community,
           ),
         );
-      case 3:
-        return LeaderboardTab(communityId: widget.community.id);
       case 4:
+        return LeaderboardTab(communityId: widget.community.id);
+      case 5:
         return MembersTab(
           community: community,
         );
-      case 5:
+      case 6:
         if (_showJoinRequestsTab) {
           return BlocProvider(
             create: (context) => JoinRequestsCubit(ApiService())
