@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/community/data/models/classroom_model.dart';
@@ -44,18 +45,29 @@ class _ClassroomCardState extends State<ClassroomCard> {
             padding: EdgeInsets.all(16.w),
             child: Row(
               children: <Widget>[
-                Container(
-                  width: 80.w,
-                  height: 80.h,
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(
-                    Icons.menu_book_rounded,
-                    size: 40.w,
-                    color: colorScheme.primary,
-                  ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: (classroom.coverImg == null ||
+                          classroom.coverImg!.isEmpty)
+                      ? Container(
+                          width: 80.w,
+                          height: 80.h,
+                          color: colorScheme.primary.withOpacity(0.1),
+                          child: Icon(Icons.class_,
+                              color: colorScheme.primary, size: 40.r),
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: classroom.coverImg!,
+                          fit: BoxFit.contain,
+                          width: 80.w,
+                          height: 80.h,
+                          errorWidget: (context, error, stackTrace) =>
+                              Container(
+                            color: colorScheme.primary.withOpacity(0.1),
+                            child: Icon(Icons.class_,
+                                color: colorScheme.primary, size: 40.r),
+                          ),
+                        ),
                 ),
                 SizedBox(width: 16.w),
                 Expanded(
