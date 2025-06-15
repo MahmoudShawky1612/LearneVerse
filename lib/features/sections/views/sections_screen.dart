@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/utils/snackber_util.dart';
 import 'package:video_player/video_player.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -537,6 +538,9 @@ class _SectionsScreenState extends State<SectionsScreen> {
                                                         .toggleLessonCompleted(
                                                             lesson.id,
                                                             currentSection!.id);
+                                                    isDone ? SnackBarUtils.showSuccessSnackBar(context, message: "You're cracking it, keep it up 🤩")
+                                                        : Container();
+
                                                   },
                                                   style:
                                                       ElevatedButton.styleFrom(

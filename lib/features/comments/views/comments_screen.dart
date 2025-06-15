@@ -5,12 +5,13 @@ import 'package:flutterwidgets/features/comments/logic/cubit/comment_states.dart
 import 'package:flutterwidgets/features/comments/views/widgets/comment_input_field.dart';
 import 'package:flutterwidgets/utils/loading_state.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../utils/error_state.dart';
 import '../../home/data/models/post_model.dart';
+import '../../home/logic/cubit/post_feed_cubit.dart';
 import '../../home/views/widgets/post_item.dart';
 import '../../profile/views/widgets/build_comments.dart';
 import '../logic/cubit/comment_cubit.dart';
-import '../../home/logic/cubit/post_feed_cubit.dart';
 
 class CommentsScreen extends StatefulWidget {
   final dynamic post;
@@ -76,7 +77,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<CommentCubit>().fetchComments(widget.post.id, forceRefresh: true);
+        context
+            .read<CommentCubit>()
+            .fetchComments(widget.post.id, forceRefresh: true);
       },
       child: Scaffold(
         resizeToAvoidBottomInset: true,
