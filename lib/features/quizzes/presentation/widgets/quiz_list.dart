@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/loading_state.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../profile/views/widgets/no_profile_widget.dart';
 import '../../logic/cubit/quiz_cubit.dart';
 import '../../logic/cubit/quiz_states.dart';
@@ -86,10 +87,12 @@ class QuizList extends StatelessWidget {
                               color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12.r),
                             ),
-                            child: Icon(
-                              Icons.quiz_rounded,
-                              size: 40.w,
-                              color: Theme.of(context).colorScheme.primary,
+                            child: Center(
+                              child: FaIcon(
+                                FontAwesomeIcons.puzzlePiece,
+                                size: 40.w,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                             ),
                           ),
                           SizedBox(width: 16.w),
