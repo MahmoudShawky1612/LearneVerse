@@ -20,7 +20,7 @@ class QuizTakingScreen extends StatefulWidget {
 class _QuizTakingScreenState extends State<QuizTakingScreen>
     with TickerProviderStateMixin {
   final PageController _pageController = PageController();
-  final Map<int, String> _answers = {};
+  final Map<int, dynamic> _answers = {}; // Changed to dynamic to handle different answer types
   bool _isFinished = false;
   int _score = 0;
   int _totalPoints = 0;
@@ -45,11 +45,11 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
   void _calculateTotalPoints() {
     _totalPoints = widget.quiz.quizQuestions.fold(
       0,
-      (sum, question) => sum + question.points,
+          (sum, question) => sum + question.points,
     );
   }
 
-  void _submitAnswer(int questionId, String answer) {
+  void _submitAnswer(int questionId, dynamic answer, QuestionType type) {
     setState(() {
       _answers[questionId] = answer;
     });
@@ -60,29 +60,29 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
     );
   }
 
+  bool _isAnswerCorrect(QuizQuestion question) {
+    final userAnswer = _answers[question.questionId];
+    final correctAnswers = question.question.answer;
+
+    // Determine question type based on answer structure or add type field to your model
+    if (correctAnswers.length == 1) {
+      // Single choice or True/False
+      return userAnswer == correctAnswers.first;
+    } else {
+      // Multi choice
+      if (userAnswer is List<String>) {
+        return userAnswer.toSet().containsAll(correctAnswers.toSet()) &&
+            correctAnswers.toSet().containsAll(userAnswer.toSet());
+      }
+      return false;
+    }
+  }
+
   void _finishQuiz() {
     int score = 0;
     for (var question in widget.quiz.quizQuestions) {
-      final userAnswer = _answers[question.questionId];
-      final correctAnswers = question.question.answer;
-      
-      if (userAnswer != null) {
-        if (question.question.type == 'SINGLE') {
-          // Single choice
-          if (userAnswer == correctAnswers.first) {
-            score += question.points;
-          }
-        } else if (question.question.type == 'MULTI') {
-          // Multiple choice
-          final userAnswers = userAnswer.split(',');
-          final isCorrect = userAnswers.length == correctAnswers.length &&
-              userAnswers.every((answer) => correctAnswers.contains(answer)) &&
-              correctAnswers.every((answer) => userAnswers.contains(answer));
-          
-          if (isCorrect) {
-            score += question.points;
-          }
-        }
+      if (_isAnswerCorrect(question)) {
+        score += question.points;
       }
     }
 
@@ -113,84 +113,11 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.quiz.name,
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        actions: [
-          TextButton.icon(
-            onPressed: _finishQuiz,
-            icon: Icon(
-              Icons.check_circle_outline,
-              size: 20.w,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            label: Text(
-              'Finish',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
+      backgroundColor: const Color(0xFFF8FAFC),
+      appBar: _buildModernAppBar(),
       body: Column(
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context).shadowColor.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Progress',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                      ),
-                    ),
-                    Text(
-                      '${_answers.length}/${widget.quiz.quizQuestions.length}',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8.h),
-                LinearProgressIndicator(
-                  value: widget.quiz.quizQuestions.isEmpty 
-                      ? 0.0 
-                      : (_answers.length / widget.quiz.quizQuestions.length).clamp(0.0, 1.0),
-                  backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).colorScheme.primary,
-                  ),
-                  borderRadius: BorderRadius.circular(4.r),
-                  minHeight: 8.h,
-                ),
-              ],
-            ),
-          ),
+          _buildProgressSection(),
           Expanded(
             child: PageView.builder(
               controller: _pageController,
@@ -216,88 +143,187 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
     );
   }
 
+  PreferredSizeWidget _buildModernAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      leading: Container(
+        margin: EdgeInsets.all(8.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      title: Text(
+        widget.quiz.name,
+        style: TextStyle(
+          color: Colors.black87,
+          fontSize: 20.sp,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      actions: [
+        Container(
+          margin: EdgeInsets.all(8.w),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).primaryColor,
+                Theme.of(context).primaryColor.withOpacity(0.8),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: TextButton(
+            onPressed: _finishQuiz,
+            child: Text(
+              'Finish',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProgressSection() {
+    return Container(
+      padding: EdgeInsets.all(20.w),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${_answers.length} of ${widget.quiz.quizQuestions.length}',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                '${((_answers.length / widget.quiz.quizQuestions.length) * 100).toInt()}%',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          AnimatedBuilder(
+            animation: _progressController,
+            builder: (context, child) {
+              return Container(
+                height: 8.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+                child: FractionallySizedBox(
+                  alignment: Alignment.centerLeft,
+                  widthFactor: _progressController.value,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).primaryColor,
+                          Theme.of(context).primaryColor.withOpacity(0.7),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildQuestionCard(QuizQuestion quizQuestion, int index) {
     final questionType = _getQuestionType(quizQuestion);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(20.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8.r),
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
-              'Question ${index + 1} of ${widget.quiz.quizQuestions.length}',
+              'Question ${index + 1}',
               style: TextStyle(
                 fontSize: 14.sp,
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ),
-          SizedBox(height: 16.h),
-          Text(
-            quizQuestion.question.questionHeader,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.onSurface,
+          SizedBox(height: 20.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(24.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  quizQuestion.question.questionHeader,
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                    height: 1.3,
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                _buildQuestionOptions(quizQuestion, questionType),
+              ],
             ),
           ),
-          SizedBox(height: 24.h),
-          _buildQuestionOptions(quizQuestion, questionType),
-          SizedBox(height: 24.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (index > 0)
-                OutlinedButton.icon(
-                  onPressed: () {
-                    _cardController.reset();
-                    _cardController.forward();
-                    _pageController.previousPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    size: 20.w,
-                  ),
-                  label: Text(
-                    'Previous',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ),
-              if (index < widget.quiz.quizQuestions.length - 1)
-                ElevatedButton.icon(
-                  onPressed: () {
-                    _cardController.reset();
-                    _cardController.forward();
-                    _pageController.nextPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
-                  icon: Icon(
-                    Icons.arrow_forward,
-                    size: 20.w,
-                  ),
-                  label: Text(
-                    'Next',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ),
-            ],
-          ),
+          SizedBox(height: 32.h),
+          _buildNavigationButtons(index),
         ],
       ),
     );
@@ -319,62 +345,60 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
     return Column(
       children: quizQuestion.question.options.map((option) {
         final isSelected = _answers[quizQuestion.questionId] == option;
-        return Padding(
-          padding: EdgeInsets.only(bottom: 12.h),
-          child: InkWell(
-            onTap: () => _submitAnswer(quizQuestion.questionId, option),
-            borderRadius: BorderRadius.circular(12.r),
-            child: Container(
-              padding: EdgeInsets.all(16.w),
-              decoration: BoxDecoration(
-                color: isSelected 
-                    ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                    : Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: isSelected
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.outline.withOpacity(0.5),
+        return GestureDetector(
+          onTap: () => _submitAnswer(quizQuestion.questionId, option, QuestionType.SINGLE),
+          child: Container(
+            margin: EdgeInsets.only(bottom: 12.h),
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? Theme.of(context).primaryColor.withOpacity(0.1)
+                  : Colors.grey[50],
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(
+                color: isSelected
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[200]!,
+                width: 2,
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 24.w,
+                  height: 24.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSelected
+                        ? Theme.of(context).primaryColor
+                        : Colors.transparent,
+                    border: Border.all(
+                      color: isSelected
+                          ? Theme.of(context).primaryColor
+                          : Colors.grey[400]!,
+                      width: 2,
+                    ),
+                  ),
+                  child: isSelected
+                      ? Icon(
+                    Icons.check,
+                    size: 16.w,
+                    color: Colors.white,
+                  )
+                      : null,
                 ),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 24.w,
-                    height: 24.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isSelected
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.outline,
-                      ),
-                    ),
-                    child: isSelected
-                        ? Center(
-                            child: Container(
-                              width: 12.w,
-                              height: 12.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                          )
-                        : null,
-                  ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    child: Text(
-                      option,
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Text(
+                    option,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      color: isSelected ? Theme.of(context).primaryColor : Colors.black87,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
@@ -393,76 +417,74 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            color: Colors.grey[600],
           ),
         ),
         SizedBox(height: 16.h),
         ...quizQuestion.question.options.map((option) {
           final isSelected = selectedAnswers.contains(option);
-          return Padding(
-            padding: EdgeInsets.only(bottom: 12.h),
-            child: InkWell(
-              onTap: () {
-                List<String> newAnswers = List.from(selectedAnswers);
-                if (isSelected) {
-                  newAnswers.remove(option);
-                } else {
-                  newAnswers.add(option);
-                }
-                _submitAnswer(quizQuestion.questionId, newAnswers.join(','));
-              },
-              borderRadius: BorderRadius.circular(12.r),
-              child: Container(
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
+          return GestureDetector(
+            onTap: () {
+              List<String> newAnswers = List.from(selectedAnswers);
+              if (isSelected) {
+                newAnswers.remove(option);
+              } else {
+                newAnswers.add(option);
+              }
+              _submitAnswer(quizQuestion.questionId, newAnswers, QuestionType.MULTI);
+            },
+            child: Container(
+              margin: EdgeInsets.only(bottom: 12.h),
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? Theme.of(context).primaryColor.withOpacity(0.1)
+                    : Colors.grey[50],
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(
                   color: isSelected
-                      ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                      : Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.outline.withOpacity(0.5),
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey[200]!,
+                  width: 2,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 24.w,
+                    height: 24.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.r),
+                      color: isSelected
+                          ? Theme.of(context).primaryColor
+                          : Colors.transparent,
+                      border: Border.all(
+                        color: isSelected
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey[400]!,
+                        width: 2,
+                      ),
+                    ),
+                    child: isSelected
+                        ? Icon(
+                      Icons.check,
+                      size: 16.w,
+                      color: Colors.white,
+                    )
+                        : null,
                   ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 24.w,
-                      height: 24.w,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6.r),
-                        border: Border.all(
-                          color: isSelected
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.outline,
-                        ),
-                      ),
-                      child: isSelected
-                          ? Center(
-                              child: Container(
-                                width: 12.w,
-                                height: 12.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                            )
-                          : null,
-                    ),
-                    SizedBox(width: 16.w),
-                    Expanded(
-                      child: Text(
-                        option,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: Text(
+                      option,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                        color: isSelected ? Theme.of(context).primaryColor : Colors.black87,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
@@ -504,7 +526,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
     final isSelected = _answers[quizQuestion.questionId] == value;
 
     return GestureDetector(
-      onTap: () => _submitAnswer(quizQuestion.questionId, value),
+      onTap: () => _submitAnswer(quizQuestion.questionId, value, QuestionType.TRUE_FALSE),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20.h),
         decoration: BoxDecoration(
@@ -537,6 +559,99 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
     );
   }
 
+  Widget _buildNavigationButtons(int currentIndex) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        if (currentIndex > 0)
+          _buildNavButton(
+            'Previous',
+            Icons.arrow_back_ios,
+            false,
+                () {
+              _cardController.reset();
+              _cardController.forward();
+              _pageController.previousPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
+          )
+        else
+          const SizedBox(),
+        if (currentIndex < widget.quiz.quizQuestions.length - 1)
+          _buildNavButton(
+            'Next',
+            Icons.arrow_forward_ios,
+            true,
+                () {
+              _cardController.reset();
+              _cardController.forward();
+              _pageController.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
+          )
+        else
+          const SizedBox(),
+      ],
+    );
+  }
+
+  Widget _buildNavButton(String text, IconData icon, bool isNext, VoidCallback onPressed) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).primaryColor.withOpacity(0.8),
+            Theme.of(context).primaryColor,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).primaryColor.withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (!isNext) ...[
+              Icon(icon, size: 18.w, color: Colors.white),
+              SizedBox(width: 8.w),
+            ],
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            if (isNext) ...[
+              SizedBox(width: 8.w),
+              Icon(icon, size: 18.w, color: Colors.white),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildResultsScreen() {
     final percentage = (_score / _totalPoints) * 100;
     String grade;
@@ -547,7 +662,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
       gradeColor = Colors.green;
     } else if (percentage >= 80) {
       grade = 'B';
-      gradeColor = Colors.lightGreen;
+      gradeColor = Colors.blue;
     } else if (percentage >= 70) {
       grade = 'C';
       gradeColor = Colors.orange;
@@ -560,6 +675,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
     }
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFC),
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(24.w),
@@ -567,91 +683,163 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 120.w,
-                height: 120.w,
+                padding: EdgeInsets.all(40.w),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      gradeColor.withOpacity(0.1),
+                      gradeColor.withOpacity(0.2),
+                    ],
+                  ),
                 ),
                 child: Icon(
-                  Icons.assignment_turned_in,
-                  size: 60.w,
-                  color: Theme.of(context).colorScheme.primary,
+                  Icons.emoji_events,
+                  size: 80.w,
+                  color: gradeColor,
                 ),
               ),
               SizedBox(height: 32.h),
               Text(
                 'Quiz Completed!',
                 style: TextStyle(
-                  fontSize: 24.sp,
+                  fontSize: 28.sp,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 24.h),
+              SizedBox(height: 8.h),
+              Text(
+                '🎉 Great job! 🎉',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.grey[600],
+                ),
+              ),
+              SizedBox(height: 32.h),
               Container(
                 padding: EdgeInsets.all(24.w),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(16.r),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Theme.of(context).shadowColor.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
                 child: Column(
                   children: [
-                    Text(
-                      'Your Score',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      '$_score / $_totalPoints',
-                      style: TextStyle(
-                        fontSize: 32.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Your Score:',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        Text(
+                          '$_score / $_totalPoints',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 16.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                      decoration: BoxDecoration(
-                        color: gradeColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Text(
-                        'Grade: $grade',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                          color: gradeColor,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Percentage:',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            color: Colors.grey[600],
+                          ),
                         ),
-                      ),
+                        Text(
+                          '${percentage.toInt()}%',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: gradeColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Grade:',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: gradeColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Text(
+                            grade,
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: gradeColor,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 32.h),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 20.w,
+              SizedBox(height: 40.h),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme.of(context).primaryColor,
+                      Theme.of(context).primaryColor.withOpacity(0.8),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).primaryColor.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                label: Text(
-                  'Back to Quiz List',
-                  style: TextStyle(
-                    fontSize: 16.sp,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                  ),
+                  child: Text(
+                    'Back to Quiz List',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
