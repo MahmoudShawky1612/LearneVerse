@@ -14,105 +14,335 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  late AnimationController _fadeController;
+  late AnimationController _scaleController;
+
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _scaleController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _fadeController.forward();
   }
 
   @override
   void dispose() {
+    _fadeController.dispose();
+    _scaleController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    double buttonSize = 30.h;
-
     final colorScheme = theme.colorScheme;
 
-    Widget layout;
-    layout = _buildMobileLayout();
     return SafeArea(
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         body: Stack(
           clipBehavior: Clip.none,
           children: [
-            layout,
-            Positioned(
-              right: buttonSize + 15.h,
-              top: 10.h,
-              child: Container(
-                width: buttonSize,
-                height: buttonSize,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
-                  color: theme.colorScheme.surface.withOpacity(0.15),
+            _buildMobileLayout(),
+            _buildTopRightButtons(theme, colorScheme),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopRightButtons(ThemeData theme, ColorScheme colorScheme) {
+    return Positioned(
+      right: 16.w,
+      top: 16.h,
+      child: FadeTransition(
+        opacity: _fadeController,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildThemeToggleButton(theme),
+            SizedBox(width: 10.w),
+            _buildLogoutButton(colorScheme),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThemeToggleButton(ThemeData theme) {
+    return Container(
+      width: 30.w,
+      height: 30.w,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.r),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            theme.colorScheme.surface.withOpacity(0.9),
+            theme.colorScheme.surface.withOpacity(0.7),
+          ],
+        ),
+        border: Border.all(
+          color: theme.colorScheme.outline.withOpacity(0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: theme.shadowColor.withOpacity(0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: theme.colorScheme.surface.withOpacity(0.8),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+           ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12.r),
+          onTap: () {
+            _scaleController.forward().then((_) {
+              _scaleController.reverse();
+            });
+            // Your theme toggle logic here
+          },
+          child: ScaleTransition(
+            scale: Tween<double>(
+              begin: 1.0,
+              end: 0.95,
+            ).animate(CurvedAnimation(
+              parent: _scaleController,
+              curve: Curves.easeInOut,
+            )),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Center(
+                child: ThemeToggleButton(
+                  isCompact: true,
+                  size: 12.w,
                 ),
-                child: Center(
-                  child: ThemeToggleButton(
-                    isCompact: true,
-                    size: 15.w,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton(ColorScheme colorScheme) {
+    return Container(
+      width: 30.w,
+      height: 30.w,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.r),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.red.withOpacity(0.1),
+            Colors.red.withOpacity(0.05),
+          ],
+        ),
+        border: Border.all(
+          color: Colors.red.withOpacity(0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.red.withOpacity(0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12.r),
+          onTap: () => _showModernLogoutDialog(context),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.logout_rounded,
+                color: Colors.white,
+                size: 18.w,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showModernLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 20.w),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(24.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 30,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(24.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon
+                Container(
+                  width: 64.w,
+                  height: 64.w,
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.logout_rounded,
+                    color: Colors.red.shade400,
+                    size: 32.w,
                   ),
                 ),
-              ),
-            ),
-            Positioned(
-              right: 5.h,
-              top: 3.h,
-              child: IconButton(
-                icon: Icon(Icons.logout, color: colorScheme.onPrimary),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      backgroundColor: const Color(0xFF1E1E1E),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      title: const Text(
-                        'Confirm Logout',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                SizedBox(height: 20.h),
+
+                // Title
+                Text(
+                  'Confirm Logout',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+
+                // Subtitle
+                Text(
+                  'Are you sure you want to log out?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    height: 1.4,
+                  ),
+                ),
+                SizedBox(height: 32.h),
+
+                // Action buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildDialogButton(
+                        text: 'Cancel',
+                        isPrimary: false,
+                        onPressed: () => Navigator.pop(context),
                       ),
-                      content: const Text(
-                        'Are you sure you want to log out?',
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('Cancel',
-                              style: TextStyle(color: Colors.grey[400])),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.redAccent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            TokenStorage.deleteToken();
-                            context.go('/login');
-                            showPremiumSnackbar(
-                              context,
-                              message: "Logged out successfully",
-                              isSuccess: true,
-                            );
-                          },
-                          child: const Text('Logout',
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ],
                     ),
-                  );
-                },
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: _buildDialogButton(
+                        text: 'Logout',
+                        isPrimary: true,
+                        onPressed: () {
+                          Navigator.pop(context);
+                          TokenStorage.deleteToken();
+                          context.go('/login');
+                          showPremiumSnackbar(
+                            context,
+                            message: "Logged out successfully",
+                            isSuccess: true,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDialogButton({
+    required String text,
+    required bool isPrimary,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      height: 48.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14.r),
+        gradient: isPrimary
+            ? LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.red.shade400,
+            Colors.red.shade500,
+          ],
+        )
+            : null,
+        color: isPrimary ? null : Theme.of(context).colorScheme.surface,
+        border: isPrimary
+            ? null
+            : Border.all(
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+          width: 1,
+        ),
+        boxShadow: isPrimary
+            ? [
+          BoxShadow(
+            color: Colors.red.withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ]
+            : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14.r),
+          onTap: onPressed,
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: isPrimary
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

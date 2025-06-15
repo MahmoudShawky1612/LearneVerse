@@ -83,7 +83,7 @@ class _HomeHeaderState extends State<HomeHeader> {
             : 28.sp;
 
     return Container(
-      height: 115.h,
+      height: 65.h,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         gradient: themeExtension?.backgroundGradient,
@@ -99,76 +99,81 @@ class _HomeHeaderState extends State<HomeHeader> {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.red, width: 1.5.w),
-            ),
-            child: GestureDetector(
-              onTap: () => goToProfile(),
-              child: SizedBox(
-                width: 34.r,
-                height: 34.r,
-                child: isClicked || isLoading
-                    ? const Center(
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child:
-                              CupertinoActivityIndicator(color: Colors.white),
+      child: Padding(
+        padding:   EdgeInsets.only(left: 10.w),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+           children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.red, width: 1.5.w),
+              ),
+              child: GestureDetector(
+                onTap: () => goToProfile(),
+                child: SizedBox(
+                  width: 34.r,
+                  height: 34.r,
+                  child: isClicked || isLoading
+                      ? const Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child:
+                                CupertinoActivityIndicator(color: Colors.white),
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: 17.r,
+                          backgroundImage: pP != null && pP != ''
+                              ? CachedNetworkImageProvider(
+                                  UrlHelper.transformUrl(pP!),
+                                  headers: const {'ngrok-skip-browser-warning': 'true'},
+                                )
+                              : null,
+                          backgroundColor: Colors.grey[200],
+                          onBackgroundImageError: pP != null && pP != ''
+                              ? (exception, stackTrace) {}
+                              : null,
+                          child: pP != null && pP != ''
+                              ? null // No child when image is available
+                              : Icon(
+                                  Icons.person,
+                                  color: Colors.blue,
+                                  size: 20.sp,
+                                ),
                         ),
-                      )
-                    : CircleAvatar(
-                        radius: 17.r,
-                        backgroundImage: pP != null && pP != ''
-                            ? CachedNetworkImageProvider(
-                                UrlHelper.transformUrl(pP!),
-                                headers: const {'ngrok-skip-browser-warning': 'true'},
-                              )
-                            : null,
-                        backgroundColor: Colors.grey[200],
-                        onBackgroundImageError: pP != null && pP != ''
-                            ? (exception, stackTrace) {}
-                            : null,
-                        child: pP != null && pP != ''
-                            ? null // No child when image is available
-                            : Icon(
-                                Icons.person,
-                                color: Colors.blue,
-                                size: 20.sp,
-                              ),
-                      ),
+                ),
               ),
             ),
-          ),
-          SizedBox(width: screenWidth < 360 ? 4.w : 5.w),
-          Flexible(
-            child: Text(
-              'Welcome,',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: baseFontSize - 4.sp,
-                overflow: TextOverflow.ellipsis,
+            SizedBox(width: screenWidth < 360 ? 4.w : 5.w),
+            Flexible(
+              child: Text(
+                'Welcome,',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: baseFontSize - 4.sp,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
-          ),
-          SizedBox(width: screenWidth < 360 ? 4.w : 5.w),
-          Flexible(
-            child: Text(
-              fullName?.toUpperCase() ?? 'Guest',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: baseFontSize - 4.sp,
-                fontWeight: FontWeight.bold,
-                overflow: TextOverflow.ellipsis,
+            SizedBox(width: screenWidth < 360 ? 4.w : 5.w),
+            Flexible(
+              child: SizedBox(
+                width: 130.w,
+                child: Text(
+                  fullName?.toUpperCase() ?? 'Guest',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: baseFontSize - 4.sp,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

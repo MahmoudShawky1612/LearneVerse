@@ -122,9 +122,9 @@ class _UserCommunityItemState extends State<UserCommunityItem> {
                 color: theme
                     .colorScheme.surfaceContainerHighest, // fallback background
                 child: Icon(
-                  Icons.broken_image,
+                  Icons.group,
                   size: 24.r,
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: Colors.blue,
                 ),
               );
             },

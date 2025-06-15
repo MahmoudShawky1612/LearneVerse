@@ -51,8 +51,7 @@ class _MainContentState extends State<MainContent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 7.h),
-            BlocBuilder<CommunityCubit, CommunityStates>(
+             BlocBuilder<CommunityCubit, CommunityStates>(
               builder: (context, state) {
                 if (state is CommunityLoading) {
                   return const Center(child: LoadingState());
