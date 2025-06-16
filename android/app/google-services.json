@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "273324382088",
+    "project_id": "learneverse",
+    "storage_bucket": "learneverse.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273324382088:android:f9c03bd3595f37e8bc8c3d",
+        "android_client_info": {
+          "package_name": "com.example.flutterwidgets"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQRflhCq2QZvNV-N2iMpK8LLTbSXopBDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

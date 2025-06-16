@@ -378,7 +378,7 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                                   ),
                                   SizedBox(width: 8.w),
                                   Text(
-                                    'Attached Images ({editableAttachments.length})',
+                                    'Attached Images (${editableAttachments.length})',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16.sp,
