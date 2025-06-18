@@ -10,7 +10,7 @@ class QuizService {
   Future<List<Quiz>> getCommunityQuizzes(int communityId) async {
     final token = await TokenStorage.getToken();
     final response = await http.get(
-      Uri.parse('https://d580-217-55-17-184.ngrok-free.app/api/v1/quizzes/community/$communityId'),
+      Uri.parse('https://33dc-154-236-1-8.ngrok-free.app/api/v1/quizzes/community/$communityId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ class QuizService {
   Future<Quiz> getQuizById(int quizId) async {
     final token = await TokenStorage.getToken();
     final response = await http.get(
-      Uri.parse('https://d580-217-55-17-184.ngrok-free.app/api/v1/quizzes/$quizId'),
+      Uri.parse('https://33dc-154-236-1-8.ngrok-free.app/api/v1/quizzes/$quizId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
