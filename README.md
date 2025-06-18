@@ -1,16 +1,39 @@
-# flutterwidgets
+# LearneVerse
 
-A new Flutter project.
+LearneVerse is a cross-platform educational app built with Flutter. It provides interactive learning experiences, media content, and user engagement features. The project leverages modern Flutter libraries and best practices for state management, routing, and UI design.
+
+## Features
+- Interactive lessons and media (video, audio, documents)
+- User authentication and secure storage
+- Calendar and scheduling
+- Charts and data visualization
+- Speech-to-text and audio playback
+- Responsive design for mobile and desktop
+- Theming and custom fonts
+
+## Tech Stack
+- **Framework:** Flutter (Dart)
+- **State Management:** Provider, flutter_bloc, bloc
+- **Routing:** go_router
+- **UI & Animation:** fl_chart, table_calendar, google_fonts, font_awesome_flutter, lottie, simple_animations, syncfusion_flutter_charts, syncfusion_flutter_pdfviewer
+- **Media:** video_player, audioplayers, image_picker
+- **Storage:** shared_preferences, flutter_secure_storage, path_provider
+- **Networking:** http, jwt_decoder
+- **Utilities:** url_launcher, cached_network_image, mime, path
+
+## Assets
+- Images, videos, audio, and documents are stored in the `assets/` directory and referenced in `pubspec.yaml`.
 
 ## Getting Started
+1. Install Flutter SDK (see [Flutter docs](https://docs.flutter.dev/get-started/install)).
+2. Run `flutter pub get` to install dependencies.
+3. Use `flutter run` to launch the app on your device or emulator.
 
-This project is a starting point for a Flutter application.
+## Development
+- Code is organized in the `lib/` directory.
+- Main entry point: `lib/main.dart`
+- Feature modules: `lib/core/features/`
+- Utilities: `lib/core/utils/`
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## License
+This project is for educational purposes.
