@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,13 +8,13 @@ import 'package:flutterwidgets/features/login/views/widgets/background.dart';
 import 'package:flutterwidgets/features/login/views/widgets/login_footer.dart';
 import 'package:flutterwidgets/features/login/views/widgets/login_form.dart';
 import 'package:flutterwidgets/features/login/views/widgets/login_header.dart';
- import 'package:flutterwidgets/features/login/views/widgets/snackbar.dart';
+import 'package:flutterwidgets/features/login/views/widgets/snackbar.dart';
+import 'package:flutterwidgets/features/profile/views/widgets/sign_up.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../logic/cubit/auth_cubit.dart';
 import '../logic/cubit/auth_state.dart';
-
 
 class PremiumLoginScreen extends StatefulWidget {
   const PremiumLoginScreen({super.key});
@@ -184,6 +185,7 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
@@ -274,16 +276,16 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
                                           width: 1.5,
                                         ),
                                         borderRadius:
-                                        BorderRadius.circular(32.r),
+                                            BorderRadius.circular(32.r),
                                       ),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           PremiumLoginHeader(
                                             floatingAnimation:
-                                            _floatingAnimation,
+                                                _floatingAnimation,
                                             rotationAnimation:
-                                            _rotationAnimation,
+                                                _rotationAnimation,
                                             iconController: _iconController,
                                             iconScale: _iconScale,
                                           ),
@@ -292,24 +294,25 @@ class _PremiumLoginScreenState extends State<PremiumLoginScreen>
                                             formKey: _formKey,
                                             emailController: _emailController,
                                             passwordController:
-                                            _passwordController,
+                                                _passwordController,
                                             isPasswordVisible:
-                                            _isPasswordVisible,
+                                                _isPasswordVisible,
                                             isLoading: _isLoading,
                                             onPasswordVisibilityToggle: () {
                                               HapticFeedback.selectionClick();
                                               setState(() =>
-                                              _isPasswordVisible =
-                                              !_isPasswordVisible);
+                                                  _isPasswordVisible =
+                                                      !_isPasswordVisible);
                                             },
                                             onLoginPressed: _handleLogin,
                                             breathingAnimation:
-                                            _breathingAnimation,
+                                                _breathingAnimation,
                                           ),
                                           SizedBox(height: 32.h),
+                                          SignUp(),
                                           PremiumLoginFooter(
                                             floatingAnimation:
-                                            _floatingAnimation,
+                                                _floatingAnimation,
                                           ),
                                         ],
                                       ),
