@@ -13,6 +13,7 @@ class Quiz {
   final DateTime updatedAt;
   final List<QuizQuestion> quizQuestions;
   final int questionCount;
+  final bool isAttempted;
 
   Quiz({
     required this.id,
@@ -27,6 +28,7 @@ class Quiz {
     required this.updatedAt,
     required this.quizQuestions,
     required this.questionCount,
+    this.isAttempted = false,
   });
 
   factory Quiz.fromJson(Map<String, dynamic> json) {
@@ -58,6 +60,7 @@ class Quiz {
           : DateTime.now(),
       quizQuestions: questions,
       questionCount: json['questionCount'] ?? 0,
+      isAttempted: json['isAttempted'] ?? false,
     );
   }
 } 

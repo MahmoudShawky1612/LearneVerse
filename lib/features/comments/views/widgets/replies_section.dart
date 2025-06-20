@@ -52,7 +52,7 @@ class RepliesSection extends StatelessWidget {
                   SizedBox(
                     width: 18.r,
                     height: 18.r,
-                    child: CupertinoActivityIndicator(),
+                    child: const CupertinoActivityIndicator(),
                   ),
                   SizedBox(width: 10.w),
                   Text(

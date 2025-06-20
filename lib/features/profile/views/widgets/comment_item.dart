@@ -1,14 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/features/comments/logic/cubit/upvote_comment_cubit.dart';
 import 'package:flutterwidgets/features/comments/service/comment_service.dart';
-import 'package:flutterwidgets/utils/token_storage.dart';
-import 'package:flutterwidgets/utils/url_helper.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_states.dart';
 import 'package:flutterwidgets/features/profile/service/user_comments.service.dart';
+import 'package:flutterwidgets/utils/token_storage.dart';
+import 'package:flutterwidgets/utils/url_helper.dart';
+
 import '../../../../utils/jwt_helper.dart';
 import '../../../comments/data/models/comment_model.dart';
 import '../../../comments/logic/cubit/comment_cubit.dart';
@@ -17,7 +19,6 @@ import '../../../comments/logic/cubit/downvote_comment_cubit.dart';
 import '../../../comments/logic/cubit/downvote_comment_states.dart';
 import '../../../comments/logic/cubit/upvote_comment_states.dart';
 import '../../../comments/views/widgets/profile_avatar.dart';
-import '../../../home/views/widgets/vote_button.dart';
 
 class CommentItem extends StatefulWidget {
   final Comment comment;
@@ -67,8 +68,12 @@ class _CommentItemState extends State<CommentItem> {
   double get availableWidth {
     final screenWidth = MediaQuery.of(context).size.width;
     final totalIndent = indentationWidth + (widget.nestingLevel > 0 ? 16.w : 0);
-    final calculatedWidth = (widget.maxWidth == double.infinity ? screenWidth : widget.maxWidth) - totalIndent - 24.w;
-    return calculatedWidth.clamp(100.0, double.infinity); // Ensure minimum width to prevent overflow
+    final calculatedWidth =
+        (widget.maxWidth == double.infinity ? screenWidth : widget.maxWidth) -
+            totalIndent -
+            24.w;
+    return calculatedWidth.clamp(
+        100.0, double.infinity); // Ensure minimum width to prevent overflow
   }
 
   @override
@@ -111,7 +116,9 @@ class _CommentItemState extends State<CommentItem> {
       isLoadingChildren = true;
     });
     try {
-      final fetchedChildren = await context.read<CommentCubit>().fetchCommentChildren(widget.comment.id);
+      final fetchedChildren = await context
+          .read<CommentCubit>()
+          .fetchCommentChildren(widget.comment.id);
       if (mounted) {
         setState(() {
           children = fetchedChildren;
@@ -152,11 +159,14 @@ class _CommentItemState extends State<CommentItem> {
     final content = replyController.text.trim();
     if (content.isEmpty) return;
 
-    context.read<CommentCubit>().createComment(
-      content,
-      widget.comment.postId,
-      widget.comment.id,
-    ).then((_) {
+    context
+        .read<CommentCubit>()
+        .createComment(
+          content,
+          widget.comment.postId,
+          widget.comment.id,
+        )
+        .then((_) {
       if (mounted) {
         replyController.clear();
         setState(() {
@@ -224,7 +234,8 @@ class _CommentItemState extends State<CommentItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildCommentContent(comment, textTheme, colorScheme, constraints),
+                  _buildCommentContent(
+                      comment, textTheme, colorScheme, constraints),
                   if (isExpanded && widget.nestingLevel < maxNestingLevel)
                     _buildRepliesSection(constraints),
                 ],
@@ -236,7 +247,8 @@ class _CommentItemState extends State<CommentItem> {
     );
   }
 
-  Widget _buildCommentContent(Comment comment, TextTheme textTheme, ColorScheme colorScheme, BoxConstraints constraints) {
+  Widget _buildCommentContent(Comment comment, TextTheme textTheme,
+      ColorScheme colorScheme, BoxConstraints constraints) {
     return Container(
       width: constraints.maxWidth,
       margin: EdgeInsets.only(
@@ -246,17 +258,18 @@ class _CommentItemState extends State<CommentItem> {
       decoration: BoxDecoration(
         border: widget.nestingLevel > 0
             ? Border(
-          left: BorderSide(
-            color: _getThreadLineColor(colorScheme),
-            width: 2.w,
-          ),
-        )
+                left: BorderSide(
+                  color: _getThreadLineColor(colorScheme),
+                  width: 2.w,
+                ),
+              )
             : null,
       ),
       child: Container(
         padding: EdgeInsets.symmetric(
           vertical: 10.h, // Increased from 8.h
-          horizontal: widget.nestingLevel > 0 ? 14.w : 18.w, // Increased slightly
+          horizontal:
+              widget.nestingLevel > 0 ? 14.w : 18.w, // Increased slightly
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,7 +292,8 @@ class _CommentItemState extends State<CommentItem> {
     );
   }
 
-  Widget _buildCommentHeader(Comment comment, TextTheme textTheme, ColorScheme colorScheme, BoxConstraints constraints) {
+  Widget _buildCommentHeader(Comment comment, TextTheme textTheme,
+      ColorScheme colorScheme, BoxConstraints constraints) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min, // Prevent Row from taking full width
@@ -290,15 +304,18 @@ class _CommentItemState extends State<CommentItem> {
           child: ProfileAvatar(comment: comment),
         ),
         SizedBox(width: 10.w), // Increased from 8.w
-        Expanded( // Changed from Flexible to Expanded to ensure proper space allocation
+        Expanded(
+          // Changed from Flexible to Expanded to ensure proper space allocation
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
-                mainAxisSize: MainAxisSize.min, // Prevent Row from expanding unnecessarily
+                mainAxisSize: MainAxisSize.min,
+                // Prevent Row from expanding unnecessarily
                 children: [
-                  Expanded( // Wrap Text in Expanded to handle long usernames
+                  Expanded(
+                    // Wrap Text in Expanded to handle long usernames
                     child: Text(
                       comment.author.fullname.isNotEmpty
                           ? comment.author.fullname
@@ -329,12 +346,15 @@ class _CommentItemState extends State<CommentItem> {
     );
   }
 
-  Widget _buildCommentText(Comment comment, TextTheme textTheme, ColorScheme colorScheme, BoxConstraints constraints) {
-    final maxWidth = availableWidth; // Use calculated availableWidth with minimum constraint
+  Widget _buildCommentText(Comment comment, TextTheme textTheme,
+      ColorScheme colorScheme, BoxConstraints constraints) {
+    final maxWidth =
+        availableWidth; // Use calculated availableWidth with minimum constraint
 
     return Container(
       width: maxWidth,
-      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w), // Increased padding
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
+      // Increased padding
       decoration: BoxDecoration(
         color: colorScheme.surface.withOpacity(0.3),
         borderRadius: BorderRadius.circular(8.r), // Increased from 6.r
@@ -375,13 +395,15 @@ class _CommentItemState extends State<CommentItem> {
                   icon: Icons.arrow_upward,
                   color: upVoteColor,
                   isLoading: state is UpVoteCommentLoading,
-                  onTap: () => context.read<UpvoteCommentCubit>().upVoteComment(comment),
+                  onTap: () =>
+                      context.read<UpvoteCommentCubit>().upVoteComment(comment),
                 );
               },
             ),
             SizedBox(width: 6.w), // Increased from 4.w
             Container(
-              constraints: BoxConstraints(minWidth: 30.w), // Ensure vote counter has enough space
+              constraints: BoxConstraints(minWidth: 30.w),
+              // Ensure vote counter has enough space
               child: Text(
                 '$voteCounter',
                 style: TextStyle(
@@ -409,7 +431,9 @@ class _CommentItemState extends State<CommentItem> {
                   icon: Icons.arrow_downward,
                   color: downVoteColor,
                   isLoading: state is DownVoteCommentLoading,
-                  onTap: () => context.read<DownvoteCommentCubit>().downVoteComment(comment),
+                  onTap: () => context
+                      .read<DownvoteCommentCubit>()
+                      .downVoteComment(comment),
                 );
               },
             ),
@@ -441,27 +465,27 @@ class _CommentItemState extends State<CommentItem> {
         children: [
           if (isLoadingChildren)
             Container(
-              margin: EdgeInsets.only(left: indentationWidth + 18.w), // Increased from 16.w
-              padding: EdgeInsets.all(14.h), // Increased from 12.h
+              margin: EdgeInsets.only(left: indentationWidth + 18.w),
+              // Increased from 16.w
+              padding: EdgeInsets.all(14.h),
+              // Increased from 12.h
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
                     width: 18.r, // Increased from 16.r
                     height: 18.r,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
+                    child: const CupertinoActivityIndicator(),
                   ),
                   SizedBox(width: 10.w), // Increased from 8.w
                   Text(
                     'Loading replies...',
                     style: TextStyle(
                       fontSize: 12.sp, // Increased from 11.sp
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
                     ),
                   ),
                 ],
@@ -475,18 +499,21 @@ class _CommentItemState extends State<CommentItem> {
                 'No replies available',
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                 ),
               ),
             )
           else
-            ...children.map((child) => CommentItem(
-              comment: child,
-              onDelete: widget.onDelete,
-              onEdit: widget.onEdit,
-              nestingLevel: widget.nestingLevel + 1,
-              maxWidth: constraints.maxWidth,
-            )).toList(),
+            ...children
+                .map((child) => CommentItem(
+                      comment: child,
+                      onDelete: widget.onDelete,
+                      onEdit: widget.onEdit,
+                      nestingLevel: widget.nestingLevel + 1,
+                      maxWidth: constraints.maxWidth,
+                    ))
+                .toList(),
         ],
       ),
     );
@@ -505,18 +532,18 @@ class _CommentItemState extends State<CommentItem> {
         padding: EdgeInsets.all(5.r), // Increased from 4.r
         child: isLoading
             ? SizedBox(
-          width: 14.r, // Increased from 12.r
-          height: 14.r,
-          child: CircularProgressIndicator(
-            strokeWidth: 1.5,
-            valueColor: AlwaysStoppedAnimation<Color>(color),
-          ),
-        )
+                width: 14.r, // Increased from 12.r
+                height: 14.r,
+                child: CircularProgressIndicator(
+                  strokeWidth: 1.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                ),
+              )
             : Icon(
-          icon,
-          size: 16.r, // Increased from 14.r
-          color: color,
-        ),
+                icon,
+                size: 16.r, // Increased from 14.r
+                color: color,
+              ),
       ),
     );
   }
@@ -530,7 +557,8 @@ class _CommentItemState extends State<CommentItem> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.r),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h), // Increased padding
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+        // Increased padding
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -561,7 +589,8 @@ class _CommentItemState extends State<CommentItem> {
     return Container(
       width: maxWidth,
       margin: EdgeInsets.only(top: 6.h),
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h), // Increased padding
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+      // Increased padding
       decoration: BoxDecoration(
         color: colorScheme.surface.withOpacity(0.5),
         borderRadius: BorderRadius.circular(10.r), // Increased from 8.r
@@ -571,7 +600,8 @@ class _CommentItemState extends State<CommentItem> {
         ),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // Align text field and button properly
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // Align text field and button properly
         children: [
           Expanded(
             child: TextField(
@@ -583,7 +613,8 @@ class _CommentItemState extends State<CommentItem> {
                   fontSize: 13.sp, // Increased from 12.sp
                 ),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 6.h), // Increased padding
+                contentPadding: EdgeInsets.symmetric(vertical: 6.h),
+                // Increased padding
                 isDense: true,
               ),
               style: TextStyle(
@@ -631,11 +662,13 @@ class _CommentItemState extends State<CommentItem> {
     );
   }
 
-  Widget _buildOptionsMenu(ColorScheme colorScheme, BoxConstraints constraints) {
+  Widget _buildOptionsMenu(
+      ColorScheme colorScheme, BoxConstraints constraints) {
     return Container(
       margin: EdgeInsets.only(top: 8.h), // Increased from 6.h
       constraints: BoxConstraints(
-        maxWidth: (constraints.maxWidth * 0.6).clamp(140.0, 220.0), // Increased clamp range
+        maxWidth: (constraints.maxWidth * 0.6)
+            .clamp(140.0, 220.0), // Increased clamp range
       ),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
@@ -656,7 +689,7 @@ class _CommentItemState extends State<CommentItem> {
             'Edit',
             Icons.edit_outlined,
             colorScheme.primary,
-                () => _showEditCommentDialog(widget.comment.content ?? ''),
+            () => _showEditCommentDialog(widget.comment.content ?? ''),
           ),
           Divider(
             height: 1.h,
@@ -666,7 +699,7 @@ class _CommentItemState extends State<CommentItem> {
             'Delete',
             Icons.delete_outline,
             colorScheme.error,
-                () {
+            () {
               setState(() {
                 isMenuVisible = false;
               });
@@ -679,11 +712,11 @@ class _CommentItemState extends State<CommentItem> {
   }
 
   Widget _buildOptionsItem(
-      String text,
-      IconData icon,
-      Color color,
-      VoidCallback onTap,
-      ) {
+    String text,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return InkWell(
       onTap: () {
         setState(() {
@@ -741,25 +774,27 @@ class _CommentItemState extends State<CommentItem> {
       builder: (context) {
         final theme = Theme.of(context);
         final colorScheme = theme.colorScheme;
-        TextEditingController commentController = TextEditingController(text: content);
+        TextEditingController commentController =
+            TextEditingController(text: content);
 
         return AlertDialog(
           backgroundColor: theme.cardColor,
           title: Row(
             children: [
               CircleAvatar(
-                backgroundImage: comment.author.userProfile?.profilePictureURL != null
-                    ? CachedNetworkImageProvider(
-                    UrlHelper.transformUrl(comment.author.userProfile!.profilePictureURL!))
-                    : null,
+                backgroundImage:
+                    comment.author.userProfile?.profilePictureURL != null
+                        ? CachedNetworkImageProvider(UrlHelper.transformUrl(
+                            comment.author.userProfile!.profilePictureURL!))
+                        : null,
                 radius: 18.r, // Increased from 16.r
                 backgroundColor: colorScheme.primary.withOpacity(0.1),
                 child: comment.author.userProfile?.profilePictureURL == null
                     ? Icon(
-                  Icons.person,
-                  size: 20.r, // Increased from 18.r
-                  color: colorScheme.primary,
-                )
+                        Icons.person,
+                        size: 20.r, // Increased from 18.r
+                        color: colorScheme.primary,
+                      )
                     : null,
               ),
               SizedBox(width: 12.w), // Increased from 10.w
@@ -780,14 +815,20 @@ class _CommentItemState extends State<CommentItem> {
                 TextFormField(
                   controller: commentController,
                   maxLines: 4,
-                  style: TextStyle(color: colorScheme.onSurface, fontSize: 14.sp), // Increased font size
+                  style:
+                      TextStyle(color: colorScheme.onSurface, fontSize: 14.sp),
+                  // Increased font size
                   decoration: InputDecoration(
                     hintText: 'Edit your comment...',
-                    hintStyle: TextStyle(color: theme.hintColor, fontSize: 13.sp), // Increased font size
+                    hintStyle:
+                        TextStyle(color: theme.hintColor, fontSize: 13.sp),
+                    // Increased font size
                     filled: true,
-                    fillColor: theme.inputDecorationTheme.fillColor ?? theme.scaffoldBackgroundColor,
+                    fillColor: theme.inputDecorationTheme.fillColor ??
+                        theme.scaffoldBackgroundColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14.r), // Increased from 12.r
+                      borderRadius: BorderRadius.circular(14.r),
+                      // Increased from 12.r
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -800,16 +841,18 @@ class _CommentItemState extends State<CommentItem> {
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'Cancel',
-                style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13.sp), // Increased font size
+                style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 13.sp), // Increased font size
               ),
             ),
             ElevatedButton(
               onPressed: () {
                 context.read<UserCommentsCubit>().updateComment(
-                  userId,
-                  comment.id,
-                  commentController.text.trim(),
-                );
+                      userId,
+                      comment.id,
+                      commentController.text.trim(),
+                    );
                 Navigator.pop(context);
                 if (widget.onEdit != null) {
                   widget.onEdit!(comment, commentController.text.trim());
@@ -819,7 +862,8 @@ class _CommentItemState extends State<CommentItem> {
                 backgroundColor: colorScheme.primary,
                 foregroundColor: colorScheme.onPrimary,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14.r), // Increased from 12.r
+                  borderRadius:
+                      BorderRadius.circular(14.r), // Increased from 12.r
                 ),
               ),
               child: Text(
@@ -863,7 +907,9 @@ class _CommentItemState extends State<CommentItem> {
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'Cancel',
-                style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13.sp), // Increased font size
+                style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 13.sp), // Increased font size
               ),
             ),
             BlocBuilder<UserCommentsCubit, UserCommentsState>(
@@ -871,7 +917,9 @@ class _CommentItemState extends State<CommentItem> {
                 return ElevatedButton(
                   onPressed: () async {
                     Navigator.pop(context);
-                    await context.read<UserCommentsCubit>().deleteComment(userId, widget.comment.id);
+                    await context
+                        .read<UserCommentsCubit>()
+                        .deleteComment(userId, widget.comment.id);
                     if (widget.onDelete != null) {
                       widget.onDelete!(widget.comment);
                     }
@@ -880,7 +928,8 @@ class _CommentItemState extends State<CommentItem> {
                     backgroundColor: colorScheme.error,
                     foregroundColor: colorScheme.onError,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14.r), // Increased from 12.r
+                      borderRadius:
+                          BorderRadius.circular(14.r), // Increased from 12.r
                     ),
                   ),
                   child: Text(
