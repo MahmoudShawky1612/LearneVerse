@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,11 +10,17 @@ import '../../logic/cubit/quiz_cubit.dart';
 import '../../logic/cubit/quiz_states.dart';
 import '../screens/quiz_taking_screen.dart';
 
-class QuizList extends StatelessWidget {
+class QuizList extends StatefulWidget {
   final int communityId;
 
   const QuizList({Key? key, required this.communityId}) : super(key: key);
 
+  @override
+  State<QuizList> createState() => _QuizListState();
+}
+bool isLoading = false;
+
+class _QuizListState extends State<QuizList> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<QuizCubit, QuizStates>(
@@ -23,7 +30,7 @@ class QuizList extends StatelessWidget {
         } else if (state is QuizError) {
           return Center(
             child: ErrorStateWidget(onRetry: (){
-              context.read<QuizCubit>().fetchCommunityQuizzes(communityId);
+              context.read<QuizCubit>().fetchCommunityQuizzes(widget.communityId);
             }, message: state.message,),
           );
         } else if (state is QuizLoaded) {
@@ -53,6 +60,9 @@ class QuizList extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(16.r),
                     onTap: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
                       try {
                         final quizDetails = await context.read<QuizCubit>().getQuizById(quiz.id);
                         if (context.mounted) {
@@ -62,6 +72,9 @@ class QuizList extends StatelessWidget {
                               builder: (context) => QuizTakingScreen(quiz: quizDetails),
                             ),
                           );
+                          setState(() {
+                            isLoading = false;
+                          });
                         }
                       } catch (e) {
                         if (context.mounted) {
@@ -121,7 +134,7 @@ class QuizList extends StatelessWidget {
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                                   decoration: BoxDecoration(
-                                    color: quiz.active 
+                                    color: quiz.active
                                       ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
                                       : Theme.of(context).colorScheme.error.withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(4.r),
@@ -129,7 +142,7 @@ class QuizList extends StatelessWidget {
                                   child: Text(
                                     quiz.active ? 'Active' : 'Inactive',
                                     style: TextStyle(
-                                      color: quiz.active 
+                                      color: quiz.active
                                         ? Theme.of(context).colorScheme.primary
                                         : Theme.of(context).colorScheme.error,
                                       fontSize: 12.sp,
@@ -140,7 +153,7 @@ class QuizList extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Icon(Icons.arrow_forward_ios, size: 16.w),
+                         isLoading ? const CupertinoActivityIndicator() :  Icon(Icons.arrow_forward_ios, size: 16.w),
                         ],
                       ),
                     ),
@@ -154,4 +167,4 @@ class QuizList extends StatelessWidget {
       },
     );
   }
-} 
+}
