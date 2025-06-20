@@ -13,9 +13,10 @@ class ForumCubit extends Cubit<ForumStates> {
     emit(ForumLoading());
     try {
       final List<Post> posts =
-          await forumApiService.fetchPostsForCommunity(forumId);
+      await forumApiService.fetchPostsForCommunity(forumId);
       emit(ForumSuccess(posts));
     } catch (e) {
+      print(e.toString());
       emit(ForumFailure(e.toString()));
     }
   }

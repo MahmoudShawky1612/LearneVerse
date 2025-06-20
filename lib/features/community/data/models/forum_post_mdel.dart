@@ -42,8 +42,8 @@ class ForumPost {
           : DateTime.now(),
       voteCounter: json['voteScore'] ?? 0,
       commentCount: json['commentCount'] ?? 0,
-      author: json['author'] != null
-          ? Author.fromJson(json['author'])
+      author: json['Author'] != null
+          ? Author.fromJson(json['Author'])
           : Author.fallback(),
       voteType: json['voteType'] ?? 'NONE',
     );
@@ -80,13 +80,15 @@ class Author {
   });
 
   factory Author.fromJson(Map<String, dynamic> json) {
+    final userProfile = json['UserProfile'];
     return Author(
       id: json['id'] ?? 0,
       username: json['username'] ?? '',
       fullname: json['fullname'] ?? '',
-      avatarUrl: json['profilePictureURL'] ?? '',
+      avatarUrl: userProfile != null ? userProfile['profilePictureURL'] ?? '' : '',
     );
   }
+
 
   factory Author.fallback() {
     return Author(

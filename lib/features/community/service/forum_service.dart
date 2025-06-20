@@ -25,6 +25,7 @@ class ForumApiService {
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
+      print(json);
       return json.map((post) => Post.fromJson(post)).toList();
     } else {
       return Future.error('${body['message'] ?? 'Unknown error'}');

@@ -86,13 +86,15 @@ class Author {
   });
 
   factory Author.fromJson(Map<String, dynamic> json) {
+    final userProfile = json['UserProfile'];
     return Author(
       id: json['id'] ?? 0,
-      username: json['username'] ?? 'unknown',
-      fullname: json['fullname'] ?? 'Guest',
-      profilePictureURL: json['UserProfile']['profilePictureURL'],
+      username: json['username'] ?? '',
+      fullname: json['fullname'] ?? '',
+      profilePictureURL: userProfile != null ? userProfile['profilePictureURL'] ?? '' : '',
     );
   }
+
 
   Map<String, dynamic> toJson() {
     return {

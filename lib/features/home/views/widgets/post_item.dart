@@ -999,24 +999,20 @@ class _PostItemState extends State<PostItem> with TickerProviderStateMixin {
                                 children: [
                                   CircleAvatar(
                                     radius: 18.r,
-                                    backgroundImage: currentPost
-                                                .author.profilePictureURL !=
-                                            null
+                                    backgroundImage: (currentPost.author.profilePictureURL != null &&
+                                        currentPost.author.profilePictureURL!.isNotEmpty)
                                         ? CachedNetworkImageProvider(
-                                            UrlHelper.transformUrl(currentPost
-                                                .author.profilePictureURL!))
+                                        UrlHelper.transformUrl(currentPost.author.profilePictureURL!))
                                         : null,
-                                    backgroundColor:
-                                        colorScheme.primary.withOpacity(0.1),
-                                    child:
-                                        currentPost.author.profilePictureURL ==
-                                                null
-                                            ? Icon(
-                                                Icons.person,
-                                                size: 20.r,
-                                                color: colorScheme.primary,
-                                              )
-                                            : null,
+                                    backgroundColor: colorScheme.primary.withOpacity(0.1),
+                                    child: (currentPost.author.profilePictureURL == null ||
+                                        currentPost.author.profilePictureURL!.isEmpty)
+                                        ? Icon(
+                                      Icons.person,
+                                      size: 20.r,
+                                      color: Colors.blue, // Always blue icon
+                                    )
+                                        : null,
                                   ),
                                   SizedBox(width: 12.w),
                                   Column(
