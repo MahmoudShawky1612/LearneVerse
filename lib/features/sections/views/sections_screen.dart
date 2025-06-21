@@ -7,6 +7,7 @@ import 'package:flutterwidgets/utils/snackber_util.dart';
 import 'package:video_player/video_player.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import '../data/models/models.dart';
 import '../../../utils/error_state.dart';
 import '../../../utils/jwt_helper.dart';
@@ -757,6 +758,8 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
   bool _isPlaying = false;
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
+  bool _isYouTubeVideo = false;
+  WebViewController? _webViewController;
 
   @override
   void initState() {
@@ -766,12 +769,21 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
 
   void _initializeMedia() {
     if (widget.type == ContentType.video) {
-      _videoController =
-          VideoPlayerController.network(widget.lesson.materials[0].fileUrl)
-            ..initialize().then((_) {
-              setState(() {});
-            });
-      _videoController?.addListener(_videoListener);
+      final videoUrl = widget.lesson.materials[0].fileUrl;
+
+      // Check if it's a YouTube URL
+      if (_isYouTubeUrl(videoUrl)) {
+        _isYouTubeVideo = true;
+        _initializeWebView(videoUrl);
+      } else {
+        // Handle regular video URLs
+        _isYouTubeVideo = false;
+        _videoController = VideoPlayerController.network(videoUrl)
+          ..initialize().then((_) {
+            setState(() {});
+          });
+        _videoController?.addListener(_videoListener);
+      }
     } else if (widget.type == ContentType.recording) {
       _audioPlayer = AudioPlayer();
       _audioPlayer!.onDurationChanged.listen((duration) {
@@ -791,7 +803,30 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
       });
     }
   }
+  void _initializeWebView(String youtubeUrl) {
+    // Extract video ID from YouTube URL
+    String videoId = _extractYouTubeVideoId(youtubeUrl);
 
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(
+          'https://www.youtube.com/embed/$videoId?autoplay=0&controls=1'));
+  }
+  String _extractYouTubeVideoId(String url) {
+    // Handle different YouTube URL formats
+    RegExp regExp = RegExp(
+      r'(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})',
+      caseSensitive: false,
+    );
+    Match? match = regExp.firstMatch(url);
+    return match?.group(1) ?? '';
+  }
+
+  bool _isYouTubeUrl(String url) {
+    return url.contains('youtube.com') ||
+        url.contains('youtu.be') ||
+        url.contains('m.youtube.com');
+  }
   void _videoListener() {
     if (mounted) setState(() {});
   }
@@ -967,39 +1002,42 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20.r),
-                            child: _videoController != null &&
-                                    _videoController!.value.isInitialized
-                                ? Stack(
-                                    children: [
-                                      AspectRatio(
-                                        aspectRatio:
-                                            _videoController!.value.aspectRatio,
-                                        child: VideoPlayer(_videoController!),
-                                      ),
-                                      Center(
-                                        child: IconButton(
-                                          icon: Icon(
-                                            _videoController!.value.isPlaying
-                                                ? Icons.pause_circle_filled
-                                                : Icons.play_circle_filled,
-                                            color: Colors.white,
-                                            size: 60.sp,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              _videoController!.value.isPlaying
-                                                  ? _videoController!.pause()
-                                                  : _videoController!.play();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  )
+                            child: _isYouTubeVideo
+                                ? (_webViewController != null
+                                ? WebViewWidget(controller: _webViewController!)
                                 : const Center(
-                                    child: CircularProgressIndicator(
-                                        color: Colors.white),
+                              child: CircularProgressIndicator(color: Colors.white),
+                            ))
+                                : (_videoController != null && _videoController!.value.isInitialized
+                                ? Stack(
+                              children: [
+                                AspectRatio(
+                                  aspectRatio: _videoController!.value.aspectRatio,
+                                  child: VideoPlayer(_videoController!),
+                                ),
+                                Center(
+                                  child: IconButton(
+                                    icon: Icon(
+                                      _videoController!.value.isPlaying
+                                          ? Icons.pause_circle_filled
+                                          : Icons.play_circle_filled,
+                                      color: Colors.white,
+                                      size: 60.sp,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _videoController!.value.isPlaying
+                                            ? _videoController!.pause()
+                                            : _videoController!.play();
+                                      });
+                                    },
                                   ),
+                                ),
+                              ],
+                            )
+                                : const Center(
+                              child: CircularProgressIndicator(color: Colors.white),
+                            )),
                           ),
                         ),
                       ] else if (widget.type == ContentType.recording) ...[
