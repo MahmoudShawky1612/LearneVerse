@@ -16,7 +16,7 @@ class ImageHelper {
     Widget? placeholder,
   }) {
     if (imageUrl.isEmpty) {
-      return errorWidget ?? const SizedBox();
+      return errorWidget ?? const Icon(Icons.group,color: Colors.blue,);
     }
 
     if (isSvgUrl(imageUrl)) {
