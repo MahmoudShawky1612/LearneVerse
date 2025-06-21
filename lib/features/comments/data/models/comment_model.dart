@@ -25,7 +25,7 @@ class Author {
 
     return Author(
       id: json['id'] ?? 0,
-      fullname: json['fullname'] ?? 'Unknown',
+      fullname: json['fullname'] ?? 'DR. Farouk Shaaban',
       userProfile: json['UserProfile'] != null
           ? UserProfile.fromJson(json['UserProfile'])
           : null,
