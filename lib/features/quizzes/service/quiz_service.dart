@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:flutterwidgets/core/helpers/api_helper.dart';
+import 'package:flutterwidgets/core/helpers/url_helper.dart';
 import 'package:http/http.dart' as http;
 import '../../../utils/token_storage.dart';
 import '../data/models/quiz_model.dart';
-import '../../../core/helpers/api_helper.dart';
 
 class QuizService {
-  final baseUrl = ApiHelper.baseUrl;
+  static final String baseUrl = ApiHelper.baseUrl;
 
   Future<List<Quiz>> getCommunityQuizzes(int communityId) async {
     final token = await TokenStorage.getToken();
@@ -41,6 +42,37 @@ class QuizService {
       return Quiz.fromJson(body['data']);
     } else {
       throw Exception(body['message'] ?? 'Failed to load quiz');
+    }
+  }
+
+  Future<void> submitQuiz(int quizId, DateTime startDate, DateTime endDate, int score) async {
+    final token = await TokenStorage.getToken();
+    
+    // Try ISO8601 format without timezone indicator
+    String formatDate(DateTime date) {
+      return date.toIso8601String().replaceAll('Z', '');
+    }
+    
+    final requestBody = {
+      'startDate': formatDate(startDate),
+      'endDate': formatDate(endDate),
+      'score': score,
+    };
+    
+
+    final response = await http.post(
+      Uri.parse('https://bb37-217-55-63-153.ngrok-free.app/api/v1/quizzes/$quizId/submit-quiz'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(requestBody),
+    );
+    
+    final body = jsonDecode(response.body);
+
+    if (response.statusCode != 200 || body['success'] != true) {
+       throw Exception(body['message'] ?? 'Failed to submit quiz');
     }
   }
 } 

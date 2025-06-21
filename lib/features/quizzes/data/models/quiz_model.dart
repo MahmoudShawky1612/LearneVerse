@@ -28,7 +28,7 @@ class Quiz {
     required this.updatedAt,
     required this.quizQuestions,
     required this.questionCount,
-    this.isAttempted = false,
+    required this.isAttempted,
   });
 
   factory Quiz.fromJson(Map<String, dynamic> json) {
@@ -38,6 +38,9 @@ class Quiz {
           .map((q) => QuizQuestion.fromJson(q as Map<String, dynamic>))
           .toList();
     }
+
+    final isAttempted = json['isAttempted'] ?? false;
+    print('Quiz ${json['id']}: isAttempted from API = $isAttempted');
 
     return Quiz(
       id: json['id'] ?? 0,
@@ -60,7 +63,7 @@ class Quiz {
           : DateTime.now(),
       quizQuestions: questions,
       questionCount: json['questionCount'] ?? 0,
-      isAttempted: json['isAttempted'] ?? false,
+      isAttempted: isAttempted,
     );
   }
 } 

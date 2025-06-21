@@ -19,6 +19,7 @@ import 'package:flutterwidgets/features/profile/logic/cubit/user_comments_cubit.
 import 'package:flutterwidgets/features/profile/logic/cubit/user_communities_cubit.dart';
 import 'package:flutterwidgets/features/profile/logic/cubit/user_contributions_cubit.dart';
 import 'package:flutterwidgets/features/profile/service/user_comments.service.dart';
+import 'package:flutterwidgets/features/quizzes/logic/cubit/quiz_cubit.dart';
 import 'package:flutterwidgets/routing/routes.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +41,7 @@ import 'features/profile/service/profile_api_services.dart';
 import 'features/profile/service/user_communities_service.dart';
 import 'features/profile/service/user_contributions_service.dart';
 import 'features/profile/service/user_posts_service.dart';
+import 'features/quizzes/service/quiz_service.dart';
 import 'features/sections/logic/cubit/sections_cubit.dart';
 import 'features/sections/service/api_service.dart';
 
@@ -88,6 +90,7 @@ void main() async {
             create: (_) => SectionsCubit(SectionsApiService())),
         BlocProvider<UpvoteCubit>(create: (_) => UpvoteCubit(FeedPostsApiService())),
         BlocProvider<DownvoteCubit>(create: (_) =>DownvoteCubit(FeedPostsApiService())),
+        BlocProvider<QuizCubit>(create: (_) => QuizCubit(QuizService())),
       ],
       child: const MyApp(),
     ),

@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterwidgets/utils/snackber_util.dart';
 
 import '../../data/models/question_model.dart';
 import '../../data/models/quiz_model.dart';
+import '../../logic/cubit/quiz_cubit.dart';
 
 enum QuestionType { SINGLE, MULTI, TRUE_FALSE }
 
@@ -100,7 +103,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
     }
   }
 
-  void _finishQuiz() {
+  void _finishQuiz() async {
     _timer.cancel();
     int score = 0;
     for (var question in widget.quiz.quizQuestions) {
@@ -115,6 +118,25 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
     });
 
     _resultController.forward();
+
+    // Submit quiz results to API
+    try {
+      final endTime = DateTime.now();
+      await context.read<QuizCubit>().submitQuiz(
+        widget.quiz.id,
+        _startTime,
+        endTime,
+        score,
+      );
+      
+      if (context.mounted) {
+        SnackBarUtils.showSuccessSnackBar(context, message: 'Quiz submitted successfully!');
+       }
+    } catch (e) {
+      if (context.mounted) {
+        SnackBarUtils.showErrorSnackBar(context, message: 'Failed to submit quiz results: $e');
+      }
+    }
   }
 
   QuestionType _getQuestionType(QuizQuestion question) {
@@ -1157,7 +1179,11 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
                       ],
                     ),
                     child: ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: ()  {
+                        Navigator.of(context).pop();
+                        context.read<QuizCubit>().fetchCommunityQuizzes(widget.quiz.classroomId);
+
+                      },
                       style: ElevatedButton.styleFrom(
                         shadowColor: Colors.blue,
                         padding: EdgeInsets.symmetric(vertical: 16.h),

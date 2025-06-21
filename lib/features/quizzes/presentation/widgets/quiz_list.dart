@@ -40,6 +40,11 @@ class _QuizListState extends State<QuizList> {
             );
           }
 
+          // Debug: Print quiz data
+          for (var quiz in state.quizzes) {
+            print('Quiz ${quiz.id}: isAttempted = ${quiz.isAttempted}');
+          }
+
           return Column(
             children: state.quizzes.map((quiz) {
               return Container(
@@ -59,7 +64,26 @@ class _QuizListState extends State<QuizList> {
                   color: Colors.transparent,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(16.r),
-                    onTap: () async {
+                    onTap: quiz.isAttempted ? () {
+                      print('Quiz ${quiz.id} is attempted: ${quiz.isAttempted}');
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Quiz Already Attempted'),
+                            content: const Text(
+                              'You have already taken this quiz. You cannot attempt it again.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } : () async {
                       setState(() {
                         isLoading = true;
                       });
@@ -85,7 +109,6 @@ class _QuizListState extends State<QuizList> {
                             ),
                           );
                           print(e);
-
                         }
                       }
                     },
@@ -97,14 +120,20 @@ class _QuizListState extends State<QuizList> {
                             width: 80.w,
                             height: 80.h,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                              color: quiz.isAttempted 
+                                ? Colors.grey.withOpacity(0.1)
+                                : Theme.of(context).colorScheme.primary.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12.r),
                             ),
                             child: Center(
                               child: FaIcon(
-                                FontAwesomeIcons.puzzlePiece,
+                                quiz.isAttempted 
+                                  ? FontAwesomeIcons.checkCircle
+                                  : FontAwesomeIcons.puzzlePiece,
                                 size: 40.w,
-                                color: Theme.of(context).colorScheme.primary,
+                                color: quiz.isAttempted 
+                                  ? Colors.grey
+                                  : Theme.of(context).colorScheme.primary,
                               ),
                             ),
                           ),
@@ -118,42 +147,60 @@ class _QuizListState extends State<QuizList> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16.sp,
+                                    color: quiz.isAttempted ? Colors.grey : null,
                                   ),
                                 ),
                                 SizedBox(height: 8.h),
                                 Text(
                                   'Duration: ${quiz.duration} minutes',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: quiz.isAttempted ? Colors.grey : null,
+                                  ),
                                 ),
                                 SizedBox(height: 4.h),
                                 Text(
                                   'Grade: ${quiz.grade}',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: quiz.isAttempted ? Colors.grey : null,
+                                  ),
                                 ),
                                 SizedBox(height: 4.h),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                                  decoration: BoxDecoration(
-                                    color: quiz.active
-                                      ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                                      : Theme.of(context).colorScheme.error.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(4.r),
-                                  ),
-                                  child: Text(
-                                    quiz.active ? 'Active' : 'Inactive',
-                                    style: TextStyle(
-                                      color: quiz.active
-                                        ? Theme.of(context).colorScheme.primary
-                                        : Theme.of(context).colorScheme.error,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w500,
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                                      decoration: BoxDecoration(
+                                        color: quiz.isAttempted
+                                          ? Colors.grey.withOpacity(0.1)
+                                          : quiz.active
+                                            ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                                            : Theme.of(context).colorScheme.error.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(4.r),
+                                      ),
+                                      child: Text(
+                                        quiz.isAttempted 
+                                          ? 'Already Attempted'
+                                          : quiz.active ? 'Active' : 'Inactive',
+                                        style: TextStyle(
+                                          color: quiz.isAttempted
+                                            ? Colors.grey
+                                            : quiz.active
+                                              ? Theme.of(context).colorScheme.primary
+                                              : Theme.of(context).colorScheme.error,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
-                         isLoading ? const CupertinoActivityIndicator() :  Icon(Icons.arrow_forward_ios, size: 16.w),
+                          if (quiz.isAttempted)
+                            Icon(Icons.check_circle, size: 24.w, color: Colors.grey)
+                          else
+                            isLoading ? const CupertinoActivityIndicator() : Icon(Icons.arrow_forward_ios, size: 16.w),
                         ],
                       ),
                     ),

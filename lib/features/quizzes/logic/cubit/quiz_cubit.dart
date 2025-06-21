@@ -26,4 +26,13 @@ class QuizCubit extends Cubit<QuizStates> {
       throw Exception('Failed to load quiz: $e');
     }
   }
-} 
+
+  Future<void> submitQuiz(int quizId, DateTime startDate, DateTime endDate, int score) async {
+    try {
+      await _quizService.submitQuiz(quizId, startDate, endDate, score);
+    } catch (e) {
+      print(e.toString());
+      throw Exception('Failed to submit quiz: $e');
+    }
+  }
+}
