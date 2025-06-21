@@ -43,7 +43,7 @@ class ProfileAvatarAndName extends StatelessWidget {
                 )
                     : ClipOval(
                     child: CachedNetworkImage(
-                    imageUrl: userInfo.profilePictureURL,
+                    imageUrl: UrlHelper.transformUrl(userInfo.profilePictureURL),
                     width: 72.r, // 2 * radius
                     height: 72.r,
                     fit: BoxFit.cover,

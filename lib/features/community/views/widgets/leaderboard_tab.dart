@@ -6,6 +6,7 @@ import 'package:flutterwidgets/features/community/service/forum_service.dart';
 import 'package:flutterwidgets/features/profile/views/widgets/no_profile_widget.dart';
 import 'package:flutterwidgets/utils/error_state.dart';
 import 'package:flutterwidgets/utils/loading_state.dart';
+import 'package:flutterwidgets/utils/url_helper.dart';
 
 import 'podium_item.dart';
 import 'top_member_item.dart';
@@ -63,13 +64,15 @@ class LeaderboardTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+
                 if (podium.length > 1)
+
                   PodiumItem(
                     user: _LeaderboardUser(
                       id: podium[1]['userId'] ?? 0,
                       name: podium[1]['fullname'] ?? '',
                       points: podium[1]['totalScore'] ?? 0,
-                      avatar: podium[1]['profilePictureURL'] ?? '',
+                      avatar: UrlHelper.transformUrl(podium[1]['profilePictureURL']) ?? '',
                     ),
                     rank: 2,
                     height: 130.h,
@@ -84,7 +87,7 @@ class LeaderboardTab extends StatelessWidget {
                       id: podium[0]['userId'] ?? 0,
                       name: podium[0]['fullname'] ?? '',
                       points: podium[0]['totalScore'] ?? 0,
-                      avatar: podium[0]['profilePictureURL'] ?? '',
+                      avatar: UrlHelper.transformUrl(podium[0]['profilePictureURL']) ?? '',
                     ),
                     rank: 1,
                     height: 170.h,
@@ -99,7 +102,7 @@ class LeaderboardTab extends StatelessWidget {
                       id: podium[2]['userId'] ?? 0,
                       name: podium[2]['fullname'] ?? '',
                       points: podium[2]['totalScore'] ?? 0,
-                      avatar: podium[2]['profilePictureURL'] ?? '',
+                      avatar: UrlHelper.transformUrl(podium[2]['profilePictureURL']) ?? '',
                     ),
                     rank: 3,
                     height: 100.h,
@@ -155,7 +158,7 @@ class LeaderboardTab extends StatelessWidget {
                       rank: index + 4,
                       name: user['fullname'] ?? '',
                       username: user['username'] ?? '',
-                      avatarUrl: user['profilePictureURL'] ?? '',
+                      avatarUrl:UrlHelper.transformUrl(user['profilePictureURL'] ?? '') ,
                       points: user['totalScore'] ?? 0,
                     );
                   }),
