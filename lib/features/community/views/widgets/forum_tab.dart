@@ -37,13 +37,10 @@ class _ForumTabState extends State<ForumTab> {
   @override
   void initState() {
     super.initState();
-    fetchForumPosts();
+    context.read<ForumCubit>().fetchForumPosts(widget.community.id);
     _checkIfAuthor();
   }
 
-  void fetchForumPosts() {
-    context.read<ForumCubit>().fetchForumPosts(widget.community.id);
-  }
 
   String? userPp;
 
@@ -818,16 +815,6 @@ class _ForumTabState extends State<ForumTab> {
                   posts: state.posts,
                   useForumCubit: true,
                 ),
-              );
-            } else if (state is ForumFailure) {
-              return Center(
-                child: ErrorStateWidget(
-                    message: state.message,
-                    onRetry: () {
-                      context
-                          .read<ForumCubit>()
-                          .fetchForumPosts(widget.community.id);
-                    }),
               );
             }
             return const SizedBox();

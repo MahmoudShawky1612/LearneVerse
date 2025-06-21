@@ -14,6 +14,7 @@ class Quiz {
   final List<QuizQuestion> quizQuestions;
   final int questionCount;
   final bool isAttempted;
+  final int communityId;
 
   Quiz({
     required this.id,
@@ -29,6 +30,7 @@ class Quiz {
     required this.quizQuestions,
     required this.questionCount,
     required this.isAttempted,
+    required this.communityId ,
   });
 
   factory Quiz.fromJson(Map<String, dynamic> json) {
@@ -61,6 +63,7 @@ class Quiz {
       quizQuestions: questions,
       questionCount: json['questionCount'] ?? 0,
       isAttempted: json['isAttempted'] ?? false,
+      communityId: json['communityId'] ?? 0,
     );
   }
 } 
