@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/utils/url_helper.dart';
+import 'package:flutterwidgets/utils/image_helper.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../utils/jwt_helper.dart';
@@ -110,27 +110,38 @@ class _UserCommunityItemState extends State<UserCommunityItem> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(14.r),
-          child: CachedNetworkImage(
-            imageUrl: UrlHelper.transformUrl(widget.community.logoImgURL),
-            width: 40.w,
-            height: 40.h,
-            fit: BoxFit.cover,
-            errorWidget: (context, error, stackTrace) {
-              return Container(
-                width: 40.w,
-                height: 40.h,
-                color: theme
-                    .colorScheme.surfaceContainerHighest, // fallback background
-                child: Icon(
-                  Icons.group,
-                  size: 24.r,
-                  color: Colors.blue,
-                ),
-              );
-            },
-          ),
+          child: _buildImageWidget(theme),
         ),
       );
+
+  Widget _buildImageWidget(ThemeData theme) {
+    final transformedUrl = UrlHelper.transformUrl(widget.community.logoImgURL);
+    
+    if (transformedUrl.isEmpty) {
+      return _buildFallbackImage(theme);
+    }
+    
+    return ImageHelper.buildNetworkImage(
+      imageUrl: transformedUrl,
+      width: 40.w,
+      height: 40.h,
+      fit: BoxFit.cover,
+      errorWidget: _buildFallbackImage(theme),
+    );
+  }
+
+  Widget _buildFallbackImage(ThemeData theme) {
+    return Container(
+      width: 40.w,
+      height: 40.h,
+      color: theme.colorScheme.surfaceContainerHighest,
+      child: Icon(
+        Icons.group,
+        size: 24.r,
+        color: Colors.blue,
+      ),
+    );
+  }
 
   Widget _buildCommunityDetails(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;

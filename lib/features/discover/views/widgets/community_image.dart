@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../utils/url_helper.dart';
+import '../../../../utils/image_helper.dart';
 import '../../../home/data/models/community_model.dart';
 
 class CommunityImage extends StatelessWidget {
@@ -19,6 +19,8 @@ class CommunityImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final transformedUrl = UrlHelper.transformUrl(community.logoImgURL);
+    
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
@@ -42,34 +44,38 @@ class CommunityImage extends StatelessWidget {
       padding: EdgeInsets.all(4.w),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.r),
-        child: CachedNetworkImage(
-          imageUrl: UrlHelper.transformUrl(community.logoImgURL),
-          width: 42.w,
-          height: 42.h,
-          fit: BoxFit.cover,
-          errorWidget: (context, error, stackTrace) {
-            return Container(
-              width: 42.w,
-              height: 42.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.r),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    colorScheme.surfaceContainerHighest,
-                    colorScheme.surfaceContainerHighest.withOpacity(0.7),
-                  ],
-                ),
+        child: transformedUrl.isEmpty
+            ? _buildFallbackIcon()
+            : ImageHelper.buildNetworkImage(
+                imageUrl: transformedUrl,
+                width: 42.w,
+                height: 42.h,
+                fit: BoxFit.cover,
+                errorWidget: _buildFallbackIcon(),
               ),
-              child: Icon(
-                Icons.group,
-                size: 24.r,
-                color: colorScheme.primary.withOpacity(0.7),
-              ),
-            );
-          },
+      ),
+    );
+  }
+
+  Widget _buildFallbackIcon() {
+    return Container(
+      width: 42.w,
+      height: 42.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.r),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.surfaceContainerHighest,
+            colorScheme.surfaceContainerHighest.withOpacity(0.7),
+          ],
         ),
+      ),
+      child: Icon(
+        Icons.group,
+        size: 24.r,
+        color: colorScheme.primary.withOpacity(0.7),
       ),
     );
   }

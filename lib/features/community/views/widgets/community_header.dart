@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterwidgets/core/constants/app_colors.dart';
 import 'package:flutterwidgets/features/home/data/models/community_model.dart';
 import 'package:flutterwidgets/utils/url_helper.dart';
+import 'package:flutterwidgets/utils/image_helper.dart';
 
 class CommunityHeader extends StatelessWidget {
   final Community community;
@@ -16,25 +16,18 @@ class CommunityHeader extends StatelessWidget {
 
     final theme = Theme.of(context);
     Widget buildCircleAvatar() {
+      final transformedUrl = UrlHelper.transformUrl(community.logoImgURL);
+      
       return ClipOval(
-        child: CachedNetworkImage(
-          imageUrl: UrlHelper.transformUrl(community.logoImgURL),
-          width: 80.r,
-          height: 80.r,
-          fit: BoxFit.cover,
-          errorWidget: (context, error, stackTrace) {
-            return Container(
-              width: 80.r,
-              height: 80.r,
-              color: Colors.grey.shade200,
-              child: Icon(
-                Icons.group,
-                size: 40.r,
-                color: Colors.blue,
+        child: transformedUrl.isEmpty
+            ? _buildFallbackAvatar()
+            : ImageHelper.buildNetworkImage(
+                imageUrl: transformedUrl,
+                width: 80.r,
+                height: 80.r,
+                fit: BoxFit.cover,
+                errorWidget: _buildFallbackAvatar(),
               ),
-            );
-          },
-        ),
       );
     }
 
@@ -104,6 +97,19 @@ class CommunityHeader extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildFallbackAvatar() {
+    return Container(
+      width: 80.r,
+      height: 80.r,
+      color: Colors.grey.shade200,
+      child: Icon(
+        Icons.group,
+        size: 40.r,
+        color: Colors.blue,
+      ),
     );
   }
 }

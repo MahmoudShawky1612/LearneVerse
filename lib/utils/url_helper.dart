@@ -4,6 +4,11 @@ class UrlHelper {
   static const String LOCAL_URL = "http://localhost:5500";
 
   static String transformUrl(String url) {
+    // Handle empty or null URLs
+    if (url.isEmpty || url.trim().isEmpty) {
+      return ''; // Return empty string for empty URLs
+    }
+    
     // Replace localhost URLs with ngrok URL
     if (url.contains('localhost:5500') || url.contains('localhost')) {
       return url.replaceAll(RegExp(r'http://localhost:?\d*'), CLOUDFLARED_URL);
