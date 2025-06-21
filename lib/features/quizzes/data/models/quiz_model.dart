@@ -39,9 +39,6 @@ class Quiz {
           .toList();
     }
 
-    final isAttempted = json['isAttempted'] ?? false;
-    print('Quiz ${json['id']}: isAttempted from API = $isAttempted');
-
     return Quiz(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
@@ -63,7 +60,7 @@ class Quiz {
           : DateTime.now(),
       quizQuestions: questions,
       questionCount: json['questionCount'] ?? 0,
-      isAttempted: isAttempted,
+      isAttempted: json['isAttempted'] ?? false,
     );
   }
 } 

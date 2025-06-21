@@ -40,11 +40,6 @@ class _QuizListState extends State<QuizList> {
             );
           }
 
-          // Debug: Print quiz data
-          for (var quiz in state.quizzes) {
-            print('Quiz ${quiz.id}: isAttempted = ${quiz.isAttempted}');
-          }
-
           return Column(
             children: state.quizzes.map((quiz) {
               return Container(
@@ -65,7 +60,6 @@ class _QuizListState extends State<QuizList> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(16.r),
                     onTap: quiz.isAttempted ? () {
-                      print('Quiz ${quiz.id} is attempted: ${quiz.isAttempted}');
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -90,12 +84,26 @@ class _QuizListState extends State<QuizList> {
                       try {
                         final quizDetails = await context.read<QuizCubit>().getQuizById(quiz.id);
                         if (context.mounted) {
-                          Navigator.push(
+                          await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => QuizTakingScreen(quiz: quizDetails),
+                              builder: (context) => QuizTakingScreen(
+                                quiz: quizDetails,
+                                communityId: widget.communityId,
+                              ),
                             ),
                           );
+                          // Refresh the quiz list after returning from quiz
+                          print('Refreshing quiz list for community ${widget.communityId}');
+                          context.read<QuizCubit>().fetchCommunityQuizzes(widget.communityId);
+                          
+                          // Fallback: Also refresh after a short delay to ensure it happens
+                          Future.delayed(const Duration(milliseconds: 500), () {
+                            if (context.mounted) {
+                              print('Fallback refresh for community ${widget.communityId}');
+                              context.read<QuizCubit>().fetchCommunityQuizzes(widget.communityId);
+                            }
+                          });
                           setState(() {
                             isLoading = false;
                           });

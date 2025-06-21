@@ -13,8 +13,11 @@ enum QuestionType { SINGLE, MULTI, TRUE_FALSE }
 
 class QuizTakingScreen extends StatefulWidget {
   final Quiz quiz;
+  final int communityId;
 
-  const QuizTakingScreen({Key? key, required this.quiz}) : super(key: key);
+  const QuizTakingScreen(
+      {Key? key, required this.quiz, required this.communityId})
+      : super(key: key);
 
   @override
   State<QuizTakingScreen> createState() => _QuizTakingScreenState();
@@ -123,18 +126,20 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
     try {
       final endTime = DateTime.now();
       await context.read<QuizCubit>().submitQuiz(
-        widget.quiz.id,
-        _startTime,
-        endTime,
-        score,
-      );
-      
+            widget.quiz.id,
+            _startTime,
+            endTime,
+            score,
+          );
+
       if (context.mounted) {
-        SnackBarUtils.showSuccessSnackBar(context, message: 'Quiz submitted successfully!');
-       }
+        SnackBarUtils.showSuccessSnackBar(context,
+            message: 'Quiz submitted successfully!');
+      }
     } catch (e) {
       if (context.mounted) {
-        SnackBarUtils.showErrorSnackBar(context, message: 'Failed to submit quiz results: $e');
+        SnackBarUtils.showErrorSnackBar(context,
+            message: 'Failed to submit quiz results: $e');
       }
     }
   }
@@ -1179,10 +1184,8 @@ class _QuizTakingScreenState extends State<QuizTakingScreen>
                       ],
                     ),
                     child: ElevatedButton(
-                      onPressed: ()  {
+                      onPressed: () {
                         Navigator.of(context).pop();
-                        context.read<QuizCubit>().fetchCommunityQuizzes(widget.quiz.classroomId);
-
                       },
                       style: ElevatedButton.styleFrom(
                         shadowColor: Colors.blue,
