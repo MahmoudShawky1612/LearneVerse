@@ -1201,10 +1201,10 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
                           ),
                         ),
                       ] else ...[
-                        // File type - show download option
+                        // File type - show visual file display
                         Container(
                           width: double.infinity,
-                          padding: EdgeInsets.all(24.w),
+                          height: 220.h,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
@@ -1225,27 +1225,54 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
                                   ? Colors.white.withOpacity(0.1)
                                   : Colors.grey.withOpacity(0.2),
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 15.r,
+                                offset: Offset(0, 8.h),
+                              ),
+                            ],
                           ),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.insert_drive_file_rounded,
-                                size: 64.sp,
-                                color: const Color(0xFF11998E),
+                              Container(
+                                width: 80.w,
+                                height: 80.h,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFF11998E),
+                                      Color(0xFF38EF7D),
+                                    ],
+                                  ),
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFF11998E).withOpacity(0.3),
+                                      blurRadius: 20.r,
+                                      offset: Offset(0, 8.h),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  Icons.insert_drive_file_rounded,
+                                  color: Colors.white,
+                                  size: 40.sp,
+                                ),
                               ),
-                              SizedBox(height: 16.h),
+                              SizedBox(height: 20.h),
                               Text(
-                                'Download File',
+                                'File Preview',
                                 style: TextStyle(
-                                  fontSize: 16.sp,
+                                  fontSize: 18.sp,
                                   fontWeight: FontWeight.w600,
-                                  color:
-                                      isDark ? Colors.white : Colors.grey[800],
+                                  color: isDark ? Colors.white : Colors.grey[800],
                                 ),
                               ),
                               SizedBox(height: 8.h),
                               Text(
-                                'Tap to download the lesson file',
+                                'Tap to open or download',
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   color: isDark
@@ -1262,9 +1289,9 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
                                     await launchUrl(url);
                                   }
                                 },
-                                icon: Icon(Icons.download_rounded, size: 18.sp),
+                                icon: Icon(Icons.open_in_new_rounded, size: 18.sp),
                                 label: Text(
-                                  'Download',
+                                  'Open File',
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
@@ -1274,7 +1301,7 @@ class _LessonDetailSheetState extends State<LessonDetailSheet> {
                                   backgroundColor: const Color(0xFF11998E),
                                   foregroundColor: Colors.white,
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 32.w, vertical: 12.h),
+                                      horizontal: 24.w, vertical: 12.h),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12.r),
                                   ),
