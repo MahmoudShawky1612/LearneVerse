@@ -19,7 +19,7 @@ class LeaderboardTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final themeExtension = Theme.of(context).extension<AppThemeExtension>();
+    final themeExtension = theme.extension<AppThemeExtension>();
 
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: ForumApiService().fetchLeaderboardQuizScores(communityId),
@@ -28,28 +28,25 @@ class LeaderboardTab extends StatelessWidget {
           return const LoadingState();
         } else if (snapshot.hasError) {
           return Center(
-              child: ErrorStateWidget(
-            onRetry: () {
-              context
-                  .read<ForumApiService>()
-                  .fetchLeaderboardQuizScores(communityId);
-            },
-            message: snapshot.error.toString(),
-          ));
+            child: ErrorStateWidget(
+              onRetry: () {
+                context
+                    .read<ForumApiService>()
+                    .fetchLeaderboardQuizScores(communityId);
+              },
+              message: snapshot.error.toString(),
+            ),
+          );
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-              child: Column(
-            children: [
-              const NoDataWidget(message: 'Keep it up, no one has scored yet!'),
-              SizedBox(height: 30.h),
-            ],
-          ));
+          return const Center(
+            child: NoDataWidget(message: 'Keep it up, no one has scored yet!'),
+          );
         }
+
         final data = snapshot.data!;
-        // Top 3 for podium
         final podium = data.take(3).toList();
-        // Rest for list
         final rest = data.length > 3 ? data.sublist(3) : [];
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -66,16 +63,13 @@ class LeaderboardTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                // Second place (rank 2)
                 if (podium.length > 1)
                   PodiumItem(
                     user: _LeaderboardUser(
-                      id: podium[1]['User']['id'] ?? 0,
-                      name: podium[1]['User']['fullname'] ?? '',
-                      points: podium[1]['score'] ?? 0,
-                      avatar: podium[1]['User']['UserProfile']
-                              ?['profilePictureURL'] ??
-                          '',
+                      id: podium[1]['userId'] ?? 0,
+                      name: podium[1]['fullname'] ?? '',
+                      points: podium[1]['totalScore'] ?? 0,
+                      avatar: podium[1]['profilePictureURL'] ?? '',
                     ),
                     rank: 2,
                     height: 130.h,
@@ -84,16 +78,13 @@ class LeaderboardTab extends StatelessWidget {
                     themeExtension: themeExtension,
                     isFirst: false,
                   ),
-                // First place (rank 1, centered)
                 if (podium.isNotEmpty)
                   PodiumItem(
                     user: _LeaderboardUser(
-                      id: podium[0]['User']['id'] ?? 0,
-                      name: podium[0]['User']['fullname'] ?? '',
-                      points: podium[0]['score'] ?? 0,
-                      avatar: podium[0]['User']['UserProfile']
-                              ?['profilePictureURL'] ??
-                          '',
+                      id: podium[0]['userId'] ?? 0,
+                      name: podium[0]['fullname'] ?? '',
+                      points: podium[0]['totalScore'] ?? 0,
+                      avatar: podium[0]['profilePictureURL'] ?? '',
                     ),
                     rank: 1,
                     height: 170.h,
@@ -102,16 +93,13 @@ class LeaderboardTab extends StatelessWidget {
                     themeExtension: themeExtension,
                     isFirst: true,
                   ),
-                // Third place (rank 3)
                 if (podium.length > 2)
                   PodiumItem(
                     user: _LeaderboardUser(
-                      id: podium[2]['User']['id'] ?? 0,
-                      name: podium[2]['User']['fullname'] ?? '',
-                      points: podium[2]['score'] ?? 0,
-                      avatar: podium[2]['User']['UserProfile']
-                              ?['profilePictureURL'] ??
-                          '',
+                      id: podium[2]['userId'] ?? 0,
+                      name: podium[2]['fullname'] ?? '',
+                      points: podium[2]['totalScore'] ?? 0,
+                      avatar: podium[2]['profilePictureURL'] ?? '',
                     ),
                     rank: 3,
                     height: 100.h,
@@ -143,39 +131,32 @@ class LeaderboardTab extends StatelessWidget {
                       children: <Widget>[
                         const Text(
                           'Rank',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(width: 24.w),
                         const Expanded(
                           child: Text(
                             'User',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                         const Text(
                           'Points',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
                   ),
                   Divider(height: 1.h),
                   ...List.generate(rest.length, (index) {
-                    final user = rest[index]['User'];
+                    final user = rest[index];
                     return TopMemberItem(
-                      id: user['id'] ?? 0,
+                      id: user['userId'] ?? 0,
                       rank: index + 4,
                       name: user['fullname'] ?? '',
-                      username: '${user['username']}' ?? '',
-                      avatarUrl:
-                          user['UserProfile']?['profilePictureURL'] ?? '',
-                      points: rest[index]['score'] ?? 0,
+                      username: user['username'] ?? '',
+                      avatarUrl: user['profilePictureURL'] ?? '',
+                      points: user['totalScore'] ?? 0,
                     );
                   }),
                 ],
@@ -194,9 +175,10 @@ class _LeaderboardUser {
   final int points;
   final String avatar;
 
-  _LeaderboardUser(
-      {required this.id,
-      required this.name,
-      required this.points,
-      required this.avatar});
+  _LeaderboardUser({
+    required this.id,
+    required this.name,
+    required this.points,
+    required this.avatar,
+  });
 }
